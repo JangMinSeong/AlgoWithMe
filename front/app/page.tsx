@@ -1,5 +1,6 @@
 import * as React from "react";
-import Button from "@/app/components/Button";
+import Button from "@/components/Button";
+import LoginButton from "@/components/LoginButton";
 
 export default function LandingPage() {
   return (
@@ -12,6 +13,7 @@ export default function LandingPage() {
         </p>
         <div className="flex gap-4">
           <Button>시작하기</Button>
+            <LoginButton />
           <button
               className="px-6 py-3 bg-transparent text-blue-500 font-semibold rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors">
             깃 허브로 로그인
