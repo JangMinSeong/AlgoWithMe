@@ -1,5 +1,5 @@
 import * as React from 'react';
-import MainHeader from '@/components/Header'
+import MainHeader from '@/components/Header/Header'
 import StudyList from '@/components/mainpage/StudyListComponent'
 import ChartProblem from "@/components/mainpage/ChartProblemComponent";
 
