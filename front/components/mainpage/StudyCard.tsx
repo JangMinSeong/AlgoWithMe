@@ -4,10 +4,14 @@ interface CardProps {
     imageSrc?: string;
     date?: string;
     studyName?: string;
+    onClick?: () => void;
 }
-const StudyCard: React.FC<CardProps> = ({ imageSrc, date, studyName }) => {
+const StudyCard: React.FC<CardProps> = ({ imageSrc, date, studyName, onClick }) => {
     return (
-        <div className="flex flex-col items-center border-gray-200 shadow-lg">
+        <div
+            className="bg-white shadow-lg cursor-pointer hover:scale-105 transition transform duration-150 ease-in-out"
+            onClick={onClick}
+        >
             <div className="w-60 h-56 overflow-hidden rounded-lg bg-gray-200">
                 {imageSrc ? (
                     <img
@@ -24,8 +28,8 @@ const StudyCard: React.FC<CardProps> = ({ imageSrc, date, studyName }) => {
                 )}
             </div>
             <div className="text-left bg-background w-full">
-                <div className="m-2">{studyName}</div>
-                {date && <p className="m-2 text-sm text-navy">{date}</p>}
+                <div className="m-2 pt-2 mb-0">{studyName}</div>
+                {date && <p className="ml-2 pb-2 text-sm text-navy">{date}</p>}
             </div>
         </div>
     );
