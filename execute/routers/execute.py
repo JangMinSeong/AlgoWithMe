@@ -1,0 +1,129 @@
+from fastapi import Form, APIRouter
+from fastapi.responses import JSONResponse
+import subprocess
+import os
+
+router = APIRouter(
+    prefix = "/execute",
+    tags = ["execute"]
+)
+
+@router.post("/python")
+async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+    
+    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    path = os.path.join(dir, "main.py")
+
+    try:
+        with open(path, "w") as file:
+            file.write(code)
+        process = subprocess.Popen(
+            ["python", path],
+            stdin=subprocess.PIPE, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, 
+            text=True
+        )
+        output, errors = process.communicate(input=input)
+        if process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
+        return {"output": output}
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+
+@router.post("/java")
+async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+    
+    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    path = os.path.join(dir, "Main.java")
+    class_path = os.path.join(dir, "Main")
+
+    try:
+        with open(path, "w") as file:
+            file.write(code)
+        # compile
+        compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
+        if compile_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        # run
+        run_process = subprocess.Popen(
+            ["java", "-cp", dir, "Main"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        output, errors = run_process.communicate(input=input)
+        if run_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
+        return {"output": output}
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+        if os.path.exists(class_path + ".class"):
+            os.remove(class_path + ".class")
+
+@router.post("/c")
+async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+    
+    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    path = os.path.join(dir, "main.c")
+    executable_path = os.path.join(dir, "main")
+
+    try:
+        with open(path, "w") as file:
+            file.write(code)
+        # compile
+        compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
+        if compile_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        # run
+        run_process = subprocess.Popen(
+            [executable_path],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        output, errors = run_process.communicate(input=input)
+        # if run_process.returncode != 0:
+        #     return JSONResponse(status_code=400, content={"error": errors})
+        return {"output": output}
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+        if os.path.exists(executable_path):
+            os.remove(executable_path)
+
+@router.post("/cpp")
+async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+    
+    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    path = os.path.join(dir, "main.cpp")
+    executable_path = os.path.join(dir, "main")
+
+    try:
+        with open(path, "w") as file:
+            file.write(code)
+        # compile
+        compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
+        if compile_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        # run
+        run_process = subprocess.Popen(
+            [executable_path],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        output, errors = run_process.communicate(input=input)
+        # if run_process.returncode != 0:
+        #     return JSONResponse(status_code=400, content={"error": errors})
+        return {"output": output}
+    finally:
+        if os.path.exists(path):
+            os.remove(path)
+        if os.path.exists(executable_path):
+            os.remove(executable_path)
