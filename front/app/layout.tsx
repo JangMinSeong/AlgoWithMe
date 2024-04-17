@@ -23,8 +23,10 @@ export default function RootLayout({
 				<UserProvider>
 					<NextAuthProvider>
 						<SidebarProvider>
-							<SideBar />
-							{children}
+							<div className='flex'>
+								<SideBar />
+								{children}
+							</div>
 						</SidebarProvider>
 					</NextAuthProvider>
 				</UserProvider>
