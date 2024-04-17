@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/store/sidebarStore'
 
 const SideBar = () => {
-	const { handleCloseSidebar } = useSidebar()
+	const { handleCloseSidebar, handleOpenSidebar } = useSidebar()
 
 	const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
 
@@ -23,8 +23,8 @@ const SideBar = () => {
 	]
 
 	return (
-		<div className={`w-40 h-[100%] fixed top-0 left-0 bg-background ${isOpen ? null : 'invisible'}  bg-opacity-30`}>
-			<Button onClick={handleCloseSidebar}>x</Button>
+		<div className={`${isOpen ? 'w-40' : 'w-10'} h-[100%] fixed top-0 left-0 bg-background bg-opacity-30`}>
+			{isOpen ? <Button onClick={handleCloseSidebar}>x</Button> : <Button onClick={handleOpenSidebar}>=</Button>}
 			{dummy.map((el) => (
 				<SideBarItem groupName={el.groupName} key={el.groupName} />
 			))}
