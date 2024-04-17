@@ -3,8 +3,8 @@ import './globals.css'
 
 import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
+import SidebarProvider from '@/context/SidebarProvider'
 
-import SearchBar from '@/components/layout/SearchBar'
 import SideBar from '@/components/layout/SideBar'
 
 export const metadata: Metadata = {
@@ -22,9 +22,10 @@ export default function RootLayout({
 			<body>
 				<UserProvider>
 					<NextAuthProvider>
-						<SearchBar />
-						<SideBar />
-						<div className=''>{children}</div>
+						<SidebarProvider>
+							<SideBar />
+							{children}
+						</SidebarProvider>
 					</NextAuthProvider>
 				</UserProvider>
 			</body>
