@@ -4,7 +4,8 @@ import './globals.css'
 import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
 
-import SearchBar from '@/components/layout/searchbar/SearchBar'
+import SearchBar from '@/components/layout/SearchBar'
+import SideBar from '@/components/layout/SideBar'
 
 export const metadata: Metadata = {
 	title: 'AlgoWithMe',
@@ -22,7 +23,8 @@ export default function RootLayout({
 				<UserProvider>
 					<NextAuthProvider>
 						<SearchBar />
-						{children}
+						<SideBar />
+						<div className=''>{children}</div>
 					</NextAuthProvider>
 				</UserProvider>
 			</body>
