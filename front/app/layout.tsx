@@ -3,6 +3,9 @@ import './globals.css'
 
 import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
+import SidebarProvider from '@/context/SidebarProvider'
+
+import SideBar from '@/components/layout/SideBar'
 
 export const metadata: Metadata = {
 	title: 'AlgoWithMe',
@@ -18,7 +21,14 @@ export default function RootLayout({
 		<html lang='kr'>
 			<body>
 				<UserProvider>
-					<NextAuthProvider>{children}</NextAuthProvider>
+					<NextAuthProvider>
+						<SidebarProvider>
+							<div className='flex'>
+								<SideBar />
+								{children}
+							</div>
+						</SidebarProvider>
+					</NextAuthProvider>
 				</UserProvider>
 			</body>
 		</html>

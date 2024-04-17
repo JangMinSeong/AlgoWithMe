@@ -1,5 +1,5 @@
 'use client'
-import store from '@/store/userStore'
+import store from '@/store/sidebarStore'
 import { Provider } from 'react-redux'
 
 type Props = {
