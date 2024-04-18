@@ -5,7 +5,7 @@ const PrevProblem = () => {
   return (
     <div>
       {/* <div className='p-[2px] bg-gradient-to-br w-fit from-primary via-secondary to-blueishPurple rounded-lg '> </div> */}
-      <div className="flex bg-white w-[346px] h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2">
+      <div className="flex bg-white w-[346px] h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 hover:bg-dimmedPurple hover:bg-opacity-80 hover:border-opacity-0 transition-colors">
         <Image
           src="/swea.png"
           alt="백준로고"

@@ -1,10 +1,12 @@
 import AudioControl from '../groupcall/AudioControl'
+import Image from 'next/image'
+import CallAvatar from '../groupcall/CallAvatar'
 const StudyHeader = () => {
   return (
     <div className="h-10 flex justify-between items-center">
-      <div>logo</div>
+      <Image src={'/logo/1x/AWM.png'} alt="로고" width={100} height={100} />
       <div className="flex">
-        <div>사람들 아이콘 자리</div>
+        <CallAvatar />
         <AudioControl />
       </div>
       <div className="flex">
