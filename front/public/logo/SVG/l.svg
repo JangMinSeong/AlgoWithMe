@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 258.66 45.48">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #231815;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-3 {
+        clip-path: url(#clippath);
+      }
+
+      .cls-4 {
+        fill: none;
+        stroke: #231815;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        fill: url(#_무제_그라디언트_959);
+      }
+    </style>
+    <clipPath id="clippath">
+      <polygon class="cls-4" points="40.27 6.7 33.75 6.7 33.75 2.38 45.95 2.38 45.95 30.17 52.61 30.17 52.61 34.49 32.95 34.49 32.95 30.17 40.27 30.17 40.27 6.7"/>
+    </clipPath>
+    <linearGradient id="_무제_그라디언트_959" data-name="무제 그라디언트 959" x1=".5" y1="22.74" x2="258.16" y2="22.74" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#b7ff71"/>
+      <stop offset=".51" stop-color="#39f"/>
+      <stop offset=".56" stop-color="#3b94fc"/>
+      <stop offset=".64" stop-color="#5388f6"/>
+      <stop offset=".74" stop-color="#7a75ed"/>
+      <stop offset=".85" stop-color="#b159df"/>
+      <stop offset=".98" stop-color="#f537ce"/>
+      <stop offset="1" stop-color="#f3c"/>
+    </linearGradient>
+  </defs>
+  <g id="_레이어_1-2" data-name="레이어 1">
+    <g>
+      <g class="cls-3">
+        <g>
+          <rect class="cls-2" x=".5" y=".5" width="257.66" height="44.48"/>
+          <path class="cls-1" d="M257.66,1v43.48H1V1h256.66M258.66,0H0v45.48h258.66V0h0Z"/>
+        </g>
+      </g>
+      <polygon class="cls-4" points="40.27 6.7 33.75 6.7 33.75 2.38 45.95 2.38 45.95 30.17 52.61 30.17 52.61 34.49 32.95 34.49 32.95 30.17 40.27 30.17 40.27 6.7"/>
+    </g>
+  </g>
+</svg>
