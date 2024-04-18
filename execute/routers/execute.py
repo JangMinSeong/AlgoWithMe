@@ -26,9 +26,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             stderr=subprocess.PIPE, 
             text=True
         )
-        output, errors = process.communicate(input=input)
-        elapsed_time = time.perf_counter() - start_time
-        elapsed_time_ms = int(elapsed_time * 1000)
+        try:
+            output, errors = process.communicate(input=input, timeout=5)
+            elapsed_time = time.perf_counter() - start_time
+            elapsed_time_ms = int(elapsed_time * 1000)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            errors = 'Time limit exceeded'
+            return JSONResponse(status_code=408, content={"error": errors})
         if process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
@@ -59,9 +64,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             stderr=subprocess.PIPE,
             text=True
         )
-        output, errors = run_process.communicate(input=input)
-        elapsed_time = time.perf_counter() - start_time
-        elapsed_time_ms = int(elapsed_time * 1000)
+        try:
+            output, errors = run_process.communicate(input=input, timeout=5)
+            elapsed_time = time.perf_counter() - start_time
+            elapsed_time_ms = int(elapsed_time * 1000)
+        except subprocess.TimeoutExpired:
+            run_process.kill()
+            errors = 'Time limit exceeded'
+            return JSONResponse(status_code=408, content={"error": errors})
         if run_process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
@@ -94,9 +104,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             stderr=subprocess.PIPE,
             text=True
         )
-        output, errors = run_process.communicate(input=input)
-        elapsed_time = time.perf_counter() - start_time
-        elapsed_time_ms = int(elapsed_time * 1000)
+        try:
+            output, errors = run_process.communicate(input=input, timeout=5)
+            elapsed_time = time.perf_counter() - start_time
+            elapsed_time_ms = int(elapsed_time * 1000)
+        except subprocess.TimeoutExpired:
+            run_process.kill()
+            errors = 'Time limit exceeded'
+            return JSONResponse(status_code=408, content={"error": errors})
         # if run_process.returncode != 0:
         #     return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
@@ -129,9 +144,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             stderr=subprocess.PIPE,
             text=True
         )
-        output, errors = run_process.communicate(input=input)
-        elapsed_time = time.perf_counter() - start_time
-        elapsed_time_ms = int(elapsed_time * 1000)
+        try:
+            output, errors = run_process.communicate(input=input, timeout=5)
+            elapsed_time = time.perf_counter() - start_time
+            elapsed_time_ms = int(elapsed_time * 1000)
+        except subprocess.TimeoutExpired:
+            run_process.kill()
+            errors = 'Time limit exceeded'
+            return JSONResponse(status_code=408, content={"error": errors})
         # if run_process.returncode != 0:
         #     return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
