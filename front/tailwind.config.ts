@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   content: [
@@ -29,9 +29,16 @@ const config: Config = {
         darkPurple: "#B352B9",
         dimmedPurple: "#ECEBFF",
         lighterPurple: "#EEDAFF",
-        lightPink: "#F7E7E8"
+        lightPink: "#F7E7E8",
+        white: '#FAFAFA',
+      },
+      boxShadow: {
+        foggyBlue: '0px 0px 20px 0 rgb(173 177 241 / 0.3)',
+        foggyPink: '0px 0px 20px 0 rgb(250 220 255)',
+        foggyPurple: '0px 0px 16px 0 rgb(165 109 242 / 0.16)',
+      },
       }
-    },
+    
   },
   plugins: [],
 };

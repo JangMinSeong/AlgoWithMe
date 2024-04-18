@@ -4,6 +4,8 @@ import useSidebar from '@/hooks/useSidebar'
 import Button from '@/components/Button'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/sidebarStore'
+import { MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md'
+import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md'
 
 const SideBar = () => {
 	const { handleCloseSidebar, handleOpenSidebar } = useSidebar()
@@ -23,11 +25,21 @@ const SideBar = () => {
 	]
 
 	return (
-		<div className={`${isOpen ? 'w-40' : 'w-10'} h-screen top-0 left-0 bg-background bg-opacity-30`}>
-			{isOpen ? <Button onClick={handleCloseSidebar}>x</Button> : <Button onClick={handleOpenSidebar}>=</Button>}
-			{dummy.map((el) => (
-				<SideBarItem groupName={el.groupName} key={el.groupName} />
-			))}
+		<div>
+			{isOpen ? (
+				<div className='w-40 min-w-40 h-screen'>
+					<Button onClick={handleCloseSidebar}>
+						<MdOutlineKeyboardDoubleArrowLeft />
+					</Button>
+					{dummy.map((el) => (
+						<SideBarItem groupName={el.groupName} key={el.groupName} />
+					))}
+				</div>
+			) : (
+				<Button onClick={handleOpenSidebar}>
+					<MdOutlineKeyboardDoubleArrowRight />
+				</Button>
+			)}
 		</div>
 	)
 }
