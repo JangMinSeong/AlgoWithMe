@@ -12,7 +12,6 @@ export default function Layout({
 			<SidebarProvider>
 				<div className='flex'>
 					<SideBar />
-
 					<div className='flex-grow'>
 						<StudyHeader />
 						<main className='bg-background h-full bg-opacity-80'>{children}</main>
