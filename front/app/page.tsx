@@ -6,6 +6,7 @@ import Logo from '@/components/Logo'
 export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
+      <Logo />
       <h1 className="text-5xl font-bold text-center text-gray-800 mb-4">
         랜딩 페이지
       </h1>
@@ -19,7 +20,6 @@ export default function LandingPage() {
           깃 허브로 로그인
         </button>
       </div>
-      <Logo />
     </div>
   )
 }
