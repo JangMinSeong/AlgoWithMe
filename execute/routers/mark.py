@@ -21,7 +21,7 @@ class CodeTest(BaseModel):
 @router.post("/python")
 async def mark_python_code(code_test: CodeTest):
     results = []
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
     with open(path, "w") as file:
         file.write(code_test.code)
@@ -48,7 +48,7 @@ async def mark_python_code(code_test: CodeTest):
 @router.post("/java")
 async def mark_python_code(code_test: CodeTest):
     results = []
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "Main.java")
     class_path = os.path.join(dir, "Main")
     with open(path, "w") as file:

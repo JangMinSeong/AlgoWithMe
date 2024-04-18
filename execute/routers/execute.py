@@ -12,7 +12,7 @@ router = APIRouter(
 @router.post("/python")
 async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
     
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
 
     try:
@@ -44,7 +44,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
 @router.post("/java")
 async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
     
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "Main.java")
     class_path = os.path.join(dir, "Main")
 
@@ -84,7 +84,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
 @router.post("/c")
 async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
     
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.c")
     executable_path = os.path.join(dir, "main")
 
@@ -124,7 +124,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
 @router.post("/cpp")
 async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
     
-    dir = os.getenv('BASE_DIR', 'C:\\tmp')
+    dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.cpp")
     executable_path = os.path.join(dir, "main")
 
