@@ -2,6 +2,7 @@ from fastapi import Form, APIRouter
 from fastapi.responses import JSONResponse
 import subprocess
 import os
+import time
 
 router = APIRouter(
     prefix = "/execute",
@@ -15,8 +16,9 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
     path = os.path.join(dir, "main.py")
 
     try:
-        with open(path, "w") as file:
+        with open(path, "w", encoding='utf-8') as file:
             file.write(code)
+        start_time = time.perf_counter()
         process = subprocess.Popen(
             ["python", path],
             stdin=subprocess.PIPE, 
@@ -25,9 +27,11 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             text=True
         )
         output, errors = process.communicate(input=input)
+        elapsed_time = time.perf_counter() - start_time
+        elapsed_time_ms = int(elapsed_time * 1000)
         if process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output}
+        return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -40,13 +44,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
     class_path = os.path.join(dir, "Main")
 
     try:
-        with open(path, "w") as file:
+        with open(path, "w", encoding='utf-8') as file:
             file.write(code)
         # compile
         compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
         if compile_process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": compile_process.stderr})
         # run
+        start_time = time.perf_counter()
         run_process = subprocess.Popen(
             ["java", "-cp", dir, "Main"],
             stdin=subprocess.PIPE,
@@ -55,9 +60,11 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             text=True
         )
         output, errors = run_process.communicate(input=input)
+        elapsed_time = time.perf_counter() - start_time
+        elapsed_time_ms = int(elapsed_time * 1000)
         if run_process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output}
+        return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -72,13 +79,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
     executable_path = os.path.join(dir, "main")
 
     try:
-        with open(path, "w") as file:
+        with open(path, "w", encoding='utf-8') as file:
             file.write(code)
         # compile
         compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": compile_process.stderr})
         # run
+        start_time = time.perf_counter()
         run_process = subprocess.Popen(
             [executable_path],
             stdin=subprocess.PIPE,
@@ -87,9 +95,11 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             text=True
         )
         output, errors = run_process.communicate(input=input)
+        elapsed_time = time.perf_counter() - start_time
+        elapsed_time_ms = int(elapsed_time * 1000)
         # if run_process.returncode != 0:
         #     return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output}
+        return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -104,13 +114,14 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
     executable_path = os.path.join(dir, "main")
 
     try:
-        with open(path, "w") as file:
+        with open(path, "w", encoding='utf-8') as file:
             file.write(code)
         # compile
         compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
             return JSONResponse(status_code=400, content={"error": compile_process.stderr})
         # run
+        start_time = time.perf_counter()
         run_process = subprocess.Popen(
             [executable_path],
             stdin=subprocess.PIPE,
@@ -119,9 +130,11 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             text=True
         )
         output, errors = run_process.communicate(input=input)
+        elapsed_time = time.perf_counter() - start_time
+        elapsed_time_ms = int(elapsed_time * 1000)
         # if run_process.returncode != 0:
         #     return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output}
+        return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
