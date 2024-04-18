@@ -3,9 +3,9 @@ import SidebarProvider from '@/context/SidebarProvider'
 import React from 'react'
 
 export default function Layout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode
+	children: React.ReactNode
 }>) {
   return (
     <SidebarProvider>

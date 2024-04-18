@@ -2,32 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
+/* background-image: linear-gradient(
+	330deg,
+	rgba(237, 234, 255, 1) 0%,
+	rgba(237, 216, 255, 1) 36%,
+	rgba(249, 219, 255, 1) 67%,
+	rgba(237, 234, 255, 1) 100%
+);
+background-position: center center; */
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 196, 133, 238;
-    --background-end-rgb: 247, 186, 252;
-  }
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom right,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+	background-image: linear-gradient(
+		330deg,
+		rgba(237, 234, 255, 1) 0%,
+		rgba(237, 216, 255, 1) 36%,
+		rgba(249, 219, 255, 1) 67%,
+		rgba(237, 234, 255, 1) 100%
+	);
+	background-position: center center;
+	font-family: 'pretendard';
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+@font-face {
+	font-family: 'pretendard';
+	src: url('../fonts/Pretendard.ttf') format('truetype');
 }
