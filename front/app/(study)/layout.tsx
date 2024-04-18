@@ -1,6 +1,7 @@
 import SideBar from '@/components/layout/SideBar'
 import SidebarProvider from '@/context/SidebarProvider'
 import StudyHeader from '@/components/studypage/StudyHeader'
+import React from 'react'
 
 export default function Layout({
 	children,
