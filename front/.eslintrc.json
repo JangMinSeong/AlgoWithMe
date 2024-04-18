@@ -4,7 +4,8 @@
     "airbnb",
     "airbnb-typescript",
     "prettier",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:storybook/recommended"
   ],
   "parserOptions": {
     "project": "./tsconfig.json"
@@ -13,7 +14,10 @@
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "no-empty": "warn",
-    "no-cond-assign": ["error", "always"],
+    "no-cond-assign": [
+      "error",
+      "always"
+    ],
     "react/function-component-definition": [
       2,
       {
