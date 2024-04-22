@@ -18,6 +18,12 @@
       "error",
       "always"
     ],
+    "no-param-reassign": ["error", {
+      "props": true,
+      "ignorePropertyModificationsFor": [
+        "state"
+      ]
+    }],
     "react/function-component-definition": [
       2,
       {
