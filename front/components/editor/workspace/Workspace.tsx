@@ -1,6 +1,6 @@
 'use client'
 
-import '@/components/editor/styles.scss'
+import '@/components/editor/workspace/styles.scss'
 
 import React, { useCallback, useEffect, useState } from 'react'
 import { EditorContent, useEditor } from '@tiptap/react'
@@ -14,7 +14,7 @@ import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 
-import MenuBar from '@/components/editor/MenuBar'
+import MenuBar from '@/components/editor/workspace/MenuBar'
 import Button from '@/components/Button'
 
 const colors = [
@@ -61,9 +61,10 @@ const getRandomName = (): string => getRandomElement(names)
 
 const ydoc = new Y.Doc()
 const websocketProvider = new TiptapCollabProvider({
-  appId: '7j9y6m10',
-  name: 'test',
+  appId: '여기에 아이디 넣기',
+  name: 'test2', // 이름으로 문서 분류 함
   document: ydoc,
+  token: '여기에 토큰 집어넣기',
 })
 
 interface User {

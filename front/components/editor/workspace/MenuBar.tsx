@@ -1,6 +1,6 @@
 import './MenuBar.scss'
 import React, { Fragment } from 'react'
-import MenuItem from './MenuItem' // 확장자 변경 (jsx ->)
+import MenuItem from './MenuItem'
 
 // MenuItemProps 인터페이스 정의
 interface MenuItemProps {

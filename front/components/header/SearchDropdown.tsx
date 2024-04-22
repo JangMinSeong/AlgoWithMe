@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SearchTagButtons from '@/components/Header/SearchTagButtons'
+import SearchTagButtons from '@/components/header/SearchTagButtons'
 
 interface List {
   id: number

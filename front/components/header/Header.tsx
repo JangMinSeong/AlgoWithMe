@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import SearchDropdown from '@/components/Header/SearchDropdown'
+import SearchDropdown from '@/components/header/SearchDropdown'
 
 const MainHeader: React.FC = () => {
   interface Item {
