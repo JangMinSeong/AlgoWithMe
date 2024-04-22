@@ -17,7 +17,7 @@ class CodeTest(BaseModel):
     output: str
 
 @router.post("/python")
-async def mark_python_code(code_test: CodeTest):
+async def mark_swea_python(code_test: CodeTest):
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
     with open(path, "w", encoding='utf-8') as file:
@@ -50,7 +50,7 @@ async def mark_python_code(code_test: CodeTest):
     return results
 
 @router.post("/java")
-async def mark_python_code(code_test: CodeTest):
+async def mark_swea_java(code_test: CodeTest):
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "Solution.java")
     class_path = os.path.join(dir, "Solution")
@@ -92,7 +92,7 @@ async def mark_python_code(code_test: CodeTest):
     return results
 
 @router.post("/c")
-async def mark_C_code(code_test: CodeTest):
+async def mark_swea_c(code_test: CodeTest):
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.c")
     executable_path = os.path.join(dir, "main")
@@ -135,7 +135,7 @@ async def mark_C_code(code_test: CodeTest):
     return results
 
 @router.post("/cpp")
-async def mark_C_code(code_test: CodeTest):
+async def mark_swea_cpp(code_test: CodeTest):
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.cpp")
     executable_path = os.path.join(dir, "main")

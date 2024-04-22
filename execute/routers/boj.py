@@ -7,8 +7,8 @@ from typing import List
 import time
 
 router = APIRouter(
-    prefix = "/mark",
-    tags = ["mark"]
+    prefix = "/boj",
+    tags = ["boj"]
 )
 
 class TestCase(BaseModel):
@@ -21,7 +21,7 @@ class CodeTest(BaseModel):
     test_cases: List[TestCase]
 
 @router.post("/python")
-async def mark_python_code(code_test: CodeTest):
+async def mark_boj_python(code_test: CodeTest):
     results = []
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
@@ -55,7 +55,7 @@ async def mark_python_code(code_test: CodeTest):
     return results
 
 @router.post("/java")
-async def mark_python_code(code_test: CodeTest):
+async def mark_boj_java(code_test: CodeTest):
     results = []
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "Main.java")
@@ -97,7 +97,7 @@ async def mark_python_code(code_test: CodeTest):
     return results
 
 @router.post("/c")
-async def mark_python_code(code_test: CodeTest):
+async def mark_boj_c(code_test: CodeTest):
     results = []
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.c")
@@ -141,7 +141,7 @@ async def mark_python_code(code_test: CodeTest):
     return results
 
 @router.post("/cpp")
-async def mark_python_code(code_test: CodeTest):
+async def mark_boj_cpp(code_test: CodeTest):
     results = []
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.cpp")
