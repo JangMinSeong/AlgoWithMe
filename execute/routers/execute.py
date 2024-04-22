@@ -10,7 +10,7 @@ router = APIRouter(
 )
 
 @router.post("/python")
-async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+async def execute_python(code: str = Form(...), input: str = Form(default="")):
     
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
@@ -42,7 +42,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             os.remove(path)
 
 @router.post("/java")
-async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+async def execute_java(code: str = Form(...), input: str = Form(default="")):
     
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "Main.java")
@@ -82,7 +82,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             os.remove(class_path + ".class")
 
 @router.post("/c")
-async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+async def execute_c(code: str = Form(...), input: str = Form(default="")):
     
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.c")
@@ -112,8 +112,8 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             run_process.kill()
             errors = 'Time limit exceeded'
             return JSONResponse(status_code=408, content={"error": errors})
-        # if run_process.returncode != 0:
-        #     return JSONResponse(status_code=400, content={"error": errors})
+        if run_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
@@ -122,7 +122,7 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             os.remove(executable_path)
 
 @router.post("/cpp")
-async def execute_python_code(code: str = Form(...), input: str = Form(default="")):
+async def execute_cpp(code: str = Form(...), input: str = Form(default="")):
     
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.cpp")
@@ -152,8 +152,8 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             run_process.kill()
             errors = 'Time limit exceeded'
             return JSONResponse(status_code=408, content={"error": errors})
-        # if run_process.returncode != 0:
-        #     return JSONResponse(status_code=400, content={"error": errors})
+        if run_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
