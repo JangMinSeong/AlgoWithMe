@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import SearchTagButtons from '@/components/Header/SearchTagButtons'
+import SearchTagButtons from '@/components/header/SearchTagButtons'
 
 interface List {
   id: number
@@ -8,11 +8,15 @@ interface List {
 
 interface Props {
   items: List[]
-  handleItemClick: (description: string) => void
 }
 
-const SearchDropdown: React.FC<Props> = ({ items, handleItemClick }) => {
+const SearchDropdown: React.FC<Props> = ({ items }) => {
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false)
+
+  const handleItemClick = (itemName: string) => {
+    console.log(`${itemName} 클릭됨!`)
+    setDropdownVisible(false)
+  }
 
   return (
     <div className="relative w-full mx-auto">
@@ -31,7 +35,6 @@ const SearchDropdown: React.FC<Props> = ({ items, handleItemClick }) => {
                 className="p-2 hover:bg-lighterPurple"
                 onClick={() => {
                   handleItemClick(item.description)
-                  setDropdownVisible(false)
                 }}
               >
                 {item.description}
