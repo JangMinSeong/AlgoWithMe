@@ -127,6 +127,7 @@ async def mark_python_code(code_test: CodeTest):
             except subprocess.TimeoutExpired:
                 run_process.kill()
                 errors = 'Time limit exceeded'
+                return JSONResponse(status_code=408, content={"error": errors})
             if run_process.returncode != 0:
                 results.append({"input": test_case.input, "expected": test_case.output, "got": errors, "passed": False})
             else:

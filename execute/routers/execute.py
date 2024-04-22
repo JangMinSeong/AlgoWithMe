@@ -112,8 +112,8 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             run_process.kill()
             errors = 'Time limit exceeded'
             return JSONResponse(status_code=408, content={"error": errors})
-        # if run_process.returncode != 0:
-        #     return JSONResponse(status_code=400, content={"error": errors})
+        if run_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
@@ -152,8 +152,8 @@ async def execute_python_code(code: str = Form(...), input: str = Form(default="
             run_process.kill()
             errors = 'Time limit exceeded'
             return JSONResponse(status_code=408, content={"error": errors})
-        # if run_process.returncode != 0:
-        #     return JSONResponse(status_code=400, content={"error": errors})
+        if run_process.returncode != 0:
+            return JSONResponse(status_code=400, content={"error": errors})
         return {"output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
