@@ -2,6 +2,7 @@ package com.ssafy.Algowithme.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.Algowithme.auth.type.JwtCode;
+import com.ssafy.Algowithme.common.response.CommonWrapperResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,27 +32,30 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         response.setContentType("application/json;charset=UTF-8");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        Map<String, String> errorMsg = getErrorMessageMap(jwtCode);
-        response.getWriter().write(objectMapper.writeValueAsString(errorMsg));
+        CommonWrapperResponse errorMessage = getErrorMessage(jwtCode);
+        response.getWriter().write(objectMapper.writeValueAsString(errorMessage));
     }
 
-    private static Map<String, String> getErrorMessageMap(JwtCode jwtCode) {
-        Map<String, String> errorMsg = new LinkedHashMap<>();
+    private static CommonWrapperResponse getErrorMessage(JwtCode jwtCode) {
+        Map<String, String> errorMessage = new LinkedHashMap<>();
 
         switch (jwtCode) {
             case ACCESS:
-                errorMsg.put("message", "권한이 없습니다.");
-                errorMsg.put("errorType", "AccessDeniedException");
+                errorMessage.put("message", "권한이 없습니다.");
+                errorMessage.put("errorType", "AccessDeniedException");
             case EXPIRED:
-                errorMsg.put("message", "토큰이 만료되었습니다.");
-                errorMsg.put("errorType", "TokenExpiredException");
+                errorMessage.put("message", "토큰이 만료되었습니다.");
+                errorMessage.put("errorType", "TokenExpiredException");
             case DENIED:
-                errorMsg.put("message", "토큰이 유효하지 않습니다.");
-                errorMsg.put("errorType", "TokenInvalidException");
+                errorMessage.put("message", "토큰이 유효하지 않습니다.");
+                errorMessage.put("errorType", "TokenInvalidException");
         }
 
-        errorMsg.put("fieldName", "");
-        return errorMsg;
+        errorMessage.put("fieldName", "");
+
+        return CommonWrapperResponse.builder()
+                .status(HttpServletResponse.SC_UNAUTHORIZED)
+                .data(errorMessage)
+                .build();
     }
 }
-
