@@ -16,14 +16,14 @@ background-position: center center; */
 
 body {
   background-image: linear-gradient(
-    330deg,
-    rgba(237, 234, 255, 1) 0%,
-    rgba(237, 216, 255, 1) 36%,
-    rgba(249, 219, 255, 1) 67%,
-    rgba(237, 234, 255, 1) 100%
+    165deg,
+    rgba(242, 221, 255, 1) 0%,
+    rgba(216, 211, 255, 0.9) 25%,
+    rgba(219, 216, 255, 1) 54%,
+    rgba(237, 214, 255, 1) 78%,
+    rgba(247, 224, 255, 0.9) 100%
   );
   background-position: center center;
-  font-family: 'pretendard';
 }
 
 @layer utilities {
