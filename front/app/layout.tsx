@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-
-import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
 import React from 'react'
 
@@ -18,9 +16,7 @@ export default function RootLayout({
   return (
     <html lang="kr">
       <body>
-        <UserProvider>
-          <NextAuthProvider>{children}</NextAuthProvider>
-        </UserProvider>
+        <UserProvider>{children}</UserProvider>
       </body>
     </html>
   )

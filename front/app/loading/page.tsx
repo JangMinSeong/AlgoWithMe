@@ -1,12 +1,13 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 export default function Loading() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const code = searchParams.get('code')
+  const hasOngoingRequest = useRef(false)
 
   useEffect(() => {
     const loginWithCode = async () => {
@@ -14,6 +15,12 @@ export default function Loading() {
         router.push('/')
         return
       }
+
+      if (hasOngoingRequest.current) {
+        return
+      }
+
+      hasOngoingRequest.current = true
 
       try {
         const response = await fetch(
@@ -29,7 +36,7 @@ export default function Loading() {
 
         const data = await response.json()
 
-        if (response.ok && data.success) {
+        if (response.ok) {
           router.push('/main')
         } else {
           router.push('/')
@@ -38,8 +45,8 @@ export default function Loading() {
         router.push('/')
       }
     }
-
     loginWithCode()
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code])
 }
