@@ -2,6 +2,7 @@ import AudioControl from '../Header/AudioControl'
 import Image from 'next/image'
 import Avatar from '../Header/Avatar'
 import Timer from '../Header/Timer'
+
 const StudyHeader = () => {
   return (
     <div className="h-10 flex justify-between items-center">
