@@ -32,11 +32,6 @@ body {
   }
 }
 
-@font-face {
-  font-family: 'pretendard';
-  src: url('../fonts/Pretendard.ttf') format('truetype');
-}
-
 @layer utilities {
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {

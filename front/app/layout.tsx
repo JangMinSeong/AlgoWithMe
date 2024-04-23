@@ -1,5 +1,17 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Orbitron } from 'next/font/google'
+import localFont from 'next/font/local'
+
+const pretendard = localFont({
+  src: '../fonts/Pretendard.ttf',
+  display: 'swap',
+})
+
+const orbitron = Orbitron({
+  subsets: ['latin'],
+  weight: '400',
+})
 
 import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
@@ -16,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="kr">
+    <html lang="kr" className={pretendard.className}>
       <body>
         <UserProvider>
           <NextAuthProvider>{children}</NextAuthProvider>
