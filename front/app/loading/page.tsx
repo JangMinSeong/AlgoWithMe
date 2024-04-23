@@ -1,56 +1,45 @@
 'use client'
 
-import React, { useEffect } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
-const LoadingPage: React.FC = () => {
+export default function Loading() {
+  const searchParams = useSearchParams()
   const router = useRouter()
-  const { data: session } = useSession()
+  const code = searchParams.get('code')
 
   useEffect(() => {
-    const finalizeLogin = async () => {
-      if (session && session.user) {
-        // 사용자 ID를 이용하여 백엔드 서버에 로그인 요청 보내기
-        try {
-          const response = await fetch(
-            'https://your-custom-server.com/api/login',
-            {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              credentials: 'include', // HttpOnly 쿠키를 사용하기 위해 필요
-              body: JSON.stringify({
-                name: session.user.name,
-                email: session.user.email,
-                image: session.user.image,
-              }),
+    const loginWithCode = async () => {
+      if (!code) {
+        router.push('/')
+        return
+      }
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DEV_URL}/user/login`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
             },
-          )
-          if (response.ok) {
-            // 로그인 성공 시 메인 페이지로 리디렉션
-            router.push('/main')
-          } else {
-            // 서버 응답이 정상이 아닐 경우 랜딩 페이지로 리디렉션
-            router.push('/')
-          }
-        } catch (error) {
-          router.push('/') // 에러 발생 시 랜딩 페이지로 리디렉션
+            body: JSON.stringify({ code }),
+          },
+        )
+
+        const data = await response.json()
+
+        if (response.ok && data.success) {
+          router.push('/main')
+        } else {
+          router.push('/')
         }
-      } else {
+      } catch (error) {
         router.push('/')
       }
     }
 
-    finalizeLogin()
-  }, [router, session])
-
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="w-10 h-10 border-2 border-blue-500 rounded-full animate-spin" />
-    </div>
-  )
+    loginWithCode()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code])
 }
-
-export default LoadingPage

@@ -1,10 +1,18 @@
-import Image from 'next/image'
-import AWM from '@/public/logo/960w/AWM@960px.png'
+'use client'
 
-export default function Logo() {
+import Image from 'next/image'
+import LogoSrc from '@/public/logo/Logo.png'
+
+interface LogoProps {
+  className?: string
+}
+
+export default function Logo({ className }: LogoProps) {
   return (
-    <div className="flex gap-2">
-      <Image src={AWM} alt="Logo" className="h-24 object-contain" />
-    </div>
+    <Image
+      src={LogoSrc}
+      alt="Logo"
+      className={`h-8 object-contain hover:cursor-pointer ${className || ''}`}
+    />
   )
 }
