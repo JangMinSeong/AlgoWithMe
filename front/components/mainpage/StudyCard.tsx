@@ -1,5 +1,4 @@
 import React from 'react'
-import Button from '@/components/Button'
 
 interface CardProps {
   imageSrc?: string
@@ -8,8 +7,8 @@ interface CardProps {
   onClick?: () => void
 }
 const StudyCard: React.FC<CardProps> = (cardProps: CardProps) => (
-  <Button
-    className="px-0 py-0 border-0 bg-lighterPurple shadow-lg cursor-pointer hover:bg-lighterPurple hover:scale-110 transition transform duration-150 ease-in-out"
+  <button
+    className="bg-lighterPurple shadow-lg cursor-pointer hover:bg-lighterPurple hover:scale-110 transition transform duration-150 ease-in-out"
     onClick={cardProps.onClick}
   >
     <div className="w-60 h-56 overflow-hidden bg-lighterPurple">
@@ -33,7 +32,7 @@ const StudyCard: React.FC<CardProps> = (cardProps: CardProps) => (
         <p className="ml-2 pb-2 text-sm text-navy">{cardProps.date}</p>
       )}
     </div>
-  </Button>
+  </button>
 )
 
 export default StudyCard

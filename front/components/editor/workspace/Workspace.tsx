@@ -59,12 +59,15 @@ const getRandomElement = <T,>(list: T[]): T =>
 const getRandomColor = (): string => getRandomElement(colors)
 const getRandomName = (): string => getRandomElement(names)
 
+const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
+const token = process.env.NEXT_PUBLIC_TIPTAP_TOKEN as string
+
 const ydoc = new Y.Doc()
 const websocketProvider = new TiptapCollabProvider({
-  appId: '여기에 아이디 넣기',
+  appId,
   name: 'test2', // 이름으로 문서 분류 함
   document: ydoc,
-  token: '여기에 토큰 집어넣기',
+  token,
 })
 
 interface User {
