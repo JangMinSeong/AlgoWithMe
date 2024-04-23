@@ -22,6 +22,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath code = createString("code");
 
+    public final NumberPath<Integer> gitId = createNumber("gitId", Integer.class);
+
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
     public final StringPath imageUrl = createString("imageUrl");

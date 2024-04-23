@@ -126,6 +126,18 @@ public class JwtTokenProvider {
         response.addCookie(cookie);
     }
 
+    public void setAccessTokenForClient(HttpServletResponse response, User user) {
+        String accessToken = makeAccessToken(user.getCode(), user.getRoles());
+
+        Cookie cookie = new Cookie("accessToken", accessToken);
+        cookie.setMaxAge((int) (tokenValidTime / 1000));
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+    }
+
     public void removeRefreshTokenForClient(HttpServletRequest request, HttpServletResponse response) {
 
         ResponseCookie cookie = ResponseCookie.from("refreshToken", null)
@@ -146,22 +158,26 @@ public class JwtTokenProvider {
         response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
-    public JwtTokenResponse makeJwtTokenResponse(User user) {
-        String accessToken = makeAccessToken(user.getCode(), user.getRoles());
+    public void removeAccessTokenForClient(HttpServletRequest request, HttpServletResponse response) {
 
-        return JwtTokenResponse.builder()
-                .accessToken(accessToken)
-                .tokenType("Bearer")
+        ResponseCookie cookie = ResponseCookie.from("accessToken", null)
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("None")
                 .build();
+
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
-    public JwtTokenResponse reissueAccessToken(String refreshToken) {
+    public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
         if(isNotValidRefreshToken(refreshToken)) {
             throw new AuthenticationServiceException("refresh token 이 유효하지 않습니다.");
         }
 
         User foundUser = (User) userDetailsService.loadUserByUsername(getUserInfoClaim(refreshToken));
-        return makeJwtTokenResponse(foundUser);
+        setAccessTokenForClient(response, foundUser);
     }
 
     private boolean isNotValidRefreshToken(String refreshToken) {

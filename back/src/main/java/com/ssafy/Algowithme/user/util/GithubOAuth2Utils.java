@@ -31,7 +31,10 @@ public class GithubOAuth2Utils {
 
     public GithubInfoResponse getGithubInfo(String code) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(getGithubToken(code));
+
+        String token = getGithubToken(code);
+
+        headers.setBearerAuth(token);
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
