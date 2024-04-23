@@ -1,7 +1,12 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+<<<<<<< Updated upstream
 import { useEffect } from 'react'
+=======
+import { useEffect, useRef } from 'react'
+import { loginSuccess } from '@/features/auth/authSlice'
+>>>>>>> Stashed changes
 
 export default function Loading() {
   const searchParams = useSearchParams()
@@ -29,7 +34,14 @@ export default function Loading() {
 
         const data = await response.json()
 
+<<<<<<< Updated upstream
         if (response.ok && data.success) {
+=======
+        console.log(data)
+
+        if (response.ok) {
+          loginSuccess(data)
+>>>>>>> Stashed changes
           router.push('/main')
         } else {
           router.push('/')
