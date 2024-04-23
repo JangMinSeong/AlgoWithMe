@@ -2,33 +2,44 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect } from 'react'
-import axios from 'axios'
 
 export default function Loading() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const code = searchParams.get('code')
 
-  const loginWithCode = async () => {
-    try {
-      const response = await axios.post('/user/login', { code })
+  useEffect(() => {
+    const loginWithCode = async () => {
+      if (!code) {
+        router.push('/')
+        return
+      }
 
-      if (response.status === 200 && response.data.success) {
-        router.push('/main')
-      } else {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DEV_URL}/user/login`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ code }),
+          },
+        )
+
+        const data = await response.json()
+
+        if (response.ok && data.success) {
+          router.push('/main')
+        } else {
+          router.push('/')
+        }
+      } catch (error) {
         router.push('/')
       }
-    } catch (error) {
-      router.push('/')
-    }
-  }
-
-  useEffect(() => {
-    if (!code) {
-      router.push('/')
-      return
     }
 
     loginWithCode()
-  }, [code, router])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [code])
 }
