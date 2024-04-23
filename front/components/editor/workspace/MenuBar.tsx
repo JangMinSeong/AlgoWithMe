@@ -44,6 +44,11 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
       isActive: () => editor.isActive('highlight'),
     },
     {
+      icon: 'palette-fill',
+      title: 'Color',
+      action: () => {},
+    },
+    {
       icon: 'h-1',
       title: 'Heading 1',
       action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
@@ -117,16 +122,65 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
       title: 'Redo',
       action: () => editor.chain().focus().redo().run(),
     },
+    {
+      icon: 'file-image-line',
+      title: 'Image',
+      action: () => {
+        const url = prompt('Enter image URL')
+        if (url) {
+          editor.chain().focus().setImage({ src: url }).run()
+        }
+      },
+    },
+    {
+      icon: 'grid-line',
+      title: 'Table',
+      action: () => {
+        const rows = parseInt(prompt('Enter number of rows') || '0', 10)
+        const cols = parseInt(prompt('Enter number of columns') || '0', 10)
+        if (rows > 0 && cols > 0) {
+          editor
+            .chain()
+            .focus()
+            .insertTable({ rows, cols, withHeaderRow: true })
+            .run()
+        }
+      },
+    },
+    {
+      icon: 'merge-cells-horizontal',
+      title: 'Merge Cell',
+      action: () => {
+        editor.chain().focus().mergeCells().run()
+      },
+    },
+    {
+      icon: 'split-cells-horizontal',
+      title: 'Split Cell',
+      action: () => {
+        editor.chain().focus().splitCell().run()
+      },
+    },
+    {
+      icon: 'menu-fold-4-fill',
+      title: 'Fold',
+      action: () => {
+        editor.chain().focus().setDetails().run()
+      },
+    },
+    {
+      icon: 'menu-fold-3-fill',
+      title: 'UnFold',
+      action: () => {
+        editor.chain().focus().unsetDetails().run()
+      },
+    },
   ]
   return (
     <div className="editor__header">
       {items.map((item, index) => (
         <Fragment key={index}>
-          {item.type === 'divider' ? (
-            <div className="divider" />
-          ) : (
-            <MenuItem {...item} />
-          )}
+          <MenuItem {...item} />
         </Fragment>
       ))}
     </div>

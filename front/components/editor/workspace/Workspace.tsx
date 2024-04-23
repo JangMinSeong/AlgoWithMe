@@ -8,6 +8,16 @@ import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
+import { Color } from '@tiptap/extension-color'
+import { Table } from '@tiptap/extension-table'
+import { TableRow } from '@tiptap/extension-table-row'
+import { TableCell } from '@tiptap/extension-table-cell'
+import { TableHeader } from '@tiptap/extension-table-header'
+import Placeholder from '@tiptap/extension-placeholder'
+import Details from '@tiptap-pro/extension-details'
+import DetailsSummary from '@tiptap-pro/extension-details-summary'
+import DetailsContent from '@tiptap-pro/extension-details-content'
+import Image from '@tiptap/extension-image'
 import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
@@ -90,6 +100,31 @@ const WorkSpace: React.FC = () => {
       Highlight,
       TaskList,
       TaskItem,
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableCell,
+      TableHeader,
+      Image,
+      Color,
+      Details.configure({
+        persist: true,
+        HTMLAttributes: {
+          class: 'details',
+        },
+      }),
+      DetailsSummary,
+      DetailsContent,
+      Placeholder.configure({
+        includeChildren: true,
+        placeholder: ({ node }) => {
+          if (node.type.name === 'detailsSummary') {
+            return '제목'
+          }
+          return null
+        },
+      }),
       CharacterCount.configure({ limit: 10000 }),
       Collaboration.configure({ document: ydoc }),
       CollaborationCursor.configure({ provider: websocketProvider }),
