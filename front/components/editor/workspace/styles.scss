@@ -230,10 +230,9 @@
 
 .editor {
   width: 100%;
-  height: 100%;
-  background-color: #fff;
+  height: 80vh;
+  background-color: #F9F0FF;
   border: 3px solid #0d0d0d;
-  border-radius: 0.75rem;
   color: #0d0d0d;
   display: flex;
   flex-direction: column;
@@ -246,8 +245,6 @@
     align-items: center;
     background: #0d0d0d;
     border-bottom: 3px solid #0d0d0d;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
     display: flex;
     flex: 0 0 auto;
     flex-wrap: wrap;
@@ -258,7 +255,7 @@
   &__content {
     flex: 1 1 auto;
     overflow-x: hidden;
-    overflow-y: auto;
+    overflow-y: scroll;
     padding: 1.25rem 1rem;
     -webkit-overflow-scrolling: touch;
   }
