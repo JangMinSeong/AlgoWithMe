@@ -23,6 +23,7 @@ const StudyRoomPage = () => {
             {dummy.map((el) => (
               <InactiveProfileItem key={el.name} />
             ))}
+
             <CopyRoomLink />
           </div>
         </div>

@@ -5,6 +5,8 @@ import { pretendard, orbitron } from './fonts'
 import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
 import React from 'react'
+import SidebarProvider from '@/context/SidebarProvider'
+import TimerProvider from '@/context/TimerProvider'
 
 export const metadata: Metadata = {
   title: 'AlgoWithMe',
@@ -20,7 +22,11 @@ export default function RootLayout({
     <html lang="kr" className={`${pretendard.className} ${orbitron.variable}`}>
       <body>
         <UserProvider>
-          <NextAuthProvider>{children}</NextAuthProvider>
+          <NextAuthProvider>
+            <TimerProvider>
+              <SidebarProvider>{children}</SidebarProvider>
+            </TimerProvider>
+          </NextAuthProvider>
         </UserProvider>
       </body>
     </html>
