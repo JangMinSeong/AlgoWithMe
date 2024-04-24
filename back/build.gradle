@@ -46,6 +46,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
+	// MySQL
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	// Maria
 	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
