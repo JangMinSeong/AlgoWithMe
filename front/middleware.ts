@@ -9,7 +9,7 @@ export default function middleware(request: NextRequest) {
 
   console.log('middleware', token, pathname)
 
-  if (pathname.startsWith('/')) {
+  if (pathname === '/') {
     if (token) {
       const url = request.nextUrl.clone()
       url.pathname = '/main'
