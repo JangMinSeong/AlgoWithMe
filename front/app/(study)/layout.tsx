@@ -8,14 +8,12 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      <div className="flex">
-        <SideBar />
-        <div className="flex-grow">
-          <StudyHeader />
-          <main className="bg-background h-full bg-opacity-80">{children}</main>
-        </div>
+    <div className="flex">
+      <SideBar />
+      <div className="flex-grow">
+        <StudyHeader />
+        <main className="bg-background h-full bg-opacity-80">{children}</main>
       </div>
-    </>
+    </div>
   )
 }

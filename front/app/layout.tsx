@@ -1,12 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { pretendard, orbitron } from './fonts'
-
-import NextAuthProvider from '@/context/NextAuthProvider'
-import UserProvider from '@/context/UserProvider'
 import React from 'react'
-import SidebarProvider from '@/context/SidebarProvider'
-import TimerProvider from '@/context/TimerProvider'
+import StoreProvider from '@/app/StoreProvider'
+import { orbitron, pretendard } from './fonts'
 
 export const metadata: Metadata = {
   title: 'AlgoWithMe',
@@ -21,13 +17,7 @@ export default function RootLayout({
   return (
     <html lang="kr" className={`${pretendard.className} ${orbitron.variable}`}>
       <body>
-        <UserProvider>
-          <NextAuthProvider>
-            <TimerProvider>
-              <SidebarProvider>{children}</SidebarProvider>
-            </TimerProvider>
-          </NextAuthProvider>
-        </UserProvider>
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   )
