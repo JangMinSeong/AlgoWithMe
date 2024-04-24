@@ -1,26 +1,20 @@
 import * as React from 'react'
-import Button from '@/components/Button'
-import LoginButton from '@/components/LoginButton'
-import GithubButton from '@/components/GithubButton'
-import Logo from '@/components/Logo'
+import LandingHeader from '@/components/Header/LandingHeader'
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <Logo />
-      <h1 className="text-5xl font-bold text-center text-gray-800 mb-4">
-        랜딩 페이지
-      </h1>
-      <p className="text-xl text-center text-gray-600 mb-8">
-        lorem ipsum dolor sit amet consectetur adipisicing elit.
-      </p>
-      <div className="flex gap-4">
-        <Button>시작하기</Button>
-        <LoginButton />
-        <button className="px-6 py-3 bg-transparent text-blue-500 font-semibold rounded-lg border border-blue-500 hover:bg-blue-500 hover:text-white transition-colors">
-          깃 허브로 로그인
-        </button>
-        <GithubButton />
+    <div className="min-h-screen flex flex-col">
+      <LandingHeader />
+
+      <div className="2xl:container 2xl:mx-auto pt-24 px-16">
+        <div className="flex flex-col">
+          <h1 className="break-keep text-balance text-8xl font-bold text-darkNavy mb-6">
+            알고리즘 스터디 여기서 함께
+          </h1>
+          <p className="break-keep text-3xl mb-8 text-navy">
+            실시간 온라인 알고리즘 스터디 플랫폼
+          </p>
+        </div>
       </div>
     </div>
   )

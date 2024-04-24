@@ -1,29 +1,46 @@
 package com.ssafy.Algowithme.auth.config;
 
 import com.ssafy.Algowithme.auth.type.JwtCode;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.ssafy.Algowithme.user.entity.RefreshToken;
+import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
+import com.ssafy.Algowithme.user.type.Role;
+import io.jsonwebtoken.*;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+import java.util.Set;
+
 @Component
 @Slf4j
 public class JwtTokenProvider {
 
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenRedisRepository redisRepository;
     private String secretKey;
 
-    public JwtTokenProvider(UserDetailsService userDetailsService, @Value("${jwt.secret.key}") String secretKey) {
+    public JwtTokenProvider(UserDetailsService userDetailsService,
+                            RefreshTokenRedisRepository redisRepository,
+                            @Value("${jwt.secret.key}") String secretKey) {
         this.userDetailsService = userDetailsService;
-        this.secretKey = secretKey;
+        this.redisRepository = redisRepository;
+        this.secretKey=secretKey;
     }
+
+    public static long tokenValidTime = 3 * 60 * 60 * 1000L;    // 3시간
+    public static long refreshTokenValidTime = 15 * 60 * 60 * 24 * 1000L;   // 15일
 
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("Authorization");
@@ -48,19 +65,99 @@ public class JwtTokenProvider {
         return JwtCode.DENIED;
     }
 
+    private String makeRefreshToken(String code) {
+        Claims claims = Jwts.claims().setSubject(code);
+
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
+    private String makeAccessToken(String code, Set<Role> roles) {
+        Claims claims = Jwts.claims().setSubject(code);
+        claims.put("roles", roles);
+
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPrimaryKey(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserInfoClaim(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    private String getUserPrimaryKey(String token) {
-        return Jwts.parserBuilder()
+    private String getUserInfoClaim(String token) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    public void setRefreshTokenForClient(User user) {
+        String refreshToken = makeRefreshToken(user.getCode());
+
+        redisRepository.save(RefreshToken.builder()
+                .id(user.getId())
+                .refreshToken(refreshToken)
+                .build());
+    }
+
+    public void setAccessTokenForClient(HttpServletResponse response, User user) {
+        String accessToken = makeAccessToken(user.getCode(), user.getRoles());
+
+        Cookie cookie = new Cookie("accessToken", accessToken);
+        cookie.setMaxAge((int) (refreshTokenValidTime / 1000));
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+    }
+
+    public void removeRefreshTokenForClient(User user) {
+        redisRepository.deleteById(user.getId());
+    }
+
+    public void removeAccessTokenForClient(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("accessToken", null)
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("None")
+                .build();
+
+        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    public void reissueAccessToken(HttpServletResponse response, String refreshToken) {
+        if(isNotValidRefreshToken(refreshToken)) {
+            throw new AuthenticationServiceException("refresh token 이 유효하지 않습니다.");
+        }
+
+        User foundUser = (User) userDetailsService.loadUserByUsername(getUserInfoClaim(refreshToken));
+        setAccessTokenForClient(response, foundUser);
+    }
+
+    private boolean isNotValidRefreshToken(String refreshToken) {
+        log.info("refresh token : {}", refreshToken);
+        return refreshToken == null
+                || redisRepository.findByRefreshToken(refreshToken).isEmpty()
+                || validateToken(refreshToken) != JwtCode.ACCESS;
     }
 
 }
-
