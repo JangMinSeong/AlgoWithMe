@@ -9,8 +9,10 @@ import Highlight from '@tiptap/extension-highlight'
 import TaskItem from '@tiptap/extension-task-item'
 import TaskList from '@tiptap/extension-task-list'
 import { Color } from '@tiptap/extension-color'
+import TextStyle from '@tiptap/extension-text-style'
 import { Table } from '@tiptap/extension-table'
 import { TableRow } from '@tiptap/extension-table-row'
+import { FontSize } from 'tiptap-extension-font-size'
 import { TableCell } from '@tiptap/extension-table-cell'
 import { TableHeader } from '@tiptap/extension-table-header'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -70,14 +72,12 @@ const getRandomColor = (): string => getRandomElement(colors)
 const getRandomName = (): string => getRandomElement(names)
 
 const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
-const token = process.env.NEXT_PUBLIC_TIPTAP_TOKEN as string
 
 const ydoc = new Y.Doc()
 const websocketProvider = new TiptapCollabProvider({
   appId,
   name: 'test2', // 이름으로 문서 분류 함
   document: ydoc,
-  token,
 })
 
 interface User {
@@ -108,6 +108,8 @@ const WorkSpace: React.FC = () => {
       TableHeader,
       Image,
       Color,
+      TextStyle,
+      FontSize,
       Details.configure({
         persist: true,
         HTMLAttributes: {

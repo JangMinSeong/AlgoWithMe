@@ -1,5 +1,7 @@
 import './MenuBar.scss'
 import React, { Fragment } from 'react'
+import ColorPickerItem from '@/components/editor/workspace/ColorPickerItem'
+import FontSizeControl from '@/components/editor/workspace/FontSizeControl'
 import MenuItem from './MenuItem'
 
 // MenuItemProps 인터페이스 정의
@@ -44,9 +46,16 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
       isActive: () => editor.isActive('highlight'),
     },
     {
+      icon: 'font-size',
+      title: 'Font Size',
+      action: () => {},
+      isActive: () => editor.isActive('fontSize'),
+    },
+    {
       icon: 'palette-fill',
       title: 'Color',
       action: () => {},
+      isActive: () => editor.isActive('color'),
     },
     {
       icon: 'h-1',
@@ -180,7 +189,13 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
     <div className="editor__header">
       {items.map((item, index) => (
         <Fragment key={index}>
-          <MenuItem {...item} />
+          {item.title === 'Color' ? (
+            <ColorPickerItem editor={editor} isActive={item.isActive} />
+          ) : item.title === 'Font Size' ? (
+            <FontSizeControl editor={editor} isActive={item.isActive} />
+          ) : (
+            <MenuItem {...item} />
+          )}
         </Fragment>
       ))}
     </div>
