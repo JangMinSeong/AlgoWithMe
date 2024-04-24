@@ -41,16 +41,16 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(manage -> manage.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS
-                ))
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/user/main").hasRole("USER")
                         .anyRequest().permitAll())
                 .exceptionHandling(config ->
                         config.authenticationEntryPoint(authenticationEntryPoint())
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(Customizer.withDefaults());
+
 
         return httpSecurity.build();
     }
@@ -70,7 +70,7 @@ public class WebSecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(List.of(
-                "http://localhost:8080"
+                "http://localhost:8080", "http://localhost:3000", "http://localhost:8081", "http://localhost:3001"
         ));
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
@@ -89,4 +89,5 @@ public class WebSecurityConfig {
         providerManager.setEraseCredentialsAfterAuthentication(false);
         return providerManager;
     }
+
 }

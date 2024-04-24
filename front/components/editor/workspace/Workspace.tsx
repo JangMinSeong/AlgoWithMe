@@ -12,14 +12,9 @@ interface WorkSpaceProps {
 }
 
 const WorkSpace: React.FC<WorkSpaceProps> = ({ editor }) => (
-  <div className="editor">
+  <div className="editor w-full">
     {editor && <MenuBar editor={editor} />}
     <EditorContent className="editor__content" editor={editor} />
-    {/* <div className="editor__footer"> */}
-    {/*  <div className={`editor__status editor__status--${status}`}> */}
-    {/*    {status === 'connected' ? `Online` : 'Offline'} */}
-    {/*  </div> */}
-    {/* </div> */}
   </div>
 )
 

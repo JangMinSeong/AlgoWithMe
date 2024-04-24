@@ -37,6 +37,9 @@ const config: Config = {
         foggyPink: '0px 0px 20px 0 rgb(250 220 255)',
         foggyPurple: '0px 0px 16px 0 rgb(165 109 242 / 0.16)',
       },
+      fontFamily: {
+        orbitron: ['var(--font-orbitron)'],
+      },
     },
   },
   plugins: [],

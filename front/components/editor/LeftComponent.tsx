@@ -210,7 +210,7 @@ const LeftComponent: React.FC = () => {
       <div>
         <LeftHeader />
       </div>
-      <div>{renderContent()}</div>
+      <div className="w-full">{renderContent()}</div>
       <div className="flex border-b-2 w-10">
         {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
           <Button
