@@ -5,7 +5,7 @@ import { ITime } from '@/features/timer/timerTypes'
 const useTimer = () => {
   const dispatch = useDispatch()
 
-  const handleChangeTimer = (prop) => {
+  const handleChangeTimer = (prop: ITime) => {
     const newTime: ITime = {
       hour: prop.hour,
       min: prop.min,

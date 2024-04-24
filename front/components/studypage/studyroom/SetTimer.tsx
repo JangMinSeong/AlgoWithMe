@@ -13,17 +13,17 @@ const SetTimer = () => {
     setIsActiveEditing(true)
   }
 
-  const handleSetTime = async (formData) => {
-    const newHour = formData.get('newHour')
+  const handleSetTime = (event) => {
+    event.preventDefault()
+    const formData = new FormData(event.target)
+    const newHour = Number(formData.get('newHour'))
     setHour(newHour)
-    const newMin = formData.get('newMin')
+    const newMin = Number(formData.get('newMin'))
     setMin(newMin)
+
     setIsActiveEditing(false)
-    const newTime = {
-      hour: newHour,
-      min: newMin,
-    }
-    await handleChangeTimer(newTime)
+
+    handleChangeTimer({ hour: newHour, min: newMin })
   }
 
   return (
@@ -35,7 +35,7 @@ const SetTimer = () => {
           {isActiveEditing ? (
             <form
               id="timer"
-              action={(formData: FormData) => handleSetTime(formData)}
+              onSubmit={handleSetTime}
               className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
             >
               <div className="font-orbitron">
@@ -43,7 +43,7 @@ const SetTimer = () => {
                   type="number"
                   name="newHour"
                   min={0}
-                  max={11}
+                  max={23}
                   required
                   defaultValue={hour}
                   className="w-[40px] border rounded-lg p-1 text-center mr-2"
