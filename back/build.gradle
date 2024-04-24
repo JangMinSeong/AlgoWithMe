@@ -102,19 +102,6 @@ dependencies {
 
 }
 
-openapi3 {
-	servers = [
-			{ url = "http://localhost:8080" }
-	]
-	title = "SSAFY D205 Algowithme API"
-	description = "SSAFY 자율프로젝트 Algowithme 에서 사용할 API 문서입니다."
-	version = "0.0.1"
-	outputFileNamePrefix = 'open-api-3.0.1'
-	format = "json"
-
-	outputDirectory = 'build/resources/main/static/docs'
-}
-
 def querydslDir = 'src/main/generated'
 
 tasks.withType(JavaCompile).configureEach {
