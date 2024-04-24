@@ -8,3 +8,4 @@ services:
       - "8081:8081"
     environment:
       - SPRING_PROFILES_ACTIVE=prod
+      - JASYPT_KEY=${JASYPT_KEY}
