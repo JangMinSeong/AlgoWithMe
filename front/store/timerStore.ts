@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
-import sidebarReducer from '../features/sidebar/sidebarSlice'
+import timerReducer from '../features/timer/timerSlice'
 
 const store = configureStore({
   reducer: {
-    sidebar: sidebarReducer,
+    timer: timerReducer,
   },
 })
 

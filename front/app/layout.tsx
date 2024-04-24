@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { pretendard, orbitron } from './fonts'
+
+import NextAuthProvider from '@/context/NextAuthProvider'
 import UserProvider from '@/context/UserProvider'
 import React from 'react'
 
@@ -14,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="kr">
+    <html lang="kr" className={`${pretendard.className} ${orbitron.variable}`}>
       <body>
         <UserProvider>{children}</UserProvider>
       </body>

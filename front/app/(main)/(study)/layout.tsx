@@ -1,7 +1,6 @@
-import SideBar from '@/components/layout/SideBar'
-import SidebarProvider from '@/context/SidebarProvider'
 import StudyHeader from '@/components/studypage/StudyHeader'
 import React from 'react'
+import TimerProvider from '@/context/TimerProvider'
 
 export default function Layout({
   children,
@@ -10,9 +9,8 @@ export default function Layout({
 }>) {
   return (
     <>
-      <SidebarProvider>
+      <TimerProvider>
         <div className="flex">
-          <SideBar />
           <div className="flex-grow">
             <StudyHeader />
             <main className="bg-background h-full bg-opacity-80">
@@ -20,7 +18,7 @@ export default function Layout({
             </main>
           </div>
         </div>
-      </SidebarProvider>
+      </TimerProvider>
     </>
   )
 }
