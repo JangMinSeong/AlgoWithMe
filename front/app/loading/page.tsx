@@ -23,6 +23,7 @@ export default function Loading() {
       hasOngoingRequest.current = true
 
       try {
+        console.log(code)
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_DEV_URL}/user/login`,
           {
@@ -31,6 +32,7 @@ export default function Loading() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ code }),
+            credentials: 'include',
           },
         )
 
