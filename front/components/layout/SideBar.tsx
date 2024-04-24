@@ -1,5 +1,5 @@
 'use client'
-import SideBarItem from './SideBarItem'
+
 import useSidebar from '@/hooks/useSidebar'
 import Button from '@/components/Button'
 import { useSelector } from 'react-redux'
@@ -10,7 +10,7 @@ import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md'
 const SideBar = () => {
   const { handleCloseSidebar, handleOpenSidebar } = useSidebar()
 
-  const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const isOpen = useSelector((state: SidebarState) => state.sidebar.isOpen)
 
   const dummy = [
     {

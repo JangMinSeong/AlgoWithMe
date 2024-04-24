@@ -1,15 +1,14 @@
 'use client'
 
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/store/timerStore'
 
 const Timer = () => {
-  const initialHour = useSelector((state: RootState) => state.timer.hour)
-  const initialMin = useSelector((state: RootState) => state.timer.min)
+  const timer = useSelector((state: RootState) => state.timer)
 
   return (
     <div>
-      시간 {initialHour}분 {initialMin}
+      {timer.hour}시간 {timer.min}분
     </div>
   )
 }
