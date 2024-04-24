@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.auth.config;
 
-import com.ssafy.Algowithme.auth.response.JwtTokenResponse;
 import com.ssafy.Algowithme.auth.type.JwtCode;
 import com.ssafy.Algowithme.user.entity.RefreshToken;
 import com.ssafy.Algowithme.user.entity.User;
@@ -21,7 +20,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
 
@@ -109,28 +107,20 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public void setRefreshTokenForClient(HttpServletResponse response, User user) {
+    public void setRefreshTokenForClient(User user) {
         String refreshToken = makeRefreshToken(user.getCode());
-
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
-        cookie.setMaxAge((int) (refreshTokenValidTime / 1000));
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
 
         redisRepository.save(RefreshToken.builder()
                 .id(user.getId())
                 .refreshToken(refreshToken)
                 .build());
-
-        response.addCookie(cookie);
     }
 
     public void setAccessTokenForClient(HttpServletResponse response, User user) {
         String accessToken = makeAccessToken(user.getCode(), user.getRoles());
 
         Cookie cookie = new Cookie("accessToken", accessToken);
-        cookie.setMaxAge((int) (tokenValidTime / 1000));
+        cookie.setMaxAge((int) (refreshTokenValidTime / 1000));
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -138,28 +128,11 @@ public class JwtTokenProvider {
         response.addCookie(cookie);
     }
 
-    public void removeRefreshTokenForClient(HttpServletRequest request, HttpServletResponse response) {
-
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", null)
-                .maxAge(0)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .sameSite("None")
-                .build();
-
-        if(request.getCookies() != null && request.getCookies().length != 0) {
-            Arrays.stream(request.getCookies())
-                    .filter(c -> c.getName().equals("refreshToken"))
-                    .findFirst().flatMap(c -> redisRepository.findByRefreshToken(c.getValue()))
-                    .ifPresent(redisRepository::delete);
-        }
-
-        response.setHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    public void removeRefreshTokenForClient(User user) {
+        redisRepository.deleteById(user.getId());
     }
 
-    public void removeAccessTokenForClient(HttpServletRequest request, HttpServletResponse response) {
-
+    public void removeAccessTokenForClient(HttpServletResponse response) {
         ResponseCookie cookie = ResponseCookie.from("accessToken", null)
                 .maxAge(0)
                 .httpOnly(true)

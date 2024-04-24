@@ -22,7 +22,7 @@ public class UserController {
     public UserInfoResponse login(@RequestBody LoginRequest request, HttpServletResponse response) {
         User userInfo = userService.getUserInfo(request.getCode());
 
-        jwtTokenProvider.setRefreshTokenForClient(response, userInfo);
+        jwtTokenProvider.setRefreshTokenForClient(userInfo);
         jwtTokenProvider.setAccessTokenForClient(response, userInfo);
 
         return UserInfoResponse.builder()
