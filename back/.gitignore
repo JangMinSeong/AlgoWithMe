@@ -37,3 +37,5 @@ out/
 .vscode/
 
 keystore.p12
+src/main/resources/application.properties
+src/main/generated/
