@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import UserProvider from '@/context/UserProvider'
 import React from 'react'
+import StoreProvider from '@/app/StoreProvider'
+import { orbitron, pretendard } from './fonts'
 
 export const metadata: Metadata = {
   title: 'AlgoWithMe',
@@ -14,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="kr">
+    <html lang="kr" className={`${pretendard.className} ${orbitron.variable}`}>
       <body>
-        <UserProvider>{children}</UserProvider>
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   )

@@ -1,11 +1,12 @@
 'use client'
-import SideBarItem from './SideBarItem'
+
 import useSidebar from '@/hooks/useSidebar'
 import Button from '@/components/Button'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/sidebarStore'
+import { RootState } from '@/store/studyroomStore'
 import { MdOutlineKeyboardDoubleArrowRight } from 'react-icons/md'
 import { MdOutlineKeyboardDoubleArrowLeft } from 'react-icons/md'
+import SideBarItem from './SideBarItem'
 
 const SideBar = () => {
   const { handleCloseSidebar, handleOpenSidebar } = useSidebar()

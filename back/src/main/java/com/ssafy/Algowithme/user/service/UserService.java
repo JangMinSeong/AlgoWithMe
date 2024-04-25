@@ -17,9 +17,10 @@ public class UserService {
     public User getUserInfo(String code) {
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(code);
 
-        return userRepository.findByCode(code)
+        return userRepository.findByGitId(githubInfoResponse.getGitId())
                 .orElseGet(() -> userRepository.save(User.builder()
                         .code(code)
+                        .gitId(githubInfoResponse.getGitId())
                         .nickname(githubInfoResponse.getLogin())
                         .imageUrl(githubInfoResponse.getImageUrl())
                         .build()));
