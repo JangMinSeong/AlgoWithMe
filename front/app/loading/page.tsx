@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 
-export default function Loading() {
+function Login() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const code = searchParams.get('code')
@@ -51,4 +51,18 @@ export default function Loading() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code])
+
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="text-3xl">Loading...</div>
+    </div>
+  )
+}
+
+export default function Loading() {
+  return (
+    <Suspense>
+      <Login />
+    </Suspense>
+  )
 }
