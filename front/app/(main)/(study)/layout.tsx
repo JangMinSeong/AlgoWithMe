@@ -10,7 +10,9 @@ export default function Layout({
     <>
       <div>
         <StudyHeader />
-        <main className="bg-white bg-opacity-80 p-10">{children}</main>
+        <main className="bg-white bg-opacity-70 p-10 rounded-lg">
+          {children}
+        </main>
       </div>
     </>
   )

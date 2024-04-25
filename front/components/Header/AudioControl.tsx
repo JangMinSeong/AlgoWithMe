@@ -21,7 +21,7 @@ const AudioControl = () => {
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
   return (
-    <div className="bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
+    <div className="ml-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
       {isMicOn ? (
         <div onClick={handleMicOnOff}>
           <a id="willOffMic" className={anchorTagCSS}>
