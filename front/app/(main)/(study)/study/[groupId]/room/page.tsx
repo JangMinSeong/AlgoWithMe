@@ -1,9 +1,10 @@
 import NextProblem from '@/components/studypage/NextProblem'
 import AddProblem from '@/components/studypage/AddProblem'
-import ActiveProfileItem from '@/components/studypage/studyroom/ActiveProfileItem'
-import CopyRoomLink from '@/components/studypage/studyroom/CopyRoomLink'
-import InactiveProfileItem from '@/components/studypage/studyroom/InactiveProfileItem'
-import SetTimer from '@/components/studypage/studyroom/SetTimer'
+import ActiveProfileItem from '@/components/studyroom/ActiveProfileItem'
+import CopyRoomLink from '@/components/studyroom/CopyRoomLink'
+import InactiveProfileItem from '@/components/studyroom/InactiveProfileItem'
+import SetTimer from '@/components/studyroom/SetTimer'
+import ReadyButton from '@/components/studyroom/ReadyButton'
 
 const StudyRoomPage = () => {
   return (
@@ -41,9 +42,12 @@ const StudyRoomPage = () => {
               <NextProblem />
             </div>
           </div>
-          <div className="w-[50%]">
+          <div className="w-[50%] ">
             <div className="font-bold mb-4 mt-4">문제 풀이 시간</div>
-            <SetTimer />
+            <div className="flex flex-col items-center ">
+              <SetTimer />
+              <ReadyButton />
+            </div>
           </div>
         </div>
       </div>
