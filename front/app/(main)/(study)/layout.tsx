@@ -1,4 +1,4 @@
-import StudyHeader from '@/components/studypage/StudyHeader'
+import StudyHeader from '@/components/Header/StudyHeader'
 import React from 'react'
 
 export default function Layout({
@@ -8,11 +8,9 @@ export default function Layout({
 }>) {
   return (
     <>
-      <div className="flex">
-        <div className="flex-grow">
-          <StudyHeader />
-          <main className="bg-background h-full bg-opacity-80">{children}</main>
-        </div>
+      <div>
+        <StudyHeader />
+        <main className="bg-white bg-opacity-80 p-10">{children}</main>
       </div>
     </>
   )

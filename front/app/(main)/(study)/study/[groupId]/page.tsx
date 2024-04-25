@@ -8,7 +8,7 @@ import PrevProblem from '@/components/studypage/PrevProblem'
 import RankingProfileItem from '@/components/studypage/RankingProfileItem'
 const StudyMainPage = () => {
   return (
-    <div className="w-screen flex flex-col mx-10 py-10">
+    <div className="flex flex-col">
       <div className=" flex flex-wrap">
         {/* 왼쪽 위 */}
         <div className=" mb-10 flex">
