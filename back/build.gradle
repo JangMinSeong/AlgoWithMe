@@ -1,5 +1,3 @@
-import org.hidetake.gradle.swagger.generator.GenerateSwaggerUI
-
 buildscript {
 	ext {
 		queryDslVersion = "5.0.0"
@@ -11,12 +9,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.4'
 	id 'io.spring.dependency-management' version '1.1.4'
-	id 'org.asciidoctor.jvm.convert' version '3.3.2'
-
-	// openAPI 플러그인 추가 (Spring Rest Docs 결과를 openAPI3로 변환)
-	id 'com.epages.restdocs-api-spec' version "${restdocsApiSpecVersion}"
-	// swaggerUI 플러그인 추가 (openAPI3 스펙 기반으로 SwaggerUI 생성)
-	id 'org.hidetake.swagger.generator' version '2.18.2'
 }
 
 group = 'com.ssafy'
@@ -78,17 +70,11 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.5'
 
 	// querydsl
-	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+	implementation "com.querydsl:querydsl-core:${queryDslVersion}"
+	annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-
-	// restdocs + swagger
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	testImplementation "com.epages:restdocs-api-spec-mockmvc:${restdocsApiSpecVersion}"
-	asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-	testImplementation 'com.squareup.okhttp3:mockwebserver'
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.4.0'
 
 	// H2 & JDBC(for H2)
 //	runtimeOnly 'com.h2database:h2'
@@ -102,71 +88,18 @@ dependencies {
 
 	// file-upload
 	implementation 'commons-fileupload:commons-fileupload:1.4'
-
 }
 
 def querydslDir = 'src/main/generated'
 
-tasks.withType(JavaCompile).configureEach {
+sourceSets {
+	main.java.srcDirs += [ querydslDir ]
+}
+
+tasks.withType(JavaCompile) {
 	options.getGeneratedSourceOutputDirectory().set(file(querydslDir))
 }
 
-tasks.withType(GenerateSwaggerUI).configureEach {
-	dependsOn 'openapi3'
-
-	delete file('src/main/resources/static/docs/')
-	copy {
-		from "build/resources/main/static/docs"
-		into "src/main/resources/static/docs/"
-
-	}
-}
-
-// 테스트를 통해 생성된 snippets 출력 위치 정의
-tasks.register("ext") {
-	snippetsDir = file('build/generated-snippets')
-}
-
-tasks.named('test') {
-	systemProperty "JASYPT_KEY", System.getProperty("JASYPT_KEY")
-	useJUnitPlatform()
-
-	outputs.dir 'snippetsDir'
-}
-
-asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
-}
-
-// asciidoctor 작업을 구성
-tasks.named("asciidoctor") {
-	inputs.dir 'snippetsDir'
-	configurations 'asciidoctorExt'
-	dependsOn test
-}
-
-tasks.named("bootJar") {
-	dependsOn asciidoctor
-	from("${asciidoctor.outputDir}") {
-		into 'static/docs'
-	}
-	dependsOn(':openapi3')
-}
-
-tasks.register('copyDocument', Copy) {
-	dependsOn asciidoctor
-	from file(layout.buildDirectory.dir("docs/asciidoc").get().asFile.path)
-	into file("src/main/resources/static/docs")
-}
-
-tasks.named("build") {
-	dependsOn copyDocument
-}
-
-sourceSets {
-	main.java.srcDirs += [querydslDir]
-}
-
-clean {
-	delete file(querydslDir)
+clean.doLast {
+	file(querydslDir).deleteDir()
 }

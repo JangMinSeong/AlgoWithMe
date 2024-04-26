@@ -20,9 +20,9 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
-    public final StringPath code = createString("code");
-
     public final NumberPath<Integer> gitId = createNumber("gitId", Integer.class);
+
+    public final StringPath gitToken = createString("gitToken");
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
@@ -30,7 +30,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final StringPath nickname = createString("nickname");
 
-    public final SetPath<com.ssafy.Algowithme.user.type.Role, EnumPath<com.ssafy.Algowithme.user.type.Role>> roles = this.<com.ssafy.Algowithme.user.type.Role, EnumPath<com.ssafy.Algowithme.user.type.Role>>createSet("roles", com.ssafy.Algowithme.user.type.Role.class, EnumPath.class, PathInits.DIRECT2);
+    public final SetPath<com.ssafy.Algowithme.user.type.Role, EnumPath<com.ssafy.Algowithme.user.type.Role>> role = this.<com.ssafy.Algowithme.user.type.Role, EnumPath<com.ssafy.Algowithme.user.type.Role>>createSet("role", com.ssafy.Algowithme.user.type.Role.class, EnumPath.class, PathInits.DIRECT2);
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
