@@ -29,12 +29,11 @@ public class GithubOAuth2Utils {
     @Value("${github.token.url}")
     private String githubTokenUrl;
 
-    public GithubInfoResponse getGithubInfo(String code) {
+    public GithubInfoResponse getGithubInfo(String token) {
         HttpHeaders headers = new HttpHeaders();
 
-        String token = getGithubToken(code);
-
         headers.setBearerAuth(token);
+
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();

@@ -27,15 +27,9 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
+import Problem from '@/components/editor/Problem'
 
 const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
-
-const ydocUser = new Y.Doc()
-const websocketProviderUser = new TiptapCollabProvider({
-  appId,
-  name: 'test', // 이름으로 문서 분류 함
-  document: ydocUser,
-})
 
 const ydocGroup = new Y.Doc()
 const websocketProviderGroup = new TiptapCollabProvider({
@@ -136,8 +130,6 @@ const LeftComponent: React.FC = () => {
         },
       }),
       CharacterCount.configure({ limit: 10000 }),
-      Collaboration.configure({ document: ydocUser }),
-      CollaborationCursor.configure({ provider: websocketProviderUser }),
     ],
   })
 
@@ -183,7 +175,7 @@ const LeftComponent: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case '문제보기':
-        return '문제'
+        return <Problem />
       case '개인 메모장':
         return <WorkSpace editor={editorUser} />
       case '워크스페이스':
@@ -194,35 +186,52 @@ const LeftComponent: React.FC = () => {
   }
 
   useEffect(() => {
-    if (editorUser) {
-      editorUser.chain().focus().updateUser(currentUser).run()
-    }
-  }, [editorUser, currentUser])
-
-  useEffect(() => {
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
   }, [editorGroup, currentUser])
 
+  useEffect(() => {
+    const savedContent = localStorage.getItem('userMemo')
+    if (savedContent && editorUser) {
+      const doc = JSON.parse(savedContent)
+      editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+    }
+  }, [editorUser])
+
+  const handleSave = () => {
+    if (editorUser) {
+      const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
+      console.log(JSON.stringify(content))
+      localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
+    }
+  }
+
   return (
-    <div className="mt-9 m-3 flex flex-col">
-      <div>
-        <LeftHeader />
+    <div className="mt-0 m-3 flex flex-col">
+      <div className="flex flex-row">
+        <LeftHeader activeTab={activeTab} onSave={handleSave} />
       </div>
-      <div className="w-full">{renderContent()}</div>
-      <div className="flex border-b-2 w-10">
-        {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
-          <Button
-            key={tab}
-            className={`flex-1 p-2 text-center whitespace-nowrap hover:bg-navy ${
-              activeTab === tab ? 'bg-darkNavy' : 'bg-blueishPurple'
-            } rounded-t-none`}
-            onClick={() => setActiveTab(tab as any)}
-          >
-            {tab}
-          </Button>
-        ))}
+      <div className="w-full" style={{ height: '72vh' }}>
+        {renderContent()}
+      </div>
+      <div className="flex flex-row justify-between">
+        <div className="flex border-b-2 w-10">
+          {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
+            <Button
+              key={tab}
+              className={`flex-1 p-2 text-center whitespace-nowrap hover:bg-navy ${
+                activeTab === tab ? 'bg-darkNavy' : 'bg-blueishPurple'
+              } rounded-t-none`}
+              onClick={() => setActiveTab(tab as any)}
+            >
+              {tab}
+            </Button>
+          ))}
+        </div>
+        <div>
+          <Button className="rounded-t-none">풀이 종료하기</Button>
+        </div>
       </div>
     </div>
   )

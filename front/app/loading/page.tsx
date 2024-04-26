@@ -8,6 +8,10 @@ function Login() {
   const router = useRouter()
   const code = searchParams.get('code')
   const hasOngoingRequest = useRef(false)
+  const API_URL =
+    process.env.NODE_ENV === 'development'
+      ? process.env.NEXT_PUBLIC_API_DEV_URL
+      : process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
     const loginWithCode = async () => {
@@ -23,20 +27,14 @@ function Login() {
       hasOngoingRequest.current = true
 
       try {
-        console.log(code)
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DEV_URL}/user/login`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ code }),
-            credentials: 'include',
+        const response = await fetch(`${API_URL}/user/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        )
-
-        const data = await response.json()
+          body: JSON.stringify({ code }),
+          credentials: 'include',
+        })
 
         if (response.ok) {
           router.push('/main')

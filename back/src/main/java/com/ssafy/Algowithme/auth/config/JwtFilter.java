@@ -1,6 +1,6 @@
 package com.ssafy.Algowithme.auth.config;
 
-import com.ssafy.Algowithme.auth.type.JwtCode;
+import com.ssafy.Algowithme.auth.util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,21 +15,30 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtTokenProvider.resolveToken(request);
-        JwtCode jwtCode = jwtTokenProvider.validateToken(token);
+        String authorization = request.getHeader("Authorization");
 
-        if(jwtCode == JwtCode.ACCESS) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+        if(authorization == null || !authorization.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        filterChain.doFilter(request, response);
+        String token = authorization.split(" ")[1];
 
+        if(jwtUtil.isExpired(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Authentication authToken = jwtUtil.getAuthentication(token);
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
+        filterChain.doFilter(request, response);
     }
 }
