@@ -12,7 +12,7 @@ const StudyRoomPage = () => {
 
       <div>
         {/* 상단 */}
-        <div>
+        <div className="mb-10">
           <div className="font-bold mb-4 mt-4">접속 중인 멤버</div>
           <div className="flex">
             {/* 전체 멤버 중 접속 멤버 */}

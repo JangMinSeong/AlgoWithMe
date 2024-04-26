@@ -1,18 +1,7 @@
-'use client'
-
-import useSidebar from '@/hooks/useSidebar'
-import Button from '@/components/Button'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/studyroomStore'
-import {
-  MdOutlineKeyboardDoubleArrowLeft,
-  MdOutlineKeyboardDoubleArrowRight,
-} from 'react-icons/md'
-import SideBarItem from '@/components/layout/SideBarItem'
-
+import SideBarItem from './SideBarItem'
 const SideBar = () => {
-  const { handleCloseSidebar, handleOpenSidebar } = useSidebar()
-
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
 
   const dummy = [
@@ -30,18 +19,15 @@ const SideBar = () => {
   return (
     <div>
       {isOpen ? (
-        <div className="w-40 min-w-40 h-screen">
-          <Button onClick={handleCloseSidebar}>
-            <MdOutlineKeyboardDoubleArrowLeft />
-          </Button>
+        <div
+          className={`pt-2 w-40 min-w-40 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500`}
+        >
           {dummy.map((el) => (
             <SideBarItem groupName={el.groupName} key={el.groupName} />
           ))}
         </div>
       ) : (
-        <Button onClick={handleOpenSidebar}>
-          <MdOutlineKeyboardDoubleArrowRight />
-        </Button>
+        <div className=""></div>
       )}
     </div>
   )

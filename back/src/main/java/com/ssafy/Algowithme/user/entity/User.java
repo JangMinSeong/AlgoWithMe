@@ -1,5 +1,6 @@
 package com.ssafy.Algowithme.user.entity;
 
+import com.ssafy.Algowithme.common.entity.UserTeam;
 import com.ssafy.Algowithme.user.type.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,6 +19,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer id;
 
     @Column(nullable = false)
@@ -37,6 +39,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Set<Role> roles = Set.of(Role.USER);
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserTeam> userTeamList;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
