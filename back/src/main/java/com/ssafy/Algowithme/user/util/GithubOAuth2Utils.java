@@ -61,6 +61,9 @@ public class GithubOAuth2Utils {
                 GithubTokenResponse.class
         );
 
+        log.info("Github Code : " + code);
+        log.info("Github Secret : " + clientSecret);
+        log.info("Github Token Url : " + githubTokenUrl);
         log.info("GithubTokenResponse : " + githubTokenResponse);
 
         if (githubTokenResponse != null && githubTokenResponse.getAccessToken() != null) {
