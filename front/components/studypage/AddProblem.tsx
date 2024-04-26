@@ -1,10 +1,23 @@
+'use client'
 import Image from 'next/image'
 import { BiLinkExternal } from 'react-icons/bi'
 import { MdAddCircleOutline } from 'react-icons/md'
+import { useState } from 'react'
+import AddProblemModal from './AddProblemModal'
 
 const AddProblem = () => {
+  const [showModal, setShowModal] = useState(false)
+  const handleModal = () => {
+    setShowModal(true)
+  }
+
+  const clickModal = (e: MouseEvent) => {
+    e.stopPropagation()
+    setShowModal(false)
+  }
+
   return (
-    <div>
+    <div onClick={handleModal}>
       {/* <div className='p-[2px] bg-gradient-to-br w-fit from-primary via-secondary to-blueishPurple rounded-lg '> </div> */}
       <div className="flex bg-background w-fit h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 hover:bg-purple-200 hover:border-opacity-0 transition-colors">
         <MdAddCircleOutline className="min-w-6 min-h-6 mx-2" />
@@ -33,6 +46,7 @@ const AddProblem = () => {
           className="rounded-full"
         />
       </div>
+      {showModal && <AddProblemModal clickModal={clickModal} />}
     </div>
   )
 }

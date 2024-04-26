@@ -8,13 +8,11 @@ import SideBarButton from '../layout/SideBarButton'
 
 const StudyHeader = () => {
   return (
-    <div
-      className={`fixed top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5`}
-    >
+    <div className="fixed z-20 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
       <div className="flex items-center">
         <SideBarButton />
         <Link href="/main">
-          <Image src="/logo/1x/AWM.png" alt="로고" width={100} height={0} />
+          <Image src="/logo/Logo@0.1x.png" alt="로고" width={56} height={0} />
         </Link>
       </div>
       <div className="flex items-center">

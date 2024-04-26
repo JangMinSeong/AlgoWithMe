@@ -4,6 +4,7 @@ import com.ssafy.Algowithme.user.dto.request.GithubTokenRequest;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
 import com.ssafy.Algowithme.user.dto.response.GithubTokenResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class GithubOAuth2Utils {
 
     @Value("${github.client.id}")
@@ -29,12 +31,11 @@ public class GithubOAuth2Utils {
     @Value("${github.token.url}")
     private String githubTokenUrl;
 
-    public GithubInfoResponse getGithubInfo(String code) {
+    public GithubInfoResponse getGithubInfo(String token) {
         HttpHeaders headers = new HttpHeaders();
 
-        String token = getGithubToken(code);
-
         headers.setBearerAuth(token);
+
         HttpEntity<Void> request = new HttpEntity<>(headers);
 
         RestTemplate restTemplate = new RestTemplate();
@@ -60,7 +61,12 @@ public class GithubOAuth2Utils {
                 GithubTokenResponse.class
         );
 
-        if(githubTokenResponse != null) {
+        log.info("Github Code : " + code);
+        log.info("Github Secret : " + clientSecret);
+        log.info("Github Token Url : " + githubTokenUrl);
+        log.info("GithubTokenResponse : " + githubTokenResponse);
+
+        if (githubTokenResponse != null && githubTokenResponse.getAccessToken() != null) {
             return githubTokenResponse.getAccessToken();
         }
 
