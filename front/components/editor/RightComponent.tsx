@@ -30,7 +30,7 @@ const RightComponent: React.FC = () => {
         <CodeEditor ref={codeEditorRef} />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
-        <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0">
+        <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
           <div className="flex-1 border-r border-gray-300 bg-white">
             <textarea
               className="w-full h-full resize-none p-2"
@@ -41,8 +41,10 @@ const RightComponent: React.FC = () => {
           </div>
           <div className="flex-1 p-2 bg-white">실행횟수 : {runCount}</div>
         </div>
-        <div className="flex flex-row justify-end">
-          <Button onClick={handleRun}>실행하기</Button>
+        <div className="flex flex-row justify-end p-5 pt-0 pr-3">
+          <Button onClick={handleRun} className="mr-1">
+            실행하기
+          </Button>
           <Button>GIT 저장하기</Button>
         </div>
       </div>

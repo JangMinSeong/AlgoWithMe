@@ -208,11 +208,11 @@ const LeftComponent: React.FC = () => {
   }
 
   return (
-    <div className="mt-9 m-3 flex flex-col">
+    <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
         <LeftHeader activeTab={activeTab} onSave={handleSave} />
       </div>
-      <div className="w-full" style={{ height: '80vh' }}>
+      <div className="w-full" style={{ height: '72vh' }}>
         {renderContent()}
       </div>
       <div className="flex flex-row justify-between">

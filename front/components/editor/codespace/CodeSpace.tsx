@@ -133,7 +133,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
   }))
 
   return (
-    <div className="w-full h-full flex flex-col p-3 pt-10">
+    <div className="w-full h-full flex flex-col p-3 pt-0">
       <div className="flex items-center justify-between relative">
         <div>
           {tabs.slice(0, 3).map((tab) => (
