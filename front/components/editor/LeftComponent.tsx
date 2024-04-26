@@ -27,6 +27,9 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import Problem from '@/components/editor/Problem'
+import { RootState } from '@/store/studyroomStore'
+import useSolving from '@/hooks/useSolving'
+import { useSelector } from 'react-redux'
 
 const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
 
@@ -206,6 +209,21 @@ const LeftComponent: React.FC = () => {
     }
   }
 
+  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
+  const { handleStartSolving, handleEndSolving } = useSolving()
+
+  const handleStart = () => {
+    const solvingStartTime = new Date().getTime()
+    localStorage.setItem('startedAt', String(solvingStartTime))
+    handleStartSolving()
+  }
+  const handleEnd = () => {
+    if (confirm('풀이를 종료하시겠어요?')) {
+      handleEndSolving()
+      localStorage.removeItem('startedAt')
+    }
+  }
+
   return (
     <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
@@ -229,9 +247,21 @@ const LeftComponent: React.FC = () => {
           ))}
         </div>
         <div>
-          <button className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md">
-            풀이 종료하기
-          </button>
+          {isSolving ? (
+            <button
+              onClick={handleEnd}
+              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
+            >
+              풀이 종료하기
+            </button>
+          ) : (
+            <button
+              onClick={handleStart}
+              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
+            >
+              풀이 시작하기
+            </button>
+          )}
         </div>
       </div>
     </div>

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import authReducer from '@/features/auth/authSlice'
 import sidebarReducer from '@/features/sidebar/sidebarSlice'
 import timerReducer from '@/features/timer/timerSlice'
+import solvingReducer from '@/features/solving/solvingSlice'
 
 export const makeStore = () =>
   configureStore({
@@ -9,6 +10,7 @@ export const makeStore = () =>
       auth: authReducer,
       sidebar: sidebarReducer,
       timer: timerReducer,
+      solving: solvingReducer,
     },
   })
 
