@@ -16,7 +16,7 @@ export default function Layout({
       <div className="flex">
         <SideBar />
         <main
-          className={`${isSidebarOpen ? 'ml-44' : 'mr-2'} ml-2 w-dvw min-w-dvw mt-16 transition-all duration-700`}
+          className={`${isSidebarOpen ? 'ml-44 mr-2' : 'mr-2'} ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`}
         >
           {children}
         </main>
