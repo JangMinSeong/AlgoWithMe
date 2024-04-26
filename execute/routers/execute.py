@@ -38,10 +38,10 @@ async def execute_python(code_execution: CodeExecution):
         except subprocess.TimeoutExpired:
             process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
+            return {"status": 408, "output": errors}
         if process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output, "execution_time": elapsed_time_ms}
+            return {"status": 400, "output": errors}
+        return {"status": 200, "output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -59,7 +59,7 @@ async def execute_java(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+            return {"status": 400, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
@@ -76,10 +76,10 @@ async def execute_java(code_execution: CodeExecution):
         except subprocess.TimeoutExpired:
             run_process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
+            return {"status": 408, "output": errors}
         if run_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output, "execution_time": elapsed_time_ms}
+            return {"status": 400, "output": errors}
+        return {"status": 200, "output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -99,7 +99,7 @@ async def execute_c(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+            return {"status": 400, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
@@ -116,10 +116,10 @@ async def execute_c(code_execution: CodeExecution):
         except subprocess.TimeoutExpired:
             run_process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
+            return {"status": 408, "output": errors}
         if run_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output, "execution_time": elapsed_time_ms}
+            return {"status": 400, "output": errors}
+        return {"status": 200, "output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
@@ -139,7 +139,7 @@ async def execute_cpp(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+            return {"status": 400, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
@@ -156,10 +156,10 @@ async def execute_cpp(code_execution: CodeExecution):
         except subprocess.TimeoutExpired:
             run_process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
+            return {"status": 408, "output": errors}
         if run_process.returncode != 0:
-            return JSONResponse(status_code=400, content={"error": errors})
-        return {"output": output, "execution_time": elapsed_time_ms}
+            return {"status": 400, "output": errors}
+        return {"status": 200, "output": output, "execution_time": elapsed_time_ms}
     finally:
         if os.path.exists(path):
             os.remove(path)
