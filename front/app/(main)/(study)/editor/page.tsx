@@ -14,7 +14,7 @@ const EditorPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-row items-stretch w-full h-100 overflow-hidden">
+    <div className="flex flex-row items-stretch w-full h-100 overflow-hidden pt-0">
       <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
         <LeftComponent />
       </div>
