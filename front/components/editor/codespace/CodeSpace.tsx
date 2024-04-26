@@ -14,7 +14,6 @@ import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
-import Button from '@/components/Button'
 
 interface CodeExample {
   mode: string
@@ -86,6 +85,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     if (selectedTab) {
       setLanguage(selectedTab.language)
       setCode(selectedTab.code)
+      setShowMoreTabs(false)
     }
   }
 
@@ -134,66 +134,71 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
 
   return (
     <div className="w-full h-full flex flex-col p-3 pt-0">
-      <div className="flex items-center justify-between relative">
+      <div className="flex items-center justify-between relative mb-1">
         <div>
           {tabs.slice(0, 3).map((tab) => (
-            <Button
+            <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={
+              className={`bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${
                 tab.id === activeTab
-                  ? 'bg-blueishPurple text-white rounded-b-none'
-                  : 'bg-navy text-black rounded-b-none'
-              }
+                  ? 'bg-blueishPurple text-white'
+                  : 'bg-navy text-black'
+              }`}
             >
               {tab.id}
-            </Button>
+            </button>
           ))}
           {tabs.length > 3 && (
-            <Button
+            <button
               onClick={() => setShowMoreTabs(!showMoreTabs)}
-              className="rounded-b-none bg-navy"
+              className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
             >
               ...
-            </Button>
+            </button>
           )}
           {showMoreTabs && (
             <div
-              className="absolute top-10 left-0 bg-white shadow-lg"
+              className="absolute top-10 left-10 bg-white shadow-lg"
               style={{ position: 'absolute', top: '100%', zIndex: 1000 }}
             >
               {tabs.slice(3).map((tab) => (
-                <Button
+                <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={
-                    tab.id === activeTab
-                      ? 'bg-blueishPurple text-white rounded-t-none'
-                      : 'bg-navy text-black rounded-t-none'
-                  }
+                  className={`bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${
+                tab.id === activeTab
+                  ? 'bg-blueishPurple text-white'
+                  : 'bg-navy text-black'
+              }`}
                 >
                   {tab.id}
-                </Button>
+                </button>
               ))}
             </div>
           )}
-          <Button onClick={addTab} className="rounded-b-none bg-navy">
+          <button
+            onClick={addTab}
+            className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+          >
             +
-          </Button>
+          </button>
         </div>
         <div>
-          <Button
+          <button
             onClick={deleteCode}
-            className="p-2 bg-blueishPurple text-white rounded hover:bg-navy mr-1"
+            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           >
             삭제
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={saveCode}
-            className="p-2 bg-blueishPurple text-white rounded hover:bg-navy mr-2"
+            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           >
             저장
-          </Button>
+          </button>
           <select
             value={language}
             onChange={(e) => {
@@ -210,23 +215,25 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
           </select>
         </div>
       </div>
-      <AceEditor
-        ref={aceRef}
-        mode={languageOptions[language].mode}
-        name="UNIQUE_ID_OF_DIV"
-        value={code}
-        onChange={setCode}
-        editorProps={{ $blockScrolling: true }}
-        setOptions={{
-          enableBasicAutocompletion: true,
-          enableLiveAutocompletion: true,
-          enableSnippets: true,
-          showLineNumbers: true,
-          showFoldWidgets: true,
-        }}
-        width="100%"
-        height="100%"
-      />
+      <div className="border border-gray-300 w-full h-full">
+        <AceEditor
+          ref={aceRef}
+          mode={languageOptions[language].mode}
+          name="UNIQUE_ID_OF_DIV"
+          value={code}
+          onChange={setCode}
+          editorProps={{ $blockScrolling: true }}
+          setOptions={{
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true,
+            enableSnippets: true,
+            showLineNumbers: true,
+            showFoldWidgets: true,
+          }}
+          width="100%"
+          height="100%"
+        />
+      </div>
     </div>
   )
 })

@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import Button from '@/components/Button'
 
 interface LeftHeaderProps {
   activeTab: string
@@ -21,41 +20,41 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
   }
   return (
     <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
-      <div className="flex space-x-2">
-        <Button
-          className="bg-darkNavy hover:bg-navy px-3 py-2 rounded"
+      <div className="flex space-x-1">
+        <button
+          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           onClick={() => handleButtonClick('BFS')}
         >
           BFS
-        </Button>
-        <Button
-          className="bg-blueishPurple hover:bg-navy px-3 py-1 rounded"
+        </button>
+        <button
+          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           onClick={() => handleButtonClick('...')}
         >
           ...
-        </Button>
+        </button>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex space-x-1">
         {activeTab === '개인 메모장' && (
-          <Button
-            className="bg-darkNavy hover:bg-navy px-3 py-2 rounded"
+          <button
+            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
             onClick={() => handleSaveClick('저장')}
           >
             저장
-          </Button>
+          </button>
         )}
-        <Button
-          className="bg-blueishPurple hover:bg-navy px-3 py-1 rounded"
+        <button
+          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           onClick={() => handleButtonClick('정답')}
         >
           정답
-        </Button>
-        <Button
-          className="bg-darkNavy hover:bg-navy px-3 py-1 rounded"
+        </button>
+        <button
+          className=" bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           onClick={() => handleButtonClick('문제 링크')}
         >
           문제 링크
-        </Button>
+        </button>
       </div>
     </div>
   )

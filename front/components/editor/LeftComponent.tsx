@@ -4,7 +4,6 @@ import * as React from 'react'
 import { useEffect, useState } from 'react'
 import WorkSpace from '@/components/editor/workspace/Workspace'
 import LeftHeader from '@/components/editor/LeftHeader'
-import Button from '@/components/Button'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 import { useEditor } from '@tiptap/react'
@@ -218,19 +217,21 @@ const LeftComponent: React.FC = () => {
       <div className="flex flex-row justify-between">
         <div className="flex border-b-2 w-10">
           {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
-            <Button
+            <button
               key={tab}
-              className={`flex-1 p-2 text-center whitespace-nowrap hover:bg-navy ${
-                activeTab === tab ? 'bg-darkNavy' : 'bg-blueishPurple'
+              className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
+                activeTab === tab ? 'bg-primary' : 'bg-navy'
               } rounded-t-none`}
               onClick={() => setActiveTab(tab as any)}
             >
               {tab}
-            </Button>
+            </button>
           ))}
         </div>
         <div>
-          <Button className="rounded-t-none">풀이 종료하기</Button>
+          <button className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md">
+            풀이 종료하기
+          </button>
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import CodeEditor from '@/components/editor/codespace/CodeSpace'
-import Button from '@/components/Button'
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
@@ -31,7 +30,7 @@ const RightComponent: React.FC = () => {
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
         <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
-          <div className="flex-1 border-r border-gray-300 bg-white">
+          <div className="flex-1 border border-gray-300 bg-white">
             <textarea
               className="w-full h-full resize-none p-2"
               placeholder="Enter text here..."
@@ -39,13 +38,20 @@ const RightComponent: React.FC = () => {
               onChange={(e) => setInputText(e.target.value)}
             />
           </div>
-          <div className="flex-1 p-2 bg-white">실행횟수 : {runCount}</div>
+          <div className="flex-1 p-2 bg-white border border-gray-300">
+            실행횟수 : {runCount}
+          </div>
         </div>
         <div className="flex flex-row justify-end p-5 pt-0 pr-3">
-          <Button onClick={handleRun} className="mr-1">
+          <button
+            onClick={handleRun}
+            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+          >
             실행하기
-          </Button>
-          <Button>GIT 저장하기</Button>
+          </button>
+          <button className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2">
+            GIT 저장하기
+          </button>
         </div>
       </div>
     </div>
