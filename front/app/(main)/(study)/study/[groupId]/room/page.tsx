@@ -4,7 +4,7 @@ import ActiveProfileItem from '@/components/studyroom/ActiveProfileItem'
 import CopyRoomLink from '@/components/studyroom/CopyRoomLink'
 import InactiveProfileItem from '@/components/studyroom/InactiveProfileItem'
 import SetTimer from '@/components/studyroom/SetTimer'
-import ReadyButton from '@/components/studyroom/ReadyButton'
+import StartButton from '@/components/studyroom/StartButton'
 
 const StudyRoomPage = () => {
   return (
@@ -46,7 +46,7 @@ const StudyRoomPage = () => {
             <div className="font-bold mb-4 mt-4">문제 풀이 시간</div>
             <div className="flex flex-col items-center ">
               <SetTimer />
-              <ReadyButton />
+              <StartButton />
             </div>
           </div>
         </div>
