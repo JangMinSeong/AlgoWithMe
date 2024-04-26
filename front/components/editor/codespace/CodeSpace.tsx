@@ -1,6 +1,12 @@
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import AceEditor from 'react-ace'
 import 'ace-builds/src-noconflict/mode-c_cpp'
 import 'ace-builds/src-noconflict/mode-java'
@@ -34,52 +40,175 @@ const languageOptions: Record<string, CodeExample> = {
   },
 }
 
-const CodeEditor: React.FC = () => {
+const CodeEditor: React.FC = forwardRef((props, ref) => {
   const aceRef = useRef<any>(null)
   const [language, setLanguage] = useState<string>('C')
   const [code, setCode] = useState<string>(languageOptions.C.value)
+  const [tabs, setTabs] = useState<
+    { id: string; language: string; code: string }[]
+  >([])
+  const [activeTab, setActiveTab] = useState<string>('1')
+  const [showMoreTabs, setShowMoreTabs] = useState(false)
 
   useEffect(() => {
-    const storedData = localStorage.getItem('editorData')
-    if (storedData) {
-      const data = JSON.parse(storedData)
-      setLanguage(data.language)
-      setCode(data.code)
+    const storedTabs = localStorage.getItem('editorTabs')
+    if (storedTabs) {
+      const loadedTabs = JSON.parse(storedTabs)
+      setTabs(loadedTabs)
+      const initTab = loadedTabs[0].id
+      setActiveTab(initTab)
+      setLanguage(loadedTabs[0].language)
+      setCode(loadedTabs[0].code)
+    } else {
+      // Set a default tab if none are stored
+      const defaultTabs = [
+        { id: '1', language: 'C', code: languageOptions.C.value },
+      ]
+      setTabs(defaultTabs)
+      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs))
     }
   }, [])
 
+  const addTab = () => {
+    const newId = (tabs.length + 1).toString()
+    const newTab = { id: newId, language: 'C', code: languageOptions.C.value }
+    const newTabs = [...tabs, newTab]
+    setTabs(newTabs)
+    setActiveTab(newId)
+    setLanguage('C')
+    setCode(languageOptions.C.value)
+    localStorage.setItem('editorTabs', JSON.stringify(newTabs))
+  }
+
+  const handleTabChange = (tabId: string) => {
+    setActiveTab(tabId)
+    const selectedTab = tabs.find((tab) => tab.id === tabId)
+    if (selectedTab) {
+      setLanguage(selectedTab.language)
+      setCode(selectedTab.code)
+    }
+  }
+
   const saveCode = () => {
     const currentCode = aceRef.current?.editor.getValue()
-    const data = {
-      language,
-      code: currentCode,
-    }
-    localStorage.setItem('editorData', JSON.stringify(data))
+    const updatedTabs = tabs.map((tab) => {
+      if (tab.id === activeTab) {
+        return { ...tab, code: currentCode, language }
+      }
+      return tab
+    })
+    setTabs(updatedTabs)
+    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs))
   }
+
+  const deleteCode = () => {
+    if (tabs.length <= 1) {
+      return
+    }
+
+    const filteredTabs = tabs.filter((tab) => tab.id !== activeTab)
+    const renumberedTabs = filteredTabs.map((tab, index) => ({
+      ...tab,
+      id: String(index + 1),
+    }))
+
+    setTabs(renumberedTabs)
+    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs))
+
+    if (renumberedTabs.length > 0) {
+      setActiveTab(renumberedTabs[0].id)
+      setLanguage(renumberedTabs[0].language)
+      setCode(renumberedTabs[0].code)
+    }
+  }
+
+  useImperativeHandle(ref, () => ({
+    getCurrentTabInfo() {
+      const currentTab = tabs.find((tab) => tab.id === activeTab)
+      if (currentTab) {
+        return { code: currentTab.code, language: currentTab.language }
+      }
+      return { code: '', language: '' }
+    },
+  }))
 
   return (
     <div className="w-full h-full flex flex-col p-3 pt-10">
-      <div className="flex items-center justify-between">
-        <Button
-          onClick={saveCode}
-          className="p-2 bg-blueishPurple text-white rounded hover:bg-navy"
-        >
-          저장
-        </Button>
-        <select
-          value={language}
-          onChange={(e) => {
-            setLanguage(e.target.value)
-            setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
-          }}
-          className="w-1/12"
-        >
-          {Object.keys(languageOptions).map((lang) => (
-            <option key={lang} value={lang}>
-              {lang}
-            </option>
+      <div className="flex items-center justify-between relative">
+        <div>
+          {tabs.slice(0, 3).map((tab) => (
+            <Button
+              key={tab.id}
+              onClick={() => handleTabChange(tab.id)}
+              className={
+                tab.id === activeTab
+                  ? 'bg-blueishPurple text-white rounded-b-none'
+                  : 'bg-navy text-black rounded-b-none'
+              }
+            >
+              {tab.id}
+            </Button>
           ))}
-        </select>
+          {tabs.length > 3 && (
+            <Button
+              onClick={() => setShowMoreTabs(!showMoreTabs)}
+              className="rounded-b-none bg-navy"
+            >
+              ...
+            </Button>
+          )}
+          {showMoreTabs && (
+            <div
+              className="absolute top-10 left-0 bg-white shadow-lg"
+              style={{ position: 'absolute', top: '100%', zIndex: 1000 }}
+            >
+              {tabs.slice(3).map((tab) => (
+                <Button
+                  key={tab.id}
+                  onClick={() => handleTabChange(tab.id)}
+                  className={
+                    tab.id === activeTab
+                      ? 'bg-blueishPurple text-white rounded-t-none'
+                      : 'bg-navy text-black rounded-t-none'
+                  }
+                >
+                  {tab.id}
+                </Button>
+              ))}
+            </div>
+          )}
+          <Button onClick={addTab} className="rounded-b-none bg-navy">
+            +
+          </Button>
+        </div>
+        <div>
+          <Button
+            onClick={deleteCode}
+            className="p-2 bg-blueishPurple text-white rounded hover:bg-navy mr-1"
+          >
+            삭제
+          </Button>
+          <Button
+            onClick={saveCode}
+            className="p-2 bg-blueishPurple text-white rounded hover:bg-navy mr-2"
+          >
+            저장
+          </Button>
+          <select
+            value={language}
+            onChange={(e) => {
+              setLanguage(e.target.value)
+              setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
+            }}
+            className="w-1/3"
+          >
+            {Object.keys(languageOptions).map((lang) => (
+              <option key={lang} value={lang}>
+                {lang}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
       <AceEditor
         ref={aceRef}
@@ -100,6 +229,6 @@ const CodeEditor: React.FC = () => {
       />
     </div>
   )
-}
+})
 
 export default CodeEditor
