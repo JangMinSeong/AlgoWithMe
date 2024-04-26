@@ -14,7 +14,7 @@ const StudyHeader = () => {
       <div className="flex items-center">
         <SideBarButton />
         <Link href="/main">
-          <Image src="/logo/1x/AWM.png" alt="로고" width={100} height={0} />
+          <Image src="/logo/Logo@0.1x.png" alt="로고" width={56} height={0} />
         </Link>
       </div>
       <div className="flex items-center">
