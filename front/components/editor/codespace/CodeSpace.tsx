@@ -140,12 +140,8 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${
-                tab.id === activeTab
-                  ? 'bg-blueishPurple text-white'
-                  : 'bg-navy text-black'
-              }`}
+              className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${tab.id === activeTab ? 'bg-primary' : 'bg-navy'}`}
             >
               {tab.id}
             </button>
@@ -167,12 +163,8 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
                 <button
                   key={tab.id}
                   onClick={() => handleTabChange(tab.id)}
-                  className={`bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${
-                tab.id === activeTab
-                  ? 'bg-blueishPurple text-white'
-                  : 'bg-navy text-black'
-              }`}
+                  className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${tab.id === activeTab ? 'bg-primary' : 'bg-navy'}`}
                 >
                   {tab.id}
                 </button>
