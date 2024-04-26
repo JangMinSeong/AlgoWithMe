@@ -1,9 +1,8 @@
 package com.ssafy.Algowithme.auth.util;
 
+import com.ssafy.Algowithme.auth.type.JwtCode;
 import com.ssafy.Algowithme.user.type.Role;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,4 +63,20 @@ public class JwtUtil {
 
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+
+    public JwtCode validateToken(String token) {
+        if(token == null) {
+            return JwtCode.DENIED;
+        }
+
+        try {
+            Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
+            return JwtCode.ACCESS;
+        } catch (ExpiredJwtException e) {
+            return JwtCode.EXPIRED;
+        } catch (JwtException | IllegalArgumentException e) {
+            return JwtCode.DENIED;
+        }
+    }
+
 }
