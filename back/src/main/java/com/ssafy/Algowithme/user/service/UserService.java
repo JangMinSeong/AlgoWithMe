@@ -12,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -31,6 +33,7 @@ public class UserService {
 
     public User login(String code, HttpServletResponse response) {
         String gitToken = githubUtil.getGithubToken(code);
+        log.info("gitToken : " + gitToken);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
 
         User user =  userRepository.findByGitId(githubInfoResponse.getGitId())
