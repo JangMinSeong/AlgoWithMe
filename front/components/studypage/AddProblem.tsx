@@ -2,7 +2,7 @@
 import Image from 'next/image'
 import { BiLinkExternal } from 'react-icons/bi'
 import { MdAddCircleOutline } from 'react-icons/md'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
 
 const AddProblem = () => {
@@ -11,13 +11,8 @@ const AddProblem = () => {
     setShowModal(true)
   }
 
-  useEffect(() => {
-    console.log(showModal)
-  }, [showModal])
-
   const clickModal = (e: MouseEvent) => {
     e.stopPropagation()
-    console.log('눌렷다')
     setShowModal(false)
   }
 
