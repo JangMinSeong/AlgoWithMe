@@ -6,7 +6,7 @@ const RightComponent: React.FC = () => {
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [runCount, setRunCount] = React.useState(0)
 
-  const handleRun = () => {
+  const handleRun = async () => {
     setRunCount((prevCount) => prevCount + 1)
 
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
@@ -21,6 +21,17 @@ const RightComponent: React.FC = () => {
       input: inputText,
     }
     localStorage.setItem('execute', JSON.stringify(dataToSave))
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_DEV_URL}/code/run`,
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ dataToSave }),
+    //   },
+    // )
+    // console.log(response)
   }
 
   return (

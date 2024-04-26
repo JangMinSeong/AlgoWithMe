@@ -64,7 +64,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
         { id: '1', language: 'C', code: languageOptions.C.value },
       ]
       setTabs(defaultTabs)
-      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs))
+      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs)) // TODO:여기서 사용자 코드 리스트 가져오기
     }
   }, [])
 
@@ -76,7 +76,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     setActiveTab(newId)
     setLanguage('C')
     setCode(languageOptions.C.value)
-    localStorage.setItem('editorTabs', JSON.stringify(newTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(newTabs)) // TODO : 여기서 코드 생성 api 요청
   }
 
   const handleTabChange = (tabId: string) => {
@@ -98,7 +98,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
       return tab
     })
     setTabs(updatedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs)) // TODO:여기서 코드 저장 api
   }
 
   const deleteCode = () => {
@@ -113,7 +113,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     }))
 
     setTabs(renumberedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs)) // TODO: 여기서 코드 저장 api
 
     if (renumberedTabs.length > 0) {
       setActiveTab(renumberedTabs[0].id)
