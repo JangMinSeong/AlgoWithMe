@@ -14,6 +14,10 @@ import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
+import stompClientService from '@/store/stompClient'
+import debounce from 'lodash.debounce'
+import SockJS from 'sockjs-client'
+import { Stomp } from '@stomp/stompjs'
 
 interface CodeExample {
   mode: string
@@ -132,6 +136,19 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     },
   }))
 
+  useEffect(() => {
+    // console.log('in effect')
+    // stompClientService.connect()
+    // return () => {
+    //   stompClientService.disconnect()
+    // }
+  }, [])
+
+  const handleCodeChange = debounce((newCode: string) => {
+    setCode(newCode)
+    stompClientService.send('/app/code', newCode) // Send code to the server
+  }, 500) // 500 ms debounce period
+
   return (
     <div className="w-full h-full flex flex-col p-3 pt-0">
       <div className="flex items-center justify-between relative mb-1">
@@ -213,7 +230,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
           mode={languageOptions[language].mode}
           name="UNIQUE_ID_OF_DIV"
           value={code}
-          onChange={setCode}
+          onChange={handleCodeChange}
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             enableBasicAutocompletion: true,
