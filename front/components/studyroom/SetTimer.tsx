@@ -1,25 +1,37 @@
 'use client'
 import { useState } from 'react'
 import useTimer from '@/hooks/useTimer'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/studyroomStore'
+import toast, { Toaster } from 'react-hot-toast'
 
 const SetTimer = () => {
   const [isActiveEditing, setIsActiveEditing] = useState(false)
-  const [hour, setHour] = useState(0)
-  const [min, setMin] = useState(0)
+
+  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
+  const hour = useSelector((state: RootState) => state.timer.hour)
+  const min = useSelector((state: RootState) => state.timer.min)
+
+  const [timerHour, setTimerHour] = useState(hour)
+  const [timerMin, setTimerMin] = useState(min)
 
   const { handleChangeTimer } = useTimer()
 
   const handleActivateTimerEdit = () => {
-    setIsActiveEditing(true)
+    if (isSolving) {
+      toast.error('이미 문제 풀이가 진행 중이에요.')
+    } else {
+      setIsActiveEditing(true)
+    }
   }
 
   const handleSetTime = (event) => {
     event.preventDefault()
     const formData = new FormData(event.target)
     const newHour = Number(formData.get('newHour'))
-    setHour(newHour)
+    setTimerHour(newHour)
     const newMin = Number(formData.get('newMin'))
-    setMin(newMin)
+    setTimerMin(newMin)
 
     setIsActiveEditing(false)
 
@@ -45,7 +57,7 @@ const SetTimer = () => {
                   min={0}
                   max={23}
                   required
-                  defaultValue={hour}
+                  defaultValue={timerHour}
                   className="w-[40px] border rounded-lg p-1 text-center mr-2"
                 />
                 h{' '}
@@ -55,14 +67,14 @@ const SetTimer = () => {
                   min={0}
                   max={59}
                   required
-                  defaultValue={min}
+                  defaultValue={timerMin}
                   className="w-[50px] border rounded-lg p-1 text-center mr-2"
                 />
                 m
               </div>
             </form>
           ) : (
-            <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">{`${hour} h ${min} m`}</div>
+            <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2">{`${timerHour} h ${timerMin} m`}</div>
           )}
         </div>
       </div>
@@ -82,6 +94,7 @@ const SetTimer = () => {
           시간 수정하기
         </div>
       )}
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }
