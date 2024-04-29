@@ -44,9 +44,6 @@ function Login() {
             .get('Authorization')
             ?.split(' ')[1]
 
-          console.log(response)
-          console.log('accessToken', accessToken)
-
           if (accessToken) {
             const user = { nickname, imageUrl, accessToken }
             await handleLogin(user)
