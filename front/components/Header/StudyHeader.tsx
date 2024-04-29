@@ -1,15 +1,23 @@
 'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/store/studyroomStore'
+import { useEffect } from 'react'
+import { useWebSocket } from '@/hooks/useWebSocket'
 import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
-import SideBarButton from '../sidebar/SideBarButton'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import SideBarButton from '../layout/SideBarButton'
 
 const StudyHeader = () => {
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)
+  const { connectToServer } = useWebSocket()
+
+  useEffect(() => {
+    connectToServer()
+  }, [])
 
   return (
     <div className="fixed z-20 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">

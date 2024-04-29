@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const token = request.cookies.get('accessToken')
+  const token = request.cookies.get('algowithme_refreshToken')
 
   if (pathname === '/') {
     if (token) {

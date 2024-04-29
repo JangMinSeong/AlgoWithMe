@@ -1,12 +1,36 @@
 import * as React from 'react'
+import { useEffect } from 'react'
 import CodeEditor from '@/components/editor/codespace/CodeSpace'
+import { useWebSocket } from '@/hooks/useWebSocket'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [runCount, setRunCount] = React.useState(0)
 
-  const handleRun = () => {
+  const [message, setMessage] = React.useState('')
+  const onConnect = useSelector((state: RootState) => state.socket.connected)
+  const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
+
+  const socketMessage: string = useSelector(
+    (state: RootState) => state.socket?.message || '',
+  )
+
+  useEffect(() => {
+    // TODO : 코드 에디터 id에 따라 구독 진행
+    if (onConnect) {
+      subscribeToTopic('/topic/message')
+      return () => unsubscribeFromTopic('/topic/message')
+    }
+  }, [onConnect])
+
+  useEffect(() => {
+    setMessage(socketMessage)
+  }, [socketMessage])
+
+  const handleRun = async () => {
     setRunCount((prevCount) => prevCount + 1)
 
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
@@ -21,6 +45,17 @@ const RightComponent: React.FC = () => {
       input: inputText,
     }
     localStorage.setItem('execute', JSON.stringify(dataToSave))
+    // const response = await fetch(
+    //   `${process.env.NEXT_PUBLIC_API_DEV_URL}/code/run`,
+    //   {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ dataToSave }),
+    //   },
+    // )
+    // console.log(response)
   }
 
   return (

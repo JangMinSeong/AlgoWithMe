@@ -14,6 +14,8 @@ import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
+import debounce from 'lodash.debounce'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 interface CodeExample {
   mode: string
@@ -49,6 +51,8 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
   const [activeTab, setActiveTab] = useState<string>('1')
   const [showMoreTabs, setShowMoreTabs] = useState(false)
 
+  const { sendMessage } = useWebSocket()
+
   useEffect(() => {
     const storedTabs = localStorage.getItem('editorTabs')
     if (storedTabs) {
@@ -64,7 +68,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
         { id: '1', language: 'C', code: languageOptions.C.value },
       ]
       setTabs(defaultTabs)
-      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs))
+      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs)) // TODO:여기서 사용자 코드 리스트 가져오기
     }
   }, [])
 
@@ -76,7 +80,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     setActiveTab(newId)
     setLanguage('C')
     setCode(languageOptions.C.value)
-    localStorage.setItem('editorTabs', JSON.stringify(newTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(newTabs)) // TODO : 여기서 코드 생성 api 요청
   }
 
   const handleTabChange = (tabId: string) => {
@@ -98,7 +102,8 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
       return tab
     })
     setTabs(updatedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs))
+    setCode(currentCode)
+    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs)) // TODO:여기서 코드 저장 api
   }
 
   const deleteCode = () => {
@@ -113,7 +118,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     }))
 
     setTabs(renumberedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs)) // TODO: 여기서 코드 저장 api
 
     if (renumberedTabs.length > 0) {
       setActiveTab(renumberedTabs[0].id)
@@ -131,6 +136,13 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
       return { code: '', language: '' }
     },
   }))
+
+  const handleCodeChange = debounce((newCode: string) => {
+    console.log('Code changed:', newCode)
+    sendMessage('/app/message', newCode)
+    setCode(newCode)
+    // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
+  }, 500) // 500 ms debounce period
 
   return (
     <div className="w-full h-full flex flex-col p-3 pt-0">
@@ -213,7 +225,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
           mode={languageOptions[language].mode}
           name="UNIQUE_ID_OF_DIV"
           value={code}
-          onChange={setCode}
+          onChange={handleCodeChange}
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             enableBasicAutocompletion: true,
