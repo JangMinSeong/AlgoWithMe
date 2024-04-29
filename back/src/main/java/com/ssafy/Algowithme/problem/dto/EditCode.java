@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class TestCase {
-    private String problem;
-    private String answer;
+public class EditCode {
+    private String language;
+    private String frameCode;
 }

@@ -19,7 +19,10 @@ async def execute_python(code_execution: CodeExecution):
     
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.py")
-
+    try:
+        compile(code_execution.code, "main.py", "exec")
+    except SyntaxError as e:
+        return {"status": 422, "output": str(e)} # 컴파일 에러
     try:
         with open(path, "w", encoding='utf-8') as file:
             file.write(code_execution.code)
@@ -35,11 +38,11 @@ async def execute_python(code_execution: CodeExecution):
             output, errors = process.communicate(input=code_execution.input, timeout=5)
             elapsed_time = time.perf_counter() - start_time
             elapsed_time_ms = int(elapsed_time * 1000)
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired: # 시간 초과
             process.kill()
             errors = 'Time limit exceeded'
             return {"status": 408, "output": errors}
-        if process.returncode != 0:
+        if process.returncode != 0: # 런타임 에러
             return {"status": 400, "output": errors}
         return {"status": 200, "output": output, "execution_time": elapsed_time_ms}
     finally:
@@ -59,7 +62,7 @@ async def execute_java(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return {"status": 400, "output": compile_process.stderr}
+            return {"status": 422, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
@@ -99,7 +102,7 @@ async def execute_c(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return {"status": 400, "output": compile_process.stderr}
+            return {"status": 422, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
@@ -139,7 +142,7 @@ async def execute_cpp(code_execution: CodeExecution):
         # compile
         compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
         if compile_process.returncode != 0:
-            return {"status": 400, "output": compile_process.stderr}
+            return {"status": 422, "output": compile_process.stderr}
         # run
         start_time = time.perf_counter()
         run_process = subprocess.Popen(
