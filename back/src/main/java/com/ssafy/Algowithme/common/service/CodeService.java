@@ -3,12 +3,14 @@ package com.ssafy.Algowithme.common.service;
 import com.ssafy.Algowithme.common.dto.request.*;
 import com.ssafy.Algowithme.common.dto.response.BOJResponse;
 import com.ssafy.Algowithme.common.dto.response.ExecutionResponse;
+import com.ssafy.Algowithme.common.dto.response.SWEAResponse;
 import com.ssafy.Algowithme.common.entity.PersonalCode;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.repository.PageRepository;
 import com.ssafy.Algowithme.common.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.mongo.repository.BOJReactiveRepository;
+import com.ssafy.Algowithme.mongo.repository.SWEAReactiveRepository;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,6 +29,7 @@ public class CodeService {
     private final PersonalCodeRepository personalCodeRepository;
     private final PageRepository pageRepository;
     private final BOJReactiveRepository bojReactiveRepository;
+    private final SWEAReactiveRepository sweaReactiveRepository;
     private final WebClient webClient;
 
     @Transactional
@@ -64,5 +67,19 @@ public class CodeService {
                         .bodyValue(new PostBOJRequest(request.getCode(), problem.getLimit_time(), problem.getTest_case()))
                         .retrieve()
                         .bodyToMono(new ParameterizedTypeReference<List<BOJResponse>>() {}));
+    }
+
+    public Mono<SWEAResponse> markSWEA(MarkRequest request) {
+        return sweaReactiveRepository.findByNumber(request.getNumber())
+                .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
+                .flatMap(problem -> webClient.post()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/swea")
+                                .path(request.getLanguage().getPath())
+                                .build()
+                        )
+                        .bodyValue(new PostSWEARequest(request.getCode(), problem.getLimit_time().get(request.getLanguage().ordinal()), problem.getInput(), problem.getOutput()))
+                        .retrieve()
+                        .bodyToMono(SWEAResponse.class));
     }
 }
