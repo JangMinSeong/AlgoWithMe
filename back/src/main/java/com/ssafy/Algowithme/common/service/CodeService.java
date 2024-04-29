@@ -1,3 +1,4 @@
+
 package com.ssafy.Algowithme.common.service;
 
 import com.ssafy.Algowithme.common.dto.request.*;
@@ -9,8 +10,8 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.repository.PageRepository;
 import com.ssafy.Algowithme.common.repository.PersonalCodeRepository;
-import com.ssafy.Algowithme.mongo.repository.BOJReactiveRepository;
-import com.ssafy.Algowithme.mongo.repository.SWEAReactiveRepository;
+import com.ssafy.Algowithme.page.repository.BOJReactiveRepository;
+import com.ssafy.Algowithme.page.repository.SWEAReactiveRepository;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;

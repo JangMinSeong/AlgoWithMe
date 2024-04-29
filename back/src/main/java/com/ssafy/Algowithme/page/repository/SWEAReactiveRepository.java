@@ -1,6 +1,6 @@
-package com.ssafy.Algowithme.mongo.repository;
+package com.ssafy.Algowithme.page.repository;
 
-import com.ssafy.Algowithme.mongo.model.SWEA;
+import com.ssafy.Algowithme.page.entity.SWEA;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 

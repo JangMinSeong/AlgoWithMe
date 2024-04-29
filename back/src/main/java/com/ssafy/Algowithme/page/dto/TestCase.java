@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.mongo.model;
+package com.ssafy.Algowithme.page.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
