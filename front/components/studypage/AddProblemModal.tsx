@@ -13,11 +13,11 @@ const AddProblemModal = ({
   return (
     <div
       onClick={(e) => clickModal(e)}
-      className="top-0 left-0 fixed z-10 bg-black/30 w-lvw h-lvh"
+      className="top-0 left-0 fixed z-20 bg-black/30 w-lvw h-lvh"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[50%] z-20 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg"
+        className="w-[50%] z-30 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg"
       >
         <div>문제 추가하기</div>
         <div>검색창</div>

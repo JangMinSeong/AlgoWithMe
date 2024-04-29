@@ -4,10 +4,9 @@ import Image from 'next/image'
 import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
-import SideBarButton from '../layout/SideBarButton'
+import SideBarButton from '../sidebar/SideBarButton'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/studyroomStore'
-import { useEffect } from 'react'
 
 const StudyHeader = () => {
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)
