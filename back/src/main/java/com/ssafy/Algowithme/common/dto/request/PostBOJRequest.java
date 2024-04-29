@@ -1,6 +1,6 @@
 package com.ssafy.Algowithme.common.dto.request;
 
-import com.ssafy.Algowithme.mongo.model.TestCase;
+import com.ssafy.Algowithme.page.dto.TestCase;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
