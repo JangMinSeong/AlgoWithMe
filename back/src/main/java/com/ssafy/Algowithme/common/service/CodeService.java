@@ -8,8 +8,7 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.repository.PageRepository;
 import com.ssafy.Algowithme.common.repository.PersonalCodeRepository;
-import com.ssafy.Algowithme.mongo.model.BOJ;
-import com.ssafy.Algowithme.mongo.service.BOJService;
+import com.ssafy.Algowithme.mongo.repository.BOJReactiveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -28,7 +27,7 @@ public class CodeService {
 
     private final PersonalCodeRepository personalCodeRepository;
     private final PageRepository pageRepository;
-    private final BOJService bojService;
+    private final BOJReactiveRepository bojReactiveRepository;
     private final WebClient webClient;
 
     @Transactional
@@ -53,16 +52,16 @@ public class CodeService {
     }
 
     public Mono<List<BOJResponse>> markBOJ(MarkRequest request) {
-        BOJ problem = bojService.getBOJByNumber(request.getNumber());
-        return webClient
-                .post()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/boj")
-                        .path(request.getLanguage().getPath())
-                        .build()
-                )
-                .bodyValue(new PostBOJRequest(request.getCode(), problem.getLimit_time(), problem.getTest_case()))
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<BOJResponse>>() {});
+        return bojReactiveRepository.findByNumber(request.getNumber())
+                .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
+                .flatMap(problem -> webClient.post()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/boj")
+                                .path(request.getLanguage().getPath())
+                                .build()
+                        )
+                        .bodyValue(new PostBOJRequest(request.getCode(), problem.getLimit_time(), problem.getTest_case()))
+                        .retrieve()
+                        .bodyToMono(new ParameterizedTypeReference<List<BOJResponse>>() {}));
     }
 }
