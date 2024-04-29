@@ -14,6 +14,9 @@ import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
+import debounce from 'lodash.debounce'
+import { Client } from '@stomp/stompjs'
+import SockJS from 'sockjs-client'
 
 interface CodeExample {
   mode: string
@@ -64,7 +67,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
         { id: '1', language: 'C', code: languageOptions.C.value },
       ]
       setTabs(defaultTabs)
-      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs))
+      localStorage.setItem('editorTabs', JSON.stringify(defaultTabs)) // TODO:여기서 사용자 코드 리스트 가져오기
     }
   }, [])
 
@@ -76,7 +79,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     setActiveTab(newId)
     setLanguage('C')
     setCode(languageOptions.C.value)
-    localStorage.setItem('editorTabs', JSON.stringify(newTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(newTabs)) // TODO : 여기서 코드 생성 api 요청
   }
 
   const handleTabChange = (tabId: string) => {
@@ -98,7 +101,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
       return tab
     })
     setTabs(updatedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(updatedTabs)) // TODO:여기서 코드 저장 api
   }
 
   const deleteCode = () => {
@@ -113,7 +116,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     }))
 
     setTabs(renumberedTabs)
-    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs))
+    localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs)) // TODO: 여기서 코드 저장 api
 
     if (renumberedTabs.length > 0) {
       setActiveTab(renumberedTabs[0].id)
@@ -131,6 +134,45 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
       return { code: '', language: '' }
     },
   }))
+
+  const [stompClient, setStompClient] = useState(null)
+
+  useEffect(() => {
+    const client = new Client({
+      // brokerURL: 'ws://localhost:8085/ws-test', // Endpoint 넣는 곳
+      webSocketFactory: () => new SockJS('http://localhost:8085/ws-test'),
+      connectHeaders: {
+        login: 'test',
+        passcode: '1234',
+      },
+      beforeConnect: () => {
+        console.log('Before connect')
+      },
+      debug: (str) => {
+        console.log('Debug', str)
+      },
+      reconnectDelay: 50000, // 자동 재연결
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    })
+
+    client.onConnect = (frame) => {
+      console.log(`Connected: ${frame}`)
+    }
+
+    client.onStompError = (frame) => {
+      console.error(`Broker reported error: ${frame.headers.message}`)
+      console.error(`Additional details: ${frame.body}`)
+    }
+
+    client.activate()
+    setStompClient(client)
+  }, [])
+
+  const handleCodeChange = debounce((newCode) => {
+    console.log('Code changed:', newCode)
+    // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
+  }, 500) // 500 ms debounce period
 
   return (
     <div className="w-full h-full flex flex-col p-3 pt-0">
@@ -213,7 +255,7 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
           mode={languageOptions[language].mode}
           name="UNIQUE_ID_OF_DIV"
           value={code}
-          onChange={setCode}
+          onChange={handleCodeChange}
           editorProps={{ $blockScrolling: true }}
           setOptions={{
             enableBasicAutocompletion: true,
