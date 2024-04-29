@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.page.entity;
+package com.ssafy.Algowithme.problem.entity;
 
 import lombok.Getter;
 import org.springframework.data.mongodb.core.mapping.Document;

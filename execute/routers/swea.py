@@ -22,6 +22,10 @@ async def mark_swea_python(code_test: CodeTest):
     path = os.path.join(dir, "main.py")
     with open(path, "w", encoding='utf-8') as file:
         file.write(code_test.code)
+    try: # 컴파일 에러
+        compile(code_test.code, "main.py", "exec")
+    except SyntaxError as e:
+        return {"status": 422, "input": code_test.input, "expected": code_test.output, "got": str(e), "passed": False}
     start_time = time.perf_counter()
     try:
         process = subprocess.Popen(
@@ -35,13 +39,14 @@ async def mark_swea_python(code_test: CodeTest):
             output, errors = process.communicate(input=code_test.input, timeout=code_test.limit_time)
             elapsed_time = time.perf_counter() - start_time
             elapsed_time_ms = int(elapsed_time * 1000)
-        except subprocess.TimeoutExpired: # time out
+            if process.returncode != 0: # 런타임 에러
+                results={"status": 400, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
+            else:
+                results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
+        except subprocess.TimeoutExpired: # 시간 초과
             process.kill()
             errors = 'Time limit exceeded'
-        if process.returncode != 0: # error
-            results={"input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
-        else:
-            results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
+            results={"status": 408, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -60,7 +65,7 @@ async def mark_swea_java(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "input": code_test.input, "expected": code_test.output, "got": compile_process.stderr, "passed": False}
     try:
         # run
         start_time = time.perf_counter()
@@ -75,13 +80,14 @@ async def mark_swea_java(code_test: CodeTest):
             output, errors = run_process.communicate(input=code_test.input, timeout=code_test.limit_time)
             elapsed_time = time.perf_counter() - start_time
             elapsed_time_ms = int(elapsed_time * 1000)
+            if run_process.returncode != 0: # error
+                results={"status": 400, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
+            else:
+                results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
         except subprocess.TimeoutExpired: # time out
             run_process.kill()
             errors = 'Time limit exceeded'
-        if run_process.returncode != 0: # error
-            results={"input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
-        else:
-            results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
+            results={"status": 408, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -102,7 +108,7 @@ async def mark_swea_c(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "input": code_test.input, "expected": code_test.output, "got": compile_process.stderr, "passed": False}
     try:
         # run
         start_time = time.perf_counter()
@@ -117,14 +123,14 @@ async def mark_swea_c(code_test: CodeTest):
             output, errors = run_process.communicate(input=code_test.input, timeout=code_test.limit_time)
             elapsed_time = time.perf_counter() - start_time
             elapsed_time_ms = int(elapsed_time * 1000)
+            if run_process.returncode != 0: # error
+                results={"status": 400, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
+            else:
+                results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
         except subprocess.TimeoutExpired: # time out
             run_process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
-        if run_process.returncode != 0: # error
-            results={"input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
-        else:
-            results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
+            results={"status": 408, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -145,7 +151,7 @@ async def mark_swea_cpp(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "input": code_test.input, "expected": code_test.output, "got": compile_process.stderr, "passed": False}
     try:
         # run
         start_time = time.perf_counter()
@@ -160,14 +166,14 @@ async def mark_swea_cpp(code_test: CodeTest):
             output, errors = run_process.communicate(input=code_test.input, timeout=code_test.limit_time)
             elapsed_time = time.perf_counter() - start_time
             elapsed_time_ms = int(elapsed_time * 1000)
+            if run_process.returncode != 0: # error
+                results={"status": 400, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
+            else:
+                results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
         except subprocess.TimeoutExpired: # time out
             run_process.kill()
             errors = 'Time limit exceeded'
-            return JSONResponse(status_code=408, content={"error": errors})
-        if run_process.returncode != 0: # error
-            results={"input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
-        else:
-            results = mark_test_case(code_test=code_test, output=output, elapsed_time_ms=elapsed_time_ms)
+            results={"status": 408, "input": code_test.input, "expected": code_test.output, "got": errors, "passed": False}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -188,6 +194,7 @@ def mark_test_case(code_test: CodeTest, output: str, elapsed_time_ms: int):
         if is_match:
             matches += 1
     return {
+        "status": 200,
         "input": code_test.input,
         "expected": code_test.output,
         "got": output.strip(),

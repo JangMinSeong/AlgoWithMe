@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SWEAResponse {
+    private int status;
     private String input;
     private String expected;
     private String got;

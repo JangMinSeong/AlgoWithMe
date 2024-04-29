@@ -30,7 +30,7 @@ async def mark_boj_python(code_test: CodeTest):
     try:
         compile(code_test.code, "main.py", "exec")
     except SyntaxError as e:
-        return {"status": 400, "error": str(e)} # 컴파일 에러
+        return {"status": 422, "error": str(e)} # 컴파일 에러
     for test_case in code_test.test_cases:
         start_time = time.perf_counter()
         try:
@@ -70,7 +70,7 @@ async def mark_boj_java(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["javac", path], capture_output=True, text=True)
     if compile_process.returncode != 0: # 컴파일 에러
-        return {"status": 400, "error": compile_process.stderr}
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
@@ -114,7 +114,7 @@ async def mark_boj_c(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return {"status": 400, "error": compile_process.stderr}
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
@@ -158,7 +158,7 @@ async def mark_boj_cpp(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return {"status": 400, "error": compile_process.stderr}
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
