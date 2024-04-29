@@ -1,12 +1,20 @@
 'use client'
 
 import * as React from 'react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 const EditorPage: React.FC = () => {
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
+
+  const { connectToServer } = useWebSocket()
+
+  useEffect(() => {
+    console.log('in page')
+    connectToServer()
+  }, [connectToServer])
 
   const toggleCodeEditor = () => {
     setCodeEditorVisible(!codeEditorVisible)
