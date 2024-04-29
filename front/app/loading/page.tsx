@@ -2,8 +2,10 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useRef } from 'react'
+import useAuth from '@/hooks/useAuth'
 
 function Login() {
+  const { handleLogin } = useAuth()
   const searchParams = useSearchParams()
   const router = useRouter()
   const code = searchParams.get('code')
@@ -37,7 +39,19 @@ function Login() {
         })
 
         if (response.ok) {
-          router.push('/main')
+          const { nickname, imageUrl } = await response.json()
+          const accessToken = response.headers
+            .get('Authorization')
+            ?.split(' ')[1]
+
+          console.log(response)
+          console.log('accessToken', accessToken)
+
+          if (accessToken) {
+            const user = { nickname, imageUrl, accessToken }
+            await handleLogin(user)
+            router.push('/main')
+          }
         } else {
           router.push('/')
         }
@@ -46,7 +60,6 @@ function Login() {
       }
     }
     loginWithCode()
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code])
 
