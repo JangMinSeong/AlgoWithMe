@@ -9,8 +9,8 @@ import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.repository.PageRepository;
 import com.ssafy.Algowithme.common.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.mongo.repository.BOJReactiveRepository;
+import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodeService {
@@ -31,9 +30,11 @@ public class CodeService {
     private final WebClient webClient;
 
     @Transactional
-    public void savePersonalCode(SaveCodeRequest request) {
+    public void savePersonalCode(SaveCodeRequest request, User user) {
         PersonalCode code = personalCodeRepository.findById(request.getCodeId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
+        if(!user.equals(code.getUser()))
+            throw new CustomException(ExceptionStatus.USER_MISMATCH);
         code.setCode(request.getCode());
         code.setLanguage(request.getLanguage());
     }

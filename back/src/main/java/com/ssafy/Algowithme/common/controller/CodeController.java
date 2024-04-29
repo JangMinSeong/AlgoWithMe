@@ -7,8 +7,10 @@ import com.ssafy.Algowithme.common.dto.request.SaveCodeRequest;
 import com.ssafy.Algowithme.common.dto.response.BOJResponse;
 import com.ssafy.Algowithme.common.dto.response.ExecutionResponse;
 import com.ssafy.Algowithme.common.service.CodeService;
+import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -22,8 +24,8 @@ public class CodeController {
     private final CodeService codeService;
 
     @PostMapping("/save")
-    public ResponseEntity<String> savePersonalCode(@RequestBody SaveCodeRequest request) {
-        codeService.savePersonalCode(request);
+    public ResponseEntity<String> savePersonalCode(@RequestBody SaveCodeRequest request, @AuthenticationPrincipal User user) {
+        codeService.savePersonalCode(request, user);
         return ResponseEntity.ok("Success");
     }
 
