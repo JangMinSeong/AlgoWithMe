@@ -5,13 +5,12 @@ import com.ssafy.Algowithme.code.dto.response.BOJResponse;
 import com.ssafy.Algowithme.code.dto.response.ExecutionResponse;
 import com.ssafy.Algowithme.code.dto.response.SWEAResponse;
 import com.ssafy.Algowithme.code.entity.PersonalCode;
-import com.ssafy.Algowithme.code.util.BOJUtil;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
-import com.ssafy.Algowithme.page.repository.BOJReactiveRepository;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.code.repository.PersonalCodeRepository;
-import com.ssafy.Algowithme.page.repository.SWEAReactiveRepository;
+import com.ssafy.Algowithme.problem.repository.RawProblemReactiveRepository;
+import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,8 +27,7 @@ public class CodeService {
 
     private final PersonalCodeRepository personalCodeRepository;
     private final PageRepository pageRepository;
-    private final BOJReactiveRepository bojReactiveRepository;
-    private final SWEAReactiveRepository sweaReactiveRepository;
+    private final RawProblemReactiveRepository reactiveRawProblemRepository;
     private final WebClient webClient;
 
     @Transactional
@@ -56,7 +54,7 @@ public class CodeService {
     }
 
     public Mono<BOJResponse> markBOJ(MarkRequest request) {
-        return bojReactiveRepository.findByNumber(request.getNumber())
+        return reactiveRawProblemRepository.findRawProblemBySiteAndNumber(Provider.BOJ.getName(), request.getNumber())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
                         .uri(uriBuilder -> uriBuilder
@@ -64,13 +62,13 @@ public class CodeService {
                                 .path(request.getLanguage().getPath())
                                 .build()
                         )
-                        .bodyValue(new PostBOJRequest(request.getCode(), problem.getLimit_time(), problem.getTest_case()))
+                        .bodyValue(new PostBOJRequest(request.getCode(), problem.getTimeLimit().getFirst(), problem.getExampleList()))
                         .retrieve()
                         .bodyToMono(BOJResponse.class));
     }
 
     public Mono<SWEAResponse> markSWEA(MarkRequest request) {
-        return sweaReactiveRepository.findByNumber(request.getNumber())
+        return reactiveRawProblemRepository.findRawProblemBySiteAndNumber(Provider.SWEA.getName(), request.getNumber())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
                         .uri(uriBuilder -> uriBuilder
@@ -78,7 +76,7 @@ public class CodeService {
                                 .path(request.getLanguage().getPath())
                                 .build()
                         )
-                        .bodyValue(new PostSWEARequest(request.getCode(), problem.getLimit_time().get(request.getLanguage().ordinal()), problem.getInput(), problem.getOutput()))
+                        .bodyValue(new PostSWEARequest(request.getCode(), problem.getTimeLimit().get(request.getLanguage().ordinal()), problem.getExampleList().getFirst().getProblem(), problem.getExampleList().getFirst().getAnswer()))
                         .retrieve()
                         .bodyToMono(SWEAResponse.class));
     }
