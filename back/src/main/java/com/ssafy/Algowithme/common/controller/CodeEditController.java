@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CodeEditController {
 
-    @MessageMapping("/study/{codeId}")
-    @SendTo("/topic/study/{codeId}")
-    public Editor sharingEditorCode(@DestinationVariable("codeId") int codeId, Editor editor) throws Exception {
-        System.out.println("codeId: " + codeId + ", code: " + editor.getCode());
-
-        return editor;
+    @MessageMapping("/code/{codeId}")
+    @SendTo("/topic/{codeId}")
+    public String sharingEditorCode(@DestinationVariable("codeId") int codeId, String code) throws Exception {
+        System.out.println("codeId: " + codeId + ", code: " + code);
+        // redis 저장 로직 필요
+        return code;
     }
 }
 
