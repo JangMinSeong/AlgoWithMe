@@ -1,7 +1,7 @@
 package com.ssafy.Algowithme.page.repository;
 
 
-import com.ssafy.Algowithme.page.entity.BOJ;
+import com.ssafy.Algowithme.problem.entity.BOJ;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
