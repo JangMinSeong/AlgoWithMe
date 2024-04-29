@@ -14,10 +14,9 @@ import 'ace-builds/src-noconflict/mode-python'
 import 'ace-builds/src-noconflict/theme-monokai'
 import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
-import stompClientService from '@/store/stompClient'
 import debounce from 'lodash.debounce'
+import { Client } from '@stomp/stompjs'
 import SockJS from 'sockjs-client'
-import { Stomp } from '@stomp/stompjs'
 
 interface CodeExample {
   mode: string
@@ -136,17 +135,43 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
     },
   }))
 
+  const [stompClient, setStompClient] = useState(null)
+
   useEffect(() => {
-    // console.log('in effect')
-    // stompClientService.connect()
-    // return () => {
-    //   stompClientService.disconnect()
-    // }
+    const client = new Client({
+      // brokerURL: 'ws://localhost:8085/ws-test', // Endpoint 넣는 곳
+      webSocketFactory: () => new SockJS('http://localhost:8085/ws-test'),
+      connectHeaders: {
+        login: 'test',
+        passcode: '1234',
+      },
+      beforeConnect: () => {
+        console.log('Before connect')
+      },
+      debug: (str) => {
+        console.log('Debug', str)
+      },
+      reconnectDelay: 50000, // 자동 재연결
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
+    })
+
+    client.onConnect = (frame) => {
+      console.log(`Connected: ${frame}`)
+    }
+
+    client.onStompError = (frame) => {
+      console.error(`Broker reported error: ${frame.headers.message}`)
+      console.error(`Additional details: ${frame.body}`)
+    }
+
+    client.activate()
+    setStompClient(client)
   }, [])
 
-  const handleCodeChange = debounce((newCode: string) => {
-    setCode(newCode)
-    stompClientService.send('/app/code', newCode) // Send code to the server
+  const handleCodeChange = debounce((newCode) => {
+    console.log('Code changed:', newCode)
+    // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
   }, 500) // 500 ms debounce period
 
   return (
