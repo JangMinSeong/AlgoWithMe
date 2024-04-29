@@ -11,10 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CodeEditController {
 
-    @MessageMapping("/study/{pageId}")
-    @SendTo("/topic/study/{pageId}")
-    public Editor sharingEditorCode(@DestinationVariable("pageId") int pageId, Editor editor) throws Exception {
-        System.out.println("pageId: " + pageId + ", codeId: " + editor.getCodeId() + ", code: " + editor.getCode());
+    @MessageMapping("/study/{codeId}")
+    @SendTo("/topic/study/{codeId}")
+    public Editor sharingEditorCode(@DestinationVariable("codeId") int codeId, Editor editor) throws Exception {
+        System.out.println("codeId: " + codeId + ", code: " + editor.getCode());
+
         return editor;
     }
 }
