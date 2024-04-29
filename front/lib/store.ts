@@ -3,6 +3,7 @@ import authReducer from '@/features/auth/authSlice'
 import sidebarReducer from '@/features/sidebar/sidebarSlice'
 import timerReducer from '@/features/timer/timerSlice'
 import solvingReducer from '@/features/solving/solvingSlice'
+import websocketReducer from '@/features/socket/webSocketSlic'
 
 export const makeStore = () =>
   configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () =>
       sidebar: sidebarReducer,
       timer: timerReducer,
       solving: solvingReducer,
+      socket: websocketReducer,
     },
   })
 
