@@ -15,7 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/code")
@@ -37,7 +36,7 @@ public class CodeController {
     }
 
     @PostMapping("/boj")
-    public Mono<ResponseEntity<List<BOJResponse>>> markBOJ(@RequestBody MarkRequest request) {
+    public Mono<ResponseEntity<BOJResponse>> markBOJ(@RequestBody MarkRequest request) {
         return codeService.markBOJ(request)
                 .map(response -> ResponseEntity.ok().body(response));
     }

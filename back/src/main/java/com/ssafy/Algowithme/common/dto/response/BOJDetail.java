@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BOJResponse {
+public class BOJDetail {
     private int status;
-    private String error;
-    private List<BOJDetail> results;
+    private String input;
+    private String expected;
+    private String got;
+    private boolean passed;
+    private int execution_time;
 }

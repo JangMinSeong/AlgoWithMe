@@ -14,13 +14,10 @@ import com.ssafy.Algowithme.page.repository.BOJReactiveRepository;
 import com.ssafy.Algowithme.page.repository.SWEAReactiveRepository;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.util.List;
 
 
 @Service
@@ -56,7 +53,7 @@ public class CodeService {
                 .bodyToMono(ExecutionResponse.class);
     }
 
-    public Mono<List<BOJResponse>> markBOJ(MarkRequest request) {
+    public Mono<BOJResponse> markBOJ(MarkRequest request) {
         return bojReactiveRepository.findByNumber(request.getNumber())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
@@ -67,7 +64,7 @@ public class CodeService {
                         )
                         .bodyValue(new PostBOJRequest(request.getCode(), problem.getLimit_time(), problem.getTest_case()))
                         .retrieve()
-                        .bodyToMono(new ParameterizedTypeReference<List<BOJResponse>>() {}));
+                        .bodyToMono(BOJResponse.class));
     }
 
     public Mono<SWEAResponse> markSWEA(MarkRequest request) {
