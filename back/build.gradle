@@ -88,6 +88,9 @@ dependencies {
 
 	// file-upload
 	implementation 'commons-fileupload:commons-fileupload:1.4'
+
+	// socket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 def querydslDir = 'src/main/generated'
