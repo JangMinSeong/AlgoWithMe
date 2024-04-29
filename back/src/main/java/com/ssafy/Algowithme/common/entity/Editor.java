@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HelloMessage {
-    private String name;
+public class Editor {
+    private Long codeId;
+    private String code;
 }
