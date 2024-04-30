@@ -31,7 +31,7 @@ const StudyRoomPage = () => {
 
         {/* 하단 */}
         <div className="flex ">
-          <div className="w-[50%]">
+          <div className="w-[50%] grow pr-60">
             <div>
               <div className="font-bold mb-4 mt-4">오늘 풀 문제</div>
               <NextProblem />
@@ -42,7 +42,7 @@ const StudyRoomPage = () => {
               <NextProblem />
             </div>
           </div>
-          <div className="w-[50%] ">
+          <div className="w-[50%] grow">
             <div className="font-bold mb-4 mt-4">문제 풀이 시간</div>
             <div className="flex flex-col items-center ">
               <SetTimer />
