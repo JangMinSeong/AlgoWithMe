@@ -1,7 +1,7 @@
 'use client'
 
 import SideBar from '@/components/layout/SideBar'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
@@ -20,6 +20,11 @@ export default function Layout({
     process.env.NODE_ENV === 'development'
       ? process.env.NEXT_PUBLIC_API_DEV_URL
       : process.env.NEXT_PUBLIC_API_URL
+
+  useEffect(() => {
+    if (user == null) {
+    }
+  }, [user])
 
   useInterceptor({
     configs: {
