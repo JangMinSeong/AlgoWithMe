@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.code.controller;
 
-import com.ssafy.Algowithme.code.dto.request.Editor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
