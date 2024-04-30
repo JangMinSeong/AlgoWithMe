@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.common.controller;
 
-import com.ssafy.Algowithme.common.entity.Editor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
