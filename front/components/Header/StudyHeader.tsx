@@ -9,7 +9,7 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
-import SideBarButton from '../layout/SideBarButton'
+import SideBarButton from '../sidebar/SideBarButton'
 
 const StudyHeader = () => {
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)

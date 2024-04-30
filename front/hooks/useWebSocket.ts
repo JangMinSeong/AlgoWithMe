@@ -20,9 +20,13 @@ export function useWebSocket() {
     }
     const newClient = new Client({
       webSocketFactory: () =>
+<<<<<<< HEAD
         new SockJS(
           `${process.env.NEXT_PUBLIC_API_DEV_URL}/algowithme-websocket`,
         ),
+=======
+        new SockJS('http://localhost:8081/api/algowithme-websocket'),
+>>>>>>> master
       onConnect: () => {
         console.log('success')
         dispatch(setConnected(true))

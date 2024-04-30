@@ -1,6 +1,5 @@
 'use client'
-
-import SideBar from '@/components/layout/SideBar'
+import SideBar from '@/components/sidebar/SideBar'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -64,13 +63,15 @@ export default function Layout({
   })
 
   return (
-    <div className="flex">
-      <SideBar />
-      <main
-        className={`${isSidebarOpen ? 'ml-44 mr-2' : 'mr-2'} ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`}
-      >
-        {children}
-      </main>
-    </div>
+    <>
+      <div className="flex">
+        <SideBar />
+        <main
+          className={`${isSidebarOpen ? 'ml-52 mr-2' : 'mr-2'} ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`}
+        >
+          {children}
+        </main>
+      </div>
+    </>
   )
 }

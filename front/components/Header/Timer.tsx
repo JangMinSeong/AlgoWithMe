@@ -1,8 +1,8 @@
 'use client'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/studyroomStore'
-// import { changeTimer } from '@/features/timer/timerSlice'
 import { useEffect, useState } from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 
 const Timer = () => {
   const timer = useSelector((state: RootState) => state.timer)
@@ -29,6 +29,7 @@ const Timer = () => {
         const totalRemainSec = studyDurationInSec - totalPassedSec
 
         if (totalRemainSec <= 0) {
+          toast('풀이 시간이 종료되었어요', { icon: '⏱' })
           clearInterval(timerID)
         }
 
@@ -55,6 +56,7 @@ const Timer = () => {
       <span className="text-xs text-navy mr-2 ml-1">분</span>
       {remainSec}
       <span className="text-xs text-navy ml-1">초</span>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }
