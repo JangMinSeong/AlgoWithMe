@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.code.controller;
 
-import com.ssafy.Algowithme.code.dto.request.Editor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,11 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CodeEditController {
 
-    @MessageMapping("/study/{pageId}")
-    @SendTo("/topic/study/{pageId}")
-    public Editor sharingEditorCode(@DestinationVariable("pageId") int pageId, Editor editor) throws Exception {
-        System.out.println("pageId: " + pageId + ", codeId: " + editor.getCodeId() + ", code: " + editor.getCode());
-        return editor;
+    @MessageMapping("/code/{codeId}")
+    @SendTo("/topic/{codeId}")
+    public String sharingEditorCode(@DestinationVariable("codeId") int codeId, String code) throws Exception {
+        System.out.println("codeId: " + codeId + ", code: " + code);
+        // redis 저장 로직 필요
+        return code;
     }
 }
 

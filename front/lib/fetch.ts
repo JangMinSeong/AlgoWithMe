@@ -1,6 +1,9 @@
 import { interceptor } from '@/hooks/useInterceptor'
 
-async function fetch(url: string, options: RequestInit): Promise<Response> {
+export default async function fetch(
+  url: string,
+  options: RequestInit,
+): Promise<Response> {
   const interceptedRequest = interceptor.onRequest(
     url,
     options,
