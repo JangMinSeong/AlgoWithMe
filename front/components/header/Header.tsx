@@ -27,21 +27,21 @@ const MainHeader: React.FC = () => {
       </div>
       <SearchDropdown items={items} />
 
-      {avatarUrl ? (
-        <div className="flex items-center justify-end">
-          <Image
-            src={avatarUrl}
-            alt="Profile Image"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-        </div>
-      ) : (
-        <div>profile</div>
-      )}
-
-      <div className="flex-none w-1/4 text-right">profile</div>
+      <div className="flex-1 text-right">
+        {avatarUrl ? (
+          <div className="inline-block">
+            <Image
+              src={avatarUrl}
+              alt="Profile Image"
+              width={60}
+              height={60}
+              className="rounded-full shadow-md"
+            />
+          </div>
+        ) : (
+          <div>profile</div>
+        )}
+      </div>
     </header>
   )
 }

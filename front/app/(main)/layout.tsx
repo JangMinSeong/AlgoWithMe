@@ -39,6 +39,8 @@ export default function Layout({
             accessToken: updatedAccessToken,
           }
           handleLogin(updatedUser)
+        } else {
+          handleLogout()
         }
       }
     }
