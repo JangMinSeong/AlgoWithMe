@@ -16,7 +16,7 @@ const MainHeader: React.FC = () => {
   ]
 
   return (
-    <header className="w-full flex justify-center items-center p-2 shadow">
+    <header className="fixed z-20 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
       <div className="flex-none w-1/4">
         <div className="text-xl font-bold">LOGO</div>
       </div>
