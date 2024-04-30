@@ -2,12 +2,17 @@
 
 import React from 'react'
 import SearchDropdown from '@/components/header/SearchDropdown'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
+import Image from 'next/image'
 
 const MainHeader: React.FC = () => {
   interface Item {
     id: number
     description: string
   }
+
+  const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
 
   const items: Item[] = [
     { id: 1, description: '스터디 1' },
@@ -21,7 +26,22 @@ const MainHeader: React.FC = () => {
         <div className="text-xl font-bold">LOGO</div>
       </div>
       <SearchDropdown items={items} />
-      <div className="flex-none w-1/4 text-right">profile</div>
+
+      <div className="flex-1 text-right">
+        {avatarUrl ? (
+          <div className="inline-block">
+            <Image
+              src={avatarUrl}
+              alt="Profile Image"
+              width={60}
+              height={60}
+              className="rounded-full shadow-md"
+            />
+          </div>
+        ) : (
+          <div>profile</div>
+        )}
+      </div>
     </header>
   )
 }

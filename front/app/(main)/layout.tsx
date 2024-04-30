@@ -1,10 +1,12 @@
 'use client'
-import SideBar from '@/components/sidebar/SideBar'
-import React from 'react'
+
+import SideBar from '@/components/layout/SideBar'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
+import { User } from '@/features/auth/authTypes'
 
 export default function Layout({
   children,
@@ -19,6 +21,31 @@ export default function Layout({
     process.env.NODE_ENV === 'development'
       ? process.env.NEXT_PUBLIC_API_DEV_URL
       : process.env.NEXT_PUBLIC_API_URL
+
+  useEffect(() => {
+    const refreshTask = async () => {
+      if (user === null) {
+        const response = await fetch(`${baseUrl}/user/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        if (response.ok) {
+          const data = await response.json()
+          const updatedAccessToken =
+            response.headers.get('Authorization')?.split(' ')[1] || ''
+          const updatedUser: User = {
+            nickname: data.nickname,
+            imageUrl: data.imageUrl,
+            accessToken: updatedAccessToken,
+          }
+          handleLogin(updatedUser)
+        } else {
+          handleLogout()
+        }
+      }
+    }
+    refreshTask()
+  }, [user])
 
   useInterceptor({
     configs: {
