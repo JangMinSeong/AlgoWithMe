@@ -12,8 +12,8 @@ router = APIRouter(
 )
 
 class TestCase(BaseModel):
-    input: str
-    output: str
+    problem: str
+    answer: str
 
 class CodeTest(BaseModel):
     main: str
@@ -30,6 +30,10 @@ async def mark_programmers_python(code_test: CodeTest):
         file.write(code_test.main)
     with open(solution_path, "w", encoding='utf-8') as file:
         file.write(code_test.solution)
+    try:
+        compile(code_test.code, "main.py", "exec")
+    except SyntaxError as e:
+        return {"status": 422, "error": str(e)} # 컴파일 에러
     for test_case in code_test.test_cases:
         start_time = time.perf_counter()
         try:
@@ -41,23 +45,24 @@ async def mark_programmers_python(code_test: CodeTest):
                 text=True
             )
             try:
-                output, errors = process.communicate(input=test_case.input, timeout=10)
+                output, errors = process.communicate(input=test_case.problem, timeout=10)
                 elapsed_time = time.perf_counter() - start_time
                 elapsed_time_ms = int(elapsed_time * 1000)
-            except subprocess.TimeoutExpired:
+                if process.returncode != 0: # 런타임 에러
+                    results.append({"status": 400, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
+                else:
+                    results.append({"status": 200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
+            except subprocess.TimeoutExpired: # 시간 초과
                 process.kill()
                 errors = 'Time limit exceeded'
-            if process.returncode != 0:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": errors, "passed": False})
-            else:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": output.strip(), "passed": output.strip() == test_case.output, "execution_time": elapsed_time_ms})
+                results.append({"status": 408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
                 os.remove(path)
     if os.path.exists(solution_path):
                 os.remove(solution_path)
-    return results
+    return {"status": 200, "results": results}
 
 @router.post("/java")
 async def mark_programmers_java(code_test: CodeTest):
@@ -74,7 +79,7 @@ async def mark_programmers_java(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["javac", path, solution_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
@@ -87,16 +92,17 @@ async def mark_programmers_java(code_test: CodeTest):
                 text=True
             )
             try:
-                output, errors = run_process.communicate(input=test_case.input, timeout=10)
+                output, errors = run_process.communicate(input=test_case.problem, timeout=10)
                 elapsed_time = time.perf_counter() - start_time
                 elapsed_time_ms = int(elapsed_time * 1000)
-            except subprocess.TimeoutExpired:
+                if run_process.returncode != 0: # 런타임 에러
+                    results.append({"status": 400, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
+                else:
+                    results.append({"status":200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
+            except subprocess.TimeoutExpired: # 시간 초과
                 run_process.kill()
                 errors = 'Time limit exceeded'
-            if run_process.returncode != 0:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": errors, "passed": False})
-            else:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": output.strip(), "passed": output.strip() == test_case.output, "execution_time": elapsed_time_ms})
+                results.append({"status":408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
@@ -107,7 +113,7 @@ async def mark_programmers_java(code_test: CodeTest):
         os.remove(class_path + ".class")
     if os.path.exists(solution_class_path + ".class"):
         os.remove(solution_class_path + ".class")
-    return results
+    return {"status": 200, "results": results}
 
 @router.post("/c")
 async def mark_programmers_c(code_test: CodeTest):
@@ -123,7 +129,7 @@ async def mark_programmers_c(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["gcc", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
@@ -136,23 +142,24 @@ async def mark_programmers_c(code_test: CodeTest):
                 text=True
             )
             try:
-                output, errors = run_process.communicate(input=test_case.input, timeout=10)
+                output, errors = run_process.communicate(input=test_case.problem, timeout=10)
                 elapsed_time = time.perf_counter() - start_time
                 elapsed_time_ms = int(elapsed_time * 1000)
-            except subprocess.TimeoutExpired:
+                if run_process.returncode != 0: # 런타임 에러
+                    results.append({"status": 400, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
+                else:
+                    results.append({"status":200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
+            except subprocess.TimeoutExpired: # 시간 초과
                 run_process.kill()
                 errors = 'Time limit exceeded'
-            if run_process.returncode != 0:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": errors, "passed": False})
-            else:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": output.strip(), "passed": output.strip() == test_case.output, "execution_time": elapsed_time_ms})
+                results.append({"status":408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
         os.remove(path)
     if os.path.exists(solution_path):
         os.remove(solution_path)
-    return results
+    return {"status": 200, "results": results}
 
 @router.post("/cpp")
 async def mark_programmers_cpp(code_test: CodeTest):
@@ -168,7 +175,7 @@ async def mark_programmers_cpp(code_test: CodeTest):
     # compile
     compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
-        return JSONResponse(status_code=400, content={"error": compile_process.stderr})
+        return {"status": 422, "error": compile_process.stderr}
     # run
     for test_case in code_test.test_cases:
         try:
@@ -181,20 +188,21 @@ async def mark_programmers_cpp(code_test: CodeTest):
                 text=True
             )
             try:
-                output, errors = run_process.communicate(input=test_case.input, timeout=10)
+                output, errors = run_process.communicate(input=test_case.problem, timeout=10)
                 elapsed_time = time.perf_counter() - start_time
                 elapsed_time_ms = int(elapsed_time * 1000)
-            except subprocess.TimeoutExpired:
+                if run_process.returncode != 0: # 런타임 에러
+                    results.append({"status": 400, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
+                else:
+                    results.append({"status":200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
+            except subprocess.TimeoutExpired: # 시간 초과
                 run_process.kill()
                 errors = 'Time limit exceeded'
-            if run_process.returncode != 0:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": errors, "passed": False})
-            else:
-                results.append({"input": test_case.input, "expected": test_case.output, "got": output.strip(), "passed": output.strip() == test_case.output, "execution_time": elapsed_time_ms})
+                results.append({"status":408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
         os.remove(path)
     if os.path.exists(solution_path):
         os.remove(solution_path)
-    return results
+    return {"status": 200, "results": results}
