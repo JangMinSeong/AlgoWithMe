@@ -1,6 +1,8 @@
 'use client'
 
 import * as React from 'react'
+import { useState } from 'react'
+import TagSelector from '@/components/tag/Tags'
 
 interface LeftHeaderProps {
   activeTab: string
@@ -8,6 +10,17 @@ interface LeftHeaderProps {
 }
 
 const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
+  const [selectedTags, setSelectedTags] = useState<string[]>([]) // 선택된 태그를 관리하는 상태
+  const [isTagSelectorOpen, setIsTagSelectorOpen] = useState(false)
+
+  const toggleTag = (key: string) => {
+    setSelectedTags((prevTags) =>
+      prevTags.includes(key)
+        ? prevTags.filter((tag) => tag !== key)
+        : [...prevTags, key],
+    )
+  }
+
   const handleButtonClick = (action: string) => {
     console.log(`${action} button clicked`)
   }
@@ -23,16 +36,17 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
       <div className="flex space-x-1">
         <button
           className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => handleButtonClick('BFS')}
+          onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)} // 모달 창 열기
         >
-          BFS
+          문제 유형
         </button>
-        <button
-          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => handleButtonClick('...')}
-        >
-          ...
-        </button>
+        {isTagSelectorOpen && (
+          <TagSelector
+            selectedTags={selectedTags}
+            toggleTag={toggleTag}
+            onClose={() => setIsTagSelectorOpen(false)} // 모달 창 닫기
+          />
+        )}
       </div>
       <div className="flex space-x-1">
         {activeTab === '개인 메모장' && (
