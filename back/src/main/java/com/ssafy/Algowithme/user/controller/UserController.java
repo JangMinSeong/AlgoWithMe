@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
     @PostMapping("/login")
     public UserInfoResponse login(@RequestBody LoginRequest request, HttpServletResponse response) {
         User userInfo = userService.login(request.getCode(), response);
