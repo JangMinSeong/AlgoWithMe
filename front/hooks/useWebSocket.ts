@@ -19,7 +19,10 @@ export function useWebSocket() {
       return
     }
     const newClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8085/ws-test'),
+      webSocketFactory: () =>
+        new SockJS(
+          `${process.env.NEXT_PUBLIC_API_DEV_URL}/algowithme-websocket`,
+        ),
       onConnect: () => {
         console.log('success')
         dispatch(setConnected(true))
@@ -44,16 +47,12 @@ export function useWebSocket() {
   }
 
   const subscribeToTopic = (topic: string) => {
-    console.log('asdasdawdwadawd')
     if (client && client.connected) {
-      console.log('in sub')
       client.subscribe(topic, (message) => {
-        console.log(message.body)
         dispatch(addMessage(message.body))
       })
       dispatch(subscribe(topic))
     } else {
-      console.log(client)
       console.error('Attempted to sub while STOMP client is disconnected.')
     }
   }

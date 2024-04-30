@@ -6,13 +6,15 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import fetch from '@/lib/fetch'
 import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
+import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [output, setOutput] = React.useState('')
   const [isLoading, setIsLoading] = React.useState(false)
-  const [status, setStatus] = React.useState(200)
+  const [resStatus, setResStatus] = React.useState(200)
+  const [execTime, setExecTime] = React.useState(0)
 
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
@@ -59,7 +61,8 @@ const RightComponent: React.FC = () => {
 
     // 응답 파싱 및 output 추출
     const responseData = await response.json()
-    setStatus(responseData.status)
+    setResStatus(responseData.status)
+    setExecTime(responseData.execution_time)
     const responseOutput = responseData.output
 
     // output 상태 업데이트
@@ -88,13 +91,15 @@ const RightComponent: React.FC = () => {
               onChange={(e) => setInputText(e.target.value)}
             />
           </div>
-          <div className="flex-1 p-2 bg-white border border-gray-300 overflow-auto">
+          <div className="flex-1 p-1 bg-white border border-gray-300 h-48 w-32">
             {isLoading ? (
               <pre>실행 중...</pre>
-            ) : status !== 200 ? (
-              <ErrorOutput status={status} output={output} />
+            ) : resStatus !== 200 ? (
+              <ErrorOutput status={resStatus} output={output} />
+            ) : execTime !== 0 ? (
+              <ExecuteOutput time={execTime} output={output} />
             ) : (
-              <pre>{output}</pre>
+              <div>{output}</div>
             )}
           </div>
         </div>
