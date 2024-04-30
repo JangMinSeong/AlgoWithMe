@@ -4,12 +4,11 @@ import SideBarItem from './SideBarItem'
 import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 import Link from 'next/link'
-import { LuFilePlus2 } from 'react-icons/lu'
 
 const SideBar = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
   const menuItemWrapper =
-    'px-1 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
+    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-xs'
   return (
     <div>
       {isOpen ? (
@@ -23,9 +22,6 @@ const SideBar = () => {
           >
             스터디 메인 페이지
           </Link>
-          <div className={`${menuItemWrapper} flex items-center`}>
-            <LuFilePlus2 className="mr-2" />새 페이지
-          </div>
           {dummyInStudyPages.map((el) => (
             <div>
               <InStudyPageItem page={el} key={el.id} depth={0} />

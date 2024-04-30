@@ -1,5 +1,7 @@
+import { LuFilePlus2 } from 'react-icons/lu'
+
 const PageCreateButton = () => {
-  return <div>새 페이지 생성하기</div>
+  return <LuFilePlus2 />
 }
 
 export default PageCreateButton

@@ -16,7 +16,7 @@ const NextProblem: React.FC = () => {
             height={20}
             className="rounded-full mr-4 "
           />
-          <div className="mr-2 w-80">
+          <div className="mr-2">
             {'5534.'}
             {'민숭의 생일파티'}
           </div>

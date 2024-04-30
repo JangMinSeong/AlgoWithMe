@@ -11,7 +11,7 @@ const StudyMainPage = () => {
     <div className="flex flex-col">
       <div className=" flex flex-wrap">
         {/* 왼쪽 위 */}
-        <div className="mb-10 flex">
+        <div className="mb-10 flex grow">
           {/* n일째 */}
           <div className="w-[33%] mr-4 relative h-full font-bold flex flex-col justify-between items-center">
             <div className="flex flex-col items-center justify-center w-48 h-64 ">
@@ -52,12 +52,12 @@ const StudyMainPage = () => {
 
       {/* 아래 */}
       <div className="flex flex-wrap">
-        <div className=" mb-10 flex">
+        <div className=" mb-10 flex grow">
           <div className="w-[33%] mb-10 flex flex-col items-center mr-10">
             <div className="font-bold mb-4 mt-4">지난 스터디 복습하기</div>
-            <div className=" ">
+            <div className="">
               {problems.map((el) => (
-                <div className="flex-grow">
+                <div className="">
                   <PrevProblem key={el.id} />
                 </div>
               ))}

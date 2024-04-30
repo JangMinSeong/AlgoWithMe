@@ -15,7 +15,7 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
     setIsSubPagesOpen(!isSubPagesOpen)
   }
   const menuItemWrapper =
-    'px-1 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
+    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-xs'
 
   const pl = props.depth * 10
 

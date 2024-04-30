@@ -6,7 +6,7 @@ const StudyGroupDropdown = () => {
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center'
 
   return (
-    <div className="flex flex-col top-7 absolute left-2 z-20 bg-white w-48 shadow-lg text-sm  ">
+    <div className="flex flex-col top-7 absolute left-2 z-20 bg-white w-48 shadow-lg text-xs  ">
       <div>
         {dummyStudyGroups.map((el) => (
           <Link href={`/study/${el.id}`} className={dropdownItemCSS}>
