@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
+import { User } from '@/features/auth/authTypes'
 
 export default function Layout({
   children,
@@ -22,8 +23,26 @@ export default function Layout({
       : process.env.NEXT_PUBLIC_API_URL
 
   useEffect(() => {
-    if (user == null) {
+    const refreshTask = async () => {
+      if (user === null) {
+        const response = await fetch(`${baseUrl}/user/refresh`, {
+          method: 'POST',
+          credentials: 'include',
+        })
+        if (response.ok) {
+          const data = await response.json()
+          const updatedAccessToken =
+            response.headers.get('Authorization')?.split(' ')[1] || ''
+          const updatedUser: User = {
+            nickname: data.nickname,
+            imageUrl: data.imageUrl,
+            accessToken: updatedAccessToken,
+          }
+          handleLogin(updatedUser)
+        }
+      }
     }
+    refreshTask()
   }, [user])
 
   useInterceptor({
