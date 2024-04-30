@@ -19,7 +19,9 @@ const AddProblem = () => {
     <div onClick={handleModal}>
       <div className="flex bg-background w-fit h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 hover:bg-purple-200 hover:border-opacity-0 transition-colors">
         <MdAddCircleOutline className="min-w-6 min-h-6 mx-2" />
-        <div className=" font-bold flex justify-center mr-2">문제 추가하기</div>
+        <div className=" font-bold flex justify-center mr-2 w-36">
+          문제 추가하기
+        </div>
         <Image
           src="/swea.png"
           alt="swea logo"
