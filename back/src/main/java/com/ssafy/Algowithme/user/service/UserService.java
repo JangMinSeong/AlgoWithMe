@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.user.service;
 
-import com.google.common.net.HttpHeaders;
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
 import com.ssafy.Algowithme.user.entity.RefreshToken;
@@ -13,10 +12,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,13 +37,26 @@ public class UserService {
         log.info("gitToken : " + gitToken);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
 
-        User user =  userRepository.findByGitId(githubInfoResponse.getGitId())
-                .orElseGet(() -> userRepository.save(User.builder()
-                        .gitToken(gitToken)
-                        .gitId(githubInfoResponse.getGitId())
-                        .nickname(githubInfoResponse.getLogin())
-                        .imageUrl(githubInfoResponse.getImageUrl())
-                        .build()));
+        Optional<User> usercheck =  userRepository.findByGitId(githubInfoResponse.getGitId());
+
+        User user;
+
+        if(usercheck.isEmpty()){
+            user = userRepository.save(User.builder()
+                    .gitToken(gitToken)
+                    .gitId(githubInfoResponse.getGitId())
+                    .nickname(githubInfoResponse.getLogin())
+                    .imageUrl(githubInfoResponse.getImageUrl())
+                    .build());
+        }else {
+            user = usercheck.get();
+
+            user.setGitToken(gitToken);
+            user.setNickname(githubInfoResponse.getLogin());
+            user.setImageUrl(githubInfoResponse.getImageUrl());
+
+            userRepository.save(user);
+        }
 
         String accessToken = jwtUtil.createJwt(user.getId(), user.getRole(), accessTokenValidTime);
         String refreshToken = jwtUtil.createJwt(user.getId(), user.getRole(), refreshTokenValidTime);

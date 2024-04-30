@@ -1,11 +1,12 @@
 'use client'
 import { PiLinkSimple } from 'react-icons/pi'
+import toast, { Toaster } from 'react-hot-toast'
 
 const CopyRoomLink = () => {
   const handleCopyLink = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      alert('링크가 복사되었어요')
+      toast.success('링크가 복사되었어요')
       console.log(text)
     } catch (err) {
       console.log(err)
@@ -28,6 +29,7 @@ const CopyRoomLink = () => {
           <div className="font-bold text-sm">접속 링크 복사하기</div>
         </div>
       </div>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }

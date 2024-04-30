@@ -19,7 +19,8 @@ export function useWebSocket() {
       return
     }
     const newClient = new Client({
-      webSocketFactory: () => new SockJS('http://localhost:8085/ws-test'),
+      webSocketFactory: () =>
+        new SockJS('http://localhost:8081/api/algowithme-websocket'),
       onConnect: () => {
         console.log('success')
         dispatch(setConnected(true))

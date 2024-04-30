@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.common.controller;
+package com.ssafy.Algowithme.code.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
