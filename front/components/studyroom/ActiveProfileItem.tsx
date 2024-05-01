@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 const ActiveProfileItem = () => {
-  const isSolving = true // 문제풀이중이면.
+  const isSolving = false // 문제풀이중이면.
 
   return (
     <div>
