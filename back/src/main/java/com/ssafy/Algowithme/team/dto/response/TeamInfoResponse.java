@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.team.dto.response;
 
 import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
+import com.ssafy.Algowithme.team.entity.Team;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,13 +21,13 @@ public class TeamInfoResponse {
 
     private String imageUrl;
 
-    public static TeamInfoResponse create(Long teamId, CreateTeamRequest request) {
+    public static TeamInfoResponse create(Team team) {
         return TeamInfoResponse.builder()
-                .teamId(teamId)
-                .name(request.getName())
-                .description(request.getDescription())
+                .teamId(team.getId())
+                .name(team.getName())
+                .description(team.getDescription())
                 .canRead(false)
-                .imageUrl(request.getImageUrl())
+                .imageUrl(team.getImageUrl())
                 .build();
     }
 }

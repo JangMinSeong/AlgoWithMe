@@ -2,9 +2,12 @@ package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
+import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.service.TeamService;
+import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +18,15 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<?>  createTeam(CreateTeamRequest request) {
-        return teamService.createTeam(request);
+    public ResponseEntity<TeamInfoResponse>  createTeam(@AuthenticationPrincipal User user, @RequestBody CreateTeamRequest request) {
+        TeamInfoResponse response = teamService.createTeam(user, request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/problem")
-    public ResponseEntity<?> addCandidateProblem(ProblemAddRequest request) {
-        return teamService.addCandidateProblem(request);
+    public ResponseEntity<Void> addCandidateProblem(@RequestBody ProblemAddRequest request) {
+        teamService.addCandidateProblem(request);
+        return ResponseEntity.ok().build();
     }
 
 }
