@@ -73,6 +73,14 @@ const RightComponent: React.FC = () => {
       language,
       input: inputText,
     }
+
+    if (provider === 'swea' && dataToSave.language === 'JAVA') {
+      dataToSave.code = code.replace(
+        /public class Solution/g, // "public class Main"을 찾아서
+        'public class Main', // "public class Solution"으로 교체
+      )
+    }
+
     // localStorage.setItem('execute', JSON.stringify(dataToSave))
     const response = await fetch(`/code/execute`, {
       method: 'POST',
@@ -93,7 +101,7 @@ const RightComponent: React.FC = () => {
 
   const handleSampleRun = async () => {
     setIsLoading(true)
-    const number = 1090
+    const number = 3319
     setProvider('swea')
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
       code: '',
@@ -140,7 +148,7 @@ const RightComponent: React.FC = () => {
   return (
     <div className="flex flex-col w-full h-full">
       <div style={{ flex: 2 }}>
-        <CodeEditor ref={codeEditorRef} />
+        <CodeEditor ref={codeEditorRef} provider={provider} />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
         <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
