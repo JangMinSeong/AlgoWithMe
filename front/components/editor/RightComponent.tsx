@@ -7,6 +7,16 @@ import { RootState } from '@/lib/store'
 import fetch from '@/lib/fetch'
 import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
+import BOJOutput from '@/components/editor/codespace/BOJOutput'
+
+interface BojDetail {
+  status: number
+  input: string
+  expected: string
+  got: string
+  passed: boolean
+  execution_time: number
+}
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
@@ -19,6 +29,8 @@ const RightComponent: React.FC = () => {
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
   const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
+
+  const [resultList, setResultList] = React.useState<BojDetail[]>([])
 
   const socketMessage: string = useSelector(
     (state: RootState) => state.socket?.message || '',
@@ -36,7 +48,7 @@ const RightComponent: React.FC = () => {
     setMessage(socketMessage)
   }, [socketMessage])
 
-  const handleRun = async () => {
+  const handleInputRun = async () => {
     setIsLoading(true)
 
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
@@ -63,17 +75,47 @@ const RightComponent: React.FC = () => {
     const responseData = await response.json()
     setResStatus(responseData.status)
     setExecTime(responseData.execution_time)
-    const responseOutput = responseData.output
+    setOutput(responseData.output)
 
-    // output 상태 업데이트
-    setOutput(responseOutput)
+    setIsLoading(false)
+  }
+
+  const handleSampleRun = async () => {
+    setIsLoading(true)
+    const number = 1090
+    const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
+      code: '',
+      language: '',
+    }
+
+    // 가져온 코드, 언어, 입력 값을 로컬 스토리지에 저장합니다
+    const dataToSave = {
+      code,
+      language,
+      number,
+    }
+    // localStorage.setItem('execute', JSON.stringify(dataToSave))
+    const response = await fetch(`/code/boj`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSave),
+    })
+
+    // 응답 파싱 및 output 추출
+    const responseData = await response.json()
+    setResStatus(responseData.status)
+    setResultList(responseData.results)
+    setOutput(responseData.error)
 
     setIsLoading(false)
   }
 
   const handleSaveAndRun = () => {
     codeEditorRef.current?.saveCode()
-    handleRun()
+    if (!inputText) handleInputRun()
+    else handleSampleRun()
   }
 
   return (
@@ -96,10 +138,14 @@ const RightComponent: React.FC = () => {
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
               <ErrorOutput status={resStatus} output={output} />
-            ) : execTime !== 0 ? (
+            ) : !inputText ? (
               <ExecuteOutput time={execTime} output={output} />
             ) : (
-              <div>{output}</div>
+              <BOJOutput
+                status={resStatus}
+                error={output}
+                results={resultList}
+              />
             )}
           </div>
         </div>
