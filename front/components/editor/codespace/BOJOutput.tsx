@@ -20,7 +20,7 @@ const BOJOutput: React.FC<BojOutputProps> = ({ status, error, results }) => {
   const [selectedCase, setSelectedCase] = React.useState<BojDetail | null>(null)
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full flex flex-col flex-grow border border-gray-300 rounded-md p-1 bg-white overflow-auto">
       {status === 422 ? (
         <ErrorOutput status={status} output={error} />
       ) : (
@@ -42,26 +42,34 @@ const BOJOutput: React.FC<BojOutputProps> = ({ status, error, results }) => {
             }
 
             return (
-              <div
-                key={index}
-                className={`mb-2 ${caseColor}`}
-                onClick={() => setSelectedCase(result)}
-              >
-                {caseText}
+              <div key={index}>
+                <div
+                  className={`w-fit mb-0 px-1 rounded-md hover:bg-gray-300 ${caseColor}`}
+                  onClick={() =>
+                    setSelectedCase(selectedCase === result ? null : result)
+                  }
+                >
+                  {caseText}
+                </div>
+
+                {selectedCase === result && (
+                  <div className="h-full w-full pl-0 pr-0 mt-2 mb-2 flex border border-gray-300 bg-gray-200 rounded-md">
+                    {selectedCase.status === 200 && (
+                      <div className="w-1/2 p-2 border-r border-gray-300">
+                        <strong>예상 결과:</strong> <br />{' '}
+                        {selectedCase.expected}
+                      </div>
+                    )}
+                    <div
+                      className={`overflow-auto w-${selectedCase.status === 200 ? '1/2' : 'full'} p-2`}
+                    >
+                      <strong>출력 결과:</strong> <br /> {selectedCase.got}
+                    </div>
+                  </div>
+                )}
               </div>
             )
           })}
-        </div>
-      )}
-
-      {selectedCase && (
-        <div className="w-full mt-4 flex">
-          <div className="w-1/2 p-2 border-r border-black">
-            <strong>Expected:</strong> {selectedCase.expected}
-          </div>
-          <div className="w-1/2 p-2">
-            <strong>Got:</strong> {selectedCase.got}
-          </div>
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@ import fetch from '@/lib/fetch'
 import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
 import BOJOutput from '@/components/editor/codespace/BOJOutput'
+import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
 
 interface BojDetail {
   status: number
@@ -17,6 +18,11 @@ interface BojDetail {
   passed: boolean
   execution_time: number
 }
+interface SWEADetail {
+  expected: string
+  got: string
+  match: boolean
+}
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
@@ -25,12 +31,19 @@ const RightComponent: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false)
   const [resStatus, setResStatus] = React.useState(200)
   const [execTime, setExecTime] = React.useState(0)
+  const [testCase, setTestCase] = React.useState(0)
+  const [matches, setMatches] = React.useState(0)
 
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
   const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
 
-  const [resultList, setResultList] = React.useState<BojDetail[]>([])
+  const [resultBojList, setResultBojList] = React.useState<BojDetail[]>([])
+  const [resultSweaList, setResultSweaList] = React.useState<SWEADetail[]>([])
+
+  const [provider, setProvider] = React.useState('')
+
+  const [saveInputText, setSaveInputText] = React.useState('')
 
   const socketMessage: string = useSelector(
     (state: RootState) => state.socket?.message || '',
@@ -83,6 +96,7 @@ const RightComponent: React.FC = () => {
   const handleSampleRun = async () => {
     setIsLoading(true)
     const number = 1090
+    setProvider('swea')
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
       code: '',
       language: '',
@@ -94,26 +108,76 @@ const RightComponent: React.FC = () => {
       language,
       number,
     }
-    // localStorage.setItem('execute', JSON.stringify(dataToSave))
-    const response = await fetch(`/code/boj`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(dataToSave),
-    })
 
-    // 응답 파싱 및 output 추출
-    const responseData = await response.json()
+    // const response = await fetch(`/code/${provider}`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(dataToSave),
+    // })
+    // const responseData = await response.json()
+    const responseData = {
+      status: 200,
+      input: '6\n5 2 5\n3 3 3\n5 4 5\n4 1 2\n1 5 1\n1250 50 50\n',
+      expected: '#1 4\n#2 7\n#3 52\n#4 0\n#5 0\n#6 563144298\n',
+      got: '#1 4\n#2 7\n#3 52\n#4 0\n#5 0\n#6 563144298',
+      passed: false,
+      test_case: 7,
+      matches: 6,
+      execution_time: 468,
+      details: [
+        {
+          expected: '#1 4',
+          got: '#1 4',
+          match: true,
+        },
+        {
+          expected: '#2 7',
+          got: '#2 7',
+          match: true,
+        },
+        {
+          expected: '#3 52',
+          got: '#3 23',
+          match: false,
+        },
+        {
+          expected: '#4 0',
+          got: '#4 0',
+          match: true,
+        },
+        {
+          expected: '#5 0',
+          got: '#5 0',
+          match: true,
+        },
+        {
+          expected: '#6 563144298',
+          got: '#6 563144298',
+          match: true,
+        },
+      ],
+    }
     setResStatus(responseData.status)
-    setResultList(responseData.results)
-    setOutput(responseData.error)
+
+    if (provider === 'boj') {
+      setResultBojList(responseData.results)
+      if (responseData.error) setOutput(responseData.error)
+    } else if (provider === 'swea') {
+      setExecTime(responseData.execution_time)
+      setResultSweaList(responseData.details)
+      setOutput(responseData.got)
+      setMatches(responseData.matches)
+      setTestCase(responseData.test_case - 1)
+    }
 
     setIsLoading(false)
   }
 
   const handleSaveAndRun = () => {
     codeEditorRef.current?.saveCode()
+    setSaveInputText(inputText)
     if (inputText !== '') handleInputRun()
     else handleSampleRun()
   }
@@ -138,14 +202,25 @@ const RightComponent: React.FC = () => {
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
               <ErrorOutput status={resStatus} output={output} />
-            ) : inputText !== '' ? (
+            ) : saveInputText !== '' ? (
               <ExecuteOutput time={execTime} output={output} />
-            ) : (
+            ) : provider === 'boj' ? (
               <BOJOutput
                 status={resStatus}
                 error={output}
-                results={resultList}
+                results={resultBojList}
               />
+            ) : provider === 'swea' ? (
+              <SWEAOutput
+                status={resStatus}
+                got={output}
+                test_case={testCase}
+                matches={matches}
+                execution_time={execTime}
+                details={resultSweaList}
+              />
+            ) : (
+              <div>출력 창</div>
             )}
           </div>
         </div>
