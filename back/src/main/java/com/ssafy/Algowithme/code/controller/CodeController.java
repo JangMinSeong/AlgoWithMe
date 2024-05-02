@@ -12,10 +12,7 @@ import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -25,10 +22,20 @@ public class CodeController {
 
     private final CodeService codeService;
 
+    @PostMapping("/create/{pageId}")
+    public ResponseEntity<Long> createPersonalCode(@PathVariable Long pageId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(codeService.createPersonalCode(pageId, user));
+    }
+
     @PostMapping("/save")
     public ResponseEntity<String> savePersonalCode(@RequestBody SaveCodeRequest request, @AuthenticationPrincipal User user) {
         codeService.savePersonalCode(request, user);
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping("/{codeId}")
+    public ResponseEntity<?> getPersonalCode(@PathVariable Long codeId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(codeService.getPersonalCode(codeId));
     }
 
     @PostMapping("/execute")
