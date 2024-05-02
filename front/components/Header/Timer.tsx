@@ -1,6 +1,6 @@
 'use client'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/lib/store'
 import { useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
