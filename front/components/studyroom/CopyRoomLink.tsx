@@ -6,7 +6,7 @@ const CopyRoomLink = () => {
   const handleCopyLink = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text)
-      toast.success('링크가 복사되었어요')
+      toast.success('링크가 클립보드에 복사되었어요')
       console.log(text)
     } catch (err) {
       console.log(err)

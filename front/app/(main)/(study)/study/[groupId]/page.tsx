@@ -1,3 +1,5 @@
+'use client'
+
 import PieChart from '@/components/mainpage/PieChart'
 import EnterStudyRoom from '@/components/studypage/EnterStudyRoom'
 import NextProblem from '@/components/studypage/NextProblem'
@@ -6,7 +8,8 @@ import InviteMember from '@/components/studypage/InviteMember'
 import AddProblem from '@/components/studypage/AddProblem'
 import PrevProblem from '@/components/studypage/PrevProblem'
 import RankingProfileItem from '@/components/studypage/RankingProfileItem'
-const StudyMainPage = () => {
+
+const StudyMainPage = ({ params }: { params: { groupId: number } }) => {
   return (
     <div className="flex flex-col">
       <div className=" flex flex-wrap">
@@ -28,13 +31,13 @@ const StudyMainPage = () => {
               height="80"
               className="absolute bottom-20"
             />
-            <InviteMember />
+            <InviteMember groupId={params.groupId} />
           </div>
 
           <div className="w-[26%] pb-2 mr-4 flex flex-col r mx-auto justify-between">
             <div className="font-bold">오늘의 스터디룸</div>
             <div className="flex">
-              <EnterStudyRoom />
+              <EnterStudyRoom groupId={params.groupId} />
             </div>
           </div>
 

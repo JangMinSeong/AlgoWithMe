@@ -1,4 +1,3 @@
-import React from 'react'
 import { OpenVidu } from 'openvidu-browser'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -6,7 +5,7 @@ import {
   setSession,
   setMyUserName,
   setMySessionId,
-  setMainStreamManager,
+  setMainStreamManager, // 필요 없을 수도
   setSubscriber,
   setPublisher,
   setParticipants,
@@ -34,6 +33,7 @@ const useGroupCall = () => {
     const mySession = OV.initSession()
 
     mySession.on('streamCreated', (event) => {
+      // 이부분 html 요소 할당해야하는지 확인 필요
       const subscriber = mySession.subscribe(event.stream, undefined)
       const nickname = event.stream.connection.data.split('=')[1]
       dispatch(setSubscriber(subscriber))
@@ -77,9 +77,10 @@ const useGroupCall = () => {
       console.warn(exception)
     })
 
+    // 이부분 html 요소 할당해야하는지 확인 필요
     const publisher = OV.initPublisher(undefined, {
-      audioSource: undefined,
-      videoSource: undefined,
+      audioSource: undefined, // 이부분 수정필요
+      videoSource: false,
       publishAudio: false,
       publishVideo: false,
     })

@@ -19,7 +19,7 @@ const GroupCall = () => {
   const { connectToSession, disconnectSession } = useGroupCall()
 
   useEffect(() => {
-    const sessionIdResponse = fetch(`${API_URL}/groupcall/session`, {
+    const sessionIdResponse = fetch(`${API_URL}/openvidu/sessions`, {
       method: 'POST',
       body: { customSessionId: roomId },
       credentials: 'include',
@@ -27,7 +27,7 @@ const GroupCall = () => {
     const sessionId = sessionIdResponse.data
 
     const tokenResponse = fetch(
-      `${API_URL}/groupcall/session/${sessionId}/connections`,
+      `${API_URL}/openvidu/sessions/${sessionId}/connections`,
       {
         method: 'POST',
         body: { customNickname: myUserName },
