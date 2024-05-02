@@ -2,6 +2,7 @@ package com.ssafy.Algowithme.user.service;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
+import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
 import com.ssafy.Algowithme.user.repository.UserRepository;
@@ -25,7 +26,7 @@ public class UserService {
     private final GithubOAuth2Utils githubUtil;
     private final JwtUtil jwtUtil;
 
-    public User login(String code, HttpServletResponse response) {
+    public UserInfoResponse login(String code, HttpServletResponse response) {
         String gitToken = githubUtil.getGithubToken(code);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
 
@@ -52,7 +53,11 @@ public class UserService {
 
         jwtUtil.setUserTokens(response, user);
 
-        return user;
+        return UserInfoResponse.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .imageUrl(user.getImageUrl())
+                .build();
     }
 
     public void logout(HttpServletRequest request, HttpServletResponse response) {

@@ -24,9 +24,9 @@ const ErrorOutput: React.FC<ErrorOutputProps> = ({ status, output }) => {
   }
 
   return (
-    <div className="w-full h-full flex flex-col border border-red-500 bg-red-100 p-4 rounded-md">
+    <div className="w-full h-full flex flex-col border border-red-500 bg-red-100 p-4 pr-0 rounded-md overflow-auto">
       <div className="text-red-500 font-bold text-lg mb-2">{errorMessage}</div>
-      <div className="text-base text-black">{output}</div>
+      <div className="text-base text-black pr-4">{output}</div>
     </div>
   )
 }

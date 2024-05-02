@@ -60,10 +60,18 @@ function Login() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [code])
 
+  const letters = 'LOADING'.split('').map((letter, idx) => (
+    <span
+      key={letter}
+      className={`animate-bounce text-3xl delay-[${idx * 100}ms]`}
+      style={{ animationDelay: `${idx * 100}ms` }}
+    >
+      {letter}
+    </span>
+  ))
+
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="text-3xl">Loading...</div>
-    </div>
+    <div className="flex justify-center items-center h-screen">{letters}</div>
   )
 }
 
