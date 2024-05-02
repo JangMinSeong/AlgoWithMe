@@ -10,8 +10,6 @@ interface SWEADetail {
 interface SWEAOutputProps {
   status: number
   got: string
-  test_case: number
-  matches: number
   execution_time: number
   details: SWEADetail[]
 }
@@ -19,8 +17,6 @@ interface SWEAOutputProps {
 const SWEAOutput: React.FC<SWEAOutputProps> = ({
   status,
   got,
-  test_case,
-  matches,
   execution_time,
   details,
 }) => {

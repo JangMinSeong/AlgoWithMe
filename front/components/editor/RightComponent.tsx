@@ -31,8 +31,6 @@ const RightComponent: React.FC = () => {
   const [isLoading, setIsLoading] = React.useState(false)
   const [resStatus, setResStatus] = React.useState(200)
   const [execTime, setExecTime] = React.useState(0)
-  const [testCase, setTestCase] = React.useState(0)
-  const [matches, setMatches] = React.useState(0)
 
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
@@ -109,56 +107,15 @@ const RightComponent: React.FC = () => {
       number,
     }
 
-    // const response = await fetch(`/code/${provider}`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(dataToSave),
-    // })
-    // const responseData = await response.json()
-    const responseData = {
-      status: 200,
-      input: '6\n5 2 5\n3 3 3\n5 4 5\n4 1 2\n1 5 1\n1250 50 50\n',
-      expected: '#1 4\n#2 7\n#3 52\n#4 0\n#5 0\n#6 563144298\n',
-      got: '#1 4\n#2 7\n#3 52\n#4 0\n#5 0\n#6 563144298',
-      passed: false,
-      test_case: 7,
-      matches: 6,
-      execution_time: 468,
-      details: [
-        {
-          expected: '#1 4',
-          got: '#1 4',
-          match: true,
-        },
-        {
-          expected: '#2 7',
-          got: '#2 7',
-          match: true,
-        },
-        {
-          expected: '#3 52',
-          got: '#3 23',
-          match: false,
-        },
-        {
-          expected: '#4 0',
-          got: '#4 0',
-          match: true,
-        },
-        {
-          expected: '#5 0',
-          got: '#5 0',
-          match: true,
-        },
-        {
-          expected: '#6 563144298',
-          got: '#6 563144298',
-          match: true,
-        },
-      ],
-    }
+    const response = await fetch(`/code/${provider}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSave),
+    })
+    const responseData = await response.json()
+
     setResStatus(responseData.status)
 
     if (provider === 'boj') {
@@ -168,8 +125,6 @@ const RightComponent: React.FC = () => {
       setExecTime(responseData.execution_time)
       setResultSweaList(responseData.details)
       setOutput(responseData.got)
-      setMatches(responseData.matches)
-      setTestCase(responseData.test_case - 1)
     }
 
     setIsLoading(false)
@@ -214,8 +169,6 @@ const RightComponent: React.FC = () => {
               <SWEAOutput
                 status={resStatus}
                 got={output}
-                test_case={testCase}
-                matches={matches}
                 execution_time={execTime}
                 details={resultSweaList}
               />
