@@ -13,7 +13,9 @@ const GroupCall = () => {
   const myUserName = useSelector(
     (state: RootState) => state.groupcall.myUserName,
   )
-
+  const activeSpeaker = useSelector(
+    (state: RootState) => state.groupcall.activeSpeaker,
+  )
   const { connectToSession, disconnectSession } = useGroupCall()
 
   useEffect(() => {
@@ -49,6 +51,7 @@ const GroupCall = () => {
       그룹콜
       {participants.map((el, idx) => (
         <div>사람{idx + 1}</div>
+        // activeSpeaker 인 사람은 빨간 링띄우기
       ))}
     </div>
   )

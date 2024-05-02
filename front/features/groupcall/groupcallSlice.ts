@@ -11,6 +11,7 @@ interface IGroupcallState {
   participants: []
   isMicOn: boolean
   isHeadphoneOn: boolean
+  activeSpeaker: string | undefined
 }
 
 const initialState: IGroupcallState = {
@@ -23,6 +24,7 @@ const initialState: IGroupcallState = {
   participants: [],
   isMicOn: false,
   isHeadphoneOn: true,
+  activeSpeaker: undefined,
 }
 
 const groupcallSlice = createSlice({
@@ -62,6 +64,9 @@ const groupcallSlice = createSlice({
     turnHeadphoneOff(state) {
       state.isHeadphoneOn = false
     },
+    setActiveSpeaker(state, action: PayloadAction<string | undefined>) {
+      state.activeSpeaker = action.payload
+    },
   },
 })
 
@@ -77,6 +82,7 @@ export const {
   turnMicOn,
   turnHeadphoneOn,
   turnHeadphoneOff,
+  setActiveSpeaker,
 } = groupcallSlice.actions
 
 export default groupcallSlice.reducer

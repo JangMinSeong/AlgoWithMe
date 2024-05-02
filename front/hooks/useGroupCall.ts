@@ -14,13 +14,13 @@ import {
   turnMicOn,
   turnHeadphoneOff,
   turnHeadphoneOn,
+  setActiveSpeaker,
 } from '@/features/groupcall/groupcallSlice'
 
 const useGroupCall = () => {
   const dispatch = useDispatch()
 
   const session = useSelector((state: RootState) => state.groupcall.session)
-  const isMicOn = useSelector((state: RootState) => state.groupcall.isMicOn)
   const publisher = useSelector((state: RootState) => state.groupcall.publisher)
   const subscriber = useSelector(
     (state: RootState) => state.groupcall.subscriber,
@@ -61,6 +61,17 @@ const useGroupCall = () => {
     })
 
     mySession.connect(token)
+
+    // 현재 발화자
+    mySession.on('publisherStartSpeaking', (event) => {
+      setActiveSpeaker(event.connection.connectionId)
+      console.log('User ' + event.connection.connectionId + ' start speaking')
+    })
+
+    mySession.on('publisherStopSpeaking', (event) => {
+      setActiveSpeaker(undefined)
+      console.log('User ' + event.connection.connectionId + ' stop speaking')
+    })
 
     mySession.on('exception', (exception) => {
       console.warn(exception)
