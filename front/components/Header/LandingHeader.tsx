@@ -1,6 +1,6 @@
 import GithubButton from '@/components/GithubButton'
 import Image from 'next/image'
-import Logo from '@/public/logo/Logo@0.1x.png'
+import Logo from '@/public/logo.svg'
 
 export default function LandingHeader() {
   return (
@@ -9,7 +9,8 @@ export default function LandingHeader() {
         <Image
           src={Logo}
           alt="Logo"
-          className="transition ease-in-out hover:cursor-pointer hover:drop-shadow-lg hover:duration-300 hover:scale-105"
+          width={100}
+          className="transition ease-in-out hover:cursor-pointer hover:drop-shadow-md hover:duration-300 hover:scale-105"
         />
       </div>
       <div className="absolute right-4 top-1/2 transform -translate-y-1/2">

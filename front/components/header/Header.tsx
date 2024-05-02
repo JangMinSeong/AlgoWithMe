@@ -5,6 +5,7 @@ import SearchDropdown from '@/components/header/SearchDropdown'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import Image from 'next/image'
+import Logo from '@/public/logo.svg'
 
 const MainHeader: React.FC = () => {
   interface Item {
@@ -23,7 +24,8 @@ const MainHeader: React.FC = () => {
   return (
     <header className="fixed z-20 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
       <div className="flex-none w-1/4">
-        <div className="text-xl font-bold">LOGO</div>
+        <Image src={Logo} alt="Logo" width={80} />
+        {/* <div className="text-xl font-bold">LOGO</div> */}
       </div>
       <SearchDropdown items={items} />
 
