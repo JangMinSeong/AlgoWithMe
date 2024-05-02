@@ -27,15 +27,15 @@ const languageOptions: Record<string, CodeExample> = {
     mode: 'c_cpp',
     value: `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
   },
-  Cpp: {
+  CPP: {
     mode: 'c_cpp',
     value: `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
   },
-  Java: {
+  JAVA: {
     mode: 'java',
     value: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`,
   },
-  Python: {
+  PYTHON: {
     mode: 'python',
     value: `print("Hello, World!")`,
   },
@@ -129,12 +129,9 @@ const CodeEditor: React.FC = forwardRef((props, ref) => {
 
   useImperativeHandle(ref, () => ({
     getCurrentTabInfo() {
-      const currentTab = tabs.find((tab) => tab.id === activeTab)
-      if (currentTab) {
-        return { code: currentTab.code, language: currentTab.language }
-      }
-      return { code: '', language: '' }
+      return { code, language }
     },
+    saveCode,
   }))
 
   const handleCodeChange = debounce((newCode: string) => {

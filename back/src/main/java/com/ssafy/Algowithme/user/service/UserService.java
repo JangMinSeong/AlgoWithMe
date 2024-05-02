@@ -2,16 +2,13 @@ package com.ssafy.Algowithme.user.service;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
-import com.ssafy.Algowithme.user.entity.RefreshToken;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
 import com.ssafy.Algowithme.user.repository.UserRepository;
 import com.ssafy.Algowithme.user.util.GithubOAuth2Utils;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
@@ -21,7 +18,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -29,12 +25,8 @@ public class UserService {
     private final GithubOAuth2Utils githubUtil;
     private final JwtUtil jwtUtil;
 
-    public static long accessTokenValidTime = 3 * 60 * 60 * 1000L;    // 3시간
-    public static long refreshTokenValidTime = 15 * 60 * 60 * 24 * 1000L;   // 15일
-
     public User login(String code, HttpServletResponse response) {
         String gitToken = githubUtil.getGithubToken(code);
-        log.info("gitToken : " + gitToken);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
 
         Optional<User> usercheck =  userRepository.findByGitId(githubInfoResponse.getGitId());
@@ -58,22 +50,7 @@ public class UserService {
             userRepository.save(user);
         }
 
-        String accessToken = jwtUtil.createJwt(user.getId(), user.getRole(), accessTokenValidTime);
-        String refreshToken = jwtUtil.createJwt(user.getId(), user.getRole(), refreshTokenValidTime);
-
-        response.addHeader("Authorization", "Bearer " + accessToken);
-
-        Cookie cookie = new Cookie("algowithme_refreshToken", refreshToken);
-        cookie.setMaxAge((int) (refreshTokenValidTime / 1000));
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-
-        response.addCookie(cookie);
-        redisRepository.save(RefreshToken.builder()
-                .id(user.getId())
-                .refreshToken(refreshToken)
-                .build());
+        jwtUtil.setUserTokens(response, user);
 
         return user;
     }

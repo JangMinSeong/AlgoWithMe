@@ -4,11 +4,15 @@ import CodeEditor from '@/components/editor/codespace/CodeSpace'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import fetch from '@/lib/fetch'
+import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 
 const RightComponent: React.FC = () => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
-  const [runCount, setRunCount] = React.useState(0)
+  const [output, setOutput] = React.useState('')
+  const [isLoading, setIsLoading] = React.useState(false)
+  const [status, setStatus] = React.useState(200)
 
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
@@ -31,7 +35,7 @@ const RightComponent: React.FC = () => {
   }, [socketMessage])
 
   const handleRun = async () => {
-    setRunCount((prevCount) => prevCount + 1)
+    setIsLoading(true)
 
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
       code: '',
@@ -44,18 +48,29 @@ const RightComponent: React.FC = () => {
       language,
       input: inputText,
     }
-    localStorage.setItem('execute', JSON.stringify(dataToSave))
-    // const response = await fetch(
-    //   `${process.env.NEXT_PUBLIC_API_DEV_URL}/code/run`,
-    //   {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify({ dataToSave }),
-    //   },
-    // )
-    // console.log(response)
+    // localStorage.setItem('execute', JSON.stringify(dataToSave))
+    const response = await fetch(`/code/execute`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSave),
+    })
+
+    // 응답 파싱 및 output 추출
+    const responseData = await response.json()
+    setStatus(responseData.status)
+    const responseOutput = responseData.output
+
+    // output 상태 업데이트
+    setOutput(responseOutput)
+
+    setIsLoading(false)
+  }
+
+  const handleSaveAndRun = () => {
+    codeEditorRef.current?.saveCode()
+    handleRun()
   }
 
   return (
@@ -67,19 +82,25 @@ const RightComponent: React.FC = () => {
         <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
           <div className="flex-1 border border-gray-300 bg-white">
             <textarea
-              className="w-full h-full resize-none p-2"
+              className="w-full h-full resize-none p-2 overflow-auto"
               placeholder="Enter text here..."
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
             />
           </div>
-          <div className="flex-1 p-2 bg-white border border-gray-300">
-            실행횟수 : {runCount}
+          <div className="flex-1 p-2 bg-white border border-gray-300 overflow-auto">
+            {isLoading ? (
+              <pre>실행 중...</pre>
+            ) : status !== 200 ? (
+              <ErrorOutput status={status} output={output} />
+            ) : (
+              <pre>{output}</pre>
+            )}
           </div>
         </div>
         <div className="flex flex-row justify-end p-5 pt-0 pr-3">
           <button
-            onClick={handleRun}
+            onClick={handleSaveAndRun}
             className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           >
             실행하기

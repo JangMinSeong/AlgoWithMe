@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class ErrorResponse  {
+
     private final int code;
     private final String message;
     private final LocalDateTime timestamp;
