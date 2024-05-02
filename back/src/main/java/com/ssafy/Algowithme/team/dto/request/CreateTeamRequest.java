@@ -7,8 +7,6 @@ import lombok.Setter;
 @Setter
 public class CreateTeamRequest {
 
-    private Integer userId;
-
     private String name;
 
     private String description;

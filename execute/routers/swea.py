@@ -1,9 +1,9 @@
 from fastapi import  APIRouter, HTTPException
-from fastapi.responses import JSONResponse
 import subprocess
 import os
 from  pydantic import BaseModel
 import time
+from itertools import zip_longest
 
 router = APIRouter(
     prefix = "/swea",
@@ -184,11 +184,11 @@ async def mark_swea_cpp(code_test: CodeTest):
     return results
 
 def mark_test_case(code_test: CodeTest, output: str, elapsed_time_ms: int):
-    expected_lines = code_test.output.split('\n')
+    expected_lines = code_test.output.strip().split('\n')
     output_lines = output.strip().split('\n')
     matches = 0
     line_results = []
-    for exp, out in zip(expected_lines, output_lines):
+    for exp, out in zip_longest(expected_lines, output_lines, fillvalue=""):
         is_match = exp == out
         line_results.append({"expected": exp, "got": out, "match": is_match})
         if is_match:
