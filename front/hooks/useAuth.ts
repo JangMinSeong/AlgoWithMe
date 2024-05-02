@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux'
 import { loginSuccess, logout } from '@/features/auth/authSlice'
 import { User } from '@/features/auth/authTypes'
+import fetch from '@/lib/fetch'
 
 const useAuth = () => {
   const dispatch = useDispatch()
@@ -9,7 +10,11 @@ const useAuth = () => {
     dispatch(loginSuccess(user))
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await fetch('/user/logout', {
+      method: 'POST',
+      credentials: 'include',
+    })
     dispatch(logout())
   }
 
