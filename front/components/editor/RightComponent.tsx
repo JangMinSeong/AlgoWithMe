@@ -101,8 +101,8 @@ const RightComponent: React.FC = () => {
 
   const handleSampleRun = async () => {
     setIsLoading(true)
-    const number = 3319
-    setProvider('swea')
+    const number = 3678
+    setProvider('boj')
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
       code: '',
       language: '',
