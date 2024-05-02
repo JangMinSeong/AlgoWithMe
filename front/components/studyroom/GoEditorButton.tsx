@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/lib/store'
 
 const GoEditorButton = () => {
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)

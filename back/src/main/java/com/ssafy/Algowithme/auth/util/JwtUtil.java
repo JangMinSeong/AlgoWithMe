@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.auth.util;
 import com.ssafy.Algowithme.auth.type.JwtCode;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.RefreshToken;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
@@ -110,7 +111,7 @@ public class JwtUtil {
                 .build());
     }
 
-    public void refreshAccessToken(HttpServletResponse response, String refreshToken) {
+    public UserInfoResponse refreshAccessToken(HttpServletResponse response, String refreshToken) {
         if(IsNotValidaRefreshToken(refreshToken)) {
             throw new CustomException(ExceptionStatus.REFRESH_TOKEN_IS_NOT_VALID);
         }
@@ -118,6 +119,12 @@ public class JwtUtil {
         User user = (User) userDetailsService.loadUserByUsername(String.valueOf(getUserId(refreshToken)));
 
         setUserTokens(response, user);
+
+        return UserInfoResponse.builder()
+                .id(user.getId())
+                .nickname(user.getNickname())
+                .imageUrl(user.getImageUrl())
+                .build();
     }
 
     public boolean IsNotValidaRefreshToken(String refreshToken) {

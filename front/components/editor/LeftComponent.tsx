@@ -27,7 +27,7 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import Problem from '@/components/editor/Problem'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/lib/store'
 import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
 
