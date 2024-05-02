@@ -10,7 +10,7 @@ const DeleteButton = () => {
   const pageId = '123'
   const handleDelete = async (e) => {
     e.stopPropagation()
-    if (window.confirm('모든 스터디원에게서 같이 사라져요. 삭제하시겠어요?')) {
+    if (window.confirm('모든 스터디원에게서 사라져요. 삭제하시겠어요?')) {
       const pageDeleteRes = await fetch(`${API_URL}/page`, {
         method: 'DELETE',
         body: { page_id: pageId },

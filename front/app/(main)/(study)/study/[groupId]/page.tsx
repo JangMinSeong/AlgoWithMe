@@ -68,7 +68,7 @@ const StudyMainPage = ({ params }: { params: { groupId: number } }) => {
           <div className="w-[33%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
             <div className="pr-10">
-              <AddProblem />
+              <AddProblem groupId={params.groupId} />
               <NextProblem />
             </div>
           </div>

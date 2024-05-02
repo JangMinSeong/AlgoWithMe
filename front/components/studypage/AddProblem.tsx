@@ -4,7 +4,7 @@ import { MdAddCircleOutline } from 'react-icons/md'
 import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
 
-const AddProblem = () => {
+const AddProblem = ({ groupId }: { groupId: number }) => {
   const [showModal, setShowModal] = useState(false)
   const handleModal = () => {
     setShowModal(true)
@@ -46,7 +46,9 @@ const AddProblem = () => {
           />
         </div>
       </div>
-      {showModal && <AddProblemModal clickModal={clickModal} />}
+      {showModal && (
+        <AddProblemModal clickModal={clickModal} groupId={groupId} />
+      )}
     </div>
   )
 }
