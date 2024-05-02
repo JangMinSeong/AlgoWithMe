@@ -1,7 +1,7 @@
 'use client'
 
 import SideBar from '@/components/sidebar/SideBar'
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
@@ -16,6 +16,7 @@ export default function Layout({
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
+  const hasOngoingRequest = useRef(false)
 
   const baseUrl =
     process.env.NODE_ENV === 'development'
@@ -24,12 +25,18 @@ export default function Layout({
 
   useEffect(() => {
     const refreshTask = async () => {
+      if (hasOngoingRequest.current) {
+        return
+      }
+      hasOngoingRequest.current = true
+
       if (user === null) {
         const response = await fetch(`${baseUrl}/user/refresh`, {
           method: 'POST',
           credentials: 'include',
         })
         if (response.ok) {
+          console.log(response)
           const data = await response.json()
           const updatedAccessToken =
             response.headers.get('Authorization')?.split(' ')[1] || ''

@@ -62,7 +62,9 @@ function Login() {
 
   return (
     <div className="flex justify-center items-center h-screen">
-      <div className="text-3xl">Loading...</div>
+      <div className="flex flex-col items-center justify-center">
+        Loading...
+      </div>
     </div>
   )
 }

@@ -4,6 +4,8 @@ export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const token = request.cookies.get('algowithme_refreshToken')
 
+  console.log(token)
+
   if (pathname === '/') {
     if (token) {
       const url = request.nextUrl.clone()

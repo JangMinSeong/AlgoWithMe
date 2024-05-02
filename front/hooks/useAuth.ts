@@ -12,7 +12,7 @@ const useAuth = () => {
 
   const handleLogout = async () => {
     await fetch('/user/logout', {
-      method: 'POST',
+      method: 'GET',
       credentials: 'include',
     })
     dispatch(logout())
