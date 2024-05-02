@@ -114,7 +114,7 @@ const RightComponent: React.FC = () => {
 
   const handleSaveAndRun = () => {
     codeEditorRef.current?.saveCode()
-    if (!inputText) handleInputRun()
+    if (inputText !== '') handleInputRun()
     else handleSampleRun()
   }
 
@@ -138,7 +138,7 @@ const RightComponent: React.FC = () => {
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
               <ErrorOutput status={resStatus} output={output} />
-            ) : !inputText ? (
+            ) : inputText !== '' ? (
               <ExecuteOutput time={execTime} output={output} />
             ) : (
               <BOJOutput

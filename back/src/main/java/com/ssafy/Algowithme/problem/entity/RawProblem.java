@@ -18,5 +18,5 @@ public class RawProblem {
     private String level;
     private List<String> timeLimit;
     private List<TestCase> exampleList;
-    private List<EditCode> editCodeList;
+    private List<EditCode> editCodesList;
 }
