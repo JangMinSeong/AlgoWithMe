@@ -188,7 +188,9 @@ def mark_test_case(code_test: CodeTest, output: str, elapsed_time_ms: int):
     output_lines = output.strip().split('\n')
     matches = 0
     line_results = []
-    for exp, out in zip_longest(expected_lines, output_lines, fillvalue=""):
+    for i, (exp, out) in enumerate(zip_longest(expected_lines, output_lines, fillvalue="")):
+        if i >= len(expected_lines):
+            break
         is_match = exp == out
         line_results.append({"expected": exp, "got": out, "match": is_match})
         if is_match:
