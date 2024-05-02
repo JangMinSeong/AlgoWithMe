@@ -2,7 +2,7 @@
 
 import useSidebar from '@/hooks/useSidebar'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/lib/store'
 import { CiMenuBurger } from 'react-icons/ci'
 import { HiOutlineChevronDoubleLeft } from 'react-icons/hi2'
 import { Tooltip } from 'react-tooltip'

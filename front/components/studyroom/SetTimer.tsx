@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import useTimer from '@/hooks/useTimer'
 import { useSelector } from 'react-redux'
-import { RootState } from '@/store/studyroomStore'
+import { RootState } from '@/lib/store'
 import toast, { Toaster } from 'react-hot-toast'
 
 const SetTimer = () => {

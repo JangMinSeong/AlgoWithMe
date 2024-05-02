@@ -39,18 +39,17 @@ public class UserController {
     })
     public ResponseEntity<UserInfoResponse> login(@RequestBody LoginRequest loginRequest,
                                                   HttpServletResponse response) {
-        User userInfo = userService.login(loginRequest.getCode(), response);
+        UserInfoResponse userInfo = userService.login(loginRequest.getCode(), response);
 
-        return ResponseEntity.ok(
-                UserInfoResponse.builder()
-                .id(userInfo.getId())
-                .nickname(userInfo.getNickname())
-                .imageUrl(userInfo.getImageUrl())
-                .build());
+        return ResponseEntity.ok(userInfo);
     }
 
     @GetMapping("/logout")
     @Operation(summary = "로그아웃 기능", description = "로그아웃을 진행한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize를 제거하여 request를 요청해주세요.")
+    })
     public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request, response);
         return ResponseEntity.ok().build();
@@ -58,9 +57,17 @@ public class UserController {
 
     @PostMapping("/refresh")
     @Operation(summary = "엑세스 토큰 갱신", description = "Refresh Token을 사용하여 Access Token을 갱신한다.")
-    public ResponseEntity<Void> refresh(@CookieValue(name = "algowithme_refreshToken", required = true) String refreshToken,
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Access Token 갱신 성공",
+                    content = {@Content(schema = @Schema(implementation = UserInfoResponse.class))}),
+            @ApiResponse(responseCode = "1002", description = "Refresh Token이 유효하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1004", description = "Refresh Token에 해당하는 유저가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<UserInfoResponse> refresh(@CookieValue(name = "algowithme_refreshToken", required = true) String refreshToken,
                                         HttpServletResponse response) {
-        jwtUtil.refreshAccessToken(response, refreshToken);
-        return ResponseEntity.ok().build();
+        UserInfoResponse userInfo = jwtUtil.refreshAccessToken(response, refreshToken);
+        return ResponseEntity.ok(userInfo);
     }
 }
