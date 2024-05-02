@@ -1,7 +1,13 @@
 package com.ssafy.Algowithme.problem.controller;
 
+import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.problem.service.ProblemService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping("/problem")
@@ -18,7 +25,12 @@ public class ProblemController {
     private final ProblemService problemService;
 
     @GetMapping("/all")
-    public ResponseEntity<?> getAllProblem() {
+    @Operation(summary = "문제 리스트 조회", description = "요약된 문제 정보 리스트를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = AllProblemResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "조회 실패")
+    })
+    public ResponseEntity<AllProblemResponse> getAllProblem() {
         return problemService.getAll();
     }
 
