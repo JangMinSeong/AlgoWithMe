@@ -5,6 +5,7 @@ import com.ssafy.Algowithme.code.dto.request.MarkRequest;
 import com.ssafy.Algowithme.code.dto.request.SaveCodeRequest;
 import com.ssafy.Algowithme.code.dto.response.BOJResponse;
 import com.ssafy.Algowithme.code.dto.response.ExecutionResponse;
+import com.ssafy.Algowithme.code.dto.response.ProgrammersResponse;
 import com.ssafy.Algowithme.code.dto.response.SWEAResponse;
 import com.ssafy.Algowithme.code.service.CodeService;
 import com.ssafy.Algowithme.user.entity.User;
@@ -45,6 +46,12 @@ public class CodeController {
     @PostMapping("/swea")
     public Mono<ResponseEntity<SWEAResponse>> markSwea(@RequestBody MarkRequest request) {
         return codeService.markSWEA(request)
+                .map(response -> ResponseEntity.ok().body(response));
+    }
+
+    @PostMapping("/programmers")
+    public Mono<ResponseEntity<ProgrammersResponse>> markProgrammers(@RequestBody MarkRequest request) {
+        return codeService.markProgrammers(request)
                 .map(response -> ResponseEntity.ok().body(response));
     }
 }

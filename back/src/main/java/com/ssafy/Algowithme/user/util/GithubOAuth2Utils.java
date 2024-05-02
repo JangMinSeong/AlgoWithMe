@@ -1,5 +1,7 @@
 package com.ssafy.Algowithme.user.util;
 
+import com.ssafy.Algowithme.common.exception.CustomException;
+import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.user.dto.request.GithubTokenRequest;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
 import com.ssafy.Algowithme.user.dto.response.GithubTokenResponse;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -48,11 +49,11 @@ public class GithubOAuth2Utils {
                     GithubInfoResponse.class
             ).getBody();
         } catch (HttpClientErrorException e) {
-            throw new HttpClientErrorException(HttpStatus.NOT_FOUND, "해당하는 유저가 없습니다.");
+            throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
         }
     }
 
-    public String getGithubToken(String code) throws RuntimeException {
+    public String getGithubToken(String code) {
         RestTemplate restTemplate = new RestTemplate();
 
         GithubTokenResponse githubTokenResponse = restTemplate.postForObject(
@@ -70,6 +71,6 @@ public class GithubOAuth2Utils {
             return githubTokenResponse.getAccessToken();
         }
 
-        throw new RuntimeException("Github Access Token 이 없습니다.");
+        throw new CustomException(ExceptionStatus.GITHUB_TOKEN_NOT_FOUND);
     }
 }

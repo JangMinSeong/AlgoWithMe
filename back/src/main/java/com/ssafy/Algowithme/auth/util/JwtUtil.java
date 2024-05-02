@@ -1,10 +1,17 @@
 package com.ssafy.Algowithme.auth.util;
 
 import com.ssafy.Algowithme.auth.type.JwtCode;
+import com.ssafy.Algowithme.common.exception.CustomException;
+import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.user.entity.RefreshToken;
+import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
 import com.ssafy.Algowithme.user.type.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,12 +28,17 @@ public class JwtUtil {
 
     private Key secretKey;
     private final UserDetailsService userDetailsService;
+    private final RefreshTokenRedisRepository redisRepository;
 
     public JwtUtil(@Value("${jwt.secret.key}") String secretKey,
-                   UserDetailsService userDetailsService) {
+                   UserDetailsService userDetailsService, RefreshTokenRedisRepository redisRepository) {
         this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
         this.userDetailsService = userDetailsService;
+        this.redisRepository = redisRepository;
     }
+
+    public static long accessTokenValidTime = 3 * 60 * 60 * 1000L;    // 3시간
+    public static long refreshTokenValidTime = 15 * 60 * 60 * 24 * 1000L;   // 15일
 
     public Integer getUserId(String token) {
         return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().get("userId", Integer.class);
@@ -79,4 +91,38 @@ public class JwtUtil {
         }
     }
 
+    public void setUserTokens(HttpServletResponse response, User user) {
+        String accessToken = createJwt(user.getId(), user.getRole(), accessTokenValidTime);
+        String refreshToken = createJwt(user.getId(), user.getRole(), refreshTokenValidTime);
+
+        response.addHeader("Authorization", "Bearer " + accessToken);
+
+        Cookie cookie = new Cookie("algowithme_refreshToken", refreshToken);
+        cookie.setMaxAge((int) (refreshTokenValidTime / 1000));
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+        redisRepository.save(RefreshToken.builder()
+                .id(user.getId())
+                .refreshToken(refreshToken)
+                .build());
+    }
+
+    public void refreshAccessToken(HttpServletResponse response, String refreshToken) {
+        if(IsNotValidaRefreshToken(refreshToken)) {
+            throw new CustomException(ExceptionStatus.REFRESH_TOKEN_IS_NOT_VALID);
+        }
+
+        User user = (User) userDetailsService.loadUserByUsername(String.valueOf(getUserId(refreshToken)));
+
+        setUserTokens(response, user);
+    }
+
+    public boolean IsNotValidaRefreshToken(String refreshToken) {
+        return refreshToken == null
+                || redisRepository.findByRefreshToken(refreshToken).isEmpty()
+                || validateToken(refreshToken) != JwtCode.ACCESS;
+    }
 }
