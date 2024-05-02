@@ -10,6 +10,7 @@ import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
+import GroupCall from '../groupcall/GroupCall'
 
 const StudyHeader = () => {
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)
@@ -29,6 +30,7 @@ const StudyHeader = () => {
       </div>
       <div className="flex items-center">
         <Avatar />
+        <GroupCall />
         <AudioControl />
       </div>
       <div className="flex items-center">

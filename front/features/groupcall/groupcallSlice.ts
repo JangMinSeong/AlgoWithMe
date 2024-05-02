@@ -7,8 +7,10 @@ interface IGroupcallState {
   session: Session | undefined
   mainStreamManager: Publisher | Subscriber | undefined // publisher 또는 subscribers 중 한명임
   publisher: Publisher | undefined
-  subscribers: Subscriber[]
+  subscriber: Subscriber | undefined
+  participants: []
   isMicOn: boolean
+  isHeadphoneOn: boolean
 }
 
 const initialState: IGroupcallState = {
@@ -17,8 +19,10 @@ const initialState: IGroupcallState = {
   session: undefined,
   mainStreamManager: undefined, // publisher 또는 subscribers 중 한명임
   publisher: undefined,
-  subscribers: [],
+  subscriber: undefined,
+  participants: [],
   isMicOn: false,
+  isHeadphoneOn: true,
 }
 
 const groupcallSlice = createSlice({
@@ -40,14 +44,23 @@ const groupcallSlice = createSlice({
     setPublisher(state, action: PayloadAction<Publisher>) {
       state.publisher = action.payload
     },
-    setSubscribers(state, action: PayloadAction<Subscriber[]>) {
-      state.subscribers = [...action.payload]
+    setSubscriber(state, action: PayloadAction<Subscriber>) {
+      state.subscriber = action.payload
+    },
+    setParticipants(state, action: PayloadAction<[]>) {
+      state.participants = [...action.payload]
     },
     turnMicOff(state) {
       state.isMicOn = false
     },
     turnMicOn(state) {
       state.isMicOn = true
+    },
+    turnHeadphoneOn(state) {
+      state.isHeadphoneOn = true
+    },
+    turnHeadphoneOff(state) {
+      state.isHeadphoneOn = false
     },
   },
 })
@@ -58,9 +71,12 @@ export const {
   setSession,
   setMainStreamManager,
   setPublisher,
-  setSubscribers,
+  setSubscriber,
+  setParticipants,
   turnMicOff,
   turnMicOn,
+  turnHeadphoneOn,
+  turnHeadphoneOff,
 } = groupcallSlice.actions
 
 export default groupcallSlice.reducer
