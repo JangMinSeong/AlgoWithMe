@@ -36,7 +36,6 @@ export default function Layout({
           credentials: 'include',
         })
         if (response.ok) {
-          console.log(response)
           const data = await response.json()
           const updatedAccessToken =
             response.headers.get('Authorization')?.split(' ')[1] || ''
