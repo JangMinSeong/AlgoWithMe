@@ -31,7 +31,7 @@ async def mark_programmers_python(code_test: CodeTest):
     with open(solution_path, "w", encoding='utf-8') as file:
         file.write(code_test.solution)
     try:
-        compile(code_test.code, "main.py", "exec")
+        compile(code_test.main, "main.py", "exec")
     except SyntaxError as e:
         return {"status": 422, "error": str(e)} # 컴파일 에러
     for test_case in code_test.test_cases:
