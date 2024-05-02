@@ -13,12 +13,15 @@ import com.ssafy.Algowithme.code.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemReactiveRepository;
 import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 
 @Slf4j
@@ -28,6 +31,7 @@ public class CodeService {
 
     private final PersonalCodeRepository personalCodeRepository;
     private final PageRepository pageRepository;
+    private final UserRepository userRepository;
     private final RawProblemReactiveRepository reactiveRawProblemRepository;
     private final WebClient webClient;
 
@@ -35,6 +39,14 @@ public class CodeService {
     public Long createPersonalCode(Long pageId, User user) {
         Workspace workspace = (Workspace) pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).build()).getId();
+    }
+
+    @Transactional
+    public void deletePersonalCode(Long codeId, User user) {
+        PersonalCode code = personalCodeRepository.findById(codeId).orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
+        if(!user.equals(code.getUser()))
+            throw new CustomException(ExceptionStatus.USER_MISMATCH);
+        code.setDeleted(true);
     }
 
     @Transactional
@@ -51,6 +63,14 @@ public class CodeService {
         PersonalCode personalCode = personalCodeRepository.findById(codeId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
         return PersonalCodeResponse.fromEntity(personalCode);
+    }
+
+    public CodeByPageAndUserResponse getPersonalCodeByPageAndUser(Long pageId, Integer userId) {
+        Workspace workspace = (Workspace) pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));
+        List<Long> ids = personalCodeRepository.findAllIdsByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
+        PersonalCode code = personalCodeRepository.findById(ids.getFirst()).orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
+        return new CodeByPageAndUserResponse(ids, PersonalCodeResponse.fromEntity(code));
     }
 
     public Mono<ExecutionResponse> executeCode(ExecuteRequest request){

@@ -3,10 +3,7 @@ package com.ssafy.Algowithme.code.controller;
 import com.ssafy.Algowithme.code.dto.request.ExecuteRequest;
 import com.ssafy.Algowithme.code.dto.request.MarkRequest;
 import com.ssafy.Algowithme.code.dto.request.SaveCodeRequest;
-import com.ssafy.Algowithme.code.dto.response.BOJResponse;
-import com.ssafy.Algowithme.code.dto.response.ExecutionResponse;
-import com.ssafy.Algowithme.code.dto.response.ProgrammersResponse;
-import com.ssafy.Algowithme.code.dto.response.SWEAResponse;
+import com.ssafy.Algowithme.code.dto.response.*;
 import com.ssafy.Algowithme.code.service.CodeService;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +19,15 @@ public class CodeController {
 
     private final CodeService codeService;
 
-    @PostMapping("/create/{pageId}")
+    @PostMapping("/{pageId}")
     public ResponseEntity<Long> createPersonalCode(@PathVariable Long pageId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(codeService.createPersonalCode(pageId, user));
+    }
+
+    @DeleteMapping("/{codeId}")
+    public ResponseEntity<String> deletePersonalCode(@PathVariable Long codeId, @AuthenticationPrincipal User user) {
+        codeService.deletePersonalCode(codeId, user);
+        return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/save")
@@ -34,8 +37,13 @@ public class CodeController {
     }
 
     @GetMapping("/{codeId}")
-    public ResponseEntity<?> getPersonalCode(@PathVariable Long codeId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<PersonalCodeResponse> getPersonalCode(@PathVariable Long codeId) {
         return ResponseEntity.ok(codeService.getPersonalCode(codeId));
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<CodeByPageAndUserResponse> getPersonalCodeByPageAndUser(@RequestParam Long pageId, @RequestParam Integer userId) {
+        return ResponseEntity.ok(codeService.getPersonalCodeByPageAndUser(pageId, userId));
     }
 
     @PostMapping("/execute")

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,12 +15,16 @@ public class CodeCommentResponse {
     private String nickname;
     private int line;
     private String content;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
     static public CodeCommentResponse fromEntity(CodeComment entity) {
         return new CodeCommentResponse(
                 entity.getId(),
                 entity.getUser().getNickname(),
                 entity.getLine(),
-                entity.getContent()
+                entity.getContent(),
+                entity.getCreatedAt(),
+                entity.getUpdatedAt()
         );
     }
 }
