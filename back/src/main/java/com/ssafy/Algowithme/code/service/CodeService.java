@@ -64,7 +64,7 @@ public class CodeService {
                                 .path(request.getLanguage().getPath())
                                 .build()
                         )
-                        .bodyValue(new PostBOJRequest(request.getCode(), problem.getTimeLimit().getFirst(), problem.getExampleList()))
+                        .bodyValue(new PostBOJRequest(request.getCode(), Integer.parseInt(problem.getTimeLimit().getFirst().split(" ")[0]), problem.getExampleList()))
                         .retrieve()
                         .bodyToMono(BOJResponse.class));
     }
@@ -78,7 +78,7 @@ public class CodeService {
                                 .path(request.getLanguage().getPath())
                                 .build()
                         )
-                        .bodyValue(new PostSWEARequest(request.getCode(), problem.getTimeLimit().get(request.getLanguage().ordinal()), problem.getExampleList().getFirst().getProblem(), problem.getExampleList().getFirst().getAnswer()))
+                        .bodyValue(new PostSWEARequest(request.getCode(), Integer.parseInt(problem.getTimeLimit().get(request.getLanguage().ordinal())), problem.getExampleList().getFirst().getProblem(), problem.getExampleList().getFirst().getAnswer()))
                         .retrieve()
                         .bodyToMono(SWEAResponse.class));
     }

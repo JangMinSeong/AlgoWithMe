@@ -16,7 +16,7 @@ public class RawProblem {
     private String title;
     private String content;
     private String level;
-    private List<Integer> timeLimit;
+    private List<String> timeLimit;
     private List<TestCase> exampleList;
     private List<EditCode> editCodeList;
 }

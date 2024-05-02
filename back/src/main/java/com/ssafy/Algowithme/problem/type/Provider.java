@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum Provider {
-    BOJ("boj"), SWEA("swea"), PROGRAMMERS("programmers");
+    BOJ("baekjoon"), SWEA("swea"), PROGRAMMERS("programmers");
     private final String name;
 }
