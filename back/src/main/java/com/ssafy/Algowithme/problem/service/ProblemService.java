@@ -1,8 +1,11 @@
 package com.ssafy.Algowithme.problem.service;
 
+import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
+import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
+import com.ssafy.Algowithme.problem.dto.response.RawProblemResponse;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.entity.RawProblem;
 import com.ssafy.Algowithme.problem.repository.BOJRepository;
@@ -38,9 +41,20 @@ public class ProblemService {
         throw new BadRequestException("잘못된 문제 사이트입니다.");
     }
 
-
     public ResponseEntity<AllProblemResponse> getAll() {
         List<Problem> problemList = problemRepository.findAll();
         return ResponseEntity.ok(AllProblemResponse.create(problemList));
+    }
+
+    public RawProblemResponse getProblem(Long problemId) {
+        //요약 정보 조회
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
+
+        //세부 정보 조회
+        RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
+
+        return RawProblemResponse.create(rawProblem);
     }
 }
