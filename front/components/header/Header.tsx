@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import Image from 'next/image'
 import Logo from '@/public/logo.svg'
+import SideBarButton from '../sidebar/SideBarButton'
 
 const MainHeader: React.FC = () => {
   interface Item {
@@ -23,7 +24,9 @@ const MainHeader: React.FC = () => {
 
   return (
     <header className="fixed top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
-      <div className="flex-none w-1/4">
+      <div className="flex w-1/4">
+        <SideBarButton />
+
         <Image src={Logo} alt="Logo" width={80} />
         {/* <div className="text-xl font-bold">LOGO</div> */}
       </div>
