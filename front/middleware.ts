@@ -17,9 +17,10 @@ export default function middleware(request: NextRequest) {
   }
 
   if (
-    pathname.startsWith('/main') ||
-    pathname.startsWith('/study') ||
-    (pathname.startsWith('/editor') && !token)
+    (pathname.startsWith('/main') ||
+      pathname.startsWith('/study') ||
+      pathname.startsWith('/editor')) &&
+    !token
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/'
