@@ -34,8 +34,8 @@ public class TeamController {
         return ResponseEntity.ok(teamService.createInviteUrl(teamId, user));
     }
 
-    @GetMapping("/member/{encrypted}")
-    public ResponseEntity<String> addMember(@PathVariable String encrypted, @AuthenticationPrincipal User user){
+    @GetMapping("/member")
+    public ResponseEntity<String> addMember(@RequestParam("encrypted") String encrypted, @AuthenticationPrincipal User user){
         teamService.addTeamMember(encrypted, user);
         return ResponseEntity.ok("Success");
     }

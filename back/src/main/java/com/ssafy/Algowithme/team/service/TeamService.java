@@ -16,10 +16,11 @@ import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
-
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +45,7 @@ public class TeamService {
                         .user(user)
                         .team(team)
                         .manager(true)
+                        .visitedAt(LocalDateTime.now())
                         .build());
 
         return TeamInfoResponse.create(team);
@@ -71,15 +73,15 @@ public class TeamService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
         userTeamRepository.findByUserAndTeam(user, team)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_INVITE_UNAUTHORIZED));
-        return aes128Config.encryptAes("team" + "." + teamId + "." + LocalDateTime.now());
+        return aes128Config.encryptAes("team" + "/" + teamId + "/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
     }
 
     @Transactional
     public void addTeamMember(String encrypted, User user) {
         String decrypted = aes128Config.decryptAes(encrypted);
-        String[] data = decrypted.split("\\.");
+        String[] data = decrypted.split("/");
         Long teamId = Long.parseLong(data[1]);
-        LocalDateTime createdAt = LocalDateTime.parse(data[2]);
+        LocalDateTime createdAt = LocalDateTime.parse(data[2], DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         if(LocalDateTime.now().isAfter(createdAt.plusDays(1)))
             throw new CustomException(ExceptionStatus.TEAM_INVITE_URL_EXPIRED);
         Team team = teamRepository.findByIdAndDeletedFalse(teamId)
