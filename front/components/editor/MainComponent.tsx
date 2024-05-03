@@ -13,12 +13,14 @@ const MainComponent: React.FC = () => {
   const [provider, setProvider] = useState('')
   const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
+  const [testCases, setTestCases] = useState([])
+
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/problem/92295`, {
+        const response = await fetch(`/problem/92296`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -30,9 +32,24 @@ const MainComponent: React.FC = () => {
         }
 
         const responseData = await response.json()
-        setProvider(responseData.site)
+        switch (responseData.site) {
+          case 'baekjoon':
+            setProvider('boj')
+            break
+          case 'programmers':
+            setProvider('programmers')
+            break
+          case 'swea':
+            setProvider('swea')
+            break
+          default:
+            setProvider('boj')
+        }
         setUrl(responseData.url)
         setContent(responseData.content)
+        if (provider === 'boj' || provider === 'swea')
+          setTestCases(responseData.exampleList || [])
+        else setTestCases(null)
         setNumber(responseData.number)
       } catch (error) {
         console.error('Failed to fetch data:', error)
@@ -54,7 +71,12 @@ const MainComponent: React.FC = () => {
   return (
     <div className="flex flex-row items-stretch w-full h-full overflow-hidden pt-0">
       <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
-        <LeftComponent url={url} content={content} room="test2" />
+        <LeftComponent
+          url={url}
+          content={content}
+          room="test2"
+          testCases={testCases}
+        />
       </div>
       <div
         className={`mt-1 transition-width duration-500 ease-in-out ${codeEditorVisible ? 'flex-1' : 'w-0 hidden'}`}

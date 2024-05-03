@@ -35,6 +35,7 @@ interface ProblemProp {
   url: string
   content: string
   room: string
+  testCases: { problem: string; answer: string }[]
 }
 
 const colors = [
@@ -98,7 +99,12 @@ const websocketProviderGroup = new TiptapCollabProvider({
   document: ydocGroup,
 })
 
-const LeftComponent: React.FC<ProblemProp> = ({ url, content, room }) => {
+const LeftComponent: React.FC<ProblemProp> = ({
+  url,
+  content,
+  room,
+  testCases,
+}) => {
   const [currentUser] = useState(getInitialUser)
   const [activeTab, setActiveTab] = useState<
     '문제보기' | '개인 메모장' | '워크스페이스'
@@ -181,9 +187,10 @@ const LeftComponent: React.FC<ProblemProp> = ({ url, content, room }) => {
   })
 
   const renderContent = () => {
+    console.log(testCases)
     switch (activeTab) {
       case '문제보기':
-        return <Problem content={content} />
+        return <Problem content={content} testCases={testCases} />
       case '개인 메모장':
         return <WorkSpace editor={editorUser} />
       case '워크스페이스':
