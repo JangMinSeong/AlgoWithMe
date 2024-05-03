@@ -1,6 +1,6 @@
 package com.ssafy.Algowithme.user.service;
 
-import com.ssafy.Algowithme.user.repository.UserRepository;
+import com.ssafy.Algowithme.user.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

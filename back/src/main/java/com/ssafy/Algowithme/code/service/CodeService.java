@@ -7,13 +7,12 @@ import com.ssafy.Algowithme.code.type.Language;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.page.entity.Page;
-import com.ssafy.Algowithme.page.entity.Workspace;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.code.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemReactiveRepository;
 import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.user.entity.User;
-import com.ssafy.Algowithme.user.repository.UserRepository;
+import com.ssafy.Algowithme.user.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,8 +36,8 @@ public class CodeService {
 
     @Transactional
     public Long createPersonalCode(Long pageId, User user) {
-        Workspace workspace = (Workspace) pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).build()).getId();
+        Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).deleted(false).build()).getId();
     }
 
     @Transactional
@@ -66,7 +65,7 @@ public class CodeService {
     }
 
     public CodeByPageAndUserResponse getPersonalCodeByPageAndUser(Long pageId, Integer userId) {
-        Workspace workspace = (Workspace) pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));
         List<Long> ids = personalCodeRepository.findAllIdsByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
         PersonalCode code = personalCodeRepository.findById(ids.getFirst()).orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));

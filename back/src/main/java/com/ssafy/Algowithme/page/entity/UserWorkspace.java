@@ -23,7 +23,7 @@ public class UserWorkspace { // 개인 메모장
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id")
-    private Workspace workspace;
+    private Page workspace;
 
     private String content;
 }

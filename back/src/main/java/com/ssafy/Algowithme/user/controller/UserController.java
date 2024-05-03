@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.user.controller;
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.user.dto.request.LoginRequest;
+import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.service.UserService;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -68,6 +70,19 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> refresh(@CookieValue(name = "algowithme_refreshToken", required = true) String refreshToken,
                                         HttpServletResponse response) {
         UserInfoResponse userInfo = jwtUtil.refreshAccessToken(response, refreshToken);
+        return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/info")
+    @Operation(summary = "유저 메인페이지 정보 조회", description = "유저가 푼 문제들의 태그, 최근 푼 문제, 최근 접속한 스터디들의 정보를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공",
+            content = {@Content(schema = @Schema(implementation = UserInfoDetailResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+            content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<UserInfoDetailResponse> getUserInfoDetail(@AuthenticationPrincipal User user) {
+        UserInfoDetailResponse userInfo = userService.getUserInfoDetail(user);
         return ResponseEntity.ok(userInfo);
     }
 }

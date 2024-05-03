@@ -33,7 +33,6 @@ public class TeamService {
         //팀 생성
         Team team = teamRepository.save(Team.builder()
                         .name(request.getName())
-                        .description(request.getDescription())
                         .canRead(false)
                         .imageUrl(request.getImageUrl())
                         .build());

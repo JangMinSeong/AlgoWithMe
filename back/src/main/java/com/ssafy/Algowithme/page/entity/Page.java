@@ -1,20 +1,21 @@
 package com.ssafy.Algowithme.page.entity;
 
+import com.ssafy.Algowithme.code.entity.PersonalCode;
 import com.ssafy.Algowithme.common.util.BaseTime;
+import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type")
+@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public abstract class Page extends BaseTime {
+public class Page extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +26,8 @@ public abstract class Page extends BaseTime {
     @JoinColumn(name = "team_id")
     private Team team;
 
+    private String title;
+
     private Double orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,4 +37,13 @@ public abstract class Page extends BaseTime {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
     private List<Page> child = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "problem_id")
+    private Problem problem;
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<WorkspaceTag> tags;
+
+    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+    private List<PersonalCode> personalCodes;
 }

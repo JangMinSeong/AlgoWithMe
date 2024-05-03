@@ -19,7 +19,7 @@ public class WorkspaceTag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id")
-    private Workspace workspace;
+    private Page workspace;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -2,10 +2,11 @@ package com.ssafy.Algowithme.user.service;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
+import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.repository.RefreshTokenRedisRepository;
-import com.ssafy.Algowithme.user.repository.UserRepository;
+import com.ssafy.Algowithme.user.repository.user.UserRepository;
 import com.ssafy.Algowithme.user.util.GithubOAuth2Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -26,6 +28,7 @@ public class UserService {
     private final GithubOAuth2Utils githubUtil;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public UserInfoResponse login(String code, HttpServletResponse response) {
         String gitToken = githubUtil.getGithubToken(code);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
@@ -75,5 +78,14 @@ public class UserService {
                 .ifPresent(redisRepository::delete);
 
         response.setHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
+    }
+
+    public UserInfoDetailResponse getUserInfoDetail(User user) {
+        return UserInfoDetailResponse.builder()
+                .id(user.getId())
+                .chart(userRepository.getSolvedTagChart(user.getId()))
+                .problems(userRepository.getStudiedProblem(user.getId()))
+                .teams(userRepository.getRecentTeam(user.getId()))
+                .build();
     }
 }

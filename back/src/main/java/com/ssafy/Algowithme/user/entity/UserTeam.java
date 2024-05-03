@@ -5,6 +5,8 @@ import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Builder
 @NoArgsConstructor
@@ -25,5 +27,9 @@ public class UserTeam extends BaseTime {
     @JoinColumn(name ="team_id")
     private Team team;
 
+    @Column(nullable = false)
     private boolean manager;
+
+    @Column(nullable = false)
+    private LocalDateTime visitedAt;
 }
