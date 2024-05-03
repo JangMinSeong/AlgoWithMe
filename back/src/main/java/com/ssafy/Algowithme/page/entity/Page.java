@@ -2,6 +2,7 @@ package com.ssafy.Algowithme.page.entity;
 
 import com.ssafy.Algowithme.code.entity.PersonalCode;
 import com.ssafy.Algowithme.common.util.BaseTime;
+import com.ssafy.Algowithme.page.dto.request.CreateDocsRequest;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@Builder
 public class Page extends BaseTime {
 
     @Id
@@ -27,6 +29,8 @@ public class Page extends BaseTime {
     private Team team;
 
     private String title;
+
+    private String content;
 
     private Double orders;
 
@@ -46,4 +50,5 @@ public class Page extends BaseTime {
 
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
     private List<PersonalCode> personalCodes;
+
 }
