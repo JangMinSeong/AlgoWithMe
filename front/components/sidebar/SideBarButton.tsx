@@ -1,11 +1,9 @@
-'use client'
-
 import useSidebar from '@/hooks/useSidebar'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { CiMenuBurger } from 'react-icons/ci'
 import { HiOutlineChevronDoubleLeft } from 'react-icons/hi2'
-import { Tooltip } from 'react-tooltip'
+import { Tooltip } from '@/components/ReactToolTip'
 
 const SideBarButton = () => {
   const { handleCloseSidebar, handleOpenSidebar } = useSidebar()

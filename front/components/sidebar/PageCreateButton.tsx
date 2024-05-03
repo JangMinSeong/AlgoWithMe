@@ -1,31 +1,29 @@
 'use client'
-import { LuFilePlus2 } from 'react-icons/lu'
-import { usePathname } from 'next/navigation'
-
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_DEV_URL
-    : process.env.NEXT_PUBLIC_API_URL
+import { FaPlus } from 'react-icons/fa6'
+import { Tooltip } from '@/components/ReactToolTip'
+import useModal from '@/hooks/useModal'
 
 const PageCreateButton = () => {
-  const pathname = usePathname()
-  const groupId = pathname.split('/') // 해서 잘라야함
-  // default : 문서 페이지 생성
-  const handlePageCreate = async () => {
-    try {
-      await fetch(`${API_URL}/page/docs`, {
-        method: 'GET',
-        body: {
-          group_id: groupId,
-          parent_id: parentPageId, // 최상위 경우 null
-        },
-        credentials: 'include',
-      })
-    } catch (error) {
-      console.error(error)
-    }
-  }
-  return <LuFilePlus2 onClick={handlePageCreate} />
+  const { handleOpenModal } = useModal()
+
+  const anchorTagCSS =
+    'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
+  return (
+    <div>
+      <a id="hover" className={anchorTagCSS}>
+        <FaPlus
+          className="relative"
+          onClick={(e) => {
+            e.stopPropagation()
+            handleOpenModal()
+          }}
+        />
+      </a>
+      <Tooltip anchorSelect="hover" place="right">
+        하위 페이지 생성하기
+      </Tooltip>
+    </div>
+  )
 }
 
 export default PageCreateButton

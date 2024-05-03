@@ -1,6 +1,6 @@
-'use client'
 import Button from '@/components/Button'
 import toast, { Toaster } from 'react-hot-toast'
+import ViewProblems from './ViewProblems'
 
 const API_URL =
   process.env.NODE_ENV === 'development'
@@ -39,16 +39,16 @@ const AddProblemModal = ({
   return (
     <div
       onClick={(e) => clickModal(e)}
-      className="top-0 left-0 fixed z-20 bg-black/30 w-lvw h-lvh"
+      className="z-10 top-0 left-0 fixed bg-black/30 w-lvw h-lvh"
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[50%] z-30 fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg"
+        className="w-[50%] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg"
       >
         <div>문제 추가하기</div>
         <div>검색창</div>
         <div>태그 모음집</div>
-        <div>검색 결과</div>
+        <ViewProblems />
         <Button onClick={(e) => clickModal(e)} variant="secondary">
           취소하기
         </Button>

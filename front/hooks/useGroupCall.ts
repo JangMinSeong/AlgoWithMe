@@ -26,6 +26,7 @@ const useGroupCall = () => {
   )
 
   const OV = new OpenVidu()
+  OV.enableProdMode()
 
   const connectToSession = (token) => {
     if (session) session.disconnect()

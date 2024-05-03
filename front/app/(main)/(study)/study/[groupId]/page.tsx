@@ -2,11 +2,11 @@
 
 import PieChart from '@/components/mainpage/PieChart'
 import EnterStudyRoom from '@/components/studypage/EnterStudyRoom'
-import NextProblem from '@/components/studypage/NextProblem'
+import NextProblem from '@/components/problems/NextProblem'
 import Member from '@/components/studypage/Member'
 import InviteMember from '@/components/studypage/InviteMember'
-import AddProblem from '@/components/studypage/AddProblem'
-import PrevProblem from '@/components/studypage/PrevProblem'
+import AddProblem from '@/components/problems/AddProblem'
+import PrevProblem from '@/components/problems/PrevProblem'
 import RankingProfileItem from '@/components/studypage/RankingProfileItem'
 
 const StudyMainPage = ({ params }: { params: { groupId: number } }) => {

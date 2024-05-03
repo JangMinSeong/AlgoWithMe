@@ -1,30 +1,33 @@
-'use client'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_DEV_URL
-    : process.env.NEXT_PUBLIC_API_URL
+import { Tooltip } from '@/components/ReactToolTip'
 
 const DeleteButton = () => {
   const pageId = '123'
   const handleDelete = async (e) => {
     e.stopPropagation()
     if (window.confirm('모든 스터디원에게서 사라져요. 삭제하시겠어요?')) {
-      const pageDeleteRes = await fetch(`${API_URL}/page`, {
+      const pageDeleteRes = await fetch(`/page`, {
         method: 'DELETE',
         body: { page_id: pageId },
         credentials: 'include',
       })
     }
   }
+
+  const anchorTagCSS =
+    'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
+
   return (
-    <div
-      onClick={handleDelete}
-      className="text-red-500 bg-white/50 flex items-center justify-evenly rounded-lg w-20 h-8 hover:bg-white transition-opacity"
-    >
-      <RiDeleteBin6Line />
-      삭제하기
+    <div>
+      <a id="hover" className={anchorTagCSS}>
+        <RiDeleteBin6Line
+          className=" w-4 rounded-sm relative text-red-500"
+          onClick={handleDelete}
+        />
+      </a>
+      <Tooltip anchorSelect="hover" place="right">
+        페이지 삭제하기
+      </Tooltip>
     </div>
   )
 }

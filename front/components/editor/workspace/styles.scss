@@ -12,8 +12,8 @@
   outline: none;
 }
 
-
-.tiptap ul, .tiptap ol {
+.tiptap ul,
+.tiptap ol {
   list-style-type: disc;
   padding-left: 1rem;
 }
@@ -60,14 +60,14 @@
 
     .selectedCell:after {
       background: rgba(200, 200, 255, 0.4);
-      content: "";
+      content: '';
       left: 0;
       right: 0;
       top: 0;
       bottom: 0;
       pointer-events: none;
       position: absolute;
-      z-index: 2;
+      // z-index: 2;
     }
 
     .column-resize-handle {
@@ -166,14 +166,14 @@
 
   code {
     background-color: rgba(#616161, 0.1);
-    color: #8D91B9;
+    color: #8d91b9;
   }
 
   pre {
     background: #616161;
     border-radius: 0.5rem;
     color: #fff;
-    font-family: "JetBrainsMono", monospace;
+    font-family: 'JetBrainsMono', monospace;
     padding: 0.75rem 1rem;
 
     code {
@@ -208,7 +208,7 @@
     margin: 2rem 0;
   }
 
-  ul[data-type="taskList"] {
+  ul[data-type='taskList'] {
     list-style: none;
     padding: 0;
 
@@ -233,7 +233,7 @@
   width: 100%;
   max-width: 100%;
   height: 72vh;
-  background-color: #F9F0FF;
+  background-color: #f9f0ff;
   border: 1px solid #ced4da;
   color: #616161;
   display: flex;
@@ -243,9 +243,9 @@
   &__header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    // z-index: 1000;
     align-items: center;
-    background: #8D91B9;
+    background: #8d91b9;
     display: flex;
     flex: 0 0 auto;
     flex-wrap: wrap;
@@ -284,7 +284,7 @@
     &::before {
       background: rgba(#0d0d0d, 0.5);
       border-radius: 50%;
-      content: " ";
+      content: ' ';
       display: inline-block;
       flex: 0 0 auto;
       height: 0.5rem;

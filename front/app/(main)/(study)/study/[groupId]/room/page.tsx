@@ -1,5 +1,5 @@
-import NextProblem from '@/components/studypage/NextProblem'
-import AddProblem from '@/components/studypage/AddProblem'
+import NextProblem from '@/components/problems/NextProblem'
+import AddProblem from '@/components/problems/AddProblem'
 import ActiveProfileItem from '@/components/studyroom/ActiveProfileItem'
 import CopyRoomLink from '@/components/studyroom/CopyRoomLink'
 import InactiveProfileItem from '@/components/studyroom/InactiveProfileItem'

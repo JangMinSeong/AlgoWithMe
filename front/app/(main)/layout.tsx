@@ -7,6 +7,7 @@ import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
+import PageCreateModal from '@/components/sidebar/PageCreateModal'
 
 export default function Layout({
   children,
@@ -14,6 +15,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const isModalOpen = useSelector((state: RootState) => state.modal.isOpen)
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
   const hasOngoingRequest = useRef(false)
@@ -103,6 +105,7 @@ export default function Layout({
       >
         {children}
       </main>
+      {isModalOpen && <PageCreateModal />}
     </div>
   )
 }

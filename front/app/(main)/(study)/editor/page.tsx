@@ -31,7 +31,7 @@ const EditorPage: React.FC = () => {
         <RightComponent />
       </div>
       <button
-        className="bg-none hover:bg-navy absolute top-1/2 right-0 mr-5 z-10 rounded-full"
+        className="bg-none hover:bg-navy absolute top-1/2 right-0 mr-5  rounded-full"
         onClick={toggleCodeEditor}
       >
         {codeEditorVisible ? '>' : '<'}

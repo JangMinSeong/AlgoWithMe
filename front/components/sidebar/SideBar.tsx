@@ -8,7 +8,7 @@ import Link from 'next/link'
 const SideBar = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
   const menuItemWrapper =
-    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-xs'
+    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
   return (
     <div>
       {isOpen ? (
