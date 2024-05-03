@@ -74,6 +74,13 @@ public class UserController {
     }
 
     @GetMapping("/info")
+    @Operation(summary = "유저 메인페이지 정보 조회", description = "유저가 푼 문제들의 태그, 최근 푼 문제, 최근 접속한 스터디들의 정보를 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저 정보 조회 성공",
+            content = {@Content(schema = @Schema(implementation = UserInfoDetailResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+            content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
     public ResponseEntity<UserInfoDetailResponse> getUserInfoDetail(@AuthenticationPrincipal User user) {
         UserInfoDetailResponse userInfo = userService.getUserInfoDetail(user);
         return ResponseEntity.ok(userInfo);
