@@ -7,9 +7,10 @@ import TagSelector from '@/components/tag/Tags'
 interface LeftHeaderProps {
   activeTab: string
   onSave: () => void
+  url: string
 }
 
-const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
+const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]) // 선택된 태그를 관리하는 상태
   const [isTagSelectorOpen, setIsTagSelectorOpen] = useState(false)
 
@@ -26,11 +27,15 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
   }
 
   const handleSaveClick = (action: string) => {
-    console.log(`${action} button clicked`)
     if (action === '저장') {
       onSave() // 저장 버튼 클릭 시 onSave 호출
     }
   }
+
+  const handleProblemLinkClick = () => {
+    window.open(url, '_blank')
+  }
+
   return (
     <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
       <div className="flex space-x-1">
@@ -65,7 +70,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
         </button>
         <button
           className=" bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => handleButtonClick('문제 링크')}
+          onClick={() => handleProblemLinkClick()}
         >
           문제 링크
         </button>

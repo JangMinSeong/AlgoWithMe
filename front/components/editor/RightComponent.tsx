@@ -7,10 +7,10 @@ import { RootState } from '@/lib/store'
 import fetch from '@/lib/fetch'
 import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
-import BOJOutput from '@/components/editor/codespace/BOJOutput'
+import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
 
-interface BojDetail {
+interface BojAndPGDetail {
   status: number
   input: string
   expected: string
@@ -24,7 +24,12 @@ interface SWEADetail {
   match: boolean
 }
 
-const RightComponent: React.FC = () => {
+interface ProblemProp {
+  provider: string
+  number: number
+}
+
+const RightComponent: React.FC<ProblemProp> = ({ provider, number }) => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [output, setOutput] = React.useState('')
@@ -36,10 +41,10 @@ const RightComponent: React.FC = () => {
   const onConnect = useSelector((state: RootState) => state.socket.connected)
   const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
 
-  const [resultBojList, setResultBojList] = React.useState<BojDetail[]>([])
+  const [resultBojAndPGList, setResultBojAndPGList] = React.useState<
+    BojAndPGDetail[]
+  >([])
   const [resultSweaList, setResultSweaList] = React.useState<SWEADetail[]>([])
-
-  const [provider, setProvider] = React.useState('')
 
   const [saveInputText, setSaveInputText] = React.useState('')
 
@@ -101,8 +106,6 @@ const RightComponent: React.FC = () => {
 
   const handleSampleRun = async () => {
     setIsLoading(true)
-    const number = 3678
-    setProvider('boj')
     const { code, language } = codeEditorRef.current?.getCurrentTabInfo() || {
       code: '',
       language: '',
@@ -126,8 +129,8 @@ const RightComponent: React.FC = () => {
 
     setResStatus(responseData.status)
 
-    if (provider === 'boj') {
-      setResultBojList(responseData.results)
+    if (provider === 'boj' || provider === 'programmers') {
+      setResultBojAndPGList(responseData.results)
       if (responseData.error) setOutput(responseData.error)
     } else if (provider === 'swea') {
       setExecTime(responseData.execution_time)
@@ -152,14 +155,16 @@ const RightComponent: React.FC = () => {
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
         <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
-          <div className="flex-1 border border-gray-300 bg-white">
-            <textarea
-              className="w-full h-full resize-none p-2 overflow-auto"
-              placeholder="Enter text here..."
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-            />
-          </div>
+          {provider !== 'programmers' ? (
+            <div className="flex-1 border border-gray-300 bg-white">
+              <textarea
+                className="w-full h-full resize-none p-2 overflow-auto"
+                placeholder="Enter text here..."
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
+              />
+            </div>
+          ) : null}
           <div className="flex-1 p-1 bg-white border border-gray-300 h-48 w-32">
             {isLoading ? (
               <pre>실행 중...</pre>
@@ -167,11 +172,11 @@ const RightComponent: React.FC = () => {
               <ErrorOutput status={resStatus} output={output} />
             ) : saveInputText !== '' ? (
               <ExecuteOutput time={execTime} output={output} />
-            ) : provider === 'boj' ? (
-              <BOJOutput
+            ) : provider === 'boj' || provider === 'programmers' ? (
+              <BOJAndPGOutput
                 status={resStatus}
                 error={output}
-                results={resultBojList}
+                results={resultBojAndPGList}
               />
             ) : provider === 'swea' ? (
               <SWEAOutput
