@@ -2,7 +2,7 @@ import { TiDocumentAdd } from 'react-icons/ti'
 import { PiChatsCircle } from 'react-icons/pi'
 import Link from 'next/link'
 
-const EnterStudyRoom = () => {
+const EnterStudyRoom = ({ groupId }: { groupId: number }) => {
   return (
     <div>
       <div className="flex">
@@ -12,7 +12,7 @@ const EnterStudyRoom = () => {
         </div>
       </div>
       <Link
-        href={`/study/${'방번호'}/room`}
+        href={`/study/${groupId}/room`}
         className="w-60 h-72 bg-white shadow-foggyBlue rounded-md flex flex-col justify-center items-center hover:bg-purple-200 hover:border-opacity-0 transition-colors"
       >
         <TiDocumentAdd className="w-6 h-6" />
