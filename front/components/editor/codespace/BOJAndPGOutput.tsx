@@ -1,7 +1,7 @@
 import * as React from 'react'
 import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 
-interface BojDetail {
+interface Detail {
   status: number
   input: string
   expected: string
@@ -10,14 +10,14 @@ interface BojDetail {
   execution_time: number
 }
 
-interface BojOutputProps {
+interface OutputProps {
   status: number
   error: string
-  results: BojDetail[]
+  results: Detail[]
 }
 
-const BOJOutput: React.FC<BojOutputProps> = ({ status, error, results }) => {
-  const [selectedCase, setSelectedCase] = React.useState<BojDetail | null>(null)
+const BOJAndPGOutput: React.FC<OutputProps> = ({ status, error, results }) => {
+  const [selectedCase, setSelectedCase] = React.useState<Detail | null>(null)
 
   return (
     <div className="w-full h-full flex flex-col flex-grow border border-gray-300 rounded-md p-1 bg-white overflow-auto">
@@ -76,4 +76,4 @@ const BOJOutput: React.FC<BojOutputProps> = ({ status, error, results }) => {
   )
 }
 
-export default BOJOutput
+export default BOJAndPGOutput

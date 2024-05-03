@@ -31,15 +31,17 @@ const CodeEditor: React.FC<{ provider: string }> = forwardRef(
       provider === 'swea'
         ? `public class Solution {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
         : `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
-
+    const initialCCode = `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`
+    const initialCppCode = `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`
+    const initialPythonCode = `print("Hello, World!")`
     const languageOptions: Record<string, CodeExample> = {
       C: {
         mode: 'c_cpp',
-        value: `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`,
+        value: initialCCode,
       },
       CPP: {
         mode: 'c_cpp',
-        value: `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`,
+        value: initialCppCode,
       },
       JAVA: {
         mode: 'java',
@@ -47,7 +49,7 @@ const CodeEditor: React.FC<{ provider: string }> = forwardRef(
       },
       PYTHON: {
         mode: 'python',
-        value: `print("Hello, World!")`,
+        value: initialPythonCode,
       },
     }
 

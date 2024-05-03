@@ -31,14 +31,11 @@ import { RootState } from '@/lib/store'
 import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
 
-const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
-
-const ydocGroup = new Y.Doc()
-const websocketProviderGroup = new TiptapCollabProvider({
-  appId,
-  name: 'test2', // 이름으로 문서 분류 함
-  document: ydocGroup,
-})
+interface ProblemProp {
+  url: string
+  content: string
+  room: string
+}
 
 const colors = [
   '#958DF1',
@@ -92,7 +89,16 @@ const getInitialUser = (): User => ({
   color: getRandomColor(),
 })
 
-const LeftComponent: React.FC = () => {
+const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
+
+const ydocGroup = new Y.Doc()
+const websocketProviderGroup = new TiptapCollabProvider({
+  appId,
+  name: 'test2', // 이름으로 문서 분류 함
+  document: ydocGroup,
+})
+
+const LeftComponent: React.FC<ProblemProp> = ({ url, content, room }) => {
   const [currentUser] = useState(getInitialUser)
   const [activeTab, setActiveTab] = useState<
     '문제보기' | '개인 메모장' | '워크스페이스'
@@ -177,7 +183,7 @@ const LeftComponent: React.FC = () => {
   const renderContent = () => {
     switch (activeTab) {
       case '문제보기':
-        return <Problem />
+        return <Problem content={content} />
       case '개인 메모장':
         return <WorkSpace editor={editorUser} />
       case '워크스페이스':
@@ -227,7 +233,7 @@ const LeftComponent: React.FC = () => {
   return (
     <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
-        <LeftHeader activeTab={activeTab} onSave={handleSave} />
+        <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} />
       </div>
       <div className="w-full" style={{ height: '72vh' }}>
         {renderContent()}

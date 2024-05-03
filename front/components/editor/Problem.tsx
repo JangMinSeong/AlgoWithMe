@@ -1,7 +1,11 @@
 import * as React from 'react'
 
-const Problem: React.FC = () => (
-  <div className="bg-white w-full h-full">문제 페이지</div>
+interface ProblemProp {
+  content: string
+}
+
+const Problem: React.FC<ProblemProp> = ({ content }) => (
+  <div className="bg-white w-full h-full">{content}</div>
 )
 
 export default Problem

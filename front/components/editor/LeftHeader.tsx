@@ -7,9 +7,10 @@ import TagSelector from '@/components/tag/Tags'
 interface LeftHeaderProps {
   activeTab: string
   onSave: () => void
+  url: string
 }
 
-const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
+const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]) // 선택된 태그를 관리하는 상태
   const [isTagSelectorOpen, setIsTagSelectorOpen] = useState(false)
 
@@ -26,7 +27,6 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave }) => {
   }
 
   const handleSaveClick = (action: string) => {
-    console.log(`${action} button clicked`)
     if (action === '저장') {
       onSave() // 저장 버튼 클릭 시 onSave 호출
     }
