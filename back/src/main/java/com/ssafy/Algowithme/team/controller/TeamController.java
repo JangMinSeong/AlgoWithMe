@@ -29,4 +29,14 @@ public class TeamController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/invite/{teamId}")
+    public ResponseEntity<String> createInviteUrl(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(teamService.createInviteUrl(teamId, user));
+    }
+
+    @GetMapping("/member/{encrypted}")
+    public ResponseEntity<String> addMember(@PathVariable String encrypted, @AuthenticationPrincipal User user){
+        teamService.addTeamMember(encrypted, user);
+        return ResponseEntity.ok("Success");
+    }
 }
