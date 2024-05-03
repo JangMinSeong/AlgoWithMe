@@ -5,7 +5,10 @@ interface ProblemProp {
 }
 
 const Problem: React.FC<ProblemProp> = ({ content }) => (
-  <div className="bg-white w-full h-full">{content}</div>
+  <div
+    className="bg-white w-full h-full"
+    dangerouslySetInnerHTML={{ __html: content }}
+  />
 )
 
 export default Problem

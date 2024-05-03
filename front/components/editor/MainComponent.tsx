@@ -9,7 +9,7 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 
 const MainComponent: React.FC = () => {
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
-  const [number, setNumber] = useState(92295)
+  const [number, setNumber] = useState(0)
   const [provider, setProvider] = useState('')
   const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
@@ -18,7 +18,7 @@ const MainComponent: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/problem/${number}`, {
+        const response = await fetch(`/problem/92295`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -33,6 +33,7 @@ const MainComponent: React.FC = () => {
         setProvider(responseData.site)
         setUrl(responseData.url)
         setContent(responseData.content)
+        setNumber(responseData.number)
       } catch (error) {
         console.error('Failed to fetch data:', error)
         // 에러 처리 로직을 여기에 추가할 수 있습니다.
