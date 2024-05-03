@@ -25,7 +25,6 @@ public class TeamInfoResponse {
         return TeamInfoResponse.builder()
                 .teamId(team.getId())
                 .name(team.getName())
-                .description(team.getDescription())
                 .canRead(false)
                 .imageUrl(team.getImageUrl())
                 .build();

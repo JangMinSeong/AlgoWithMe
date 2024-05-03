@@ -1,7 +1,7 @@
 package com.ssafy.Algowithme.code.entity;
 
 import com.ssafy.Algowithme.code.type.Language;
-import com.ssafy.Algowithme.page.entity.Workspace;
+import com.ssafy.Algowithme.page.entity.Page;
 import com.ssafy.Algowithme.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +23,7 @@ public class PersonalCode{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "page_id")
-    private Workspace workspace;
+    private Page workspace;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

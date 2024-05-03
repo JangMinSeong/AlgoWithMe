@@ -21,8 +21,6 @@ public class Team extends BaseTime {
 
     private String name;
 
-    private String description;
-
     private boolean canRead;
 
     private String imageUrl;

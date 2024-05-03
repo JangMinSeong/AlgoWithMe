@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -26,6 +27,7 @@ public class UserService {
     private final GithubOAuth2Utils githubUtil;
     private final JwtUtil jwtUtil;
 
+    @Transactional
     public UserInfoResponse login(String code, HttpServletResponse response) {
         String gitToken = githubUtil.getGithubToken(code);
         GithubInfoResponse githubInfoResponse = githubUtil.getGithubInfo(gitToken);
