@@ -19,13 +19,13 @@ const DeleteButton = () => {
 
   return (
     <div>
-      <a id="hover" className={anchorTagCSS}>
+      <a id="hoverDelete" className={anchorTagCSS}>
         <RiDeleteBin6Line
           className=" w-4 rounded-sm relative text-red-500"
           onClick={handleDelete}
         />
       </a>
-      <Tooltip anchorSelect="hover" place="right">
+      <Tooltip anchorSelect="hoverDelete" place="right">
         페이지 삭제하기
       </Tooltip>
     </div>

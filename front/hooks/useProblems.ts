@@ -9,10 +9,14 @@ const useProblems = () => {
     await fetch('/problem/all', {
       method: 'GET',
       credentials: 'include',
+      cache: 'no-store',
     })
       .then((res) => {
-        console.log('문제전부내놔', res)
-        // dispatch(viewProblems(res.data))
+        return res.json()
+      })
+      .then((res) => {
+        console.log(res.problemList)
+        dispatch(viewProblems(res.problemList))
       })
       .catch((error) => {
         console.error(error)
