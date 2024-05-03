@@ -12,7 +12,7 @@ import com.ssafy.Algowithme.code.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemReactiveRepository;
 import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.user.entity.User;
-import com.ssafy.Algowithme.user.repository.UserRepository;
+import com.ssafy.Algowithme.user.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,7 @@ public class CodeService {
     @Transactional
     public Long createPersonalCode(Long pageId, User user) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).build()).getId();
+        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).deleted(false).build()).getId();
     }
 
     @Transactional

@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.user.controller;
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.user.dto.request.LoginRequest;
+import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.service.UserService;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -68,6 +70,12 @@ public class UserController {
     public ResponseEntity<UserInfoResponse> refresh(@CookieValue(name = "algowithme_refreshToken", required = true) String refreshToken,
                                         HttpServletResponse response) {
         UserInfoResponse userInfo = jwtUtil.refreshAccessToken(response, refreshToken);
+        return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<UserInfoDetailResponse> getUserInfoDetail(@AuthenticationPrincipal User user) {
+        UserInfoDetailResponse userInfo = userService.getUserInfoDetail(user);
         return ResponseEntity.ok(userInfo);
     }
 }

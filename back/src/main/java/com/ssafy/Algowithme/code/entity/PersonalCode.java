@@ -35,7 +35,7 @@ public class PersonalCode{
 
     private String code;
 
-    private boolean deleted = false;
+    private boolean deleted;
 
     @OneToMany(mappedBy = "personalCode", cascade = CascadeType.ALL)
     private List<CodeComment> codeComments;
