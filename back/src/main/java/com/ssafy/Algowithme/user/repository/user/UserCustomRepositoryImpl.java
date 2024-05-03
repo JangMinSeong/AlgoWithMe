@@ -32,10 +32,10 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
     public List<SolvedTagCountDto> getSolvedTagChart(Integer userId) {
         List<Tuple> tuple = jpaQueryFactory.select(workspaceTag.tag, ExpressionUtils.count(workspaceTag))
                 .from(user)
-                .join(userTeam).on(user.id.eq(userTeam.user.id))
-                .join(team).on(team.id.eq(userTeam.team.id))
-                .join(page).on(team.id.eq(page.team.id))
-                .join(workspaceTag).on(page.id.eq(workspaceTag.workspace.id))
+                .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
+                .innerJoin(team).on(team.id.eq(userTeam.team.id))
+                .innerJoin(page).on(team.id.eq(page.team.id))
+                .innerJoin(workspaceTag).on(page.id.eq(workspaceTag.workspace.id))
                 .where(user.id.eq(userId))
                 .groupBy(workspaceTag.tag)
                 .having(workspaceTag.tag.isNotNull())
@@ -47,14 +47,12 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .tag(t.get(workspaceTag.tag))
                 .count(t.get(1, Long.class)).build()));
 
-        log.info("tag count : " + result);
-
         return result;
     }
 
     @Override
     public List<StudiedProblemDto> getStudiedProblem(Integer userId) {
-        List<StudiedProblemDto> result =  jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.bean(StudiedProblemDto.class,
                         problem.provider,
                         problem.number,
@@ -67,15 +65,11 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .orderBy(userProblem.updatedAt.desc())
                 .limit(5)
                 .fetch();
-
-        log.info("solved problem : " + result);
-
-        return result;
     }
 
     @Override
     public List<RecentTeamDto> getRecentTeam(Integer userId) {
-        List<RecentTeamDto> result =  jpaQueryFactory
+        return jpaQueryFactory
                 .select(Projections.bean(RecentTeamDto.class,
                         team.id,
                         team.name,
@@ -87,9 +81,5 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .where(user.id.eq(userId), team.deleted.eq(false))
                 .orderBy(userTeam.visitedAt.desc())
                 .fetch();
-
-        log.info("recent team : " + result);
-
-        return result;
     }
 }
