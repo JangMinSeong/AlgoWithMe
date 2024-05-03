@@ -6,7 +6,7 @@ export default function middleware(request: NextRequest) {
 
   // const permitPaths = ['/main', '/study', '/editor']
 
-  // if (process.env.NODE_ENV === 'development') return NextResponse.next()
+  if (process.env.NODE_ENV === 'development') return NextResponse.next()
 
   if (pathname === '/') {
     if (token) {
