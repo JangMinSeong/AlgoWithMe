@@ -66,9 +66,10 @@ public class CodeService {
     }
 
     public PersonalCodeResponse getPersonalCode(Long codeId) {
-        PersonalCode personalCode = personalCodeRepository.findById(codeId)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
-        return PersonalCodeResponse.fromEntity(personalCode);
+        return codeCacheRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
+                .orElseGet(() -> personalCodeRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
+                        .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND))
+        );
     }
 
     public CodeByPageAndUserResponse getPersonalCodeByPageAndUser(Long pageId, Integer userId) {
