@@ -2,7 +2,9 @@ package com.ssafy.Algowithme.code.service;
 
 import com.ssafy.Algowithme.code.dto.request.*;
 import com.ssafy.Algowithme.code.dto.response.*;
+import com.ssafy.Algowithme.code.entity.Code;
 import com.ssafy.Algowithme.code.entity.PersonalCode;
+import com.ssafy.Algowithme.code.repository.CodeCacheRepository;
 import com.ssafy.Algowithme.code.type.Language;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
@@ -33,6 +35,7 @@ public class CodeService {
     private final UserRepository userRepository;
     private final RawProblemReactiveRepository reactiveRawProblemRepository;
     private final WebClient webClient;
+    private final CodeCacheRepository codeCacheRepository;
 
     @Transactional
     public Long createPersonalCode(Long pageId, User user) {
@@ -56,6 +59,10 @@ public class CodeService {
             throw new CustomException(ExceptionStatus.USER_MISMATCH);
         code.setCode(request.getCode());
         code.setLanguage(request.getLanguage());
+    }
+
+    public void savePersonalCodeToCache(SaveCodeRequest request) {
+        codeCacheRepository.save(Code.fromDto(request));
     }
 
     public PersonalCodeResponse getPersonalCode(Long codeId) {

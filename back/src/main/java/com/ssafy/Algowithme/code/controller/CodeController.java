@@ -36,6 +36,12 @@ public class CodeController {
         return ResponseEntity.ok("Success");
     }
 
+    @PostMapping("/cache")
+    public ResponseEntity<String> savePersonalCodeToCache(@RequestBody SaveCodeRequest request) {
+        codeService.savePersonalCodeToCache(request);
+        return ResponseEntity.ok("Success");
+    }
+
     @GetMapping("/{codeId}")
     public ResponseEntity<PersonalCodeResponse> getPersonalCode(@PathVariable Long codeId) {
         return ResponseEntity.ok(codeService.getPersonalCode(codeId));
