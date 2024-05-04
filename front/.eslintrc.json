@@ -33,6 +33,12 @@
       {
         "namedComponents": ["arrow-function", "function-declaration"]
       }
+    ],
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
     ]
   }
 }
