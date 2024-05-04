@@ -7,6 +7,7 @@ import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
+import generateSVGPath from '@/lib/computeControlPoints'
 
 export default function Layout({
   children,
@@ -17,6 +18,17 @@ export default function Layout({
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
   const hasOngoingRequest = useRef(false)
+
+  // 예제 점 배열
+  const points = [
+    { x: 10, y: 80 },
+    { x: 100, y: 100 },
+    { x: 200, y: 30 },
+    { x: 300, y: 150 },
+    { x: 400, y: 60 },
+  ]
+  const svgOutput = generateSVGPath(points)
+  console.log(svgOutput)
 
   const baseUrl =
     process.env.NODE_ENV === 'development'
