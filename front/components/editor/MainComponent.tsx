@@ -14,13 +14,14 @@ const MainComponent: React.FC = () => {
   const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
   const [testCases, setTestCases] = useState([])
+  const [editCodes, setEditCodes] = useState([])
 
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/problem/92296`, {
+        const response = await fetch(`/problem/92294`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -50,6 +51,9 @@ const MainComponent: React.FC = () => {
         if (provider === 'boj' || provider === 'swea')
           setTestCases(responseData.exampleList || [])
         else setTestCases(null)
+        if (provider === 'programmers')
+          setEditCodes(responseData.editCodesList || [])
+        else setEditCodes(null)
         setNumber(responseData.number)
       } catch (error) {
         console.error('Failed to fetch data:', error)
@@ -80,7 +84,11 @@ const MainComponent: React.FC = () => {
       <div
         className={`mt-1 transition-width duration-500 ease-in-out ${codeEditorVisible ? 'flex-1' : 'w-0 hidden'}`}
       >
-        <RightComponent provider={provider} number={number} />
+        <RightComponent
+          provider={provider}
+          number={number}
+          editCodes={editCodes}
+        />
       </div>
       <button
         className="bg-none hover:bg-navy absolute top-1/2 right-0 mr-5 z-10 rounded-full"

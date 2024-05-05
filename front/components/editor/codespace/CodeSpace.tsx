@@ -21,19 +21,67 @@ interface CodeExample {
   mode: string
   value: string
 }
+interface EditCode {
+  language: string
+  frameCode: string
+}
 
-const CodeEditor: React.FC<{ provider: string }> = forwardRef(
-  ({ provider }, ref) => {
+const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] }> =
+  forwardRef(({ provider, editCodes }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
 
-    const initialJavaCode =
-      provider === 'swea'
-        ? `public class Solution {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
-        : `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
-    const initialCCode = `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`
-    const initialCppCode = `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`
-    const initialPythonCode = `print("Hello, World!")`
+    const initialJavaCode = (() => {
+      if (provider === 'swea') {
+        return `public class Solution {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
+      }
+      if (provider === 'programmers' && editCodes) {
+        const javaCode = editCodes.find(
+          (code) => code.language.toUpperCase() === 'JAVA',
+        )
+        return javaCode
+          ? javaCode.frameCode
+          : `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
+      }
+      return `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`
+    })()
+
+    const initialCCode = (() => {
+      if (provider === 'programmers' && editCodes) {
+        const cCode = editCodes.find(
+          (code) => code.language.toUpperCase() === 'C',
+        )
+        return cCode
+          ? cCode.frameCode
+          : `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`
+      }
+      return `#include <stdio.h>\n\nint main() {\n    printf("Hello, World!\\n");\n    return 0;\n}`
+    })()
+
+    const initialCppCode = (() => {
+      if (provider === 'programmers' && editCodes) {
+        const cppCode = editCodes.find(
+          (code) => code.language.toUpperCase() === 'CPP',
+        )
+        return cppCode
+          ? cppCode.frameCode
+          : `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`
+      }
+      return `#include <iostream>\n\nusing namespace std;\n\nint main() {\n    cout << "Hello, World!" << endl;\n    return 0;\n}`
+    })()
+
+    const initialPythonCode = (() => {
+      if (provider === 'programmers' && editCodes) {
+        const pythonCode = editCodes.find(
+          (code) =>
+            code.language.toUpperCase() === 'PYTHON' ||
+            code.language.toUpperCase() === 'PYTHON3',
+        )
+        return pythonCode ? pythonCode.frameCode : `print("Hello, World!")`
+      }
+      return `print("Hello, World!")`
+    })()
+
     const languageOptions: Record<string, CodeExample> = {
       C: {
         mode: 'c_cpp',
@@ -246,7 +294,6 @@ const CodeEditor: React.FC<{ provider: string }> = forwardRef(
         </div>
       </div>
     )
-  },
-)
+  })
 
 export default CodeEditor
