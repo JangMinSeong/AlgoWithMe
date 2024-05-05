@@ -5,6 +5,8 @@ import timerReducer from '@/features/timer/timerSlice'
 import solvingReducer from '@/features/solving/solvingSlice'
 import websocketReducer from '@/features/socket/webSocketSlic'
 import groupcallReducer from '@/features/groupcall/groupcallSlice'
+import problemReducer from '@/features/problems/problemSlice'
+import modalReducer from '@/features/modal/modalSlice'
 
 export const makeStore = () =>
   configureStore({
@@ -15,6 +17,8 @@ export const makeStore = () =>
       solving: solvingReducer,
       socket: websocketReducer,
       groupcall: groupcallReducer,
+      problems: problemReducer,
+      modal: modalReducer,
     },
   })
 

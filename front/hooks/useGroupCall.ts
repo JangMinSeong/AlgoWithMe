@@ -1,4 +1,3 @@
-import React from 'react'
 import { OpenVidu } from 'openvidu-browser'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -6,7 +5,7 @@ import {
   setSession,
   setMyUserName,
   setMySessionId,
-  setMainStreamManager,
+  setMainStreamManager, // 필요 없을 수도
   setSubscriber,
   setPublisher,
   setParticipants,
@@ -14,19 +13,20 @@ import {
   turnMicOn,
   turnHeadphoneOff,
   turnHeadphoneOn,
+  setActiveSpeaker,
 } from '@/features/groupcall/groupcallSlice'
 
 const useGroupCall = () => {
   const dispatch = useDispatch()
 
   const session = useSelector((state: RootState) => state.groupcall.session)
-  const isMicOn = useSelector((state: RootState) => state.groupcall.isMicOn)
   const publisher = useSelector((state: RootState) => state.groupcall.publisher)
   const subscriber = useSelector(
     (state: RootState) => state.groupcall.subscriber,
   )
 
   const OV = new OpenVidu()
+  OV.enableProdMode()
 
   const connectToSession = (token) => {
     if (session) session.disconnect()
@@ -34,6 +34,7 @@ const useGroupCall = () => {
     const mySession = OV.initSession()
 
     mySession.on('streamCreated', (event) => {
+      // 이부분 html 요소 할당해야하는지 확인 필요
       const subscriber = mySession.subscribe(event.stream, undefined)
       const nickname = event.stream.connection.data.split('=')[1]
       dispatch(setSubscriber(subscriber))
@@ -62,13 +63,25 @@ const useGroupCall = () => {
 
     mySession.connect(token)
 
+    // 현재 발화자
+    mySession.on('publisherStartSpeaking', (event) => {
+      setActiveSpeaker(event.connection.connectionId)
+      console.log('User ' + event.connection.connectionId + ' start speaking')
+    })
+
+    mySession.on('publisherStopSpeaking', (event) => {
+      setActiveSpeaker(undefined)
+      console.log('User ' + event.connection.connectionId + ' stop speaking')
+    })
+
     mySession.on('exception', (exception) => {
       console.warn(exception)
     })
 
+    // 이부분 html 요소 할당해야하는지 확인 필요
     const publisher = OV.initPublisher(undefined, {
-      audioSource: undefined,
-      videoSource: undefined,
+      audioSource: undefined, // 이부분 수정필요
+      videoSource: false,
       publishAudio: false,
       publishVideo: false,
     })

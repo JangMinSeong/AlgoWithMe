@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
-import ItemModifier from './ItemModifier'
+import DeleteButton from './DeleteButton'
+import PageCreateButton from './PageCreateButton'
 
 interface IPage {
   id: number
@@ -15,7 +16,7 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
     setIsSubPagesOpen(!isSubPagesOpen)
   }
   const menuItemWrapper =
-    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-xs'
+    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
 
   const pl = props.depth * 10
 
@@ -37,7 +38,12 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
         <div style={{ width: 192 - pl }} className="truncate ">
           {props.page.desc}
         </div>
-        {isModifierShowing && <ItemModifier />}
+        {isModifierShowing && (
+          <div className="flex items-center">
+            <PageCreateButton />
+            <DeleteButton />
+          </div>
+        )}
       </div>
       {props.page.subPages !== undefined &&
         isSubPagesOpen &&

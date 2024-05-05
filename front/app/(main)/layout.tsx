@@ -7,6 +7,8 @@ import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
+import PageCreateModal from '@/components/sidebar/PageCreateModal'
+import generateSVGPath from '@/lib/computeControlPoints'
 
 export default function Layout({
   children,
@@ -14,9 +16,21 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const isModalOpen = useSelector((state: RootState) => state.modal.isOpen)
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
   const hasOngoingRequest = useRef(false)
+
+  // 예제 점 배열
+  const points = [
+    { x: 10, y: 80 },
+    { x: 100, y: 100 },
+    { x: 200, y: 30 },
+    { x: 300, y: 150 },
+    { x: 400, y: 60 },
+  ]
+  const svgOutput = generateSVGPath(points)
+  console.log(svgOutput)
 
   const baseUrl =
     process.env.NODE_ENV === 'development'
@@ -103,6 +117,7 @@ export default function Layout({
       >
         {children}
       </main>
+      {isModalOpen && <PageCreateModal />}
     </div>
   )
 }

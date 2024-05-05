@@ -17,6 +17,8 @@ public enum ExceptionStatus {
 
     // team(11)
     TEAM_NOT_FOUND(1100, "팀이 존재하지 않습니다."),
+    TEAM_INVITE_URL_EXPIRED(1101, "초대 링크가 유효하지 않습니다."),
+    TEAM_INVITE_UNAUTHORIZED(1102, "초대 권한이 없습니다."),
 
     // page(12)
     PAGE_NOT_FOUND(1200, "페이지가 존재하지 않습니다."),
@@ -25,11 +27,15 @@ public enum ExceptionStatus {
     PERSONAL_CODE_NOT_FOUND(1300, "코드가 존재하지 않습니다."),
 
     //problem(14)
-    PROBLEM_NOT_FOUND(1400, "문제가 존재하지 않습니다.")
+    PROBLEM_NOT_FOUND(1400, "문제가 존재하지 않습니다."),
 
     //openvidu/websocket(15)
 
     //github(16)
+
+    //aes128(17)
+    ENCRYPTION_FAILED(1700, "암호화에 실패했습니다."),
+    DECRYPTION_FAILED(1701, "복호화에 실패했습니다."),
     ;
 
     private final int code;

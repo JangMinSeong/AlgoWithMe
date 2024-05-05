@@ -1,5 +1,6 @@
 package com.ssafy.Algowithme.team.service;
 
+import com.ssafy.Algowithme.common.config.AES128Config;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.problem.entity.Problem;
@@ -15,9 +16,11 @@ import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -27,8 +30,9 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final ProblemRepository problemRepository;
     private final CandidateProblemRepository candidateProblemRepository;
+    private final AES128Config aes128Config;
 
-
+    @Transactional
     public TeamInfoResponse createTeam(User user, CreateTeamRequest request) {
         //팀 생성
         Team team = teamRepository.save(Team.builder()
@@ -41,11 +45,13 @@ public class TeamService {
                         .user(user)
                         .team(team)
                         .manager(true)
+                        .visitedAt(LocalDateTime.now())
                         .build());
 
         return TeamInfoResponse.create(team);
     }
 
+    @Transactional
     public void addCandidateProblem(ProblemAddRequest request) {
         //팀 조회
         Team team = teamRepository.findById(request.getTeamId())
@@ -61,4 +67,26 @@ public class TeamService {
                                             .problem(problem)
                                             .build());
     }
+
+    public String createInviteUrl(Long teamId, User user) {
+        Team team = teamRepository.findByIdAndDeletedFalse(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+        userTeamRepository.findByUserAndTeam(user, team)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_INVITE_UNAUTHORIZED));
+        return aes128Config.encryptAes("team" + "/" + teamId + "/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+    }
+
+    @Transactional
+    public void addTeamMember(String encrypted, User user) {
+        String decrypted = aes128Config.decryptAes(encrypted);
+        String[] data = decrypted.split("/");
+        Long teamId = Long.parseLong(data[1]);
+        LocalDateTime createdAt = LocalDateTime.parse(data[2], DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        if(LocalDateTime.now().isAfter(createdAt.plusDays(1)))
+            throw new CustomException(ExceptionStatus.TEAM_INVITE_URL_EXPIRED);
+        Team team = teamRepository.findByIdAndDeletedFalse(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+        userTeamRepository.findByUserAndTeam(user, team).orElseGet(UserTeam::new);
+    }
+
 }

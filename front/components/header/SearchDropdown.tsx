@@ -27,7 +27,7 @@ const SearchDropdown: React.FC<Props> = ({ items }) => {
         onClick={() => setDropdownVisible(!dropdownVisible)}
       />
       {dropdownVisible && (
-        <div className="absolute w-full bg-background border shadow z-10">
+        <div className="absolute w-full bg-background border shadow ">
           <div>
             {items.map((item, index) => (
               <div

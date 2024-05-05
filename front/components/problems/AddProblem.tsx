@@ -3,10 +3,14 @@ import Image from 'next/image'
 import { MdAddCircleOutline } from 'react-icons/md'
 import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
+import useProblems from '@/hooks/useProblems'
 
-const AddProblem = () => {
+const AddProblem = ({ groupId }: { groupId: number }) => {
   const [showModal, setShowModal] = useState(false)
+  const { viewAllProblems } = useProblems()
+
   const handleModal = () => {
+    viewAllProblems()
     setShowModal(true)
   }
 
@@ -46,7 +50,9 @@ const AddProblem = () => {
           />
         </div>
       </div>
-      {showModal && <AddProblemModal clickModal={clickModal} />}
+      {showModal && (
+        <AddProblemModal clickModal={clickModal} groupId={groupId} />
+      )}
     </div>
   )
 }
