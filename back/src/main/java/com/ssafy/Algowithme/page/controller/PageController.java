@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.page.controller;
 
 import com.ssafy.Algowithme.page.dto.request.CreateDocsRequest;
+import com.ssafy.Algowithme.page.dto.response.CreateDocsResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.page.service.PageService;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +21,9 @@ public class PageController {
     }
 
     @PostMapping("/docs")
-    public ResponseEntity<Void> createDocs(CreateDocsRequest request) {
-        pageService.createDocs(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<CreateDocsResponse> createDocs(CreateDocsRequest request) {
+        CreateDocsResponse response = pageService.createDocs(request);
+        return ResponseEntity.ok(response);
     }
 
 }

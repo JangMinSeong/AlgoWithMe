@@ -43,15 +43,16 @@ public class PageService {
         }
 
         //상위 페이지가 존재하는 경우
-        Page parentPage = pageRepository.findById(request.getPageId())
-                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        Page parentPage = null;
+        if(request.getPageId() != -1) {
+            parentPage = pageRepository.findById(request.getPageId())
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        }
 
         //페이지(워크 스페이스) 생성 및 저장
         Page page = pageRepository.save(Page.builder()
-                .title("이름 없는 페이지")
-                .content("")
-                .team(team)
                 .orders(request.getOrder())
+                .team(team)
                 .parent(parentPage)
                 .build());
 
