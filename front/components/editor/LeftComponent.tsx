@@ -187,7 +187,6 @@ const LeftComponent: React.FC<ProblemProp> = ({
   })
 
   const renderContent = () => {
-    console.log(testCases)
     switch (activeTab) {
       case '문제보기':
         return <Problem content={content} testCases={testCases} />

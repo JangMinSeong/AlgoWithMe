@@ -53,7 +53,6 @@ const MainComponent: React.FC = () => {
         setNumber(responseData.number)
       } catch (error) {
         console.error('Failed to fetch data:', error)
-        // 에러 처리 로직을 여기에 추가할 수 있습니다.
       }
     }
 
