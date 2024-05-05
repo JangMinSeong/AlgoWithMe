@@ -51,10 +51,12 @@ public class PageService {
 
         //페이지(워크 스페이스) 생성 및 저장
         Page page = pageRepository.save(Page.builder()
-                .orders(request.getOrder())
-                .team(team)
-                .parent(parentPage)
-                .build());
+                    .team(team)
+                    .parent(parentPage)
+                    .title(request.getTitle())
+                    .content(request.getContent())
+                    .orders(request.getOrders())
+                    .build());
 
         return new CreateDocsResponse(page.getId());
     }
