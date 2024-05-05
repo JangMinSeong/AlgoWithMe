@@ -1,6 +1,7 @@
 import Button from '@/components/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewProblems from './ViewProblems'
+import LevelSelector from './LevelSelector'
 
 const API_URL =
   process.env.NODE_ENV === 'development'
@@ -43,11 +44,15 @@ const AddProblemModal = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[50%] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg"
+        className="w-[50%] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg p-6"
       >
-        <div>문제 추가하기</div>
+        <h2 className=" text-lg font-bold">문제 추가하기</h2>
+
         <div>검색창</div>
-        <div>태그 모음집</div>
+
+        <div>난이도로 검색하기</div>
+        <LevelSelector />
+
         <ViewProblems />
         <Button onClick={(e) => clickModal(e)} variant="secondary">
           취소하기
