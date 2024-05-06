@@ -7,6 +7,7 @@ import websocketReducer from '@/features/socket/webSocketSlic'
 import groupcallReducer from '@/features/groupcall/groupcallSlice'
 import problemReducer from '@/features/problems/problemSlice'
 import modalReducer from '@/features/modal/modalSlice'
+import levelReducer from '@/features/levels/levelSlice'
 
 export const makeStore = () =>
   configureStore({
@@ -19,6 +20,7 @@ export const makeStore = () =>
       groupcall: groupcallReducer,
       problems: problemReducer,
       modal: modalReducer,
+      levels: levelReducer,
     },
   })
 
