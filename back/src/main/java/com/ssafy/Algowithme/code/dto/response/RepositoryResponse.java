@@ -17,24 +17,16 @@ import java.util.List;
 @NoArgsConstructor
 public class RepositoryResponse {
     private String name;
+    private String fullname;
     private String description;
-    private List<String> branches;
     private boolean isPrivate;
 
     public static RepositoryResponse create (GHRepository repo) {
         if(repo == null) throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
-        List<String> branchNames = new ArrayList<>();
-        try {
-            for (GHBranch branch : repo.getBranches().values()) {
-                branchNames.add(branch.getName());
-            }
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
-        }
         return new RepositoryResponse(
                 repo.getName(),
+                repo.getFullName(),
                 repo.getDescription(),
-                branchNames,
                 repo.isPrivate()
         );
     }

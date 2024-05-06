@@ -6,10 +6,7 @@ import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,13 +17,20 @@ public class GithubController {
 
     private final GithubService githubService;
 
-    @GetMapping("/repository/list")
-    public ResponseEntity<List<RepositoryResponse>> listRepositories(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(githubService.getListRepositoriesForUser(user));
+    @GetMapping("/repository")
+    public ResponseEntity<List<RepositoryResponse>> getRepositories(@AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(githubService.getRepositories(user));
     }
 
-    @GetMapping("/repository/{name}")
-    public ResponseEntity<RepositoryResponse> getRepository(@PathVariable String name, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(githubService.getRepositoryForUser(name, user));
+    @GetMapping("/repository/{repo}")
+    public ResponseEntity<List<String>> getBranches(@PathVariable String repo, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(githubService.getBranches(repo, user));
     }
+
+    @GetMapping("/repository/{repo}/{branch}")
+    public ResponseEntity<List<String>> getDirectoryContent(@PathVariable String repo, @PathVariable String branch, @RequestParam String path, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(githubService.getDirectoryStructure(repo, branch, path, user));
+    }
+
+
 }
