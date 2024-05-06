@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,12 @@ public class GithubController {
     private final GithubService githubService;
 
     @GetMapping("/repository/list")
-    public ResponseEntity<List<RepositoryResponse>> list(@AuthenticationPrincipal User user) {
+    public ResponseEntity<List<RepositoryResponse>> listRepositories(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(githubService.getListRepositoriesForUser(user));
+    }
+
+    @GetMapping("/repository/{name}")
+    public ResponseEntity<RepositoryResponse> getRepository(@PathVariable String name, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(githubService.getRepositoryForUser(name, user));
     }
 }
