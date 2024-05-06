@@ -44,7 +44,7 @@ public class PageService {
 
         //상위 페이지가 존재하는 경우
         Page parentPage = null;
-        if(request.getPageId() != -1) {
+        if(!request.getPageId().equals(-1L)) {
             parentPage = pageRepository.findById(request.getPageId())
                     .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         }
@@ -53,9 +53,6 @@ public class PageService {
         Page page = pageRepository.save(Page.builder()
                     .team(team)
                     .parent(parentPage)
-                    .title(request.getTitle())
-                    .content(request.getContent())
-                    .orders(request.getOrders())
                     .build());
 
         return new CreateDocsResponse(page.getId());

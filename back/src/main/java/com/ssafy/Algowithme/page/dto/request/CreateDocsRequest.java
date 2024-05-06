@@ -12,7 +12,4 @@ import lombok.Setter;
 public class CreateDocsRequest {
     private Long teamId;
     private Long pageId;
-    private String title;
-    private String content;
-    private Double orders;
 }
