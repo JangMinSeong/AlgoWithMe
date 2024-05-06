@@ -6,7 +6,8 @@ const ViewProblems = () => {
 
   return (
     <div>
-      문제 리스트 조회
+      {/* default는 전체 문제리스트 */}
+      <div className="font-bold">검색 결과 </div>
       {problemList &&
         problemList.map((el, idx) => (
           <div key={el.id}>
