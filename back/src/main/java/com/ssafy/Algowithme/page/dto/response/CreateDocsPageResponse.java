@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.page.dto.request;
+package com.ssafy.Algowithme.page.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateDocsRequest {
-    private Long teamId;
+public class CreateDocsPageResponse {
     private Long pageId;
 }

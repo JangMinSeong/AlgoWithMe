@@ -2,12 +2,18 @@ package com.ssafy.Algowithme.page.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
-import com.ssafy.Algowithme.page.dto.request.CreateDocsRequest;
-import com.ssafy.Algowithme.page.dto.response.CreateDocsResponse;
+import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
+import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
+import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.page.entity.Page;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.code.util.BOJUtil;
+import com.ssafy.Algowithme.problem.entity.Problem;
+import com.ssafy.Algowithme.problem.entity.RawProblem;
+import com.ssafy.Algowithme.problem.repository.ProblemRepository;
+import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +27,8 @@ public class PageService {
 
     private final TeamRepository teamRepository;
     private final PageRepository pageRepository;
+    private final ProblemRepository problemRepository;
+    private final RawProblemRepository rawProblemRepository;
 
     private final BOJUtil bojUtil;
 
@@ -34,7 +42,7 @@ public class PageService {
     }
 
     @Transactional
-    public CreateDocsResponse createDocs(CreateDocsRequest request) {
+    public CreateDocsPageResponse createDocsPage(CreateDocsPageRequest request) {
         //팀 조회
         Team team = null;
         if(request.getTeamId() != null) {
@@ -55,7 +63,40 @@ public class PageService {
                     .parent(parentPage)
                     .build());
 
-        return new CreateDocsResponse(page.getId());
+        return new CreateDocsPageResponse(page.getId());
+    }
+
+    public CreateProblemPageResponse createProblemPage(CreateProblemPageRequest request) {
+        //팀 조회
+        Team team = null;
+        if(request.getTeamId() != null) {
+            team = teamRepository.findById(request.getTeamId())
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+        }
+
+        //상위 페이지가 존재하는 경우
+        Page parentPage = null;
+        if(!request.getPageId().equals(-1L)) {
+            parentPage = pageRepository.findById(request.getPageId())
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        }
+
+        //상위 페이지가 존재하는 경우
+        Problem problem = problemRepository.findById(request.getProblemId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
+        RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
+
+        //페이지(워크 스페이스) 생성 및 저장
+        Page page = pageRepository.save(Page.builder()
+                        .team(team)
+                        .parent(parentPage)
+                        .problem(problem)
+                        .title(rawProblem.getTitle())
+                        .content(rawProblem.getContent())
+                        .build());
+
+        return new CreateProblemPageResponse(page.getId(), page.getTitle(), page.getContent());
     }
 }
 
