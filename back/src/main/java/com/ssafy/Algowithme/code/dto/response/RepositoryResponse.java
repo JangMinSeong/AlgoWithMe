@@ -22,13 +22,13 @@ public class RepositoryResponse {
     private boolean isPrivate;
 
     public static RepositoryResponse create (GHRepository repo) {
+        if(repo == null) throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
         List<String> branchNames = new ArrayList<>();
         try {
             for (GHBranch branch : repo.getBranches().values()) {
                 branchNames.add(branch.getName());
             }
         } catch (IOException e) {
-            e.printStackTrace();
             throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
         }
         return new RepositoryResponse(

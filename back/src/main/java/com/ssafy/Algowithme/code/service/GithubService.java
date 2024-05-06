@@ -19,7 +19,7 @@ import java.util.Map;
 public class GithubService {
 
     public List<RepositoryResponse> getListRepositoriesForUser(User user) {
-        GitHub gitHub = getGitHub(user.getGitToken());
+        GitHub gitHub = getGitHub(user);
         try {
             Map<String, GHRepository> repositories = gitHub.getMyself().getRepositories();
             return repositories.keySet().stream()
@@ -32,7 +32,7 @@ public class GithubService {
     }
 
     public RepositoryResponse getRepositoryForUser(String name, User user) {
-        GitHub gitHub = getGitHub(user.getGitToken());
+        GitHub gitHub = getGitHub(user);
         try {
             return RepositoryResponse.create(gitHub.getMyself().getRepository(name));
         } catch (IOException e) {
@@ -40,9 +40,10 @@ public class GithubService {
         }
     }
 
-    public GitHub getGitHub(String token) {
+    public GitHub getGitHub(User user) {
+        if(user == null) throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
         try {
-            GitHub gitHub = new GitHubBuilder().withOAuthToken(token).build();
+            GitHub gitHub = new GitHubBuilder().withOAuthToken(user.getGitToken()).build();
             gitHub.checkApiUrlValidity();
             return gitHub;
         } catch (IOException e) {
