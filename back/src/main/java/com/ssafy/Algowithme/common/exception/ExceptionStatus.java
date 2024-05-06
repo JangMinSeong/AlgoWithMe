@@ -32,6 +32,8 @@ public enum ExceptionStatus {
     //openvidu/websocket(15)
 
     //github(16)
+    GITHUB_TOKEN_BAD_CREDENTIALS(1600, "깃허브 토큰이 잘못되었거나 만료되었습니다."),
+    GITHUB_ACCESS_DENIED(1601, "사용 중인 깃허브 토큰에 필요한 권한이 없습니다."),
 
     //aes128(17)
     ENCRYPTION_FAILED(1700, "암호화에 실패했습니다."),
