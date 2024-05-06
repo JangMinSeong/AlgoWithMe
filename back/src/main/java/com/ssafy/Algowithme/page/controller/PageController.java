@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.page.controller;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
@@ -51,6 +52,17 @@ public class PageController {
     public ResponseEntity<CreateProblemPageResponse> createProblem(@RequestBody CreateProblemPageRequest request) {
         CreateProblemPageResponse response = pageService.createProblemPage(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/position")
+    @Operation(summary = "페이지 위치 변경", description = "페이지의 위치를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "페이지 위치 변경 성공"),
+            @ApiResponse(responseCode = "400", description = "페이지 위치 변경 실패", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<?> updatePosition(@RequestBody UpdatePagePositionRequest request) {
+        pageService.updatePosition(request);
+        return ResponseEntity.ok().build();
     }
 
 }

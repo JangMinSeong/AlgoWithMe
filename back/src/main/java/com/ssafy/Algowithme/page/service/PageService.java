@@ -4,6 +4,7 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.page.entity.Page;
@@ -97,6 +98,10 @@ public class PageService {
                         .build());
 
         return new CreateProblemPageResponse(page.getId(), page.getTitle(), page.getContent());
+    }
+
+    public void updatePosition(UpdatePagePositionRequest request) {
+
     }
 }
 
