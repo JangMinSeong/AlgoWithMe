@@ -3,13 +3,11 @@ package com.ssafy.Algowithme.user.repository.user;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Algowithme.user.dto.RecentTeamDto;
 import com.ssafy.Algowithme.user.dto.SolvedTagCountDto;
 import com.ssafy.Algowithme.user.dto.StudiedProblemDto;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,14 +21,15 @@ import static com.ssafy.Algowithme.user.entity.QUserProblem.userProblem;
 import static com.ssafy.Algowithme.problem.entity.QProblem.problem;
 
 @RequiredArgsConstructor
-@Slf4j
 public class UserCustomRepositoryImpl implements UserCustomRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
     public List<SolvedTagCountDto> getSolvedTagChart(Integer userId) {
-        List<Tuple> tuple = jpaQueryFactory.select(workspaceTag.tag, ExpressionUtils.count(workspaceTag))
+        List<Tuple> tuple = jpaQueryFactory
+                .select(workspaceTag.tag,
+                        ExpressionUtils.count(workspaceTag))
                 .from(user)
                 .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
@@ -62,7 +61,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .innerJoin(userProblem).on(user.id.eq(userProblem.user.id))
                 .innerJoin(problem).on(problem.id.eq(userProblem.problem.id))
                 .where(user.id.eq(userId))
-                .orderBy(userProblem.updatedAt.desc())
+                .orderBy(userProblem.createdAt.desc())
                 .limit(5)
                 .fetch();
     }
