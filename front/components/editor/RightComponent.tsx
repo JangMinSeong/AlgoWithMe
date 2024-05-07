@@ -27,9 +27,14 @@ interface SWEADetail {
 interface ProblemProp {
   provider: string
   number: number
+  editCodes: { language: string; frameCode: string }[]
 }
 
-const RightComponent: React.FC<ProblemProp> = ({ provider, number }) => {
+const RightComponent: React.FC<ProblemProp> = ({
+  provider,
+  number,
+  editCodes,
+}) => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [output, setOutput] = React.useState('')
@@ -151,7 +156,11 @@ const RightComponent: React.FC<ProblemProp> = ({ provider, number }) => {
   return (
     <div className="flex flex-col w-full h-full">
       <div style={{ flex: 2 }}>
-        <CodeEditor ref={codeEditorRef} provider={provider} />
+        <CodeEditor
+          ref={codeEditorRef}
+          provider={provider}
+          editCodes={editCodes}
+        />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
         <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">

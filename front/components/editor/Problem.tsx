@@ -8,16 +8,16 @@ interface ProblemProp {
 const Problem: React.FC<ProblemProp> = ({ content, testCases }) => {
   const renderTable = () => {
     // testCases가 배열이 아니라면 빈 테이블을 반환
-    if (!Array.isArray(testCases)) {
+    if (!Array.isArray(testCases) || testCases.length === 0) {
       return ''
     }
 
     let tableHtml =
-      '<table><thead><tr><th>Test Case</th><th>Input</th><th>Output</th></tr></thead><tbody>'
+      '<table><thead><tr><th>Input</th><th>Output</th></tr></thead><tbody>'
     testCases.forEach((testCase, index) => {
       const formattedProblem = testCase.problem.replace(/\n/g, '<br>') // \n을 <br>로 변환
       const formattedAnswer = testCase.answer.replace(/\n/g, '<br>') // \n을 <br>로 변환
-      tableHtml += `<tr><td>#${index + 1}</td><td>${formattedProblem}</td><td>${formattedAnswer}</td></tr>`
+      tableHtml += `<tr><td>${formattedProblem}</td><td>${formattedAnswer}</td></tr>`
     })
     tableHtml += '</tbody></table>'
     return tableHtml
