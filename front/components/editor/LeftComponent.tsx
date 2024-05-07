@@ -85,19 +85,12 @@ interface User {
   color: string
 }
 
-const getInitialUser = (): User => ({
-  name: getRandomName(),
+const getInitialUser = (nickname: string | null): User => ({
+  name: nickname === null ? getRandomName() : nickname,
   color: getRandomColor(),
 })
 
 const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
-
-// const ydocGroup = new Y.Doc()
-// const websocketProviderGroup = new TiptapCollabProvider({
-//   appId,
-//   name: 'test2', // 이름으로 문서 분류 함
-//   document: ydocGroup,
-// })
 
 const LeftComponent: React.FC<ProblemProp> = ({
   url,
@@ -105,14 +98,11 @@ const LeftComponent: React.FC<ProblemProp> = ({
   room,
   testCases,
 }) => {
-  const [currentUser] = useState(getInitialUser)
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
   const [activeTab, setActiveTab] = useState<
     '문제보기' | '개인 메모장' | '워크스페이스'
   >('문제보기')
-
-  const [ydoc, setYDoc] = useState(new Y.Doc())
-  const [provider, setProvider] = useState(null)
-  const [editor, setEditor] = useState(null)
 
   const ydocGroup = new Y.Doc()
   const websocketProviderGroup = new TiptapCollabProvider({
@@ -211,6 +201,12 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   useEffect(() => {
+    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
+    console.log(currentUser)
+  }, [user])
+
+  useEffect(() => {
+    console.log(user)
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
