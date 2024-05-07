@@ -86,6 +86,10 @@ dependencies {
 
 	// socket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+	// github api
+	implementation 'org.kohsuke:github-api:1.321'
+
 }
 
 def querydslDir = 'src/main/generated'
