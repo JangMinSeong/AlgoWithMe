@@ -67,7 +67,7 @@ public class PageService {
         Page page = pageRepository.save(Page.builder()
                         .team(team)
                         .parent(parentPage)
-                        .order(order)
+                        .orders(order)
                         .build());
 
         return new CreateDocsPageResponse(page.getId());

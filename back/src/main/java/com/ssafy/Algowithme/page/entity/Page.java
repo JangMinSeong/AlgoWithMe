@@ -32,7 +32,7 @@ public class Page extends BaseTime {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    private Double order;
+    private Double orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
