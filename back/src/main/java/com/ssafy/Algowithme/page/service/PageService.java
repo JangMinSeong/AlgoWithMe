@@ -2,11 +2,13 @@ package com.ssafy.Algowithme.page.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.page.dto.PageInfo;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
+import com.ssafy.Algowithme.page.dto.response.PageListResponse;
 import com.ssafy.Algowithme.page.entity.Page;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
@@ -20,6 +22,10 @@ import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +46,35 @@ public class PageService {
         } else {
             return null;
         }
+    }
+
+    public PageListResponse getPageList(Long teamId) {
+        // 팀 내 페이지 조회
+        List<Page> pages = pageRepository.findByTeamIdOrderByParentIdAscOrdersAsc(teamId);
+
+        HashMap<Long, PageInfo> pageInfoMap = new HashMap<>();
+        List<PageInfo> result = new ArrayList<>();
+
+        for(int i=0; i<pages.size(); i++) {
+            Page page = pages.get(i);
+            pageInfoMap.put(page.getId(), PageInfo.create(page));
+            System.out.println(page.getId() + " " + pageInfoMap.get(page.getId()).toString());
+            if(page.getParent() == null) {
+                result.add(pageInfoMap.get(page.getId()));
+            }
+        }
+
+        for(int i=0; i<pages.size(); i++) {
+            Page page = pages.get(i);
+
+            PageInfo pageInfo = pageInfoMap.get(pages.get(i).getId());
+            if(page.getParent() == null) continue;
+
+            PageInfo parentPageInfo = pageInfoMap.get(pages.get(i).getParent().getId());
+            parentPageInfo.getChildren().add(pageInfo);
+        }
+
+        return new PageListResponse(result);
     }
 
     @Transactional
@@ -112,6 +147,8 @@ public class PageService {
     public void updatePosition(UpdatePagePositionRequest request) {
 
     }
+
+
 }
 
 
