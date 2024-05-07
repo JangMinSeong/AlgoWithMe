@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.page.dto.response;
+package com.ssafy.Algowithme.page.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateDocsResponse {
-    private Long pageId;
+public class UpdatePagePositionRequest {
+    private Double prevPosition;
+    private Double nextPosition;
 }

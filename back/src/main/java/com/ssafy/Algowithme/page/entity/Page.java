@@ -2,7 +2,6 @@ package com.ssafy.Algowithme.page.entity;
 
 import com.ssafy.Algowithme.code.entity.PersonalCode;
 import com.ssafy.Algowithme.common.util.BaseTime;
-import com.ssafy.Algowithme.page.dto.request.CreateDocsRequest;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
@@ -30,6 +29,7 @@ public class Page extends BaseTime {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private Double orders;
@@ -39,7 +39,7 @@ public class Page extends BaseTime {
     private Page parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Page> child = new ArrayList<>();
+    private List<Page> child;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
