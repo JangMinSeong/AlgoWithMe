@@ -2,25 +2,17 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Session, Publisher, Subscriber } from 'openvidu-browser'
 
 interface IGroupcallState {
-  mySessionId: string
-  myUserName: string
-  session: Session | undefined
-  mainStreamManager: Publisher | Subscriber | undefined // publisher 또는 subscribers 중 한명임
-  publisher: Publisher | undefined
-  subscriber: Subscriber | undefined
-  participants: []
+  myNickname: string
+
+  participants: string[]
   isMicOn: boolean
   isHeadphoneOn: boolean
   activeSpeaker: string | undefined
 }
 
 const initialState: IGroupcallState = {
-  mySessionId: '',
-  myUserName: '',
-  session: undefined,
-  mainStreamManager: undefined, // publisher 또는 subscribers 중 한명임
-  publisher: undefined,
-  subscriber: undefined,
+  myNickname: '',
+
   participants: [],
   isMicOn: false,
   isHeadphoneOn: true,
@@ -31,53 +23,39 @@ const groupcallSlice = createSlice({
   name: 'groupcall',
   initialState,
   reducers: {
-    setMySessionId(state, action: PayloadAction<string>) {
-      state.mySessionId = action.payload
+    setMyNickname: (state, action: PayloadAction<string>) => {
+      state.myNickname = action.payload
     },
-    setMyUserName(state, action: PayloadAction<string>) {
-      state.myUserName = action.payload
+    addParticipants: (state, action: PayloadAction<string>) => {
+      state.participants.push(action.payload)
     },
-    setSession(state, action: PayloadAction<Session>) {
-      state.session = action.payload // 왜안됨
+    removeParticipants: (state, action: PayloadAction<string>) => {
+      state.participants = state.participants.filter(
+        (item) => item !== action.payload,
+      )
     },
-    setMainStreamManager(state, action: PayloadAction<Publisher | Subscriber>) {
-      state.mainStreamManager = action.payload
-    },
-    setPublisher(state, action: PayloadAction<Publisher>) {
-      state.publisher = action.payload
-    },
-    setSubscriber(state, action: PayloadAction<Subscriber>) {
-      state.subscriber = action.payload
-    },
-    setParticipants(state, action: PayloadAction<[]>) {
-      state.participants = [...action.payload]
-    },
-    turnMicOff(state) {
+    turnMicOff: (state) => {
       state.isMicOn = false
     },
-    turnMicOn(state) {
+    turnMicOn: (state) => {
       state.isMicOn = true
     },
-    turnHeadphoneOn(state) {
+    turnHeadphoneOn: (state) => {
       state.isHeadphoneOn = true
     },
-    turnHeadphoneOff(state) {
+    turnHeadphoneOff: (state) => {
       state.isHeadphoneOn = false
     },
-    setActiveSpeaker(state, action: PayloadAction<string | undefined>) {
+    setActiveSpeaker: (state, action: PayloadAction<string | undefined>) => {
       state.activeSpeaker = action.payload
     },
   },
 })
 
 export const {
-  setMySessionId,
-  setMyUserName,
-  setSession,
-  setMainStreamManager,
-  setPublisher,
-  setSubscriber,
-  setParticipants,
+  setMyNickname,
+  addParticipants,
+  removeParticipants,
   turnMicOff,
   turnMicOn,
   turnHeadphoneOn,

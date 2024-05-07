@@ -7,6 +7,7 @@ interface IStudyState {
   problems: []
   statistics: []
   joindate: string
+  callSessionId: string
 }
 
 const initialState: IStudyState = {
@@ -16,6 +17,7 @@ const initialState: IStudyState = {
   problems: [],
   statistics: [],
   joindate: '',
+  callSessionId: '',
 }
 
 const studyState = createSlice({
@@ -30,9 +32,12 @@ const studyState = createSlice({
       state.statistics = action.payload.statistics
       state.joindate = action.payload.joindate
     },
+    setCallSessionId: (state: IStudyState, action: PayloadAction<string>) => {
+      state.callSessionId = action.payload
+    },
   },
 })
 
-export const { viewStudyInfo } = studyState.actions
+export const { viewStudyInfo, setCallSessionId } = studyState.actions
 
 export default studyState.reducer

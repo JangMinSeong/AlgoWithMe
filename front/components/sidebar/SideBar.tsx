@@ -1,9 +1,9 @@
+import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import SideBarItem from './SideBarItem'
 import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
-import Link from 'next/link'
 
 const SideBar = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
@@ -11,13 +11,13 @@ const SideBar = () => {
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
   return (
     <div>
-      {isOpen ? (
+      {isOpen && (
         <div
           className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500`}
         >
           <StudyGroupNavigator />
           <Link
-            href={`/study/${'현재 스터디 고유번호'}`}
+            href={`/${'현재 스터디 고유번호'}/study`}
             className={menuItemWrapper}
           >
             스터디 메인 페이지
@@ -28,8 +28,6 @@ const SideBar = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <div className=""></div>
       )}
     </div>
   )

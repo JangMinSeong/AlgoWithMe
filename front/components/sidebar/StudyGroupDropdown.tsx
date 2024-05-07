@@ -1,23 +1,22 @@
 import Link from 'next/link'
 import { BiLayerPlus } from 'react-icons/bi'
 import fetch from '@/lib/fetch'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 const StudyGroupDropdown = () => {
   const dropdownItemCSS =
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center hover:shadow-inner'
 
+  const router = useRouter()
+
   const handleCreateStudyGroup = async () => {
     await fetch('/study', {
       method: 'POST',
-      body: {
-        name: '이름없는 스터디',
-        imageUrl: '',
-      },
       credentials: 'include',
     })
       .then((res) => res.json())
-      .then((res) => redirect(`/study/${res.teamId}`))
+      // .then((res) => router.push(`/${res.teamId}/study`))
+      .then((res) => console.log(res))
       .catch((err) => console.error(err))
   }
 
@@ -25,7 +24,7 @@ const StudyGroupDropdown = () => {
     <div className="flex flex-col w-48 text-sm border-b-2 ">
       <div>
         {dummyStudyGroups.map((el) => (
-          <Link href={`/study/${el.id}`} className={dropdownItemCSS}>
+          <Link href={`/${el.id}/study`} className={dropdownItemCSS}>
             {el.name}
           </Link>
         ))}
