@@ -5,9 +5,11 @@ import MainHeader from '@/components/header/Header'
 import StudyList from '@/components/mainpage/StudyListComponent'
 import ChartProblem from '@/components/mainpage/ChartProblemComponent'
 import fetch from '@/lib/fetch'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 const MainPage: React.FC = async () => {
+  const router = useRouter()
+
   const newStudy = {
     name: '이름없는 스터디',
     description: '',
@@ -26,7 +28,7 @@ const MainPage: React.FC = async () => {
       if (response.ok) {
         const data = await response.json()
         console.log('스터디 생성 성공:', data)
-        redirect(`study/${data.teamId}`)
+        router.push(`/${data.teamId}/study`)
       } else {
         console.error('스터디 생성 실패')
       }

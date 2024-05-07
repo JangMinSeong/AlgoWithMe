@@ -7,7 +7,15 @@ import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
 import { useWebSocket } from '@/hooks/useWebSocket'
 
-const MainComponent: React.FC = () => {
+interface MainComponentProps {
+  groupId: number
+  problemId: number
+}
+
+const MainComponent: React.FC<MainComponentProps> = ({
+  groupId,
+  problemId,
+}) => {
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
   const [number, setNumber] = useState(0)
   const [provider, setProvider] = useState('')
@@ -21,7 +29,7 @@ const MainComponent: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/problem/92294`, {
+        const response = await fetch(`/problem/${problemId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
