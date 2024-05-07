@@ -6,10 +6,11 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
-import org.kohsuke.github.*;
 import org.kohsuke.github.GHBranch;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHContentBuilder;
+import org.kohsuke.github.GHContentUpdateResponse;
+import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
@@ -63,9 +64,15 @@ public class GithubService {
         try {
             GHRepository repository = gitHub.getMyself().getRepository(repo);
             String path = req.getPath() + "/" + req.getFileName() + req.getLanguage().getExtension();
-            GHContentBuilder contentBuilder = repository.createContent();
-            contentBuilder.path(path).branch(branch).content(req.getContent()).message(req.getCommitMessage()).commit();
-        } catch (IOException e) {
+            try {
+                GHContent fileContent = repository.getFileContent(path, branch);
+                GHContentUpdateResponse response = fileContent.update(req.getContent(), req.getCommitMessage(), branch);
+            } catch (GHFileNotFoundException e) {
+                GHContentBuilder contentBuilder = repository.createContent();
+                contentBuilder.path(path).branch(branch).content(req.getContent()).message(req.getCommitMessage()).commit();
+            }
+        }
+        catch (IOException e) {
             e.printStackTrace();
             throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
         }
