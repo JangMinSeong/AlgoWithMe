@@ -33,12 +33,11 @@ public class TeamService {
     private final AES128Config aes128Config;
 
     @Transactional
-    public TeamInfoResponse createTeam(User user, CreateTeamRequest request) {
+    public TeamInfoResponse createTeam(User user) {
         //팀 생성
         Team team = teamRepository.save(Team.builder()
-                        .name(request.getName())
+                        .name("이름 없는 스터디")
                         .canRead(false)
-                        .imageUrl(request.getImageUrl())
                         .build());
         //팀멤버 저장
         userTeamRepository.save(UserTeam.builder()
@@ -48,7 +47,7 @@ public class TeamService {
                         .visitedAt(LocalDateTime.now())
                         .build());
 
-        return TeamInfoResponse.create(team);
+        return TeamInfoResponse.create(team.getId());
     }
 
     @Transactional
