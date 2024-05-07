@@ -16,6 +16,8 @@ import java.util.List;
 public class TeamInfoDetailResponse {
 
     private Long teamId;
+    private String name;
+    private String imageUrl;
     private int joinDay;
     private List<SolvedTagCountDto> chart;
     private List<SolvedProblemDto> solvedProblems;

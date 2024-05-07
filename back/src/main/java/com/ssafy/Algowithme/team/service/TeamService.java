@@ -67,8 +67,13 @@ public class TeamService {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
         return TeamInfoDetailResponse.builder()
                 .teamId(teamId)
+                .name(team.getName())
+                .imageUrl(team.getImageUrl())
                 .joinDay((int) Duration.between(userTeam.getCreatedAt(), LocalDateTime.now()).toDays())
                 .chart(teamRepository.getSolvedTagChart(teamId))
                 .solvedProblems(teamRepository.getSolvedProblem(teamId))
