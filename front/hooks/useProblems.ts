@@ -9,11 +9,8 @@ const useProblems = () => {
     await fetch('/problem/all', {
       method: 'GET',
       credentials: 'include',
-      cache: 'no-store',
     })
-      .then((res) => {
-        return res.json()
-      })
+      .then((res) => res.json())
       .then((res) => {
         console.log(res.problemList)
         dispatch(viewProblems(res.problemList))

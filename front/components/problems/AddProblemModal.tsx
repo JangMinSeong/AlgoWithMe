@@ -13,9 +13,11 @@ const API_URL =
 const AddProblemModal = ({
   clickModal,
   groupId,
+  type,
 }: {
   clickModal: (e: MouseEvent) => void
   groupId: number
+  type: string
 }) => {
   const problemId = 1 // dummy
 
@@ -77,7 +79,11 @@ const AddProblemModal = ({
           >
             취소하기
           </Button>
-          <Button onClick={handleAddCandidate}>추가하기</Button>
+          {type === 'addCandidates' ? (
+            <Button onClick={handleAddCandidate}>추가하기</Button>
+          ) : (
+            <Button onClick={handleAddCandidate}>생성하기</Button>
+          )}
         </div>
       </div>
       <Toaster position="bottom-center" reverseOrder={false} />

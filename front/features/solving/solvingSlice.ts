@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-interface solvingState {
+interface ISolvingState {
   isSolving: boolean
 }
 
-const initialState: solvingState = {
+const initialState: ISolvingState = {
   isSolving: false,
 }
 
@@ -12,10 +12,10 @@ const solvingSlice = createSlice({
   name: 'solving',
   initialState,
   reducers: {
-    startSolving: (state: solvingState) => {
+    startSolving: (state: ISolvingState) => {
       state.isSolving = true
     },
-    endSolving: (state: solvingState) => {
+    endSolving: (state: ISolvingState) => {
       state.isSolving = false
     },
   },
