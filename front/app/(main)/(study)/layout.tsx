@@ -7,13 +7,9 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   return (
-    <>
-      <div>
-        <StudyHeader />
-        <main className="bg-white bg-opacity-70 p-8 rounded-lg">
-          {children}
-        </main>
-      </div>
-    </>
+    <div>
+      <StudyHeader />
+      <main className="bg-white bg-opacity-70 p-8 rounded-lg">{children}</main>
+    </div>
   )
 }

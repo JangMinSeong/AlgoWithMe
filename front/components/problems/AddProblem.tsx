@@ -1,9 +1,9 @@
 'use client'
+import useProblems from '@/hooks/useProblems'
 import Image from 'next/image'
 import { MdAddCircleOutline } from 'react-icons/md'
 import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
-import useProblems from '@/hooks/useProblems'
 
 const AddProblem = ({ groupId }: { groupId: number }) => {
   const [showModal, setShowModal] = useState(false)
@@ -11,11 +11,13 @@ const AddProblem = ({ groupId }: { groupId: number }) => {
 
   const handleModal = () => {
     viewAllProblems()
+    document.body.style.overflow = 'hidden'
     setShowModal(true)
   }
 
   const clickModal = (e: MouseEvent) => {
     e.stopPropagation()
+    document.body.style.overflow = 'unset'
     setShowModal(false)
   }
 
@@ -51,7 +53,11 @@ const AddProblem = ({ groupId }: { groupId: number }) => {
         </div>
       </div>
       {showModal && (
-        <AddProblemModal clickModal={clickModal} groupId={groupId} />
+        <AddProblemModal
+          clickModal={clickModal}
+          groupId={groupId}
+          type="addCandidates"
+        />
       )}
     </div>
   )

@@ -35,7 +35,9 @@ const PageCreateModal = () => {
         </div>
         <div
           className="w-[20%] min-w-10"
-          onClick={() => handleCloseModal()}
+          onClick={() => {
+            handleCloseModal()
+          }}
         ></div>
         <div
           onClick={handleModal}
@@ -49,7 +51,11 @@ const PageCreateModal = () => {
       </div>
       {showModal && (
         <div className="relative z-10">
-          <AddProblemModal clickModal={clickModal} groupId={groupId} />
+          <AddProblemModal
+            clickModal={clickModal}
+            groupId={groupId}
+            type="createPage"
+          />
         </div>
       )}
     </div>

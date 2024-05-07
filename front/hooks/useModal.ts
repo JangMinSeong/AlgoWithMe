@@ -5,10 +5,12 @@ const useModal = () => {
   const dispatch = useDispatch()
 
   const handleOpenModal = () => {
+    document.body.style.overflow = 'hidden'
     dispatch(openModal())
   }
 
   const handleCloseModal = () => {
+    document.body.style.overflow = 'unset'
     dispatch(closeModal())
   }
 

@@ -3,7 +3,7 @@ import { PiChatsCircle } from 'react-icons/pi'
 
 import Link from 'next/link'
 
-const EnterStudyRoom = ({ groupId }: { groupId: number }) => (
+const EnterStudyRoom = ({ teamId }: { teamId: number }) => (
   <div>
     <div className="flex">
       <div className="w-8 flex items-center justify-center mx-2">😐</div>
@@ -12,7 +12,7 @@ const EnterStudyRoom = ({ groupId }: { groupId: number }) => (
       </div>
     </div>
     <Link
-      href={`/study/${groupId}/room`}
+      href={`/study/${teamId}/room`}
       className="w-60 h-72 bg-white shadow-foggyBlue rounded-md flex flex-col justify-center items-center hover:bg-purple-200 hover:border-opacity-0 transition-colors"
     >
       <TiDocumentAdd className="w-6 h-6" />

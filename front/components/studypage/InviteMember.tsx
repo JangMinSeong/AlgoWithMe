@@ -1,24 +1,20 @@
-'use client'
-
 import { BsPersonPlusFill } from 'react-icons/bs'
 import toast, { Toaster } from 'react-hot-toast'
+import fetch from '@/lib/fetch'
 
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_DEV_URL
-    : process.env.NEXT_PUBLIC_API_URL
-
-const InviteMember = ({ groupId }: { groupId: number }) => {
+const InviteMember = ({ teamId }: { teamId: number }) => {
   const handleGetInviLink = async () => {
-    console.log(groupId)
-    const invitationLinkRes = await fetch(`${API_URL}/study/invite`, {
-      method: 'POST',
-      body: { group_id: groupId },
+    await fetch(`/study/invite/${teamId}`, {
+      method: 'GET',
       credentials: 'include',
     })
-
-    navigator.clipboard.writeText(invitationLinkRes.data)
-    toast.success('초대 링크가 클립보드에 복사되었어요.')
+      .then((res) => res.json())
+      .then((res) =>
+        navigator.clipboard.writeText(
+          `https://k10d205.p.ssafy.io/invitaion/${teamId}/${res}`,
+        ),
+      )
+      .then(() => toast.success('초대 링크가 클립보드에 복사되었어요.'))
   }
 
   return (

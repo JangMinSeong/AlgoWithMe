@@ -8,6 +8,7 @@ import groupcallReducer from '@/features/groupcall/groupcallSlice'
 import problemReducer from '@/features/problems/problemSlice'
 import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
+import studyReducer from '@/features/study/studySlice'
 
 export const makeStore = () =>
   configureStore({
@@ -21,6 +22,7 @@ export const makeStore = () =>
       problems: problemReducer,
       modal: modalReducer,
       levels: levelReducer,
+      study: studyReducer,
     },
   })
 
