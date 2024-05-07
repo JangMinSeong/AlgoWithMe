@@ -36,9 +36,8 @@ public class TeamService {
     public TeamInfoResponse createTeam(User user, CreateTeamRequest request) {
         //팀 생성
         Team team = teamRepository.save(Team.builder()
-                        .name(request.getName())
+                        .name("이름 없는 스터디")
                         .canRead(false)
-                        .imageUrl(request.getImageUrl())
                         .build());
         //팀멤버 저장
         userTeamRepository.save(UserTeam.builder()
