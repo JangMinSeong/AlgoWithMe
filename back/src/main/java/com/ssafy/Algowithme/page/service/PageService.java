@@ -16,7 +16,7 @@ import com.ssafy.Algowithme.problem.entity.RawProblem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
-import com.ssafy.Algowithme.team.repository.TeamRepository;
+import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,10 +71,8 @@ public class PageService {
 
         //문제 저장
         page.setProblem(problem);
-        page.setTitle(rawProblem.getTitle());
-        page.setContent(rawProblem.getContent());
 
-        return new CreateProblemPageResponse(page.getId(), page.getTitle(), page.getContent());
+        return CreateProblemPageResponse.create(page.getId(), rawProblem);
     }
 
     private Page getPage(Team team, Long pageId) {

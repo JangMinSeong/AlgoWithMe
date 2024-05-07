@@ -1,7 +1,7 @@
 'use client'
 
 import SideBar from '@/components/sidebar/SideBar'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useInterceptor from '@/hooks/useInterceptor'
@@ -19,6 +19,7 @@ export default function Layout({
   const isModalOpen = useSelector((state: RootState) => state.modal.isOpen)
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
+  const [isLoading, setIsLoading] = useState(true)
   const hasOngoingRequest = useRef(false)
 
   // 예제 점 배열
@@ -58,10 +59,11 @@ export default function Layout({
             imageUrl: data.imageUrl,
             accessToken: updatedAccessToken,
           }
-          handleLogin(updatedUser)
+          await handleLogin(updatedUser)
         } else {
-          handleLogout()
+          await handleLogout()
         }
+        setIsLoading(false)
       }
     }
     refreshTask()
@@ -108,6 +110,10 @@ export default function Layout({
     },
     onSuccess: (response) => response,
   })
+
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
 
   return (
     <div className="flex">

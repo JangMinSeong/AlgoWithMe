@@ -37,8 +37,7 @@ public class PageController {
             @ApiResponse(responseCode = "1200", description = "상위 페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<CreateDocsPageResponse> createDocsPage(@RequestBody CreateDocsPageRequest request) {
-        CreateDocsPageResponse response = pageService.createDocsPage(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(pageService.createDocsPage(request));
     }
 
     @PostMapping("/problem")
@@ -50,8 +49,7 @@ public class PageController {
             @ApiResponse(responseCode = "1400", description = "문제가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<CreateProblemPageResponse> createProblem(@RequestBody CreateProblemPageRequest request) {
-        CreateProblemPageResponse response = pageService.createProblemPage(request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(pageService.createProblemPage(request));
     }
 
     @PutMapping("/position")
