@@ -17,15 +17,16 @@ public class OpenviduController {
     private final OpenVidu openVidu;
 
     @PostMapping("/sessions/{studyId}")
-    public ResponseEntity<String> initiateSession(@PathVariable Long studyId) throws OpenViduJavaClientException, OpenViduHttpException {
-        openVidu.createSession(new SessionProperties.Builder().customSessionId(studyId.toString()).build());
+    public ResponseEntity<String> initiateSession(@PathVariable String studyId) throws OpenViduJavaClientException, OpenViduHttpException {
+        openVidu.createSession(new SessionProperties.Builder().customSessionId(studyId).build());
         return ResponseEntity.ok("Success");
     }
 
     @PostMapping("/sessions/{studyId}/connections")
     public ResponseEntity<String> createConnection(@PathVariable String studyId) throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openVidu.getActiveSession(studyId);
-        if (session == null) throw new CustomException(ExceptionStatus.OPENVIDU_SESSION_NOT_FOUND);
+        if (session == null)
+            session = openVidu.createSession(new SessionProperties.Builder().customSessionId(studyId).build());
         Connection connection = session.createConnection();
         return ResponseEntity.ok(connection.getToken());
     }
