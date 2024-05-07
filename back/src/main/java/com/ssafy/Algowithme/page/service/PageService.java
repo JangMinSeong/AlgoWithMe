@@ -71,10 +71,8 @@ public class PageService {
 
         //문제 저장
         page.setProblem(problem);
-        page.setTitle(rawProblem.getTitle());
-        page.setContent(rawProblem.getContent());
 
-        return new CreateProblemPageResponse(page.getId(), page.getTitle(), page.getContent());
+        return CreateProblemPageResponse.create(page.getId(), rawProblem);
     }
 
     private Page getPage(Team team, Long pageId) {
