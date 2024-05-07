@@ -30,6 +30,7 @@ public enum ExceptionStatus {
     PROBLEM_NOT_FOUND(1400, "문제가 존재하지 않습니다."),
 
     //openvidu/websocket(15)
+    OPENVIDU_SESSION_NOT_FOUND(15000, "오픈비두 세션이 없습니다."),
 
     //github(16)
     GITHUB_TOKEN_BAD_CREDENTIALS(1600, "깃허브 토큰이 잘못되었거나 만료되었습니다."),

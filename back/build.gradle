@@ -90,6 +90,8 @@ dependencies {
 	// github api
 	implementation 'org.kohsuke:github-api:1.321'
 
+	// openvidu
+	implementation 'io.openvidu:openvidu-java-client:2.29.0'
 }
 
 def querydslDir = 'src/main/generated'
