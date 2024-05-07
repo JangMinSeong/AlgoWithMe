@@ -45,11 +45,8 @@ public class PageService {
     @Transactional
     public CreateDocsPageResponse createDocsPage(CreateDocsPageRequest request) {
         //팀 조회
-        Team team = null;
-        if(request.getTeamId() != null) {
-            team = teamRepository.findById(request.getTeamId())
-                    .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
-        }
+        Team team = teamRepository.findById(request.getTeamId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
         //상위 페이지가 존재하는 경우
         Page parentPage = null;
@@ -58,11 +55,20 @@ public class PageService {
                     .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         }
 
+        //순서
+        Double order = 0.0;
+        if(parentPage != null) {
+            order = Double.valueOf(pageRepository.countByTeamIdAndParentId(team.getId(), parentPage.getId()));
+        } else {
+            order = Double.valueOf(pageRepository.countByTeamIdAndParentIsNull(team.getId()));
+        }
+
         //페이지(워크 스페이스) 생성 및 저장
         Page page = pageRepository.save(Page.builder()
-                    .team(team)
-                    .parent(parentPage)
-                    .build());
+                        .team(team)
+                        .parent(parentPage)
+                        .order(order)
+                        .build());
 
         return new CreateDocsPageResponse(page.getId());
     }

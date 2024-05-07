@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatePagePositionRequest {
-
+    private Double prevPosition;
+    private Double nextPosition;
 }
