@@ -1,4 +1,4 @@
-package com.ssafy.Algowithme.openvidu;
+package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
