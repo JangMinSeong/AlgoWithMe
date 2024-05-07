@@ -26,7 +26,4 @@ public class UserProblem extends BaseTime { // 유저가 푼 문제
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")
     private Problem problem;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 }

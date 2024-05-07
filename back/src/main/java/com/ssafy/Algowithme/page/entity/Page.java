@@ -39,7 +39,7 @@ public class Page extends BaseTime {
     private Page parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Page> child = new ArrayList<>();
+    private List<Page> child;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id")

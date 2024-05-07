@@ -2,6 +2,7 @@ package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.team.dto.response.OpenviduConnectionResponse;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +24,11 @@ public class OpenviduController {
     }
 
     @PostMapping("/sessions/{studyId}/connections")
-    public ResponseEntity<String> createConnection(@PathVariable String studyId) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<OpenviduConnectionResponse> createConnection(@PathVariable String studyId) throws OpenViduJavaClientException, OpenViduHttpException {
         Session session = openVidu.getActiveSession(studyId);
         if (session == null)
             session = openVidu.createSession(new SessionProperties.Builder().customSessionId(studyId).build());
         Connection connection = session.createConnection();
-        return ResponseEntity.ok(connection.getToken());
+        return ResponseEntity.ok(new OpenviduConnectionResponse(connection.getToken()));
     }
 }

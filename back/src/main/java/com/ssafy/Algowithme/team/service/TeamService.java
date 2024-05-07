@@ -7,11 +7,12 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
+import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.entity.CandidateProblem;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.CandidateProblemRepository;
-import com.ssafy.Algowithme.team.repository.TeamRepository;
+import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
@@ -21,6 +22,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -88,4 +92,22 @@ public class TeamService {
         userTeamRepository.findByUserAndTeam(user, team).orElseGet(UserTeam::new);
     }
 
+    public TeamInfoDetailResponse getTeamInfoDetail(User user, Long teamId) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        return TeamInfoDetailResponse.builder()
+                .teamId(teamId)
+                .name(team.getName())
+                .imageUrl(team.getImageUrl())
+                .joinDay((int) Duration.between(userTeam.getCreatedAt(), LocalDateTime.now()).toDays())
+                .chart(teamRepository.getSolvedTagChart(teamId))
+                .solvedProblems(teamRepository.getSolvedProblem(teamId))
+                .candidateProblems(teamRepository.getCandidateProblem(teamId))
+                .ranking(teamRepository.getRank(teamId))
+                .build();
+    }
 }

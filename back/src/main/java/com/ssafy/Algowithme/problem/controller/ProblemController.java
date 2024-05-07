@@ -33,17 +33,16 @@ public class ProblemController {
         return problemService.getAll();
     }
 
-
+    @GetMapping("/{problemId}")
     @Operation(summary = "문제 세부정보 조회", description = "문제의 세부정보를 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = RawProblemResponse.class))}),
             @ApiResponse(responseCode = "1400", description = "조회 실패")
     })
-    @GetMapping("/{problemId}")
     public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("problemId") String problemId) {
-        RawProblemResponse response = problemService.getProblem(Long.parseLong(problemId));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(problemService.getProblem(Long.parseLong(problemId)));
     }
+
 
 //    @GetMapping("/{problemId}")
 //    public ProblemResponse getProblem(@PathVariable String provider, @PathVariable String problemId) throws BadRequestException {
