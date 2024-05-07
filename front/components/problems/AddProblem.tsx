@@ -7,10 +7,10 @@ import AddProblemModal from './AddProblemModal'
 
 const AddProblem = ({ groupId }: { groupId: number }) => {
   const [showModal, setShowModal] = useState(false)
-  // const { viewAllProblems } = useProblems()
+  const { viewAllProblems } = useProblems()
 
   const handleModal = () => {
-    // viewAllProblems()
+    viewAllProblems()
     document.body.style.overflow = 'hidden'
     setShowModal(true)
   }

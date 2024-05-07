@@ -7,17 +7,17 @@ const ViewProblems = () => {
   )
 
   return (
-    <div>
+    <div className="overflow-y-scroll">
       {/* default는 전체 문제리스트 */}
       <div className="font-bold">검색 결과 </div>
-      {/* {problemList &&
+      {problemList &&
         problemList.map((el, idx) => (
-          <div key={el.id} className="overflow-y-scroll">
+          <div key={el.id}>
             {el.id}
             {el.level}
             {el.name}
           </div>
-        ))} */}
+        ))}
     </div>
   )
 }

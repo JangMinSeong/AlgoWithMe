@@ -1,9 +1,25 @@
 import Link from 'next/link'
 import { BiLayerPlus } from 'react-icons/bi'
+import fetch from '@/lib/fetch'
+import { redirect } from 'next/navigation'
 
 const StudyGroupDropdown = () => {
   const dropdownItemCSS =
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center hover:shadow-inner'
+
+  const handleCreateStudyGroup = async () => {
+    await fetch('/study', {
+      method: 'POST',
+      body: {
+        name: '이름없는 스터디',
+        imageUrl: '',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((res) => redirect(`/study/${res.teamId}`))
+      .catch((err) => console.error(err))
+  }
 
   return (
     <div className="flex flex-col w-48 text-sm border-b-2 ">
@@ -14,7 +30,7 @@ const StudyGroupDropdown = () => {
           </Link>
         ))}
       </div>
-      <div className={dropdownItemCSS}>
+      <div className={dropdownItemCSS} onClick={handleCreateStudyGroup}>
         <BiLayerPlus className="mr-2" />새 스터디그룹 만들기
       </div>
     </div>
