@@ -13,46 +13,52 @@ interface StudyProp {
 }
 
 const StudyList: React.FC<StudyProp> = ({ studyList = [] }) => {
-  const [visibleStudies, setVisibleStudies] = React.useState<Study[]>([])
+  const [index, setIndex] = React.useState(0)
 
-  React.useEffect(() => {
-    // 더미 데이터 생성
-    const dummyStudies = Array.from(
-      { length: Math.max(0, 4 - studyList.length) },
-      (_, i) => ({
-        id: -i - 1, // 음수 ID로 구분
-        name: `더미 스터디 ${i + 1}`,
-        imageUrl: 'https://via.placeholder.com/150', // 임시 이미지 URL
-        visitedAt: '',
-      }),
-    )
-
-    // 실제 데이터와 더미 데이터 결합
-    setVisibleStudies([...studyList, ...dummyStudies])
-  }, [studyList])
+  // 슬라이드에 보여질 스터디 수
+  const maxVisibleStudies = 4
 
   const handleCardClick = (studyName: string) => {
     console.log(`${studyName} 클릭됨!`)
   }
 
+  const handlePrevClick = () => {
+    setIndex(Math.max(0, index - 1))
+  }
+
+  const handleNextClick = () => {
+    setIndex(Math.min(studyList.length - maxVisibleStudies, index + 1))
+  }
+
   return (
-    <div>
+    <div className="relative">
       <div className="flex flex-row justify-between items-center w-full mt-6 text-lg pl-5 pr-5">
         <div className="text-darkNavy">최근 스터디</div>
-        {studyList.length > 4 && (
-          <button
-            className="cursor-pointer hover:bg-lightPurple transition-colors"
-            onClick={() => setVisibleStudies(studyList)}
-          >
-            ...
-          </button>
+        {studyList.length > maxVisibleStudies && (
+          <div>
+            <button
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 cursor-pointer hover:bg-lightPurple transition-colors"
+              onClick={handlePrevClick}
+            >
+              &lt;
+            </button>
+            <button
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 cursor-pointer hover:bg-lightPurple transition-colors"
+              onClick={handleNextClick}
+            >
+              &gt;
+            </button>
+          </div>
         )}
       </div>
-      <div className="flex justify-around mt-2 space-x-10">
-        {visibleStudies.map((study) => (
+      <div
+        className="flex justify-around mt-2 space-x-10"
+        style={{ minHeight: '250px' }}
+      >
+        {studyList.slice(index, index + maxVisibleStudies).map((study) => (
           <StudyCard
             key={study.id}
-            imageSrc=""
+            imageSrc={study.imageUrl}
             date={new Date(study.visitedAt).toLocaleDateString('ko-KR')}
             studyName={study.name}
             onClick={() => handleCardClick(study.name)}

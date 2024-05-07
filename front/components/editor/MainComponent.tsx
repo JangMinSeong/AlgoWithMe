@@ -6,6 +6,8 @@ import fetch from '@/lib/fetch'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
 
 interface MainComponentProps {
   groupId: number
@@ -16,6 +18,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   groupId,
   problemId,
 }) => {
+  const user = useSelector((state: RootState) => state.auth.user)
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
   const [number, setNumber] = useState(0)
   const [provider, setProvider] = useState('')
@@ -87,6 +90,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
           content={content}
           room="test2"
           testCases={testCases}
+          nickname={user.nickname}
         />
       </div>
       <div

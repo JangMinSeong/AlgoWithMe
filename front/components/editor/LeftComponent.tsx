@@ -36,6 +36,7 @@ interface ProblemProp {
   content: string
   room: string
   testCases: { problem: string; answer: string }[]
+  nickname: string
 }
 
 const colors = [
@@ -97,9 +98,9 @@ const LeftComponent: React.FC<ProblemProp> = ({
   content,
   room,
   testCases,
+  nickname,
 }) => {
-  const user = useSelector((state: RootState) => state.auth.user)
-  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
+  const [currentUser, setCurrentUser] = useState(getInitialUser(nickname))
   const [activeTab, setActiveTab] = useState<
     '문제보기' | '개인 메모장' | '워크스페이스'
   >('문제보기')
@@ -201,12 +202,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   useEffect(() => {
-    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
-    console.log(currentUser)
-  }, [user])
-
-  useEffect(() => {
-    console.log(user)
+    console.log(nickname)
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
