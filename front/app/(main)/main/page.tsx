@@ -10,11 +10,6 @@ import { useRouter } from 'next/navigation'
 const MainPage: React.FC = async () => {
   const router = useRouter()
 
-  const newStudy = {
-    name: '이름없는 스터디',
-    description: '',
-    category: '',
-  }
   const handleButtonClick = async () => {
     try {
       const response = await fetch('/study', {
@@ -22,7 +17,6 @@ const MainPage: React.FC = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newStudy),
       })
 
       if (response.ok) {

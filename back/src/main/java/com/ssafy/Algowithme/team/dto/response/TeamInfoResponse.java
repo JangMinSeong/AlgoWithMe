@@ -13,20 +13,9 @@ public class TeamInfoResponse {
 
     private Long teamId;
 
-    private String name;
-
-    private String description;
-
-    private boolean canRead;
-
-    private String imageUrl;
-
-    public static TeamInfoResponse create(Team team) {
+    public static TeamInfoResponse create(Long teamId) {
         return TeamInfoResponse.builder()
-                .teamId(team.getId())
-                .name(team.getName())
-                .canRead(false)
-                .imageUrl(team.getImageUrl())
+                .teamId(teamId)
                 .build();
     }
 }
