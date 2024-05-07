@@ -6,7 +6,6 @@ import com.ssafy.Algowithme.user.entity.UserTeam;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-@Repository
 public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
     Optional<UserTeam> findByUserAndTeam(User user, Team team);
