@@ -48,62 +48,67 @@ public class PageService {
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        //상위 페이지가 존재하는 경우
-        Page parentPage = null;
-        if(!request.getPageId().equals(-1L)) {
-            parentPage = pageRepository.findById(request.getPageId())
-                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        }
-
-        //순서
-        Double order = 0.0;
-        if(parentPage != null) {
-            order = Double.valueOf(pageRepository.countByTeamIdAndParentId(team.getId(), parentPage.getId()));
-        } else {
-            order = Double.valueOf(pageRepository.countByTeamIdAndParentIsNull(team.getId()));
-        }
-
-        //페이지(워크 스페이스) 생성 및 저장
-        Page page = pageRepository.save(Page.builder()
-                        .team(team)
-                        .parent(parentPage)
-                        .orders(order)
-                        .build());
+        //페이지 저장
+        Page page = getPage(team, request.getPageId());
 
         return new CreateDocsPageResponse(page.getId());
     }
 
+    @Transactional
     public CreateProblemPageResponse createProblemPage(CreateProblemPageRequest request) {
         //팀 조회
-        Team team = null;
-        if(request.getTeamId() != null) {
-            team = teamRepository.findById(request.getTeamId())
-                    .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
-        }
+        Team team = teamRepository.findById(request.getTeamId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        //상위 페이지가 존재하는 경우
-        Page parentPage = null;
-        if(!request.getPageId().equals(-1L)) {
-            parentPage = pageRepository.findById(request.getPageId())
-                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        }
+        //페이지 저장
+        Page page = getPage(team, request.getPageId());
 
-        //상위 페이지가 존재하는 경우
+        //문제 조회
         Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
         RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-        //페이지(워크 스페이스) 생성 및 저장
-        Page page = pageRepository.save(Page.builder()
-                        .team(team)
-                        .parent(parentPage)
-                        .problem(problem)
-                        .title(rawProblem.getTitle())
-                        .content(rawProblem.getContent())
-                        .build());
+        //문제 저장
+        page.setProblem(problem);
+        page.setTitle(rawProblem.getTitle());
+        page.setContent(rawProblem.getContent());
 
         return new CreateProblemPageResponse(page.getId(), page.getTitle(), page.getContent());
+    }
+
+    private Page getPage(Team team, Long pageId) {
+        Page page;
+        if(pageId == -1) {
+            //순서 조회
+            int order = pageRepository.countByTeamIdAndParentIsNull(team.getId());
+            System.out.println("-1인 경우: " + order);
+
+            //페이지(워크 스페이스) 생성 및 저장
+            page = pageRepository.save(Page.builder()
+                    .team(team)
+                    .parent(null)
+                    .orders((double) order)
+                    .build());
+        } else {
+            //부모 페이지 조회
+            Page parentPage = pageRepository.findById(pageId)
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+            //순서 조회
+            int order = pageRepository.countByTeamIdAndParentId(team.getId(), parentPage.getId());
+
+            //페이지(워크 스페이스) 생성 및 저장
+            page = pageRepository.save(Page.builder()
+                    .team(team)
+                    .parent(parentPage)
+                    .orders((double) order)
+                    .build());
+
+            //부모 페이지에 현재 페이지 저장
+            parentPage.getChild().add(page);
+        }
+        return page;
     }
 
     public void updatePosition(UpdatePagePositionRequest request) {
