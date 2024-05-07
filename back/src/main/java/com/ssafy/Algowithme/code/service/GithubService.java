@@ -1,15 +1,18 @@
 package com.ssafy.Algowithme.code.service;
 
+import com.ssafy.Algowithme.code.dto.request.CodeUploadRequest;
 import com.ssafy.Algowithme.code.dto.response.RepositoryResponse;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.kohsuke.github.*;
 import org.kohsuke.github.GHBranch;
+import org.kohsuke.github.GHContent;
+import org.kohsuke.github.GHContentBuilder;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 import org.kohsuke.github.GitHubBuilder;
-import org.kohsuke.github.GHContent;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -51,6 +54,19 @@ public class GithubService {
             List<GHContent> contents = repository.getDirectoryContent(path, branch);
             return contents.stream().filter(GHContent::isDirectory).map(GHContent::getName).toList();
         } catch (IOException e) {
+            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
+        }
+    }
+
+    public void uploadFile(String repo, String branch, CodeUploadRequest req, User user) {
+        GitHub gitHub = getGitHub(user);
+        try {
+            GHRepository repository = gitHub.getMyself().getRepository(repo);
+            String path = req.getPath() + "/" + req.getFileName() + req.getLanguage().getExtension();
+            GHContentBuilder contentBuilder = repository.createContent();
+            contentBuilder.path(path).branch(branch).content(req.getContent()).message(req.getCommitMessage()).commit();
+        } catch (IOException e) {
+            e.printStackTrace();
             throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
         }
     }

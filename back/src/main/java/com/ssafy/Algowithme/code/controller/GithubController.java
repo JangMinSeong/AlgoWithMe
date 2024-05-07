@@ -1,5 +1,6 @@
 package com.ssafy.Algowithme.code.controller;
 
+import com.ssafy.Algowithme.code.dto.request.CodeUploadRequest;
 import com.ssafy.Algowithme.code.dto.response.RepositoryResponse;
 import com.ssafy.Algowithme.code.service.GithubService;
 import com.ssafy.Algowithme.user.entity.User;
@@ -32,5 +33,9 @@ public class GithubController {
         return ResponseEntity.ok(githubService.getDirectoryStructure(repo, branch, path, user));
     }
 
-
+    @PostMapping("/repository/{repo}/{branch}")
+    public ResponseEntity<String> uploadCode(@PathVariable String repo, @PathVariable String branch, @RequestBody CodeUploadRequest req, @AuthenticationPrincipal User user) {
+        githubService.uploadFile(repo, branch, req, user);
+        return ResponseEntity.ok("Success");
+    }
 }
