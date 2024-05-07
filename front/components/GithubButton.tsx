@@ -17,7 +17,7 @@ export default function GithubButton({ login }: GithubButtonProps) {
       onClick={() => {
         const loginQuery = login ? `?login=${login}` : ''
         window.location.assign(
-          `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}${loginQuery}`,
+          `https://github.com/login/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_GITHUB_ID}${loginQuery}&scope=repo%20project`,
         )
       }}
     >
