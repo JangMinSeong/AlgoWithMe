@@ -1,7 +1,6 @@
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import Link from 'next/link'
 import useSidebar from '@/hooks/useSidebar'
 import { useEffect } from 'react'
 import fetch from '@/lib/fetch'
