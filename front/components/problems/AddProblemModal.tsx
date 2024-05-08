@@ -7,6 +7,8 @@ import ViewProblems from './ViewProblems'
 import LevelSelector from './LevelSelector'
 import ProblemSearch from './ProblemSearch'
 import TempSelected from './TempSelected'
+import { RootState } from '@/lib/store'
+import { useSelector } from 'react-redux'
 
 const AddProblemModal = ({
   clickModal,
@@ -19,10 +21,17 @@ const AddProblemModal = ({
 }) => {
   const [chosenProblem, setChosenProblem] = useState()
 
+  const existingCandidateProblems = useSelector(
+    (state: RootState) => state.study.candidateProblems,
+  )
+
   const handleAddCandidate = async () => {
     const duplicated = () => {
       // 후보 리스트 전부 돌면서 동일한 아이디가 있으면
-      return false
+      existingCandidateProblems.map((el) => {
+        if (el.problemId === chosenProblem.id) return true
+        return false
+      })
     }
 
     if (duplicated()) {
