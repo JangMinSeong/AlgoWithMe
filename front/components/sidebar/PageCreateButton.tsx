@@ -1,10 +1,13 @@
 'use client'
+
 import { FaPlus } from 'react-icons/fa6'
 import { Tooltip } from '@/components/ReactToolTip'
 import useModal from '@/hooks/useModal'
+import useSidebar from '@/hooks/useSidebar'
 
-const PageCreateButton = () => {
+const PageCreateButton = (props: { groupId: number; pageId: number }) => {
   const { handleOpenModal } = useModal()
+  const { setGId, setPId } = useSidebar()
 
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
@@ -15,6 +18,8 @@ const PageCreateButton = () => {
           className="relative"
           onClick={(e) => {
             e.stopPropagation()
+            setGId(props.groupId)
+            setPId(props.pageId)
             handleOpenModal()
           }}
         />
