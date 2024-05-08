@@ -20,7 +20,9 @@ const useProblems = () => {
       })
   }
 
-  return { viewAllProblems }
+  const handleAddCandidateProblem = () => {}
+
+  return { viewAllProblems, handleAddCandidateProblem }
 }
 
 export default useProblems

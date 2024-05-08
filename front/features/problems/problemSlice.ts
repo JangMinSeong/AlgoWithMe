@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IProblemState {
   problemList: IProblem[]
+  chosen: IProblem
 }
 
 interface IProblem {
@@ -17,6 +18,7 @@ const initialState = {
   problemList: [
     { id: 0, url: '', provider: '', number: 0, name: '', level: '' },
   ],
+  chosen: { id: 0, url: '', provider: '', number: 0, name: '', level: '' },
 }
 
 const problemSlice = createSlice({
@@ -26,8 +28,16 @@ const problemSlice = createSlice({
     viewProblems(state: IProblemState, action: PayloadAction<IProblem[]>) {
       state.problemList = [...action.payload]
     },
+    setProblemChosen(state: IProblemState, action: PayloadAction<IProblem>) {
+      state.chosen.id = action.payload.id
+      state.chosen.level = action.payload.level
+      state.chosen.name = action.payload.name
+      state.chosen.number = action.payload.number
+      state.chosen.provider = action.payload.provider
+      state.chosen.url = action.payload.url
+    },
   },
 })
 
-export const { viewProblems } = problemSlice.actions
+export const { viewProblems, setProblemChosen } = problemSlice.actions
 export default problemSlice.reducer

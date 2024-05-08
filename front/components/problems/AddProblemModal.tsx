@@ -1,16 +1,12 @@
 'use client'
 
+import { useState } from 'react'
 import Button from '@/components/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewProblems from './ViewProblems'
 import LevelSelector from './LevelSelector'
 import ProblemSearch from './ProblemSearch'
 import TempSelected from './TempSelected'
-
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_DEV_URL
-    : process.env.NEXT_PUBLIC_API_URL
 
 const AddProblemModal = ({
   clickModal,
@@ -21,23 +17,29 @@ const AddProblemModal = ({
   groupId: number
   type: string
 }) => {
-  const problemId = 1 // dummy
+  const [chosenProblem, setChosenProblem] = useState()
 
   const handleAddCandidate = async () => {
     const duplicated = () => {
       // 후보 리스트 전부 돌면서 동일한 아이디가 있으면
-      return true
+      return false
     }
 
     if (duplicated()) {
       toast.error('이미 추가된 문제예요')
     } else {
       toast.success('문제가 추가되었어요')
-      const addCandidate = await fetch(`${API_URL}/study/problem`, {
+      console.log(chosenProblem.id)
+      await fetch(`/study/problem`, {
         method: 'POST',
-        body: { group_id: groupId, problem_id: problemId },
+        body: {
+          teamId: groupId,
+          problemId: chosenProblem.id,
+        },
         credentials: 'include',
       })
+        .then((res) => console.log(res.json()))
+        .catch((err) => console.error(err))
     }
   }
 
@@ -68,7 +70,7 @@ const AddProblemModal = ({
           </div>
           {/* 오른쪽 */}
           <div className="w-[50%]">
-            <ViewProblems />
+            <ViewProblems setParentChosenProblem={setChosenProblem} />
           </div>
         </div>
 
@@ -84,7 +86,7 @@ const AddProblemModal = ({
           {type === 'addCandidates' ? (
             <Button onClick={handleAddCandidate}>추가하기</Button>
           ) : (
-            <Button onClick={handleAddCandidate}>생성하기</Button>
+            <Button>생성하기</Button> // 페이지 생성 요청하기
           )}
         </div>
       </div>
