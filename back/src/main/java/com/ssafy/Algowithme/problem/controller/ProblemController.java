@@ -40,9 +40,9 @@ public class ProblemController {
             @ApiResponse(responseCode = "1400", description = "조회 실패")
     })
     public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("problemId") String problemId) {
-        return ResponseEntity.ok(problemService.getProblem(Long.parseLong(problemId)));
+        RawProblemResponse response = problemService.getProblem(Long.parseLong(problemId));
+        return ResponseEntity.ok(response);
     }
-
 
 //    @GetMapping("/{problemId}")
 //    public ProblemResponse getProblem(@PathVariable String provider, @PathVariable String problemId) throws BadRequestException {

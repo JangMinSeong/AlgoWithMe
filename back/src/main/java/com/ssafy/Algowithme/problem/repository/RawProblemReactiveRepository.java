@@ -5,5 +5,4 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
 public interface RawProblemReactiveRepository extends ReactiveMongoRepository<RawProblem, String> {
-    Mono<RawProblem> findRawProblemBySiteAndNumber(String site, int number);
 }

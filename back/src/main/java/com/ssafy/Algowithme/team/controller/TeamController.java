@@ -27,7 +27,7 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<TeamInfoResponse>  createTeam(@AuthenticationPrincipal User user) {
+    public ResponseEntity<TeamInfoResponse> createTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createTeam(user));
     }
 
