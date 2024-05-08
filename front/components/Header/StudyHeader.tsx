@@ -7,7 +7,6 @@ import Logo from '@/public/logo.svg'
 import { RootState } from '@/lib/store'
 import { useEffect } from 'react'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
@@ -32,10 +31,9 @@ const StudyHeader = () => {
       <div className="flex items-center">
         <Avatar />
         <GroupCall />
-        <AudioControl />
       </div>
       <div className="flex items-center">
-        {isSolving && <Timer />}
+        <Timer />
         <Avatar />
       </div>
     </div>

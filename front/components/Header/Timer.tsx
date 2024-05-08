@@ -1,4 +1,5 @@
 'use client'
+
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { useEffect, useState } from 'react'
@@ -13,7 +14,7 @@ const Timer = () => {
   const [remainMin, setRemainMin] = useState(timer.min)
   const [remainSec, setRemainSec] = useState(0)
 
-  const isSolving = useSelector((state: RootState) => state.solving)
+  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
 
   useEffect(() => {
     const startTime = Number(localStorage.getItem('startedAt'))
@@ -43,20 +44,25 @@ const Timer = () => {
         setRemainSec(Math.max(0, newRemainSec))
       }, 1000) // 1초 간격으로 setInterval 실행
     }
+    setRemainHour(Math.max(0, timer.hour))
+    setRemainMin(Math.max(0, timer.min))
+    setRemainSec(0)
   }, [timer.hour, timer.min])
 
   return (
-    <div
-      className={`bg-white bg-opacity-20 border border-accent border-opacity-50 flex p-2 w-fit rounded-3xl shadow-foggyPurple items-center mr-2`}
-    >
-      <span className="text-xs text-navy mr-2 ">남은 시간 </span>
-      {remainHour}
-      <span className="text-xs text-navy mr-2 ml-1">시간</span>
-      {remainMin}
-      <span className="text-xs text-navy mr-2 ml-1">분</span>
-      {remainSec}
-      <span className="text-xs text-navy ml-1">초</span>
-      <Toaster position="bottom-center" reverseOrder={false} />
+    <div>
+      <div
+        className={`bg-white bg-opacity-20 border border-accent border-opacity-50 flex p-2 w-fit rounded-3xl shadow-foggyPurple items-center mr-2`}
+      >
+        <span className="text-xs text-navy mr-2 ">남은 시간</span>
+        {remainHour}
+        <span className="text-xs text-navy mr-2 ml-1">시간</span>
+        {remainMin}
+        <span className="text-xs text-navy mr-2 ml-1">분</span>
+        {remainSec}
+        <span className="text-xs text-navy ml-1">초</span>
+        <Toaster position="bottom-center" reverseOrder={false} />
+      </div>
     </div>
   )
 }

@@ -2,26 +2,7 @@ import { FiMic, FiMicOff } from 'react-icons/fi'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import { Tooltip } from '@/components/ReactToolTip'
 
-import useGroupCall from '@/hooks/useGroupCall'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/lib/store'
-
 const AudioControl = () => {
-  const { handleMicOn, handleMicOff, handleHeadphoneOn, handleHeadphoneOff } =
-    useGroupCall()
-
-  const isMicOn = useSelector((state: RootState) => state.groupcall.isMicOn)
-  const isHeadphoneOn = useSelector(
-    (state: RootState) => state.groupcall.isHeadphoneOn,
-  )
-
-  const mySubscriber = useSelector(
-    (state: RootState) => state.groupcall.mySubscriber,
-  )
-  const myPublisher = useSelector(
-    (state: RootState) => state.groupcall.myPublisher,
-  )
-
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
   return (

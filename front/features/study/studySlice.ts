@@ -10,6 +10,7 @@ interface IStudyState {
   callSessionId: string
 }
 
+
 const initialState: IStudyState = {
   id: 0,
   name: '',
