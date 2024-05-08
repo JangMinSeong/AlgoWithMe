@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import WorkSpace from '@/components/editor/workspace/Workspace'
-import LeftHeader from '@/components/editor/LeftHeader'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 import { useEditor } from '@tiptap/react'
@@ -26,17 +25,13 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-import Problem from '@/components/editor/Problem'
 import { RootState } from '@/lib/store'
-import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
+import Header from '@/components/docs/Header'
 
-interface ProblemProp {
-  url: string
-  content: string
+interface DocProp {
   room: string
-  testCases: { problem: string; answer: string }[]
-  nickname: string
+  pageId: number
 }
 
 const colors = [
@@ -93,17 +88,12 @@ const getInitialUser = (nickname: string | null): User => ({
 
 const appId = process.env.NEXT_PUBLIC_TIPTAP_ID as string
 
-const LeftComponent: React.FC<ProblemProp> = ({
-  url,
-  content,
-  room,
-  testCases,
-  nickname,
-}) => {
-  const [currentUser, setCurrentUser] = useState(getInitialUser(nickname))
-  const [activeTab, setActiveTab] = useState<
-    '문제보기' | '개인 메모장' | '워크스페이스'
-  >('문제보기')
+const LeftComponent: React.FC<DocProp> = ({ room, pageId }) => {
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
+  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>(
+    '개인 메모장',
+  )
 
   const ydocGroup = new Y.Doc()
   const websocketProviderGroup = new TiptapCollabProvider({
@@ -190,19 +180,22 @@ const LeftComponent: React.FC<ProblemProp> = ({
 
   const renderContent = () => {
     switch (activeTab) {
-      case '문제보기':
-        return <Problem content={content} testCases={testCases} />
       case '개인 메모장':
         return <WorkSpace editor={editorUser} />
       case '워크스페이스':
         return <WorkSpace editor={editorGroup} />
       default:
-        return '문제'
+        return '개인 메모장'
     }
   }
 
   useEffect(() => {
-    console.log(nickname)
+    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
+    console.log(currentUser)
+  }, [user])
+
+  useEffect(() => {
+    console.log(user)
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
@@ -219,37 +212,21 @@ const LeftComponent: React.FC<ProblemProp> = ({
   const handleSave = () => {
     if (editorUser) {
       const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
-      console.log(JSON.stringify(content))
       localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
-    }
-  }
-
-  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
-  const { handleStartSolving, handleEndSolving } = useSolving()
-
-  const handleStart = () => {
-    const solvingStartTime = new Date().getTime()
-    localStorage.setItem('startedAt', String(solvingStartTime))
-    handleStartSolving()
-  }
-  const handleEnd = () => {
-    if (confirm('풀이를 종료하시겠어요?')) {
-      handleEndSolving()
-      localStorage.removeItem('startedAt')
     }
   }
 
   return (
     <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
-        <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} />
+        <Header activeTab={activeTab} onSave={handleSave} />
       </div>
       <div className="w-full" style={{ height: '72vh' }}>
         {renderContent()}
       </div>
       <div className="flex flex-row justify-between">
         <div className="flex border-b-2 w-10">
-          {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
+          {['개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
               className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
@@ -260,23 +237,6 @@ const LeftComponent: React.FC<ProblemProp> = ({
               {tab}
             </button>
           ))}
-        </div>
-        <div>
-          {isSolving ? (
-            <button
-              onClick={handleEnd}
-              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-            >
-              풀이 종료하기
-            </button>
-          ) : (
-            <button
-              onClick={handleStart}
-              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-            >
-              풀이 시작하기
-            </button>
-          )}
         </div>
       </div>
     </div>

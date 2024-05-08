@@ -20,7 +20,7 @@ public class PageInfo {
     public static PageInfo create(Page page) {
         boolean isDocs = true;
         if(page.getProblem() == null) {
-            isDocs = false;
+            isDocs = true;
         }
         return PageInfo.builder()
                 .pageId(page.getId())

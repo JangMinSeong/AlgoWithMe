@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import SideBarItem from './SideBarItem'
 import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 
 const SideBar = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const groupId = useSelector((state: RootState) => state.sidebar.groupId)
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
   return (
@@ -15,7 +15,7 @@ const SideBar = () => {
         <div
           className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500`}
         >
-          <StudyGroupNavigator />
+          <StudyGroupNavigator groupId={groupId} />
           <Link
             href={`/${'현재 스터디 고유번호'}/study`}
             className={menuItemWrapper}
@@ -24,10 +24,17 @@ const SideBar = () => {
           </Link>
           {dummyInStudyPages.map((el) => (
             <div>
-              <InStudyPageItem page={el} key={el.id} depth={0} />
+              <InStudyPageItem
+                groupId={groupId}
+                page={el}
+                key={el.id}
+                depth={0}
+              />
             </div>
           ))}
         </div>
+      ) : (
+        <div className=""></div>
       )}
     </div>
   )

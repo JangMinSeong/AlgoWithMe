@@ -1,13 +1,54 @@
 'use client'
 
 import * as React from 'react'
+import { useEffect } from 'react'
 import MainHeader from '@/components/header/Header'
 import StudyList from '@/components/mainpage/StudyListComponent'
 import ChartProblem from '@/components/mainpage/ChartProblemComponent'
 import fetch from '@/lib/fetch'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
+import useSidebar from '@/hooks/useSidebar'
 
-const MainPage: React.FC = async () => {
+const MainPage: React.FC = () => {
+  const router = useRouter()
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [chartData, setChartData] = React.useState([])
+  const [problemData, setProblemData] = React.useState([])
+  const [studyData, setStudyData] = React.useState([])
+  const { handleCloseSidebar } = useSidebar()
+  const { setGId } = useSidebar()
+
+  useEffect(() => {
+    if (user) {
+      console.log(user)
+      const fetchData = async () => {
+        try {
+          const response = await fetch('/user/info', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (response.ok) {
+            const data = await response.json()
+            setChartData(data.chart)
+            setProblemData(data.problems)
+            setStudyData(data.teams)
+          } else {
+            throw new Error('Network response was not ok.')
+          }
+        } catch (error) {
+          console.error('Error fetching data: ', error)
+        }
+      }
+      fetchData()
+      handleCloseSidebar()
+    }
+  }, [user])
+
   const handleButtonClick = async () => {
     try {
       const response = await fetch('/study', {
@@ -19,8 +60,8 @@ const MainPage: React.FC = async () => {
 
       if (response.ok) {
         const data = await response.json()
-        console.log('스터디 생성 성공:', data)
-        redirect(`${data.teamId}/study`)
+        setGId(data.teamId)
+        router.push(`/${data.teamId}/study`)
       } else {
         console.error('스터디 생성 실패')
       }
@@ -34,8 +75,8 @@ const MainPage: React.FC = async () => {
       <MainHeader />
       <div className="flex flex-col items-center justify-center min-h-screen py-2">
         <main className="flex w-full flex-col items-center justify-center text-center mt-0.5 pb-10">
-          <ChartProblem />
-          <StudyList />
+          <ChartProblem chartList={chartData} problemList={problemData} />
+          <StudyList studyList={studyData} />
         </main>
 
         <button
