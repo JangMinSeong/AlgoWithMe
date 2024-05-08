@@ -5,7 +5,6 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
-import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
@@ -17,14 +16,12 @@ import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -92,12 +89,16 @@ public class TeamService {
         userTeamRepository.findByUserAndTeam(user, team).orElseGet(UserTeam::new);
     }
 
+    @Transactional
     public TeamInfoDetailResponse getTeamInfoDetail(User user, Long teamId) {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        userTeam.setVisitedAt(LocalDateTime.now());
+        userTeamRepository.save(userTeam);
 
         return TeamInfoDetailResponse.builder()
                 .teamId(teamId)
