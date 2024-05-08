@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.team.service;
 import com.ssafy.Algowithme.common.config.AES128Config;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.common.util.S3Util;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
@@ -18,6 +19,8 @@ import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -32,6 +35,7 @@ public class TeamService {
     private final ProblemRepository problemRepository;
     private final CandidateProblemRepository candidateProblemRepository;
     private final AES128Config aes128Config;
+    private final S3Util s3Util;
 
     @Transactional
     public TeamInfoResponse createTeam(User user) {
@@ -110,5 +114,44 @@ public class TeamService {
                 .candidateProblems(teamRepository.getCandidateProblem(teamId))
                 .ranking(teamRepository.getRank(teamId))
                 .build();
+    }
+
+    @Transactional
+    public String changeTeamImage(User user, Long teamId, MultipartFile file) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        String url = s3Util.uploadVideo(file, "/" + teamId , "profile");
+
+        team.setImageUrl(url);
+        teamRepository.save(team);
+
+        return url;
+    }
+
+    @Transactional
+    public void changeTeamName(User user, Long teamId, String name) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        team.setName(name);
+        teamRepository.save(team);
+    }
+
+    @Transactional
+    public void deleteTeam(User user, Long teamId) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        teamRepository.delete(team);
     }
 }

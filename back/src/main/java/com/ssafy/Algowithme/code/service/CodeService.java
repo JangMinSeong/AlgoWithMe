@@ -12,7 +12,6 @@ import com.ssafy.Algowithme.page.entity.Page;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.code.repository.PersonalCodeRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemReactiveRepository;
-import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -94,7 +93,7 @@ public class CodeService {
     }
 
     public Mono<BOJResponse> markBOJ(MarkRequest request) {
-        return reactiveRawProblemRepository.findRawProblemBySiteAndNumber(Provider.BOJ.getName(), request.getNumber())
+        return reactiveRawProblemRepository.findById(request.getUid())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
                         .uri(uriBuilder -> uriBuilder
@@ -108,7 +107,7 @@ public class CodeService {
     }
 
     public Mono<SWEAResponse> markSWEA(MarkRequest request) {
-        return reactiveRawProblemRepository.findRawProblemBySiteAndNumber(Provider.SWEA.getName(), request.getNumber())
+        return reactiveRawProblemRepository.findById(request.getUid())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
                         .uri(uriBuilder -> uriBuilder
@@ -122,7 +121,7 @@ public class CodeService {
     }
 
     public Mono<ProgrammersResponse> markProgrammers(MarkRequest request) {
-        return reactiveRawProblemRepository.findRawProblemBySiteAndNumber(Provider.PROGRAMMERS.getName(), request.getNumber())
+        return reactiveRawProblemRepository.findById(request.getUid())
                 .switchIfEmpty(Mono.error(new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND)))
                 .flatMap(problem -> webClient.post()
                         .uri(uriBuilder -> uriBuilder

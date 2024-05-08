@@ -5,6 +5,7 @@ import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.page.dto.PageInfo;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
@@ -64,7 +65,6 @@ public class PageService {
         for(int i=0; i<pages.size(); i++) {
             Page page = pages.get(i);
             pageInfoMap.put(page.getId(), PageInfo.create(page));
-            System.out.println(page.getId() + " " + pageInfoMap.get(page.getId()).toString());
             if(page.getParent() == null) {
                 result.add(pageInfoMap.get(page.getId()));
             }
@@ -107,7 +107,7 @@ public class PageService {
         //문제 조회
         Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
-        RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
+        RawProblem rawProblem = rawProblemRepository.findById(problem.getUid())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //문제 저장
@@ -173,10 +173,21 @@ public class PageService {
             userWorkspace = userWorkspaceRepository.save(UserWorkspace.builder()
                             .user(user)
                             .workspace(page)
+                            .content("")
                             .build());
         }
 
         return MemoResponse.create(userWorkspace);
+    }
+
+    @Transactional
+    public void updateMemo(UpdateMemoRequest request) {
+        //개인메모 조회
+        UserWorkspace userWorkspace = userWorkspaceRepository.findById(request.getUserWorkspaceId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USERWORKSPACE_NOT_FOUND));
+
+        //개인메모 내용 수정
+        userWorkspace.setContent(request.getContent());
     }
 }
 
