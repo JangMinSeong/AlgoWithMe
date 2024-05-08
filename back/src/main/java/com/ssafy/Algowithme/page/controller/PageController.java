@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.page.controller;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
@@ -85,8 +86,22 @@ public class PageController {
             @ApiResponse(responseCode = "400", description = "조회 실패"),
             @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    public ResponseEntity<MemoResponse> getPageList(@PathVariable("pageId") Long pageId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<MemoResponse> getMemo(@PathVariable("pageId") Long pageId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(pageService.getMemo(pageId, user));
     }
+
+    @PutMapping("/memo")
+    @Operation(summary = "개인메모 저장", description = "pageId 에 해당하는 개인 메모를 수정한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정 성공", content = {@Content(schema = @Schema(implementation = MemoResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "수정 실패"),
+            @ApiResponse(responseCode = "1200", description = "개인메모가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    public ResponseEntity<Void> updateMemo(@RequestBody UpdateMemoRequest request) {
+        pageService.updateMemo(request);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }
