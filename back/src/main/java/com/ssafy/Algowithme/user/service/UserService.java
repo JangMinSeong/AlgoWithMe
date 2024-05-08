@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.user.service;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
+import com.ssafy.Algowithme.user.dto.TeamListDto;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -87,5 +89,9 @@ public class UserService {
                 .problems(userRepository.getStudiedProblem(user.getId()))
                 .teams(userRepository.getRecentTeam(user.getId()))
                 .build();
+    }
+
+    public List<TeamListDto> getTeamList(User user) {
+        return userRepository.getUserTeam(user.getId());
     }
 }
