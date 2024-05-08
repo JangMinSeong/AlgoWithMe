@@ -23,6 +23,7 @@ public enum ExceptionStatus {
 
     // page(12)
     PAGE_NOT_FOUND(1200, "페이지가 존재하지 않습니다."),
+    USERWORKSPACE_NOT_FOUND(1201, "개인메모가 존재하지 않습니다."),
 
     // code(13),
     PERSONAL_CODE_NOT_FOUND(1300, "코드가 존재하지 않습니다."),

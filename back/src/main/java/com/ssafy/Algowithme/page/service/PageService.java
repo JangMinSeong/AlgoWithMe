@@ -5,6 +5,7 @@ import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.page.dto.PageInfo;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
@@ -173,10 +174,21 @@ public class PageService {
             userWorkspace = userWorkspaceRepository.save(UserWorkspace.builder()
                             .user(user)
                             .workspace(page)
+                            .content("")
                             .build());
         }
 
         return MemoResponse.create(userWorkspace);
+    }
+
+    @Transactional
+    public void updateMemo(UpdateMemoRequest request) {
+        //개인메모 조회
+        UserWorkspace userWorkspace = userWorkspaceRepository.findById(request.getUserWorkspaceId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USERWORKSPACE_NOT_FOUND));
+
+        //개인메모 내용 수정
+        userWorkspace.setContent(request.getContent());
     }
 }
 
