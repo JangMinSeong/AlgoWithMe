@@ -111,4 +111,15 @@ public class TeamService {
                 .ranking(teamRepository.getRank(teamId))
                 .build();
     }
+
+    @Transactional
+    public void deleteTeam(User user, Long teamId) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        teamRepository.delete(team);
+    }
 }

@@ -65,4 +65,20 @@ public class TeamController {
         TeamInfoDetailResponse teamInfo = teamService.getTeamInfoDetail(user, teamId);
         return ResponseEntity.ok(teamInfo);
     }
+
+    @DeleteMapping("/{teamId}")
+    @Operation(summary = "스터디 그룹 삭제", description = "스터디 그룹을 삭제한다. ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스터디 그룹 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> deleteTeam(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
+        teamService.deleteTeam(user, teamId);
+        return ResponseEntity.ok().build();
+    }
 }
