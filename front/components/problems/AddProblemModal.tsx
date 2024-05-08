@@ -1,3 +1,5 @@
+'use client'
+
 import Button from '@/components/Button'
 import toast, { Toaster } from 'react-hot-toast'
 import ViewProblems from './ViewProblems'

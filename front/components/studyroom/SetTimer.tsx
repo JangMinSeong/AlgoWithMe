@@ -39,11 +39,9 @@ const SetTimer = () => {
   }
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center justify-center mx-auto">
       <div className="rounded-full p-1 border relative bg-gradient-to-br from-primary/30 via-accent/30 to-secondary/30 shadow-foggyPink mb-3">
-        <div
-          className={`rounded-full w-80 h-80 relative bg-white font-orbitron font-bold text-xl text-darkNavy`}
-        >
+        <div className="rounded-full w-80 h-80 relative bg-white font-orbitron font-bold text-xl text-darkNavy">
           {isActiveEditing ? (
             <form
               id="timer"
