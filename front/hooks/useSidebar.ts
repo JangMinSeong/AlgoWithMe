@@ -4,8 +4,23 @@ import {
   openSidebar,
   setGroupId,
   setPageId,
+  setPageList,
+  setStudyList,
 } from '@/features/sidebar/sidebarSlice'
 
+interface Study {
+  id: number
+  name: string
+  imageUrl: string
+  visitedAt: string
+}
+
+interface Page {
+  pageId: number
+  title: string
+  isDocs: boolean
+  children: Page[]
+}
 const useSidebar = () => {
   const dispatch = useDispatch()
 
@@ -18,15 +33,28 @@ const useSidebar = () => {
   }
 
   const setGId = (id: number) => {
-    console.log(id)
     dispatch(setGroupId(id))
   }
   const setPId = (id: number) => {
-    console.log(id)
     dispatch(setPageId(id))
   }
 
-  return { handleOpenSidebar, handleCloseSidebar, setGId, setPId }
+  const setStudys = (list: Study[]) => {
+    dispatch(setStudyList(list))
+  }
+
+  const setPages = (list: Page[]) => {
+    dispatch(setPageList(list))
+  }
+
+  return {
+    handleOpenSidebar,
+    handleCloseSidebar,
+    setGId,
+    setPId,
+    setStudys,
+    setPages,
+  }
 }
 
 export default useSidebar

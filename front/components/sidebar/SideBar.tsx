@@ -7,6 +7,7 @@ import InStudyPageItem from './InStudyPageItem'
 const SideBar = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
   const groupId = useSelector((state: RootState) => state.sidebar.groupId)
+  const pageList = useSelector((state: RootState) => state.sidebar.pageList)
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
   return (
@@ -16,18 +17,15 @@ const SideBar = () => {
           className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500`}
         >
           <StudyGroupNavigator groupId={groupId} />
-          <Link
-            href={`/study/${'현재 스터디 고유번호'}`}
-            className={menuItemWrapper}
-          >
+          <Link href={`/${groupId}/study`} className={menuItemWrapper}>
             스터디 메인 페이지
           </Link>
-          {dummyInStudyPages.map((el) => (
+          {pageList.map((el) => (
             <div>
               <InStudyPageItem
                 groupId={groupId}
                 page={el}
-                key={el.id}
+                key={el.pageId}
                 depth={0}
               />
             </div>

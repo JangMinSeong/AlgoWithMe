@@ -18,7 +18,6 @@ const MainPage: React.FC = () => {
   const [problemData, setProblemData] = React.useState([])
   const [studyData, setStudyData] = React.useState([])
   const { handleCloseSidebar } = useSidebar()
-  const { setGId } = useSidebar()
 
   useEffect(() => {
     if (user) {
@@ -60,7 +59,6 @@ const MainPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json()
-        setGId(data.teamId)
         router.push(`/${data.teamId}/study`)
       } else {
         console.error('스터디 생성 실패')

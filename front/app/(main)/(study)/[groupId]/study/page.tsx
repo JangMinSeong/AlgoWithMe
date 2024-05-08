@@ -7,9 +7,36 @@ import Member from '@/components/studypage/Member'
 import InviteMember from '@/components/studypage/InviteMember'
 import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
-import RankingProfileItem from '@/components/studypage/RankingProfileItem'
+import { useEffect } from 'react'
+import useSidebar from '@/hooks/useSidebar'
+import fetch from '@/lib/fetch'
 
 const StudyMainPage = ({ params }: { params: { groupId: number } }) => {
+  const { setGId, setPages } = useSidebar()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/page/team/${params.groupId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setPages(data.pageInfoList)
+        } else {
+          throw new Error('Network response was not ok.')
+        }
+      } catch (error) {
+        console.error('Error fetching data: ', error)
+      }
+    }
+    fetchData()
+    setGId(params.groupId)
+  })
   return (
     <div className="flex flex-col">
       <div className=" flex flex-wrap">
@@ -18,10 +45,10 @@ const StudyMainPage = ({ params }: { params: { groupId: number } }) => {
           {/* n일째 */}
           <div className=" w-[26%] mr-4 relative h-full font-bold flex flex-col justify-between items-center mx-auto">
             <div className="flex flex-col items-center justify-center w-48 h-64">
-              <div className="text-3xl mb-4">{'오구오구스터디'}</div>
+              <div className="text-3xl mb-4">오구오구스터디</div>
               <div>와 함께한 지</div>
               <div className="text-3xl mt-4">
-                <span className="text-purple-400">{'123'}</span>일째
+                <span className="text-purple-400">123</span>일째
               </div>
             </div>
             <img

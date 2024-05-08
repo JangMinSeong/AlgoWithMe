@@ -5,10 +5,10 @@ import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
 
 interface IPage {
-  id: number
-  desc: string
-  type: string
-  subPages: IPage[] | undefined
+  pageId: number
+  title: string
+  isDocs: boolean
+  children: IPage[] | undefined
 }
 
 const InStudyPageItem = (props: {
@@ -41,13 +41,13 @@ const InStudyPageItem = (props: {
         onMouseOut={handleUnShowModifier}
       >
         <div style={{ width: 192 - pl }} className="truncate ">
-          {props.page.desc}
+          {props.page.title ? props.page.title : '빈 페이지'}
         </div>
         {isModifierShowing && (
           <div className="flex items-center">
-            {props.page.type === 'D' && (
+            {props.page.isDocs === true && (
               <PageCreateButton
-                pageId={props.page.id}
+                pageId={props.page.pageId}
                 groupId={props.groupId}
               />
             )}
@@ -55,14 +55,14 @@ const InStudyPageItem = (props: {
           </div>
         )}
       </div>
-      {props.page.subPages !== undefined &&
+      {props.page.children?.length !== 0 &&
         isSubPagesOpen &&
-        props.page.subPages.map((el) => (
+        props.page.children?.map((el) => (
           <div>
             <InStudyPageItem
               groupId={props.groupId}
               page={el}
-              key={el.id}
+              key={el.pageId}
               depth={props.depth + 1}
             />
           </div>
