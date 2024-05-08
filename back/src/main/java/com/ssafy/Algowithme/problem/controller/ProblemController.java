@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.problem.controller;
 
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
+import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
 import com.ssafy.Algowithme.problem.dto.response.RawProblemResponse;
 import com.ssafy.Algowithme.problem.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,9 +40,18 @@ public class ProblemController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = RawProblemResponse.class))}),
             @ApiResponse(responseCode = "1400", description = "조회 실패")
     })
-    public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("problemId") String problemId) {
-        RawProblemResponse response = problemService.getProblem(Long.parseLong(problemId));
-        return ResponseEntity.ok(response);
+    public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("problemId") Long problemId) {
+        return ResponseEntity.ok(problemService.getProblem(problemId));
+    }
+
+    @GetMapping("title/{title}")
+    @Operation(summary = "문제 제목 조회", description = "문제의 제목으로 문제 리스트를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = ProblemByTitleResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "조회 실패")
+    })
+    public ResponseEntity<ProblemByTitleResponse> getProblemByTitle(@PathVariable("title") String title) {
+        return ResponseEntity.ok(problemService.getProblemByTitle(title));
     }
 
 //    @GetMapping("/{problemId}")
