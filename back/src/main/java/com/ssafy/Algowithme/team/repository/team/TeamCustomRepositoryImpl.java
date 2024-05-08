@@ -73,7 +73,8 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     public List<CandidateProblemDto> getCandidateProblem(Long teamId) {
         return jpaQueryFactory
                 .select(Projections.bean(CandidateProblemDto.class,
-                        problem.id,
+                        candidateProblem.id,
+                        problem.id.as("problemId"),
                         problem.url,
                         problem.provider,
                         problem.number,

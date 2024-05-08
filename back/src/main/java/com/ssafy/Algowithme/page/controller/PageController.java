@@ -6,6 +6,7 @@ import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
+import com.ssafy.Algowithme.page.dto.response.PageListResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.page.service.PageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,6 +29,17 @@ public class PageController {
     public ProblemResponse getProblem(@PathVariable String provider, @PathVariable Integer problemId) {
         return pageService.getProblemInfo(provider, problemId);
     }
+
+    @GetMapping("/team/{teamId}")
+    @Operation(summary = "스터디 내 페이지 조회", description = "스터디의 페이지 리스트를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = PageListResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "조회 실패")
+    })
+    public ResponseEntity<PageListResponse> getPageList(@PathVariable("teamId") String teamId) {
+        return ResponseEntity.ok(pageService.getPageList(Long.parseLong(teamId)));
+    }
+
 
     @PostMapping("/docs")
     @Operation(summary = "문서 페이지 생성", description = "팀 아이디와 상위 페이지 아이디를 입력하여, 페이지를 생성한다.")

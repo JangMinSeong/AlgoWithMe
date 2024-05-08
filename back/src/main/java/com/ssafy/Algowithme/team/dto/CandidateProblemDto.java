@@ -11,6 +11,7 @@ import lombok.*;
 public class CandidateProblemDto {
 
     private Long id;
+    private Long problemId;
     private String url;
     private Provider provider;
     private int number;
