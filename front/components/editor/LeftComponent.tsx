@@ -236,11 +236,23 @@ const LeftComponent: React.FC<ProblemProp> = ({
     fetchData()
   }, [editorUser])
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editorUser) {
-      const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
-      console.log(JSON.stringify(content))
-      localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
+      const dataToSave = {
+        userWorkspaceId: room,
+        content: editorUser.getJSON(),
+      }
+      const response = await fetch(`/memo`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSave),
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
     }
   }
 
