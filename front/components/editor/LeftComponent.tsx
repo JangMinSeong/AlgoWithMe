@@ -30,6 +30,7 @@ import Problem from '@/components/editor/Problem'
 import { RootState } from '@/lib/store'
 import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
+import fetch from '@/lib/fetch'
 
 interface ProblemProp {
   url: string
@@ -209,11 +210,30 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }, [editorGroup, currentUser])
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('userMemo')
-    if (savedContent && editorUser) {
-      const doc = JSON.parse(savedContent)
-      editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/memo/${room}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+
+        const responseData = await response.json()
+
+        if (responseData.memo && editorUser) {
+          const doc = JSON.parse(responseData.memo)
+          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
     }
+    fetchData()
   }, [editorUser])
 
   const handleSave = () => {

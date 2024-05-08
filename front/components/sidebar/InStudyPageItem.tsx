@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import useSidebar from '@/hooks/useSidebar'
 import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
 
 interface IPage {
   pageId: number
   title: string
-  isDocs: boolean
+  docs: boolean
   children: IPage[] | undefined
 }
 
@@ -16,9 +18,15 @@ const InStudyPageItem = (props: {
   page: IPage
   depth: number
 }) => {
+  const router = useRouter()
   const [isSubPagesOpen, setIsSubPagesOpen] = useState(false)
+  const { setPId } = useSidebar()
   const handleSubPageOpen = () => {
     setIsSubPagesOpen(!isSubPagesOpen)
+    setPId(props.page.pageId)
+    if (props.page.docs)
+      router.push(`/${props.groupId}/docs/${props.page.pageId}`)
+    else router.push(`/${props.groupId}/editor/${props.page.pageId}`)
   }
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
@@ -45,7 +53,7 @@ const InStudyPageItem = (props: {
         </div>
         {isModifierShowing && (
           <div className="flex items-center">
-            {props.page.isDocs === true && (
+            {props.page.docs && (
               <PageCreateButton
                 pageId={props.page.pageId}
                 groupId={props.groupId}

@@ -9,7 +9,6 @@ import fetch from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import useSidebar from '@/hooks/useSidebar'
 
 const MainPage: React.FC = () => {
   const router = useRouter()
@@ -17,7 +16,6 @@ const MainPage: React.FC = () => {
   const [chartData, setChartData] = React.useState([])
   const [problemData, setProblemData] = React.useState([])
   const [studyData, setStudyData] = React.useState([])
-  const { handleCloseSidebar } = useSidebar()
 
   useEffect(() => {
     if (user) {
@@ -44,7 +42,6 @@ const MainPage: React.FC = () => {
         }
       }
       fetchData()
-      handleCloseSidebar()
     }
   }, [user])
 

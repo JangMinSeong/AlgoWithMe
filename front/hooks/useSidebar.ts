@@ -18,7 +18,7 @@ interface Study {
 interface Page {
   pageId: number
   title: string
-  isDocs: boolean
+  docs: boolean
   children: Page[]
 }
 const useSidebar = () => {

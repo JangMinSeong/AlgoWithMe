@@ -1,15 +1,44 @@
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import Link from 'next/link'
-import StudyGroupNavigator from './StudyGroupNavigator'
+import useSidebar from '@/hooks/useSidebar'
+import { useEffect } from 'react'
+import fetch from '@/lib/fetch'
 import InStudyPageItem from './InStudyPageItem'
+import StudyGroupNavigator from './StudyGroupNavigator'
 
-const SideBar = () => {
+const SideBar = ({ groupId }: { groupId: number }) => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
-  const groupId = useSelector((state: RootState) => state.sidebar.groupId)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
+
+  const { setGId, setPages } = useSidebar()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/page/team/${groupId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (response.ok) {
+          const data = await response.json()
+          setPages(data.pageInfoList)
+        } else {
+          throw new Error('Network response was not ok.')
+        }
+      } catch (error) {
+        console.error('Error fetching data: ', error)
+      }
+    }
+    fetchData()
+    setGId(groupId)
+  }, [groupId])
+
   return (
     <div>
       {isOpen ? (
@@ -39,62 +68,3 @@ const SideBar = () => {
 }
 
 export default SideBar
-
-const dummyInStudyPages = [
-  {
-    id: 123,
-    desc: '[백준] 12123. 민숭의 생일파티',
-    type: 'W',
-    subPages: undefined,
-  },
-  {
-    id: 2323223,
-    desc: 'DFS 모음집',
-    type: 'D',
-    subPages: [
-      {
-        id: 12341324,
-        desc: '[프로그래머스] 123. 재숭의 생일파티',
-        type: 'W',
-        subPages: undefined,
-      },
-      {
-        id: 98989,
-        desc: '[SWEA] 1. 집가고싶다',
-        type: 'W',
-        subPages: undefined,
-      },
-      {
-        id: 23423454,
-        desc: '재귀',
-        type: 'D',
-        subPages: [
-          {
-            id: 12423,
-            desc: '[백준] 2494. 냥냥펀치',
-            type: 'W',
-            subPages: undefined,
-          },
-          {
-            id: 3535,
-            desc: '[SWEA] 23394. 냥냥펀치',
-            type: 'W',
-            subPages: undefined,
-          },
-          {
-            id: 767,
-            desc: '[SWEA] 2494. 냥냥냥냥냥펀치',
-            type: 'W',
-            subPages: undefined,
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 5858,
-    desc: '[SWEA] 194. 배고프다',
-    type: 'W',
-    subPages: undefined,
-  },
-]

@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { useSelector } from 'react-redux'

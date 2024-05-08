@@ -1,3 +1,5 @@
+'use client'
+
 import { IoDocument } from 'react-icons/io5'
 import { PiMathOperationsFill } from 'react-icons/pi'
 import useModal from '@/hooks/useModal'
@@ -8,6 +10,13 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useSidebar from '@/hooks/useSidebar'
 import AddProblemModal from '../problems/AddProblemModal'
+
+interface Page {
+  pageId: number
+  title: string
+  docs: boolean
+  children: Page[]
+}
 
 const PageCreateModal = () => {
   const router = useRouter()
@@ -40,15 +49,36 @@ const PageCreateModal = () => {
       body: JSON.stringify(dataToCreate),
     })
     const responseData = await response.json()
+    const newPage = {
+      pageId: responseData.pageId,
+      title: '빈 페이지',
+      docs: true,
+      children: [],
+    }
+
+    const addSubPage = (
+      pages: Page[],
+      parentPageId: number,
+      newPage: Page,
+    ): Page[] =>
+      pages.map((page) => {
+        if (page.pageId === parentPageId) {
+          return { ...page, children: [...page.children, newPage] }
+        }
+
+        return {
+          ...page,
+          children: addSubPage(page.children, parentPageId, newPage),
+        }
+      })
+
     if (pPageId === -1) {
-      const newPage = {
-        pageId: responseData.pageId,
-        title: '빈 페이지',
-        isDocs: true,
-        children: [],
-      }
       const updatedList = [...pageList, newPage]
       setPages(updatedList)
+    } else {
+      const updatedList = addSubPage(pageList, pPageId, newPage)
+      setPages(updatedList)
+      console.log(updatedList)
     }
     handleCloseModal()
     router.push(`/${groupId}/docs/${responseData.pageId}`)
