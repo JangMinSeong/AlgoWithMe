@@ -8,9 +8,12 @@ import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
+import com.ssafy.Algowithme.page.dto.response.MemoResponse;
 import com.ssafy.Algowithme.page.dto.response.PageListResponse;
 import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.page.entity.UserWorkspace;
 import com.ssafy.Algowithme.page.repository.PageRepository;
+import com.ssafy.Algowithme.page.repository.UserWorkspaceRepository;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.code.util.BOJUtil;
 import com.ssafy.Algowithme.problem.entity.Problem;
@@ -19,6 +22,7 @@ import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
+import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +41,7 @@ public class PageService {
     private final PageRepository pageRepository;
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
+    private final UserWorkspaceRepository userWorkspaceRepository;
 
     private final BOJUtil bojUtil;
 
@@ -149,6 +155,29 @@ public class PageService {
     }
 
 
+    @Transactional
+    public MemoResponse getMemo(Long pageId, User user) {
+        // userId 와 pageId 로 조회
+        Optional<UserWorkspace> optionalUserWorkspace = userWorkspaceRepository.findByWorkspaceIdAndUserId(pageId, user.getId());
+
+        UserWorkspace userWorkspace;
+
+        if(optionalUserWorkspace.isPresent()) {
+            // 조회되는 경우
+            userWorkspace = optionalUserWorkspace.get();
+        } else {
+            // 조회되지 않은 경우, 개인메모 생성 후 반환
+            Page page = pageRepository.findById(pageId)
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+            userWorkspace = userWorkspaceRepository.save(UserWorkspace.builder()
+                            .user(user)
+                            .workspace(page)
+                            .build());
+        }
+
+        return MemoResponse.create(userWorkspace);
+    }
 }
 
 
