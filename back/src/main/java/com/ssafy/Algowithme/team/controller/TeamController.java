@@ -67,6 +67,19 @@ public class TeamController {
     }
 
     @PutMapping("/image/{teamId}")
+    @Operation(summary = "스터디 그룹 이미지 변경", description = "스터디 그룹의 이미지를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스터디 그룹 이미지 변경 성공. 이미지 url 반환.",
+                content = {@Content(schema = @Schema(implementation = String.class))}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1800", description = "S3 파일 업로드에 실패했습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
     public ResponseEntity<String> changeTeamImage(@AuthenticationPrincipal User user,
                                                    @PathVariable Long teamId,
                                                    @RequestParam(value = "file") MultipartFile file) {
@@ -74,8 +87,26 @@ public class TeamController {
         return ResponseEntity.ok(url);
     }
 
+    @PutMapping("/name/{teamId}")
+    @Operation(summary = "스터디 그룹 이름 변경", description = "스터디 그룹의 이름을 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스터디 그룹 이름 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> changeTeamName(@AuthenticationPrincipal User user,
+                                                 @PathVariable Long teamId,
+                                                 @RequestBody String name) {
+        teamService.changeTeamName(user, teamId, name);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/{teamId}")
-    @Operation(summary = "스터디 그룹 삭제", description = "스터디 그룹을 삭제한다. ")
+    @Operation(summary = "스터디 그룹 삭제", description = "스터디 그룹을 삭제한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "스터디 그룹 삭제 성공"),
             @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
