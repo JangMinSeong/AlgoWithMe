@@ -2,6 +2,8 @@ package com.ssafy.Algowithme.problem.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.page.dto.PageInfo;
+import com.ssafy.Algowithme.problem.dto.ProblemInfo;
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
@@ -53,8 +55,27 @@ public class ProblemService {
         return RawProblemResponse.create(rawProblem);
     }
 
-    public ProblemByTitleResponse getProblemByTitle(String title) {
+    public ProblemByTitleResponse getProblemByTitle(String title, int page) {
+        //문제 제목 조회
+        List<Problem> problemList = problemRepository.findByNameContaining(title);
+        if(problemList.size() == 0) {
+            return ProblemByTitleResponse.create(0, 1, 1, new ArrayList<>());
+        }
 
-        return ProblemByTitleResponse.create(new ArrayList<>());
+        //조회 결과 수
+        int resultCount = problemList.size();
+
+        //전체 페이지 번호
+        int totalPages = resultCount/10 + (resultCount%10==0 ? 0 : 1);
+
+        //문제 리스트
+        List<ProblemInfo> problemInfoList = new ArrayList<>();
+        int startNum = 10 * (page - 1);
+        for(int i=startNum; i<startNum+10; i++) {
+            Problem problem = problemList.get(i);
+            problemInfoList.add(ProblemInfo.create(problem));
+        }
+
+        return ProblemByTitleResponse.create(resultCount, page, totalPages, problemInfoList);
     }
 }
