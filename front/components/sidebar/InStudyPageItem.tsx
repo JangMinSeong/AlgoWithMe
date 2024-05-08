@@ -1,4 +1,5 @@
 'use client'
+
 import { useState } from 'react'
 import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
@@ -10,7 +11,11 @@ interface IPage {
   subPages: IPage[] | undefined
 }
 
-const InStudyPageItem = (props: { page: IPage; depth: number }) => {
+const InStudyPageItem = (props: {
+  groupId: number
+  page: IPage
+  depth: number
+}) => {
   const [isSubPagesOpen, setIsSubPagesOpen] = useState(false)
   const handleSubPageOpen = () => {
     setIsSubPagesOpen(!isSubPagesOpen)
@@ -40,7 +45,12 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
         </div>
         {isModifierShowing && (
           <div className="flex items-center">
-            <PageCreateButton />
+            {props.page.type === 'D' && (
+              <PageCreateButton
+                pageId={props.page.id}
+                groupId={props.groupId}
+              />
+            )}
             <DeleteButton />
           </div>
         )}
@@ -49,7 +59,12 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
         isSubPagesOpen &&
         props.page.subPages.map((el) => (
           <div>
-            <InStudyPageItem page={el} key={el.id} depth={props.depth + 1} />
+            <InStudyPageItem
+              groupId={props.groupId}
+              page={el}
+              key={el.id}
+              depth={props.depth + 1}
+            />
           </div>
         ))}
     </div>

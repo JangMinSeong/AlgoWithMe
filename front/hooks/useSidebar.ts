@@ -1,18 +1,32 @@
 import { useDispatch } from 'react-redux'
-import { openSidebar, closeSidebar } from '@/features/sidebar/sidebarSlice'
+import {
+  closeSidebar,
+  openSidebar,
+  setGroupId,
+  setPageId,
+} from '@/features/sidebar/sidebarSlice'
 
 const useSidebar = () => {
-	const dispatch = useDispatch()
+  const dispatch = useDispatch()
 
-	const handleOpenSidebar = () => {
-		dispatch(openSidebar())
-	}
+  const handleOpenSidebar = () => {
+    dispatch(openSidebar())
+  }
 
-	const handleCloseSidebar = () => {
-		dispatch(closeSidebar())
-	}
+  const handleCloseSidebar = () => {
+    dispatch(closeSidebar())
+  }
 
-	return { handleOpenSidebar, handleCloseSidebar }
+  const setGId = (id: number) => {
+    console.log(id)
+    dispatch(setGroupId(id))
+  }
+  const setPId = (id: number) => {
+    console.log(id)
+    dispatch(setPageId(id))
+  }
+
+  return { handleOpenSidebar, handleCloseSidebar, setGId, setPId }
 }
 
 export default useSidebar
