@@ -92,7 +92,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .from(user)
                 .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
-                .where(user.id.eq(userId))
+                .where(user.id.eq(userId), team.deleted.eq(false))
                 .fetch();
     }
 }
