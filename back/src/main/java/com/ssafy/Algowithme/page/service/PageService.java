@@ -65,7 +65,6 @@ public class PageService {
         for(int i=0; i<pages.size(); i++) {
             Page page = pages.get(i);
             pageInfoMap.put(page.getId(), PageInfo.create(page));
-            System.out.println(page.getId() + " " + pageInfoMap.get(page.getId()).toString());
             if(page.getParent() == null) {
                 result.add(pageInfoMap.get(page.getId()));
             }
