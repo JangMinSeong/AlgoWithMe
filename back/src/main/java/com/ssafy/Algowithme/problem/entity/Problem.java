@@ -16,6 +16,8 @@ public class Problem {
     @Column(name = "problem_id")
     private Long id;
 
+    private String uid;
+
     private String url;
 
     @Enumerated(EnumType.STRING)

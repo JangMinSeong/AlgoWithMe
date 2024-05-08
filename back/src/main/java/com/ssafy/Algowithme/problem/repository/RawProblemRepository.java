@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface RawProblemRepository extends MongoRepository<RawProblem, Long> {
-    Optional<RawProblem> findBySiteAndNumber(String site, int number);
+public interface RawProblemRepository extends MongoRepository<RawProblem, String> {
 }

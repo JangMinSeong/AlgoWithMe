@@ -101,7 +101,7 @@ public class PageService {
         //문제 조회
         Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
-        RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
+        RawProblem rawProblem = rawProblemRepository.findById(problem.getUid())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //문제 저장

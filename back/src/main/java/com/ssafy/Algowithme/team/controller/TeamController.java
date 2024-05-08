@@ -1,7 +1,6 @@
 package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
-import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
@@ -27,7 +26,7 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
-    public ResponseEntity<TeamInfoResponse>  createTeam(@AuthenticationPrincipal User user) {
+    public ResponseEntity<TeamInfoResponse> createTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createTeam(user));
     }
 
