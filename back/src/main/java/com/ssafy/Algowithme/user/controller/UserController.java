@@ -2,12 +2,14 @@ package com.ssafy.Algowithme.user.controller;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
+import com.ssafy.Algowithme.user.dto.TeamListDto;
 import com.ssafy.Algowithme.user.dto.request.LoginRequest;
 import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -19,6 +21,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -84,5 +88,21 @@ public class UserController {
     public ResponseEntity<UserInfoDetailResponse> getUserInfoDetail(@AuthenticationPrincipal User user) {
         UserInfoDetailResponse userInfo = userService.getUserInfoDetail(user);
         return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/study")
+    @Operation(summary = "유저 스터디 목록 조회", description = "유저가 소속된 스터디그룹의 목록을 조회한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스터디 목록 조회 성공",
+            content = {@Content(
+                    mediaType = "application/json",
+                    array = @ArraySchema(schema = @Schema(implementation = TeamListDto.class))
+            )}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<List<TeamListDto>> getTeamList(@AuthenticationPrincipal User user) {
+        List<TeamListDto> teamList = userService.getTeamList(user);
+        return ResponseEntity.ok(teamList);
     }
 }
