@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import PieChart from '@/components/mainpage/PieChart'
 import NextProblem from '@/components/problems/NextProblem'
 import InviteMember from '@/components/studypage/InviteMember'
@@ -9,7 +10,10 @@ import ActiveProfileItem from '@/components/studyroom/ActiveProfileItem'
 import SetTimer from '@/components/studyroom/SetTimer'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import useStudy from '@/hooks/useStudy'
+import { RootState } from '@/lib/store'
+import { useSelector } from 'react-redux'
 
 const anchorTagCSS =
   'w-6 h-6 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors '
@@ -18,6 +22,14 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
   const [isEditingName, setIsEditingName] = useState(false)
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
+  const { handleViewStudyInfo } = useStudy()
+
+  useEffect(() => {
+    console.log(params.teamId)
+    handleViewStudyInfo(params.teamId)
+  }, [params.teamId]) // 이렇게 받는게.. 맞나
+
+  const currentStudyInfo = useSelector((state: RootState) => state.study)
 
   return (
     <div className="flex flex-col">
@@ -32,15 +44,16 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
               onMouseEnter={() => setIsShowingImgEditor(true)}
               onMouseLeave={() => setIsShowingImgEditor(false)}
             >
-              <img
-                src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
+              <Image
+                src={currentStudyInfo.imageUrl}
                 alt="Bubbles"
-                width="80"
-                height="80"
-                className="mr-2 "
+                width={80}
+                height={80}
+                className="mr-2"
               />
               <a
                 id="editImage"
+                href="a"
                 className={`${anchorTagCSS} absolute right-0 bottom-0`}
               >
                 {isShowingImgEditor && (
@@ -53,7 +66,7 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
             </span>
             <div className="flex text-2xl mb-2 mr-2">
               <div className="flex items-center">
-                {'오구오구스터디'}
+                {currentStudyInfo.name}
                 <a id="editName" className={anchorTagCSS}>
                   <GoPencil
                     className="w-4 opacity-20"
@@ -62,7 +75,9 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
                 </a>
               </div>
               <div>와 함께한 지</div>
-              <div className="text-purple-400 ml-2">{'123'}</div>
+              <div className="text-purple-400 ml-2">
+                {currentStudyInfo.joinDay}
+              </div>
               <div>일 </div>
             </div>
             <InviteMember teamId={params.teamId} />
@@ -70,7 +85,9 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[72%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <ActiveProfileItem />
+            {currentStudyInfo.ranking.map((el, idx) => (
+              <ActiveProfileItem key={el.id} person={el} rank={idx} />
+            ))}
           </div>
         </div>
 
@@ -78,7 +95,7 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
         <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
           <div className="flex items-center justify-center h-80 ">
-            <PieChart />
+            <PieChart chartList={currentStudyInfo.chart} />
           </div>
         </div>
       </div>
@@ -97,15 +114,17 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
             <div className="pr-10">
               <AddProblem groupId={params.teamId} />
-              <NextProblem />
+              {currentStudyInfo.candidateProblems.map((el) => (
+                <NextProblem problemInfo={el} key={el.id} />
+              ))}
             </div>
           </div>
 
           <div className="w-[33%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">지난 스터디 복습하기</div>
             <div className="pr-10">
-              {problems.map((el) => (
-                <PrevProblem key={el.id} />
+              {currentStudyInfo.solvedProblems.map((el) => (
+                <PrevProblem key={el.pageId} problemPageInfo={el} />
               ))}
             </div>
           </div>
@@ -114,22 +133,10 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
       <Tooltip anchorSelect="#editName" place="bottom">
         스터디 이름 수정
       </Tooltip>
-      <Tooltip anchorSelect="#editImage" place="bottom">
+      <Tooltip anchorSelect="#editImage" place="right">
         대표 이미지 수정
       </Tooltip>
     </div>
   )
 }
 export default StudyMainPage
-
-const problems = [
-  {
-    id: 1,
-  },
-  {
-    id: 2,
-  },
-  {
-    id: 3,
-  },
-]

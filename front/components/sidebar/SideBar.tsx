@@ -33,8 +33,6 @@ const SideBar = () => {
             </div>
           ))}
         </div>
-      ) : (
-        <div className=""></div>
       )}
     </div>
   )

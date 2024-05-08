@@ -1,24 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-
-interface IStudyState {
-  id: number
-  name: string
-  ranking: []
-  problems: []
-  statistics: []
-  joindate: string
-  callSessionId: string
-}
-
+import { IStudyState } from './studyTypes'
 
 const initialState: IStudyState = {
-  id: 0,
+  teamId: 0,
   name: '',
+  imageUrl: '',
+  joinDay: 0,
+  chart: [],
+  solvedProblems: [],
+  candidateProblems: [],
   ranking: [],
-  problems: [],
-  statistics: [],
-  joindate: '',
-  callSessionId: '',
 }
 
 const studyState = createSlice({
@@ -26,19 +17,24 @@ const studyState = createSlice({
   initialState,
   reducers: {
     viewStudyInfo: (state: IStudyState, action: PayloadAction<IStudyState>) => {
-      state.id = action.payload.id
+      state.teamId = action.payload.teamId
       state.name = action.payload.name
-      state.ranking = action.payload.ranking
-      state.problems = action.payload.problems
-      state.statistics = action.payload.statistics
-      state.joindate = action.payload.joindate
+      state.imageUrl = action.payload.imageUrl
+      state.joinDay = action.payload.joinDay
+      state.chart = [...action.payload.chart]
+      state.solvedProblems = [...action.payload.solvedProblems]
+      state.candidateProblems = [...action.payload.candidateProblems]
+      state.ranking = [...action.payload.ranking]
     },
-    setCallSessionId: (state: IStudyState, action: PayloadAction<string>) => {
-      state.callSessionId = action.payload
+    editImage: (state: IStudyState, action: PayloadAction<string>) => {
+      state.imageUrl = action.payload
+    },
+    editName: (state: IStudyState, action: PayloadAction<string>) => {
+      state.name = action.payload
     },
   },
 })
 
-export const { viewStudyInfo, setCallSessionId } = studyState.actions
+export const { viewStudyInfo, editImage, editName } = studyState.actions
 
 export default studyState.reducer
