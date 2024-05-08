@@ -26,6 +26,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
   const [content, setContent] = useState('')
   const [testCases, setTestCases] = useState([])
   const [editCodes, setEditCodes] = useState([])
+  const pageId = useSelector((state: RootState) => state.sidebar.pageId)
 
   const { connectToServer } = useWebSocket()
 
@@ -88,7 +89,7 @@ const MainComponent: React.FC<MainComponentProps> = ({
         <LeftComponent
           url={url}
           content={content}
-          room="test2"
+          room={pageId.toString()}
           testCases={testCases}
           nickname={user.nickname}
         />

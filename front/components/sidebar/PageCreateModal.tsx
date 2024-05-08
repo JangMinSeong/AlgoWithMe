@@ -8,7 +8,15 @@ import fetch from '@/lib/fetch'
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import useSidebar from '@/hooks/useSidebar'
 import AddProblemModal from '../problems/AddProblemModal'
+
+interface Page {
+  pageId: number
+  title: string
+  docs: boolean
+  children: Page[]
+}
 
 const PageCreateModal = () => {
   const router = useRouter()
@@ -16,6 +24,8 @@ const PageCreateModal = () => {
   const [showModal, setShowModal] = useState(false)
   const groupId = useSelector((state: RootState) => state.sidebar.groupId)
   const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
+  const pageList = useSelector((state: RootState) => state.sidebar.pageList)
+  const { setPages } = useSidebar()
 
   const handleModal = () => {
     setShowModal(true)
@@ -39,6 +49,37 @@ const PageCreateModal = () => {
       body: JSON.stringify(dataToCreate),
     })
     const responseData = await response.json()
+    const newPage = {
+      pageId: responseData.pageId,
+      title: '빈 페이지',
+      docs: true,
+      children: [],
+    }
+
+    const addSubPage = (
+      pages: Page[],
+      parentPageId: number,
+      newPage: Page,
+    ): Page[] =>
+      pages.map((page) => {
+        if (page.pageId === parentPageId) {
+          return { ...page, children: [...page.children, newPage] }
+        }
+
+        return {
+          ...page,
+          children: addSubPage(page.children, parentPageId, newPage),
+        }
+      })
+
+    if (pPageId === -1) {
+      const updatedList = [...pageList, newPage]
+      setPages(updatedList)
+    } else {
+      const updatedList = addSubPage(pageList, pPageId, newPage)
+      setPages(updatedList)
+      console.log(updatedList)
+    }
     handleCloseModal()
     router.push(`/${groupId}/docs/${responseData.pageId}`)
   }
