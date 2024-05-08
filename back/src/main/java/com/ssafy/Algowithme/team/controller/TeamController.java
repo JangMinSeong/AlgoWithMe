@@ -1,7 +1,6 @@
 package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
-import com.ssafy.Algowithme.team.dto.request.CreateTeamRequest;
 import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -66,6 +66,14 @@ public class TeamController {
         return ResponseEntity.ok(teamInfo);
     }
 
+    @PutMapping("/image/{teamId}")
+    public ResponseEntity<String> changeTeamImage(@AuthenticationPrincipal User user,
+                                                   @PathVariable Long teamId,
+                                                   @RequestParam(value = "file") MultipartFile file) {
+        String url = teamService.changeTeamImage(user, teamId, file);
+        return ResponseEntity.ok(url);
+    }
+
     @DeleteMapping("/{teamId}")
     @Operation(summary = "스터디 그룹 삭제", description = "스터디 그룹을 삭제한다. ")
     @ApiResponses(value = {
@@ -77,7 +85,8 @@ public class TeamController {
             @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<Void> deleteTeam(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Void> deleteTeam(@AuthenticationPrincipal User user,
+                                           @PathVariable Long teamId) {
         teamService.deleteTeam(user, teamId);
         return ResponseEntity.ok().build();
     }

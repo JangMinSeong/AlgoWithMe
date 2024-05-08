@@ -41,6 +41,9 @@ public enum ExceptionStatus {
     //aes128(17)
     ENCRYPTION_FAILED(1700, "암호화에 실패했습니다."),
     DECRYPTION_FAILED(1701, "복호화에 실패했습니다."),
+
+    //S3(18)
+    S3_UPLOAD_FAILED(1800, "S3 파일 업로드에 실패했습니다."),
     ;
 
     private final int code;
