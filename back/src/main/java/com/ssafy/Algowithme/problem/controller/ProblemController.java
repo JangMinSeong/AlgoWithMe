@@ -43,9 +43,4 @@ public class ProblemController {
         RawProblemResponse response = problemService.getProblem(Long.parseLong(problemId));
         return ResponseEntity.ok(response);
     }
-
-//    @GetMapping("/{problemId}")
-//    public ProblemResponse getProblem(@PathVariable String provider, @PathVariable String problemId) throws BadRequestException {
-//        return problemService.getProblem(provider, problemId);
-//    }
 }
