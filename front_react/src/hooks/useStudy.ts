@@ -36,10 +36,9 @@ const useStudy = () => {
       body: JSON.stringify({ teamId, problemId }),
       credentials: 'include',
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json)
-        dispatch(addCandidateProblems(json)) // 이거 다시 확인해야함
+      .then((res) => {
+        console.log(res)
+        // dispatch(addCandidateProblems(json)) // 이거 응답 받으면 추가하기
       })
       .catch((err) => console.error(err))
   }

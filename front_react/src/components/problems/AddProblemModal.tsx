@@ -35,7 +35,7 @@ const AddProblemModal = ({
       })
     }
 
-    if (duplicated) {
+    if (duplicated()) {
       toast.error('이미 추가된 문제예요')
     } else {
       toast.success('문제가 추가되었어요')
