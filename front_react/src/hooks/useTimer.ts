@@ -9,6 +9,7 @@ const useTimer = () => {
     const newTime: ITime = {
       hour: prop.hour,
       min: prop.min,
+      sec: prop.sec,
     }
     dispatch(changeTimer(newTime))
   }

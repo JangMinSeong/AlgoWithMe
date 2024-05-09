@@ -34,7 +34,7 @@ const SetTimer = () => {
 
     setIsActiveEditing(false)
 
-    handleChangeTimer({ hour: newHour, min: newMin })
+    handleChangeTimer({ hour: newHour, min: newMin, sec: 0 })
   }
 
   return (
