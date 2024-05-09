@@ -24,8 +24,9 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProblemData = async () => {
       try {
+        console.log(pageId + ' ' + groupId )
         const response = await fetch(`/problem/${pageId}`, {
           method: 'GET',
           headers: {
@@ -64,8 +65,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         console.error('Failed to fetch data:', error)
       }
     }
-
-    fetchData()
+    fetchProblemData()
   }, [number])
 
   useEffect(() => {
@@ -94,6 +94,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           provider={provider}
           number={number}
           editCodes={editCodes}
+          groupId={groupId}
         />
       </div>
       <button

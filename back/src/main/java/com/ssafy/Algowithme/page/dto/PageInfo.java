@@ -18,7 +18,7 @@ public class PageInfo {
     private List<PageInfo> children;
 
     public static PageInfo create(Page page) {
-        boolean isDocs = true;
+        boolean isDocs = false;
         if(page.getProblem() == null) {
             isDocs = true;
         }

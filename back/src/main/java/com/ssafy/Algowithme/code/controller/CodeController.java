@@ -47,6 +47,11 @@ public class CodeController {
         return ResponseEntity.ok(codeService.getPersonalCode(codeId));
     }
 
+    @GetMapping("/codeList")
+    public ResponseEntity<CodeByPageAndUserResponse> getCodeByPage(@RequestParam Long pageId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(codeService.getCodeByPage(pageId, user));
+    }
+
     @GetMapping("/user")
     public ResponseEntity<CodeByPageAndUserResponse> getPersonalCodeByPageAndUser(@RequestParam Long pageId, @RequestParam Integer userId) {
         return ResponseEntity.ok(codeService.getPersonalCodeByPageAndUser(pageId, userId));

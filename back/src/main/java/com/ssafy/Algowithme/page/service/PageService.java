@@ -111,6 +111,7 @@ public class PageService {
 
         //문제 저장
         page.setProblem(problem);
+        page.setTitle(problem.getName());
 
         return CreateProblemPageResponse.create(page.getId(), rawProblem);
     }

@@ -71,6 +71,14 @@ public class CodeService {
         );
     }
 
+    public CodeByPageAndUserResponse getCodeByPage(Long pageId, User user) {
+        Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        List<Long> ids = personalCodeRepository.findAllIdsByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
+        PersonalCode code = personalCodeRepository.findById(ids.getFirst()).orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
+        return new CodeByPageAndUserResponse(ids, PersonalCodeResponse.fromEntity(code));
+    }
+
+
     public CodeByPageAndUserResponse getPersonalCodeByPageAndUser(Long pageId, Integer userId) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));

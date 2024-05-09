@@ -28,12 +28,20 @@ interface ProblemProp {
   provider: string
   number: number
   editCodes: { language: string; frameCode: string }[]
+  groupId : number
+}
+
+interface PersonalCodeResponse {
+  id:number
+  language:string
+  code:string
 }
 
 const RightComponent: React.FC<ProblemProp> = ({
   provider,
   number,
   editCodes,
+  groupId,
 }) => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
@@ -41,6 +49,8 @@ const RightComponent: React.FC<ProblemProp> = ({
   const [isLoading, setIsLoading] = React.useState(false)
   const [resStatus, setResStatus] = React.useState(200)
   const [execTime, setExecTime] = React.useState(0)
+
+  const [codeIds , setCodeIds] = React.useState([])
 
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
@@ -56,6 +66,51 @@ const RightComponent: React.FC<ProblemProp> = ({
   const socketMessage: string = useSelector(
     (state: RootState) => state.socket?.message || '',
   )
+
+  useEffect(()=> {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/code/codeList`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+
+        const responseData = await response.json()
+        switch (responseData.site) {
+          case 'baekjoon':
+            setProvider('boj')
+            break
+          case 'programmers':
+            setProvider('programmers')
+            break
+          case 'swea':
+            setProvider('swea')
+            break
+          default:
+            setProvider('boj')
+        }
+        setUrl(responseData.url)
+        setContent(responseData.content)
+        if (provider === 'boj' || provider === 'swea')
+          setTestCases(responseData.exampleList || [])
+        else setTestCases(null)
+        if (provider === 'programmers')
+          setEditCodes(responseData.editCodesList || [])
+        else setEditCodes(null)
+        setNumber(responseData.number)
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
+    }
+
+    fetchData()
+  })
 
   useEffect(() => {
     // TODO : 코드 에디터 id에 따라 구독 진행

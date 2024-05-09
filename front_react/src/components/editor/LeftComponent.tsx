@@ -90,7 +90,7 @@ const getInitialUser = (nickname: string | null): User => ({
   color: getRandomColor(),
 })
 
-const appId = import.meta.env.NEXT_PUBLIC_TIPTAP_ID as string
+const appId = import.meta.env.VITE_TIPTAP_ID as string
 
 const LeftComponent: React.FC<ProblemProp> = ({
                                                 url,
