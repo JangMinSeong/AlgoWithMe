@@ -9,16 +9,6 @@ const NextProblem: React.FC = ({
 }) => {
   const { handleDeleteCandidateProblem } = useStudy()
 
-  let prov = 0
-
-  if (problemInfo.provider === 'BOJ') {
-    prov = 1
-  } else if (problemInfo.provider === 'PROGRAMMERS') {
-    prov = 2
-  }
-
-  const providerLogo = ['/swea.png', '/bojlogo.png', '/programmers.png']
-
   return (
     <div className={`w-full flex  rounded-lg mb-2`}>
       <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors justify-between">
@@ -31,7 +21,7 @@ const NextProblem: React.FC = ({
         >
           {' '}
           <img
-            src={providerLogo[prov]}
+            src={`/${problemInfo.provider}.png`}
             alt="로고"
             width={20}
             height={20}

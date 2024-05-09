@@ -60,7 +60,7 @@ const AddProblemModal = ({
 
         <div className="flex ">
           {/* 왼쪽 */}
-          <div className="w-[50%] ">
+          <div className="w-[50%] mr-6">
             <div className="font-bold mb-2">제목으로 검색하기</div>
             <ProblemSearch />
             <div className="w-full">
