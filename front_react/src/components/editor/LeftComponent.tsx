@@ -99,9 +99,8 @@ const LeftComponent: React.FC<ProblemProp> = ({
                                                 testCases,
                                                 nickname,
                                               }) => {
-  const user = useSelector((state: RootState) => state.auth.user);
   const [memoId, setMemoId] = useState<string | undefined>(undefined);
-  const [currentUser, setCurrentUser] = useState(getInitialUser(null));
+  const [currentUser] = useState(getInitialUser(nickname));
   const [activeTab, setActiveTab] = useState<'문제보기' | '개인 메모장' | '워크스페이스'>('문제보기');
   const [editorGroup, setEditorGroup] = useState<any>(null);
 
@@ -155,10 +154,6 @@ const LeftComponent: React.FC<ProblemProp> = ({
         return '문제'
     }
   }
-
-  useEffect(() => {
-    setCurrentUser(getInitialUser(user !== null ? user.nickname : null));
-  }, [user]);
 
   useEffect(() => {
     if (editorGroup) {
