@@ -4,10 +4,8 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Algowithme.user.dto.RecentTeamDto;
-import com.ssafy.Algowithme.user.dto.SolvedTagCountDto;
-import com.ssafy.Algowithme.user.dto.StudiedProblemDto;
-import com.ssafy.Algowithme.user.dto.TeamListDto;
+import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.user.dto.*;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -93,6 +91,31 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
                 .where(user.id.eq(userId), team.deleted.eq(false))
+                .fetch();
+    }
+
+    @Override
+    public List<SearchStudyDto> searchStudyByWord(Integer userId, String word) {
+        return jpaQueryFactory
+                .select(Projections.bean(SearchStudyDto.class,
+                        team.id,
+                        team.name))
+                .from(user)
+                .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
+                .innerJoin(team).on(team.id.eq(userTeam.team.id))
+                .where(user.id.eq(userId), team.name.contains(word))
+                .fetch();
+    }
+
+    @Override
+    public List<Page> searchPageByWord(Integer userId, String word) {
+        return jpaQueryFactory
+                .select(page)
+                .from(user)
+                .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
+                .innerJoin(team).on(team.id.eq(userTeam.team.id))
+                .innerJoin(page).on(team.id.eq(page.team.id))
+                .where(user.id.eq(userId), page.title.contains(word))
                 .fetch();
     }
 }

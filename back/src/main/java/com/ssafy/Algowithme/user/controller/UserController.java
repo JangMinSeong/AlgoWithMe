@@ -4,6 +4,7 @@ import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.user.dto.TeamListDto;
 import com.ssafy.Algowithme.user.dto.request.LoginRequest;
+import com.ssafy.Algowithme.user.dto.response.PageSearchResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
@@ -104,5 +105,12 @@ public class UserController {
     public ResponseEntity<List<TeamListDto>> getTeamList(@AuthenticationPrincipal User user) {
         List<TeamListDto> teamList = userService.getTeamList(user);
         return ResponseEntity.ok(teamList);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<PageSearchResponse> searchPage(@AuthenticationPrincipal User user,
+                                                         @RequestParam String word) {
+        PageSearchResponse searchResult = userService.searchPage(user, word);
+        return ResponseEntity.ok(searchResult);
     }
 }
