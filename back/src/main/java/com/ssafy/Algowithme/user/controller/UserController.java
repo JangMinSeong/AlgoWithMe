@@ -108,6 +108,13 @@ public class UserController {
     }
 
     @GetMapping("/search")
+    @Operation(summary = "상단바 검색 기능", description = "유저가 소속된 스터디그룹과 그에 포함된 페이지들의 이름을 검색한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "겅색 성공",
+                content = {@Content(schema = @Schema(implementation = PageSearchResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
     public ResponseEntity<PageSearchResponse> searchPage(@AuthenticationPrincipal User user,
                                                          @RequestParam String word) {
         PageSearchResponse searchResult = userService.searchPage(user, word);
