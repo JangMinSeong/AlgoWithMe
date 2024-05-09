@@ -71,7 +71,7 @@ public class ProblemService {
         //문제 리스트
         List<ProblemInfo> problemInfoList = new ArrayList<>();
         int startNum = 10 * (page - 1);
-        for(int i=startNum; i<startNum+10; i++) {
+        for(int i=startNum; i<startNum+10 && i<problemList.size(); i++) {
             Problem problem = problemList.get(i);
             problemInfoList.add(ProblemInfo.create(problem));
         }
