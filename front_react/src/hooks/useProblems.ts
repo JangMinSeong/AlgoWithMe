@@ -8,7 +8,7 @@ const useProblems = () => {
 	const viewAllProblems = async () => {
 		await fetch('/problem/all', {
 			method: 'GET',
-			headers: { 'Content-Type': 'application/json' },
+			// headers: { 'Content-Type': 'application/json' },
 			credentials: 'include',
 		})
 			.then((res) => res.json())
