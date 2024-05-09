@@ -6,8 +6,9 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,7 @@ public class Page extends BaseTime {
     private Double orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "parent_id")
     private Page parent;
 

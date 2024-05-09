@@ -34,8 +34,8 @@ public class PageController {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = PageListResponse.class))}),
             @ApiResponse(responseCode = "400", description = "조회 실패")
     })
-    public ResponseEntity<PageListResponse> getPageList(@PathVariable("teamId") String teamId) {
-        return ResponseEntity.ok(pageService.getPageList(Long.parseLong(teamId)));
+    public ResponseEntity<PageListResponse> getPageList(@PathVariable("teamId") Long teamId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(pageService.getPageList(teamId, user));
     }
 
 
@@ -46,8 +46,8 @@ public class PageController {
             @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1200", description = "상위 페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<CreateDocsPageResponse> createDocsPage(@RequestBody CreateDocsPageRequest request) {
-        return ResponseEntity.ok(pageService.createDocsPage(request));
+    public ResponseEntity<CreateDocsPageResponse> createDocsPage(@RequestBody CreateDocsPageRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(pageService.createDocsPage(request, user));
     }
 
     @PostMapping("/problem")
@@ -58,8 +58,8 @@ public class PageController {
             @ApiResponse(responseCode = "1200", description = "상위 페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1400", description = "문제가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<CreateProblemPageResponse> createProblem(@RequestBody CreateProblemPageRequest request) {
-        return ResponseEntity.ok(pageService.createProblemPage(request));
+    public ResponseEntity<CreateProblemPageResponse> createProblem(@RequestBody CreateProblemPageRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(pageService.createProblemPage(request, user));
     }
 
     @PutMapping("/position")
@@ -68,8 +68,8 @@ public class PageController {
             @ApiResponse(responseCode = "200", description = "페이지 위치 변경 성공"),
             @ApiResponse(responseCode = "400", description = "페이지 위치 변경 실패", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<?> updatePosition(@RequestBody UpdatePagePositionRequest request) {
-        pageService.updatePosition(request);
+    public ResponseEntity<?> updatePosition(@RequestBody UpdatePagePositionRequest request, @AuthenticationPrincipal User user) {
+        pageService.updatePosition(request, user);
         return ResponseEntity.ok().build();
     }
 
@@ -96,6 +96,50 @@ public class PageController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{pageId}")
+    @Operation(summary = "페이지 제목 변경", description = "해당 페이지의 제목을 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "페이지 제목 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> changePageTitle(@AuthenticationPrincipal User user,
+                                                @PathVariable Long pageId,
+                                                @RequestBody String title) {
+        pageService.changePageTitle(user, pageId, title);
+        return ResponseEntity.ok().build();
+    }
 
+    @DeleteMapping("/{pageId}")
+    @Operation(summary = "페이지 삭제", description = "해당 페이지를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "페이지 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> deletePage(@AuthenticationPrincipal User user,
+                                           @PathVariable Long pageId) {
+        pageService.deletePage(user, pageId);
+        return ResponseEntity.ok().build();
+    }
 
+    @PutMapping("/parent/{pageId}")
+    @Operation(summary = "부모 페이지 변경", description = "부모 페이지를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "부모 페이지 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1202", description = "자신의 자식페이지를 부모페이지로 할 수 없습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> changeParentPage(@AuthenticationPrincipal User user,
+                                                 @PathVariable Long pageId,
+                                                 @RequestBody Long parentId){
+        pageService.changeParentPage(user, pageId, parentId);
+        return ResponseEntity.ok().build();
+    }
 }

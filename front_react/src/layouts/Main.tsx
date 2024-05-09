@@ -5,7 +5,7 @@ import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
 import generateSVGPath from '@/lib/computeControlPoints'
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 
 export default function Layout() {
     const user = useSelector((state: RootState) => state.auth.user)
@@ -13,6 +13,7 @@ export default function Layout() {
     const [isLoading, setIsLoading] = useState(true)
     const hasOngoingRequest = useRef(false)
     const navigate = useNavigate()
+    const location = useLocation()
 
     // 예제 점 배열
     const points = [
@@ -31,6 +32,7 @@ export default function Layout() {
             : import.meta.env.VITE_API_URL
 
     useEffect(() => {
+
         const refreshTask = async () => {
             if (hasOngoingRequest.current) {
                 return
@@ -53,6 +55,9 @@ export default function Layout() {
                             accessToken: updatedAccessToken,
                         }
                         handleLogin(updatedUser)
+                        if (location.pathname === '/') {
+                            navigate('/main')
+                        }
                     } else {
                         handleLogout()
                         navigate('/welcome')
@@ -60,6 +65,11 @@ export default function Layout() {
                     setIsLoading(false)
                     console.log(isLoading)
                 })()
+            } else {
+                if (location.pathname === '/') {
+                    navigate('/main')
+                }
+                setIsLoading(false)
             }
         }
         refreshTask()
@@ -110,7 +120,8 @@ export default function Layout() {
     return (
         <div className="flex">
             <main className="ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`">
-                <Outlet />
+                {(!isLoading) && <Outlet />}
+                {/*<Outlet />*/}
             </main>
         </div>
     )

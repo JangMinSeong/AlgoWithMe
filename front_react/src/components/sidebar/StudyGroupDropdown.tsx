@@ -1,17 +1,28 @@
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { BiLayerPlus } from 'react-icons/bi'
+import useStudy from '@/hooks/useStudy'
+import { useNavigate } from 'react-router-dom'
 
 const StudyGroupDropdown = () => {
+  const navigate = useNavigate()
+  const { handleFetchStudyInfo } = useStudy()
   const dropdownItemCSS =
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center hover:shadow-inner'
 
+  const handleGoStudyMain = (id: number) => {
+    handleFetchStudyInfo(id)
+    navigate(`/${id}/study`)
+  }
   return (
     <div className="flex flex-col w-48 text-sm border-b-2 ">
       <div>
         {dummyStudyGroups.map((el) => (
-          <Link to={`/study/${el.id}`} className={dropdownItemCSS}>
+          <div
+            onClick={() => handleGoStudyMain(el.id)}
+            className={dropdownItemCSS}
+          >
             {el.name}
-          </Link>
+          </div>
         ))}
       </div>
       <div className={dropdownItemCSS}>

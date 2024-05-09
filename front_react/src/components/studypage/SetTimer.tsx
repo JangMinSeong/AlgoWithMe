@@ -1,4 +1,3 @@
-'use client'
 import { useState } from 'react'
 import useTimer from '@/hooks/useTimer'
 import { useSelector } from 'react-redux'
@@ -35,7 +34,7 @@ const SetTimer = () => {
 
     setIsActiveEditing(false)
 
-    handleChangeTimer({ hour: newHour, min: newMin })
+    handleChangeTimer({ hour: newHour, min: newMin, sec: 0 })
   }
 
   return (

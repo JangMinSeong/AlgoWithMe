@@ -3,11 +3,13 @@ import { ITime } from './timerTypes'
 interface timerState {
   hour: number
   min: number
+  sec: number
 }
 
 const initialState: timerState = {
   hour: 0,
   min: 0,
+  sec: 0,
 }
 
 const timerSlice = createSlice({
@@ -17,6 +19,7 @@ const timerSlice = createSlice({
     changeTimer: (state: timerState, action: PayloadAction<ITime>) => {
       state.hour = action.payload.hour
       state.min = action.payload.min
+      state.sec = action.payload.sec
     },
   },
 })
