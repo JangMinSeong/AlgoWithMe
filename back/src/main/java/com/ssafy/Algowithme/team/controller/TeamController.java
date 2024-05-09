@@ -38,6 +38,14 @@ public class TeamController {
     }
 
     @DeleteMapping("/problem")
+    @Operation(summary = "풀어볼 문제 삭제", description = "선택한 풀어볼 문제를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "풀어볼 문제 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1103", description = "풀어볼 문제 삭제 권한이 없습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
     public ResponseEntity<Void> deleteCandidateProblem(@AuthenticationPrincipal User user,
                                                        @RequestBody Long candidateId) {
         teamService.deleteCandidateProblem(user, candidateId);
