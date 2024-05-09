@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.Algowithme.user.dto.RecentTeamDto;
 import com.ssafy.Algowithme.user.dto.SolvedTagCountDto;
 import com.ssafy.Algowithme.user.dto.StudiedProblemDto;
+import com.ssafy.Algowithme.user.dto.TeamListDto;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
@@ -79,6 +80,19 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
                 .where(user.id.eq(userId), team.deleted.eq(false))
                 .orderBy(userTeam.visitedAt.desc())
+                .fetch();
+    }
+
+    @Override
+    public List<TeamListDto> getUserTeam(Integer userId) {
+        return jpaQueryFactory
+                .select(Projections.bean(TeamListDto.class,
+                        team.id,
+                        team.name))
+                .from(user)
+                .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
+                .innerJoin(team).on(team.id.eq(userTeam.team.id))
+                .where(user.id.eq(userId), team.deleted.eq(false))
                 .fetch();
     }
 }

@@ -1,20 +1,29 @@
-import Link from 'next/link'
 import { BiLayerPlus } from 'react-icons/bi'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
+import { useRouter } from 'next/navigation'
 
 const StudyGroupDropdown = () => {
+  const router = useRouter()
+  const studyGroups = useSelector((state: RootState) => state.sidebar.studyList)
+
   const dropdownItemCSS =
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center hover:shadow-inner'
+
+  const moveStudy = (id: number) => {
+    router.push(`/${id}/study`)
+  }
 
   return (
     <div className="flex flex-col w-48 text-sm border-b-2 ">
       <div>
-        {dummyStudyGroups.map((el) => (
-          <Link href={`/study/${el.id}`} className={dropdownItemCSS}>
+        {studyGroups.map((el) => (
+          <div onClick={() => moveStudy(el.id)} className={dropdownItemCSS}>
             {el.name}
-          </Link>
+          </div>
         ))}
       </div>
-      <div className={dropdownItemCSS}>
+      <div className={dropdownItemCSS} onClick={handleCreateStudyGroup}>
         <BiLayerPlus className="mr-2" />새 스터디그룹 만들기
       </div>
     </div>
@@ -22,18 +31,3 @@ const StudyGroupDropdown = () => {
 }
 
 export default StudyGroupDropdown
-
-const dummyStudyGroups = [
-  {
-    id: '1',
-    name: '오구오구스터디',
-  },
-  {
-    id: '2',
-    name: '알고리즘 스터디',
-  },
-  {
-    id: '3',
-    name: '자스알고리즘 모임',
-  },
-]

@@ -1,14 +1,10 @@
 import { OpenVidu } from 'openvidu-browser'
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '@/lib/store'
+import { useDispatch } from 'react-redux'
+import fetch from '@/lib/fetch'
 import {
-  setSession,
-  setMyUserName,
-  setMySessionId,
-  setMainStreamManager, // 필요 없을 수도
-  setSubscriber,
-  setPublisher,
-  setParticipants,
+  setMyNickname,
+  addParticipants,
+  removeParticipants,
   turnMicOff,
   turnMicOn,
   turnHeadphoneOff,
@@ -16,52 +12,68 @@ import {
   setActiveSpeaker,
 } from '@/features/groupcall/groupcallSlice'
 
+import { setCallSessionId } from '@/features/study/studySlice'
+
 const useGroupCall = () => {
   const dispatch = useDispatch()
-
-  const session = useSelector((state: RootState) => state.groupcall.session)
-  const publisher = useSelector((state: RootState) => state.groupcall.publisher)
-  const subscriber = useSelector(
-    (state: RootState) => state.groupcall.subscriber,
-  )
 
   const OV = new OpenVidu()
   OV.enableProdMode()
 
-  const connectToSession = (token) => {
-    if (session) session.disconnect()
+  const createSession = async (teamId: number) => {
+    await fetch(`/openvidu/sessions/${teamId}`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+      .then((res) => {
+        console.log(res)
+        console.log(res.json())
+        res.json()
+      })
+      .then((json) => {
+        console.log('세션만들기성공')
+        dispatch(setCallSessionId(json))
+      })
+      .catch((err) => console.error(err))
+  }
 
-    const mySession = OV.initSession()
+  const joinSession = async (existingSessionId: number) => {
+    const mySession = OV.initSession() // 만들어진 'Session'을 반환함
 
     mySession.on('streamCreated', (event) => {
-      // 이부분 html 요소 할당해야하는지 확인 필요
-      const subscriber = mySession.subscribe(event.stream, undefined)
-      const nickname = event.stream.connection.data.split('=')[1]
-      dispatch(setSubscriber(subscriber))
-      dispatch(setMyUserName(nickname))
-      dispatch(
-        setParticipants((prevParticipants) => [
-          ...prevParticipants,
-          { subscriber, nickname },
-        ]),
-      )
+      // stream이 만들어지면
+      const subscriber = mySession.subscribe(event.stream, undefined) // 섭스크라이버로서의 나
+      const nickname = event.stream.connection.data.split('=')[1] // 나의 닉네임
+      dispatch(setMyNickname(nickname))
+      dispatch(addParticipants(nickname))
     })
 
     mySession.on('streamDestroyed', (event) => {
       event.preventDefault()
       const nickname = event.stream.connection.data.split('=')[1]
-      dispatch(setSubscriber(undefined))
-      dispatch(setMyUserName(undefined))
-      dispatch(
-        setParticipants((prevParticipants) =>
-          prevParticipants.filter(
-            (participant) => participant.nickname !== nickname,
-          ),
-        ),
-      )
+      dispatch(setMyNickname(''))
+      dispatch(removeParticipants(nickname))
     })
 
-    mySession.connect(token)
+    await fetch(`/openvidu/sessions/${existingSessionId}/connections`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        mySession.connect(json)
+        console.log('세션연결성공')
+      })
+
+    // 이부분 html 요소 할당해야하는지?
+    const publisher = OV.initPublisher(undefined, {
+      audioSource: undefined,
+      videoSource: false,
+      publishAudio: true, // 이거 어떻게
+      publishVideo: false, // 어떻게 하지
+    })
+
+    mySession.publish(publisher)
 
     // 현재 발화자
     mySession.on('publisherStartSpeaking', (event) => {
@@ -77,50 +89,37 @@ const useGroupCall = () => {
     mySession.on('exception', (exception) => {
       console.warn(exception)
     })
+  } // joinsession 함수
 
-    // 이부분 html 요소 할당해야하는지 확인 필요
-    const publisher = OV.initPublisher(undefined, {
-      audioSource: undefined, // 이부분 수정필요
-      videoSource: false,
-      publishAudio: false,
-      publishVideo: false,
-    })
-
-    mySession.publish(publisher)
-
-    dispatch(setPublisher(publisher))
-    dispatch(setSession(mySession))
-  }
-
+  // 나에게 저장된 세션 있는지 확인해서 있으면 끊기
   const disconnectSession = () => {
-    if (session) {
-      session.disconnect()
-      dispatch(setSession(undefined))
-    }
+    mySession.disconnect()
+    dispatch(setMySession(undefined))
   }
 
   const handleMicOff = () => {
     dispatch(turnMicOff())
-    publisher.publishAudio(false)
+    myPublisher.publishAudio(false)
   }
 
   const handleMicOn = () => {
     dispatch(turnMicOn())
-    publisher.publishAudio(true)
+    myPublisher.publishAudio(true)
   }
 
   const handleHeadphoneOn = () => {
     dispatch(turnHeadphoneOn())
-    subscriber.subscribeToAudio(true) // true to unmute the audio track, false to mute it
+    mySubscriber.subscribeToAudio(true) // true to unmute the audio track, false to mute it
   }
 
-  const handleHeadphoneOff = () => {
+  const handleHeadphoneOff = (mySubscriber) => {
     dispatch(turnHeadphoneOff())
-    subscriber.subscribeToAudio(false)
+    mySubscriber.subscribeToAudio(false)
   }
 
   return {
-    connectToSession,
+    createSession,
+    joinSession,
     disconnectSession,
     handleMicOff,
     handleMicOn,

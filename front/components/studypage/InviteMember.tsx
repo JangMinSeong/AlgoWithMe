@@ -1,33 +1,29 @@
-'use client'
-
 import { BsPersonPlusFill } from 'react-icons/bs'
 import toast, { Toaster } from 'react-hot-toast'
+import fetch from '@/lib/fetch'
 
-const API_URL =
-  process.env.NODE_ENV === 'development'
-    ? process.env.NEXT_PUBLIC_API_DEV_URL
-    : process.env.NEXT_PUBLIC_API_URL
-
-const InviteMember = ({ groupId }: { groupId: number }) => {
+const InviteMember = ({ teamId }: { teamId: number }) => {
   const handleGetInviLink = async () => {
-    console.log(groupId)
-    const invitationLinkRes = await fetch(`${API_URL}/study/invite`, {
-      method: 'POST',
-      body: { group_id: groupId },
+    await fetch(`/study/invite/${teamId}`, {
+      method: 'GET',
       credentials: 'include',
     })
-
-    navigator.clipboard.writeText(invitationLinkRes.data)
-    toast.success('초대 링크가 클립보드에 복사되었어요.')
+      .then((res) => res.json())
+      .then((res) =>
+        navigator.clipboard.writeText(
+          `https://k10d205.p.ssafy.io/invitaion/${teamId}/${res}`,
+        ),
+      )
+      .then(() => toast.success('초대 링크가 클립보드에 복사되었어요.'))
   }
 
   return (
     <div
       onClick={handleGetInviLink}
-      className=" bg-white flex min-w-60 px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 items-center hover:bg-purple-200 hover:border-opacity-0 transition-colors"
+      className=" flex min-w-32 pr-2 py-2 rounded-xl border text-sm shadow-foggyBlue border-opacity-30 mb-2 items-center hover:bg-purple-200 hover:border-opacity-0 transition-colors"
     >
       <BsPersonPlusFill className="w-6 h-6 mx-2" />
-      <div className=" w-full flex justify-center">멤버 초대하기</div>
+      <div className="w-full flex justify-center">멤버 초대하기</div>
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )

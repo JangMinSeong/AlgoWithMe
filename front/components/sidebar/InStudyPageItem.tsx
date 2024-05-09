@@ -1,19 +1,32 @@
 'use client'
+
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import useSidebar from '@/hooks/useSidebar'
 import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
 
 interface IPage {
-  id: number
-  desc: string
-  type: string
-  subPages: IPage[] | undefined
+  pageId: number
+  title: string
+  docs: boolean
+  children: IPage[] | undefined
 }
 
-const InStudyPageItem = (props: { page: IPage; depth: number }) => {
+const InStudyPageItem = (props: {
+  groupId: number
+  page: IPage
+  depth: number
+}) => {
+  const router = useRouter()
   const [isSubPagesOpen, setIsSubPagesOpen] = useState(false)
+  const { setPId } = useSidebar()
   const handleSubPageOpen = () => {
     setIsSubPagesOpen(!isSubPagesOpen)
+    setPId(props.page.pageId)
+    if (props.page.docs)
+      router.push(`/${props.groupId}/docs/${props.page.pageId}`)
+    else router.push(`/${props.groupId}/editor/${props.page.pageId}`)
   }
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
@@ -36,20 +49,30 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
         onMouseOut={handleUnShowModifier}
       >
         <div style={{ width: 192 - pl }} className="truncate ">
-          {props.page.desc}
+          {props.page.title ? props.page.title : '빈 페이지'}
         </div>
         {isModifierShowing && (
           <div className="flex items-center">
-            <PageCreateButton />
+            {props.page.docs && (
+              <PageCreateButton
+                pageId={props.page.pageId}
+                groupId={props.groupId}
+              />
+            )}
             <DeleteButton />
           </div>
         )}
       </div>
-      {props.page.subPages !== undefined &&
+      {props.page.children?.length !== 0 &&
         isSubPagesOpen &&
-        props.page.subPages.map((el) => (
+        props.page.children?.map((el) => (
           <div>
-            <InStudyPageItem page={el} key={el.id} depth={props.depth + 1} />
+            <InStudyPageItem
+              groupId={props.groupId}
+              page={el}
+              key={el.pageId}
+              depth={props.depth + 1}
+            />
           </div>
         ))}
     </div>

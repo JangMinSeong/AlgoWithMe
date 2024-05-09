@@ -2,13 +2,19 @@ package com.ssafy.Algowithme.page.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.page.dto.PageInfo;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
+import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
 import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
+import com.ssafy.Algowithme.page.dto.response.MemoResponse;
+import com.ssafy.Algowithme.page.dto.response.PageListResponse;
 import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.page.entity.UserWorkspace;
 import com.ssafy.Algowithme.page.repository.PageRepository;
+import com.ssafy.Algowithme.page.repository.UserWorkspaceRepository;
 import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.code.util.BOJUtil;
 import com.ssafy.Algowithme.problem.entity.Problem;
@@ -17,9 +23,15 @@ import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
+import com.ssafy.Algowithme.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +42,7 @@ public class PageService {
     private final PageRepository pageRepository;
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
+    private final UserWorkspaceRepository userWorkspaceRepository;
 
     private final BOJUtil bojUtil;
 
@@ -40,6 +53,34 @@ public class PageService {
         } else {
             return null;
         }
+    }
+
+    public PageListResponse getPageList(Long teamId) {
+        // 팀 내 페이지 조회
+        List<Page> pages = pageRepository.findByTeamIdOrderByParentIdAscOrdersAsc(teamId);
+
+        HashMap<Long, PageInfo> pageInfoMap = new HashMap<>();
+        List<PageInfo> result = new ArrayList<>();
+
+        for(int i=0; i<pages.size(); i++) {
+            Page page = pages.get(i);
+            pageInfoMap.put(page.getId(), PageInfo.create(page));
+            if(page.getParent() == null) {
+                result.add(pageInfoMap.get(page.getId()));
+            }
+        }
+
+        for(int i=0; i<pages.size(); i++) {
+            Page page = pages.get(i);
+
+            PageInfo pageInfo = pageInfoMap.get(pages.get(i).getId());
+            if(page.getParent() == null) continue;
+
+            PageInfo parentPageInfo = pageInfoMap.get(pages.get(i).getParent().getId());
+            parentPageInfo.getChildren().add(pageInfo);
+        }
+
+        return new PageListResponse(result);
     }
 
     @Transactional
@@ -66,7 +107,7 @@ public class PageService {
         //문제 조회
         Problem problem = problemRepository.findById(request.getProblemId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
-        RawProblem rawProblem = rawProblemRepository.findBySiteAndNumber(problem.getProvider().getName(), problem.getNumber())
+        RawProblem rawProblem = rawProblemRepository.findById(problem.getUid())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //문제 저장
@@ -111,6 +152,42 @@ public class PageService {
 
     public void updatePosition(UpdatePagePositionRequest request) {
 
+    }
+
+
+    @Transactional
+    public MemoResponse getMemo(Long pageId, User user) {
+        // userId 와 pageId 로 조회
+        Optional<UserWorkspace> optionalUserWorkspace = userWorkspaceRepository.findByWorkspaceIdAndUserId(pageId, user.getId());
+
+        UserWorkspace userWorkspace;
+
+        if(optionalUserWorkspace.isPresent()) {
+            // 조회되는 경우
+            userWorkspace = optionalUserWorkspace.get();
+        } else {
+            // 조회되지 않은 경우, 개인메모 생성 후 반환
+            Page page = pageRepository.findById(pageId)
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+            userWorkspace = userWorkspaceRepository.save(UserWorkspace.builder()
+                            .user(user)
+                            .workspace(page)
+                            .content("")
+                            .build());
+        }
+
+        return MemoResponse.create(userWorkspace);
+    }
+
+    @Transactional
+    public void updateMemo(UpdateMemoRequest request) {
+        //개인메모 조회
+        UserWorkspace userWorkspace = userWorkspaceRepository.findById(request.getUserWorkspaceId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USERWORKSPACE_NOT_FOUND));
+
+        //개인메모 내용 수정
+        userWorkspace.setContent(request.getContent());
     }
 }
 

@@ -30,12 +30,14 @@ import Problem from '@/components/editor/Problem'
 import { RootState } from '@/lib/store'
 import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
+import fetch from '@/lib/fetch'
 
 interface ProblemProp {
   url: string
   content: string
   room: string
   testCases: { problem: string; answer: string }[]
+  nickname: string
 }
 
 const colors = [
@@ -97,9 +99,9 @@ const LeftComponent: React.FC<ProblemProp> = ({
   content,
   room,
   testCases,
+  nickname,
 }) => {
-  const user = useSelector((state: RootState) => state.auth.user)
-  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
+  const [currentUser, setCurrentUser] = useState(getInitialUser(nickname))
   const [activeTab, setActiveTab] = useState<
     '문제보기' | '개인 메모장' | '워크스페이스'
   >('문제보기')
@@ -201,30 +203,56 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   useEffect(() => {
-    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
-    console.log(currentUser)
-  }, [user])
-
-  useEffect(() => {
-    console.log(user)
+    console.log(nickname)
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
   }, [editorGroup, currentUser])
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('userMemo')
-    if (savedContent && editorUser) {
-      const doc = JSON.parse(savedContent)
-      editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/memo/${room}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+
+        const responseData = await response.json()
+
+        if (responseData.memo && editorUser) {
+          const doc = JSON.parse(responseData.memo)
+          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
     }
+    fetchData()
   }, [editorUser])
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (editorUser) {
-      const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
-      console.log(JSON.stringify(content))
-      localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
+      const dataToSave = {
+        userWorkspaceId: room,
+        content: editorUser.getJSON(),
+      }
+      const response = await fetch(`/memo`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSave),
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
     }
   }
 

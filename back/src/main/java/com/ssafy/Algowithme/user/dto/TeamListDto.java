@@ -1,10 +1,12 @@
-package com.ssafy.Algowithme.team.dto.request;
+package com.ssafy.Algowithme.user.dto;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateTeamRequest {
+public class TeamListDto {
+
+    private Long id;
     private String name;
 }
