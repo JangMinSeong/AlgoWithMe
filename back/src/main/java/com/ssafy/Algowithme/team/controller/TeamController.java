@@ -37,6 +37,13 @@ public class TeamController {
         return ResponseEntity.ok(teamService.addCandidateProblem(request));
     }
 
+    @DeleteMapping("/problem")
+    public ResponseEntity<Void> deleteCandidateProblem(@AuthenticationPrincipal User user,
+                                                       @RequestBody Long candidateId) {
+        teamService.deleteCandidateProblem(user, candidateId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/invite/{teamId}")
     public ResponseEntity<String> createInviteUrl(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createInviteUrl(teamId, user));

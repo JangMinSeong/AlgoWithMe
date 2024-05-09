@@ -20,6 +20,7 @@ public enum ExceptionStatus {
     TEAM_NOT_FOUND(1100, "팀이 존재하지 않습니다."),
     TEAM_INVITE_URL_EXPIRED(1101, "초대 링크가 유효하지 않습니다."),
     TEAM_INVITE_UNAUTHORIZED(1102, "초대 권한이 없습니다."),
+    CANDIDATE_PROBLEM_DELETE_UNAUTHORIZED(1103, "풀어볼 문제 삭제 권한이 없습니다."),
 
     // page(12)
     PAGE_NOT_FOUND(1200, "페이지가 존재하지 않습니다."),

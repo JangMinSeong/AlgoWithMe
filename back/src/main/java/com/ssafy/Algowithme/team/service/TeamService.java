@@ -12,7 +12,7 @@ import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.entity.CandidateProblem;
 import com.ssafy.Algowithme.team.entity.Team;
-import com.ssafy.Algowithme.team.repository.CandidateProblemRepository;
+import com.ssafy.Algowithme.team.repository.candidateProblem.CandidateProblemRepository;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
@@ -73,6 +73,16 @@ public class TeamService {
                                                                             .build());
 
         return AddProblemResponse.create(candidateProblem);
+    }
+
+    @Transactional
+    public void deleteCandidateProblem(User user, Long candidateId) {
+        CandidateProblem candidateProblem = candidateProblemRepository.checkAuthCandidateProblem(user.getId(), candidateId);
+
+        if(candidateProblem == null) {
+            throw new CustomException(ExceptionStatus.CANDIDATE_PROBLEM_DELETE_UNAUTHORIZED);
+        }
+        candidateProblemRepository.delete(candidateProblem);
     }
 
     public String createInviteUrl(Long teamId, User user) {
