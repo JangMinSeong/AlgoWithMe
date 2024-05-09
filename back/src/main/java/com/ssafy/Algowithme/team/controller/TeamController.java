@@ -1,7 +1,8 @@
 package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
-import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
+import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
+import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.service.TeamService;
@@ -32,9 +33,8 @@ public class TeamController {
     }
 
     @PostMapping("/problem")
-    public ResponseEntity<Void> addCandidateProblem(@RequestBody ProblemAddRequest request) {
-        teamService.addCandidateProblem(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<AddProblemResponse> addCandidateProblem(@RequestBody AddProblemRequest request) {
+        return ResponseEntity.ok(teamService.addCandidateProblem(request));
     }
 
     @GetMapping("/invite/{teamId}")

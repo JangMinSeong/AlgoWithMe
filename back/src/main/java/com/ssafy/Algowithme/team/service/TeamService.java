@@ -6,7 +6,8 @@ import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.util.S3Util;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
-import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
+import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
+import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.entity.CandidateProblem;
@@ -56,7 +57,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void addCandidateProblem(ProblemAddRequest request) {
+    public AddProblemResponse addCandidateProblem(AddProblemRequest request) {
         //팀 조회
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
@@ -66,10 +67,12 @@ public class TeamService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //문제 후보 추가
-        candidateProblemRepository.save(CandidateProblem.builder()
-                                            .team(team)
-                                            .problem(problem)
-                                            .build());
+        CandidateProblem candidateProblem = candidateProblemRepository.save(CandidateProblem.builder()
+                                                                            .team(team)
+                                                                            .problem(problem)
+                                                                            .build());
+
+        return AddProblemResponse.create(candidateProblem);
     }
 
     public String createInviteUrl(Long teamId, User user) {
