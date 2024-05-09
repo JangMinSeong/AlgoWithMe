@@ -4,6 +4,7 @@ import com.ssafy.Algowithme.auth.util.JwtUtil;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.user.dto.TeamListDto;
 import com.ssafy.Algowithme.user.dto.request.LoginRequest;
+import com.ssafy.Algowithme.user.dto.response.PageSearchResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
@@ -104,5 +105,19 @@ public class UserController {
     public ResponseEntity<List<TeamListDto>> getTeamList(@AuthenticationPrincipal User user) {
         List<TeamListDto> teamList = userService.getTeamList(user);
         return ResponseEntity.ok(teamList);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "상단바 검색 기능", description = "유저가 소속된 스터디그룹과 그에 포함된 페이지들의 이름을 검색한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "겅색 성공",
+                content = {@Content(schema = @Schema(implementation = PageSearchResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<PageSearchResponse> searchPage(@AuthenticationPrincipal User user,
+                                                         @RequestParam String word) {
+        PageSearchResponse searchResult = userService.searchPage(user, word);
+        return ResponseEntity.ok(searchResult);
     }
 }

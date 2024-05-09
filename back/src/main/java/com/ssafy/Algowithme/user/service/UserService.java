@@ -1,8 +1,12 @@
 package com.ssafy.Algowithme.user.service;
 
 import com.ssafy.Algowithme.auth.util.JwtUtil;
+import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.user.dto.SearchPageDto;
+import com.ssafy.Algowithme.user.dto.SearchStudyDto;
 import com.ssafy.Algowithme.user.dto.TeamListDto;
 import com.ssafy.Algowithme.user.dto.response.GithubInfoResponse;
+import com.ssafy.Algowithme.user.dto.response.PageSearchResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoDetailResponse;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
@@ -17,6 +21,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,5 +98,43 @@ public class UserService {
 
     public List<TeamListDto> getTeamList(User user) {
         return userRepository.getUserTeam(user.getId());
+    }
+
+    public PageSearchResponse searchPage(User user, String word) {
+        List<SearchStudyDto> teamList = userRepository.searchStudyByWord(user.getId(), word);
+        List<Page> pageList = userRepository.searchPageByWord(user.getId(), word);
+
+        List<SearchPageDto> pageDtoList = new ArrayList<>();
+
+        for (Page page : pageList) {
+            pageDtoList.add(SearchPageDto.builder()
+                    .id(page.getId())
+                    .studyId(page.getTeam().getId())
+                    .name(getSearchPageName(page))
+                    .imageUrl(page.getTeam().getImageUrl())
+                    .build());
+        }
+
+        return PageSearchResponse.builder()
+                .studies(teamList)
+                .pages(pageDtoList)
+                .build();
+    }
+
+    private String getSearchPageName(Page page) {
+        StringBuilder name = new StringBuilder();
+
+        name.append(page.getTitle());
+
+        Page tmp = page.getParent();
+
+        while(tmp != null) {
+            name.insert(0, tmp.getTitle() + " > ");
+            tmp = tmp.getParent();
+        }
+
+        name.insert(0, page.getTeam().getName() + " > ");
+
+        return name.toString();
     }
 }
