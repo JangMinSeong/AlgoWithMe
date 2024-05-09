@@ -1,4 +1,3 @@
-'use client'
 import { useState } from 'react'
 import useTimer from '@/hooks/useTimer'
 import { useSelector } from 'react-redux'

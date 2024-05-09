@@ -42,10 +42,10 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     setGId(groupId)
   }, [groupId])
 
-  const { handleViewStudyInfo } = useStudy()
+  const { handleFetchStudyInfo } = useStudy()
 
   const handleGoStudyMain = () => {
-    handleViewStudyInfo(groupId)
+    handleFetchStudyInfo(groupId)
     navigate(`/${groupId}/study`)
   }
 

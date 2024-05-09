@@ -1,17 +1,15 @@
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Logo from '/logo.svg'
 import { RootState } from '@/lib/store'
 import { useEffect, useState } from 'react'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import AudioControl from './AudioControl'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
 import GroupCall from '../groupcall/GroupCall'
 
 const StudyHeader = () => {
-  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
@@ -29,10 +27,9 @@ const StudyHeader = () => {
       <div className="flex items-center">
         <Avatar />
         <GroupCall />
-        <AudioControl />
       </div>
       <div className="flex items-center">
-        {isSolving && <Timer />}
+        <Timer />
         <Avatar />
       </div>
     </div>

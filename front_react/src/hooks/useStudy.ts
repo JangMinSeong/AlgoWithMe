@@ -10,7 +10,7 @@ import fetch from '@/lib/fetch'
 const useStudy = () => {
   const dispatch = useDispatch()
 
-  const handleViewStudyInfo = async (teamId: number) => {
+  const handleFetchStudyInfo = async (teamId: number) => {
     await fetch(`/study/${teamId}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -74,7 +74,7 @@ const useStudy = () => {
   }
 
   return {
-    handleViewStudyInfo,
+    handleFetchStudyInfo,
     handleAddCandidateProblems,
     handleEditImage,
     handleEditName,

@@ -19,14 +19,14 @@ const StudyList: React.FC<StudyProp> = ({ studyList = [] }) => {
   const navigate = useNavigate()
   const [index, setIndex] = React.useState(0)
   const { setGId } = useSidebar()
-  const { handleViewStudyInfo } = useStudy()
+  const { handleFetchStudyInfo } = useStudy()
 
   // 슬라이드에 보여질 스터디 수
   const maxVisibleStudies = 4
 
   const handleCardClick = (id: number) => {
     setGId(id)
-    handleViewStudyInfo(id)
+    handleFetchStudyInfo(id)
     navigate(`/${id}/study`)
   }
 

@@ -5,12 +5,12 @@ import { useNavigate } from 'react-router-dom'
 
 const StudyGroupDropdown = () => {
   const navigate = useNavigate()
-  const { handleViewStudyInfo } = useStudy()
+  const { handleFetchStudyInfo } = useStudy()
   const dropdownItemCSS =
     'px-4 h-8 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center hover:shadow-inner'
 
   const handleGoStudyMain = (id: number) => {
-    handleViewStudyInfo(id)
+    handleFetchStudyInfo(id)
     navigate(`/${id}/study`)
   }
   return (

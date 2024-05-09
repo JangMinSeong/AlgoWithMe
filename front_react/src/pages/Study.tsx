@@ -8,7 +8,7 @@ import SetTimer from '@/components/studypage/SetTimer'
 import { useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
@@ -23,6 +23,8 @@ const StudyMainPage = () => {
   const { handleEditName, handleEditImage } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
+
+  // 로딩중 적용하기
 
   return (
     <div className="flex flex-col">
