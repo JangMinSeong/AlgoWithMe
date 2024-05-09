@@ -5,7 +5,6 @@ import Main from '@/pages/Main'
 import Loading from "@/pages/Loading";
 import Editor from "@/pages/Editor";
 import Study from "@/pages/Study";
-import StudyRoom from "@/pages/StudyRoom";
 import StudyLayout from "@/layouts/Study";
 import Invitation from "@/pages/Invitation";
 import Docs from "@/pages/Docs.tsx";
@@ -50,10 +49,6 @@ const router = createBrowserRouter([
     {
         path: '/:groupId/study',
         element: <Study />
-    },
-    {
-        path: '/:groupId/study/room',
-        element: <StudyRoom />
     },
     {
         path: '/invitation/:groupId',

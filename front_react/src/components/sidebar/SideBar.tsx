@@ -6,6 +6,7 @@ import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 import useSidebar from "@/hooks/useSidebar.ts";
 import {useEffect} from "react";
+import fetch from '@/lib/fetch'
 
 const SideBar = ({ groupId }: { groupId: number }) => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
@@ -28,6 +29,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         if (response.ok) {
           const data = await response.json()
           setPages(data.pageInfoList)
+          console.log(data.pageInfoList)
         } else {
           throw new Error('Network response was not ok.')
         }
