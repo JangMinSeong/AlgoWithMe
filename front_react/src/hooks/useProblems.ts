@@ -1,0 +1,29 @@
+import { useDispatch } from 'react-redux'
+import { viewProblems } from '@/features/problems/problemSlice'
+import fetch from '@/lib/fetch'
+
+const useProblems = () => {
+  const dispatch = useDispatch()
+
+  const viewAllProblems = async () => {
+    await fetch('/problem/all', {
+      method: 'GET',
+      credentials: 'include',
+      cache: 'no-store',
+    })
+      .then((res) => {
+        return res.json()
+      })
+      .then((res) => {
+        console.log(res.problemList)
+        dispatch(viewProblems(res.problemList))
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  return { viewAllProblems }
+}
+
+export default useProblems

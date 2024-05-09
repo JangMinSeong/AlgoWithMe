@@ -1,5 +1,3 @@
-'use client'
-
 import SideBar from '@/components/sidebar/SideBar'
 import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -46,24 +44,27 @@ export default function Layout({
       hasOngoingRequest.current = true
 
       if (user === null) {
-        const response = await fetch(`${baseUrl}/user/refresh`, {
-          method: 'POST',
-          credentials: 'include',
-        })
-        if (response.ok) {
-          const data = await response.json()
-          const updatedAccessToken =
-            response.headers.get('Authorization')?.split(' ')[1] || ''
-          const updatedUser: User = {
-            nickname: data.nickname,
-            imageUrl: data.imageUrl,
-            accessToken: updatedAccessToken,
+        await (async () => {
+          const response = await fetch(`${baseUrl}/user/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          })
+          if (response.ok) {
+            const data = await response.json()
+            const updatedAccessToken =
+              response.headers.get('Authorization')?.split(' ')[1] || ''
+            const updatedUser: User = {
+              nickname: data.nickname,
+              imageUrl: data.imageUrl,
+              accessToken: updatedAccessToken,
+            }
+            handleLogin(updatedUser)
+          } else {
+            handleLogout()
           }
-          await handleLogin(updatedUser)
-        } else {
-          await handleLogout()
-        }
-        setIsLoading(false)
+          setIsLoading(false)
+          console.log(isLoading)
+        })()
       }
     }
     refreshTask()
@@ -111,18 +112,16 @@ export default function Layout({
     onSuccess: (response) => response,
   })
 
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
   return (
     <div className="flex">
       <SideBar />
-      <main
-        className={`${isSidebarOpen ? 'ml-52 mr-2' : 'mr-2'} ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`}
-      >
-        {children}
-      </main>
+      {!isLoading && (
+        <main
+          className={`${isSidebarOpen ? 'ml-52 mr-2' : 'mr-2'} ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`}
+        >
+          {children}
+        </main>
+      )}
       {isModalOpen && <PageCreateModal />}
     </div>
   )
