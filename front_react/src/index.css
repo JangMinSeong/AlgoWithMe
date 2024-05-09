@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    background-image: linear-gradient(
+            165deg,
+            rgba(242, 221, 255, 1) 0%,
+            rgba(216, 211, 255, 0.9) 25%,
+            rgba(219, 216, 255, 1) 54%,
+            rgba(237, 214, 255, 1) 78%,
+            rgba(247, 224, 255, 0.9) 100%
+    );
+    background-position: center center;
+}
+
+@layer utilities {
+    .text-balance {
+        text-wrap: balance;
+    }
+}
+
+@layer utilities {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+    }
+}
