@@ -96,6 +96,32 @@ public class PageController {
         return ResponseEntity.ok().build();
     }
 
+    @PutMapping("/{pageId}")
+    @Operation(summary = "페이지 제목 변경", description = "해당 페이지의 제목을 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "페이지 제목 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> changePageTitle(@AuthenticationPrincipal User user,
+                                                @PathVariable Long pageId,
+                                                @RequestBody String title) {
+        pageService.changePageTitle(user, pageId, title);
+        return ResponseEntity.ok().build();
+    }
 
-
+    @DeleteMapping("/{pageId}")
+    @Operation(summary = "페이지 삭제", description = "해당 페이지를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "페이지 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> deletePage(@AuthenticationPrincipal User user,
+                                           @PathVariable Long pageId) {
+        pageService.deletePage(user, pageId);
+        return ResponseEntity.ok().build();
+    }
 }

@@ -26,10 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -175,6 +172,24 @@ public class PageService {
 
         //개인메모 내용 수정
         userWorkspace.setContent(request.getContent());
+    }
+
+    @Transactional
+    public void changePageTitle(User user, Long pageId, String title) {
+        //TODO : user의 page에 대한 권한 확인
+
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        page.setTitle(title);
+        pageRepository.save(page);
+    }
+
+    @Transactional
+    public void deletePage(User user, Long pageId) {
+        //TODO : user의 page에 대한 권한 확인
+
+        pageRepository.deleteById(pageId);
     }
 }
 
