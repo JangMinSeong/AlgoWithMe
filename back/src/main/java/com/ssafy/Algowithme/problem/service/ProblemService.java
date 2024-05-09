@@ -2,6 +2,8 @@ package com.ssafy.Algowithme.problem.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.problem.dto.ProblemInfo;
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
@@ -23,15 +25,25 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
+    private final PageRepository pageRepository;
 
     public ResponseEntity<AllProblemResponse> getAll() {
         List<Problem> problemList = problemRepository.findAll();
         return ResponseEntity.ok(AllProblemResponse.create(problemList));
     }
 
-    public RawProblemResponse getProblem(Long problemId) {
+    public RawProblemResponse getProblem(Long pageId) {
+        //페이지 조회
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        //문제 페이지 확인
+        if(page.getProblem() == null) {
+            throw new CustomException(ExceptionStatus.NOT_PROBLEM_PAGE);
+        }
+
         //요약 정보 조회
-        Problem problem = problemRepository.findById(problemId)
+        Problem problem = problemRepository.findById(page.getProblem().getId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //세부 정보 조회

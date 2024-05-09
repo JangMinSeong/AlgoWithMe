@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class RawProblemResponse {
 
-    private String id;
     private String site;
     private String url;
     private int number;
@@ -27,7 +26,6 @@ public class RawProblemResponse {
 
     public static RawProblemResponse create(RawProblem rawProblem) {
         return RawProblemResponse.builder()
-                .id(rawProblem.getId())
                 .site(rawProblem.getSite())
                 .url(rawProblem.getUrl())
                 .number(rawProblem.getNumber())

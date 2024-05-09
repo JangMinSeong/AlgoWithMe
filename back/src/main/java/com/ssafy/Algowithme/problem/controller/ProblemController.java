@@ -31,14 +31,14 @@ public class ProblemController {
         return problemService.getAll();
     }
 
-    @GetMapping("/{problemId}")
-    @Operation(summary = "문제 세부정보 조회", description = "문제의 세부정보를 반환한다.")
+    @GetMapping("/{pageId}")
+    @Operation(summary = "문제 세부정보 조회", description = "페이지 아이디로 문제의 세부정보를 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = RawProblemResponse.class))}),
             @ApiResponse(responseCode = "1400", description = "조회 실패")
     })
-    public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("problemId") Long problemId) {
-        return ResponseEntity.ok(problemService.getProblem(problemId));
+    public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("pageId") Long pageId) {
+        return ResponseEntity.ok(problemService.getProblem(pageId));
     }
 
     @GetMapping("/search")
