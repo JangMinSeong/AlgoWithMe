@@ -4,7 +4,6 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Algowithme.problem.type.Provider;
 import com.ssafy.Algowithme.team.dto.CandidateProblemDto;
 import com.ssafy.Algowithme.team.dto.RankDto;
 import com.ssafy.Algowithme.team.dto.SolvedProblemDto;
@@ -73,7 +72,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     public List<CandidateProblemDto> getCandidateProblem(Long teamId) {
         return jpaQueryFactory
                 .select(Projections.bean(CandidateProblemDto.class,
-                        candidateProblem.id,
+                        candidateProblem.id.as("candidateId"),
                         problem.id.as("problemId"),
                         problem.url,
                         problem.provider,
