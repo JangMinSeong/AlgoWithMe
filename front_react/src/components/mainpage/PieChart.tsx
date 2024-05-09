@@ -1,5 +1,6 @@
 import { Pie } from 'react-chartjs-2'
 import 'chart.js/auto'
+import React from "react";
 
 interface ChartData {
 	tag: string

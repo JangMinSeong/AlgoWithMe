@@ -1,22 +1,33 @@
-'use client'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import useSidebar from '@/hooks/useSidebar'
 import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
 
 interface IPage {
-  id: number
-  desc: string
-  type: string
-  subPages: IPage[] | undefined
+  pageId: number
+  title: string
+  docs: boolean
+  children: IPage[] | undefined
 }
 
-const InStudyPageItem = (props: { page: IPage; depth: number }) => {
+const InStudyPageItem = (props: {
+  groupId: number
+  page: IPage
+  depth: number
+}) => {
+  const navigate = useNavigate()
   const [isSubPagesOpen, setIsSubPagesOpen] = useState(false)
+  const { setPId } = useSidebar()
   const handleSubPageOpen = () => {
     setIsSubPagesOpen(!isSubPagesOpen)
+    setPId(props.page.pageId)
+    if (props.page.docs)
+      navigate(`/${props.groupId}/docs/${props.page.pageId}`)
+    else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
   const menuItemWrapper =
-    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
+      'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
 
   const pl = props.depth * 10
 
@@ -28,31 +39,41 @@ const InStudyPageItem = (props: { page: IPage; depth: number }) => {
     setIsModifierShowing(false)
   }
   return (
-    <div style={{ paddingLeft: pl }}>
-      <div
-        onClick={handleSubPageOpen}
-        className={menuItemWrapper}
-        onMouseOver={handleShowModifier}
-        onMouseOut={handleUnShowModifier}
-      >
-        <div style={{ width: 192 - pl }} className="truncate ">
-          {props.page.desc}
+      <div style={{ paddingLeft: pl }}>
+        <div
+            onClick={handleSubPageOpen}
+            className={menuItemWrapper}
+            onMouseOver={handleShowModifier}
+            onMouseOut={handleUnShowModifier}
+        >
+          <div style={{ width: 192 - pl }} className="truncate ">
+            {props.page.title ? props.page.title : '빈 페이지'}
+          </div>
+          {isModifierShowing && (
+              <div className="flex items-center">
+                {props.page.docs && (
+                    <PageCreateButton
+                        pageId={props.page.pageId}
+                        groupId={props.groupId}
+                    />
+                )}
+                <DeleteButton />
+              </div>
+          )}
         </div>
-        {isModifierShowing && (
-          <div className="flex items-center">
-            <PageCreateButton />
-            <DeleteButton />
-          </div>
-        )}
+        {props.page.children?.length !== 0 &&
+            isSubPagesOpen &&
+            props.page.children?.map((el) => (
+                <div>
+                  <InStudyPageItem
+                      groupId={props.groupId}
+                      page={el}
+                      key={el.pageId}
+                      depth={props.depth + 1}
+                  />
+                </div>
+            ))}
       </div>
-      {props.page.subPages !== undefined &&
-        isSubPagesOpen &&
-        props.page.subPages.map((el) => (
-          <div>
-            <InStudyPageItem page={el} key={el.id} depth={props.depth + 1} />
-          </div>
-        ))}
-    </div>
   )
 }
 
