@@ -106,24 +106,12 @@ public class UserService {
 
         List<SearchPageDto> pageDtoList = new ArrayList<>();
 
-        for (Page p : pageList) {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append(p.getTitle());
-
-            Page tmp = p.getParent();
-
-            while(tmp != null) {
-                sb.insert(0, tmp.getTitle() + " > ");
-                tmp = tmp.getParent();
-            }
-
-            sb.insert(0, p.getTeam().getName() + " > ");
-
+        for (Page page : pageList) {
             pageDtoList.add(SearchPageDto.builder()
-                    .id(p.getId())
-                    .studyId(p.getTeam().getId())
-                    .name(sb.toString())
+                    .id(page.getId())
+                    .studyId(page.getTeam().getId())
+                    .name(getSearchPageName(page))
+                    .imageUrl(page.getTeam().getImageUrl())
                     .build());
         }
 
@@ -131,5 +119,22 @@ public class UserService {
                 .studies(teamList)
                 .pages(pageDtoList)
                 .build();
+    }
+
+    private String getSearchPageName(Page page) {
+        StringBuilder name = new StringBuilder();
+
+        name.append(page.getTitle());
+
+        Page tmp = page.getParent();
+
+        while(tmp != null) {
+            name.insert(0, tmp.getTitle() + " > ");
+            tmp = tmp.getParent();
+        }
+
+        name.insert(0, page.getTeam().getName() + " > ");
+
+        return name.toString();
     }
 }

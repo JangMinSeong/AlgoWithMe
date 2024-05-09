@@ -12,4 +12,5 @@ public class SearchPageDto {
     private Long id;
     private Long studyId;
     private String name;
+    private String imageUrl;
 }
