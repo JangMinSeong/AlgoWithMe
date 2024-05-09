@@ -10,7 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 public class CandidateProblemDto {
 
-    private Long id;
+    private Long candidateId;
     private Long problemId;
     private String url;
     private Provider provider;
