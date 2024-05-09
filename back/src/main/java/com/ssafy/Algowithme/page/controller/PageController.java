@@ -9,7 +9,6 @@ import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.page.dto.response.MemoResponse;
 import com.ssafy.Algowithme.page.dto.response.PageListResponse;
-import com.ssafy.Algowithme.problem.dto.response.ProblemResponse;
 import com.ssafy.Algowithme.page.service.PageService;
 import com.ssafy.Algowithme.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,11 +27,6 @@ import org.springframework.web.bind.annotation.*;
 public class PageController {
 
     private final PageService pageService;
-
-    @GetMapping("/problem/{provider}/{problemId}")
-    public ProblemResponse getProblem(@PathVariable String provider, @PathVariable Integer problemId) {
-        return pageService.getProblemInfo(provider, problemId);
-    }
 
     @GetMapping("/team/{teamId}")
     @Operation(summary = "스터디 내 페이지 조회", description = "스터디의 페이지 리스트를 반환한다.")
