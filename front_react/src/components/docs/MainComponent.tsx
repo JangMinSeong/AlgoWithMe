@@ -1,7 +1,8 @@
+'use client'
+
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import WorkSpace from '@/components/editor/workspace/Workspace'
-import LeftHeader from '@/components/editor/LeftHeader'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
 import { useEditor } from '@tiptap/react'
@@ -24,18 +25,13 @@ import Placeholder from '@tiptap/extension-placeholder'
 import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
-import Problem from '@/components/editor/Problem'
 import { RootState } from '@/lib/store'
-import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
-import fetch from '@/lib/fetch'
+import Header from '@/components/docs/Header'
 
-interface ProblemProp {
-  url: string
-  content: string
+interface DocProp {
   room: string
-  testCases: { problem: string; answer: string }[]
-  nickname: string
+  pageId: number
 }
 
 const colors = [
@@ -76,7 +72,7 @@ const names = [
 ]
 
 const getRandomElement = <T,>(list: T[]): T =>
-    list[Math.floor(Math.random() * list.length)]
+  list[Math.floor(Math.random() * list.length)]
 const getRandomColor = (): string => getRandomElement(colors)
 const getRandomName = (): string => getRandomElement(names)
 
@@ -90,19 +86,14 @@ const getInitialUser = (nickname: string | null): User => ({
   color: getRandomColor(),
 })
 
-const appId = import.meta.env.NEXT_PUBLIC_TIPTAP_ID as string
+const appId = import.meta.env.VITE_TIPTAP_ID as string
 
-const LeftComponent: React.FC<ProblemProp> = ({
-                                                url,
-                                                content,
-                                                room,
-                                                testCases,
-                                                nickname,
-                                              }) => {
-  const [currentUser, setCurrentUser] = useState(getInitialUser(nickname))
-  const [activeTab, setActiveTab] = useState<
-      '문제보기' | '개인 메모장' | '워크스페이스'
-  >('문제보기')
+const MainComponent: React.FC<DocProp> = ({ room, pageId }) => {
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
+  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>(
+    '개인 메모장',
+  )
 
   const ydocGroup = new Y.Doc()
   const websocketProviderGroup = new TiptapCollabProvider({
@@ -189,128 +180,67 @@ const LeftComponent: React.FC<ProblemProp> = ({
 
   const renderContent = () => {
     switch (activeTab) {
-      case '문제보기':
-        return <Problem content={content} testCases={testCases} />
       case '개인 메모장':
         return <WorkSpace editor={editorUser} />
       case '워크스페이스':
         return <WorkSpace editor={editorGroup} />
       default:
-        return '문제'
+        return '개인 메모장'
     }
   }
 
   useEffect(() => {
-    console.log(nickname)
+    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
+    console.log(currentUser)
+  }, [user])
+
+  useEffect(() => {
+    console.log(user)
     if (editorGroup) {
       editorGroup.chain().focus().updateUser(currentUser).run()
     }
   }, [editorGroup, currentUser])
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/memo/${room}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-
-        const responseData = await response.json()
-
-        if (responseData.memo && editorUser) {
-          const doc = JSON.parse(responseData.memo)
-          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
-        }
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
+    const savedContent = localStorage.getItem('userMemo')
+    if (savedContent && editorUser) {
+      const doc = JSON.parse(savedContent)
+      editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
     }
-    fetchData()
   }, [editorUser])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (editorUser) {
-      const dataToSave = {
-        userWorkspaceId: room,
-        content: editorUser.getJSON(),
-      }
-      const response = await fetch(`/memo`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSave),
-      })
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok')
-      }
-    }
-  }
-
-  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
-  const { handleStartSolving, handleEndSolving } = useSolving()
-
-  const handleStart = () => {
-    const solvingStartTime = new Date().getTime()
-    localStorage.setItem('startedAt', String(solvingStartTime))
-    handleStartSolving()
-  }
-  const handleEnd = () => {
-    if (confirm('풀이를 종료하시겠어요?')) {
-      handleEndSolving()
-      localStorage.removeItem('startedAt')
+      const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
+      localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
     }
   }
 
   return (
-      <div className="mt-0 m-3 flex flex-col">
-        <div className="flex flex-row">
-          <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} />
-        </div>
-        <div className="w-full" style={{ height: '72vh' }}>
-          {renderContent()}
-        </div>
-        <div className="flex flex-row justify-between">
-          <div className="flex border-b-2 w-10">
-            {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
-                <button
-                    key={tab}
-                    className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
-                        activeTab === tab ? 'bg-primary' : 'bg-navy'
-                    } rounded-t-none`}
-                    onClick={() => setActiveTab(tab as any)}
-                >
-                  {tab}
-                </button>
-            ))}
-          </div>
-          <div>
-            {isSolving ? (
-                <button
-                    onClick={handleEnd}
-                    className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-                >
-                  풀이 종료하기
-                </button>
-            ) : (
-                <button
-                    onClick={handleStart}
-                    className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-                >
-                  풀이 시작하기
-                </button>
-            )}
-          </div>
+    <div className="mt-0 m-3 flex flex-col">
+      <div className="flex flex-row">
+        <Header activeTab={activeTab} onSave={handleSave} />
+      </div>
+      <div className="w-full" style={{ height: '72vh' }}>
+        {renderContent()}
+      </div>
+      <div className="flex flex-row justify-between">
+        <div className="flex border-b-2 w-10">
+          {['개인 메모장', '워크스페이스'].map((tab) => (
+            <button
+              key={tab}
+              className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
+                activeTab === tab ? 'bg-primary' : 'bg-navy'
+              } rounded-t-none`}
+              onClick={() => setActiveTab(tab as any)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
       </div>
+    </div>
   )
 }
 
-export default LeftComponent
+export default MainComponent
