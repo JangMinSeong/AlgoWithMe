@@ -8,21 +8,23 @@ import groupcallReducer from '@/features/groupcall/groupcallSlice'
 import problemReducer from '@/features/problems/problemSlice'
 import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
+import studyReducer from '@/features/study/studySlice'
 
 export const makeStore = () =>
-  configureStore({
-    reducer: {
-      auth: authReducer,
-      sidebar: sidebarReducer,
-      timer: timerReducer,
-      solving: solvingReducer,
-      socket: websocketReducer,
-      groupcall: groupcallReducer,
-      problems: problemReducer,
-      modal: modalReducer,
-      levels: levelReducer,
-    },
-  })
+	configureStore({
+		reducer: {
+			auth: authReducer,
+			sidebar: sidebarReducer,
+			timer: timerReducer,
+			solving: solvingReducer,
+			socket: websocketReducer,
+			groupcall: groupcallReducer,
+			problems: problemReducer,
+			modal: modalReducer,
+			levels: levelReducer,
+			study: studyReducer,
+		},
+	})
 
 export type AppStore = ReturnType<typeof makeStore>
 export type RootState = ReturnType<AppStore['getState']>
