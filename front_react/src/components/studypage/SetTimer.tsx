@@ -41,7 +41,8 @@ const SetTimer = () => {
     <div className="flex flex-col items-center">
       <div className="rounded-full p-1 border relative bg-gradient-to-br from-primary/30 via-accent/30 to-secondary/30 shadow-foggyPink mb-3">
         <div
-          className={`rounded-full w-80 h-80 relative bg-white font-orbitron font-bold text-xl text-darkNavy`}
+          style={{ fontFamily: 'orbitron' }}
+          className={`rounded-full w-80 h-80 relative bg-white font-bold text-xl text-darkNavy`}
         >
           {isActiveEditing ? (
             <form
@@ -49,7 +50,7 @@ const SetTimer = () => {
               onSubmit={handleSetTime}
               className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 flex flex-col items-center justify-center"
             >
-              <div className="font-orbitron">
+              <div style={{ fontFamily: 'orbitron' }}>
                 <input
                   type="number"
                   name="newHour"

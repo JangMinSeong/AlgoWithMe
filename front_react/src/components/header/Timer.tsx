@@ -68,7 +68,6 @@ const Timer = () => {
     if (confirm('풀이를 종료하시겠어요?')) {
       clearInterval(timerId.current)
       handleEndSolving()
-      handleChangeTimer({ hour: 0, min: 0, sec: 0 })
     }
   }
 
@@ -78,21 +77,26 @@ const Timer = () => {
         className={`bg-white bg-opacity-20 border border-accent border-opacity-50 flex p-2 w-fit rounded-3xl shadow-foggyPurple items-center mr-2`}
       >
         <span className="text-xs text-navy mr-2 ">남은 시간</span>
-        {timerHour}
+        <span style={{ fontFamily: 'orbitron' }} className="text-sm">
+          {timerHour}
+        </span>
         <span className="text-xs text-navy mr-2 ml-1">시간</span>
-        {timerMin}
+        <span style={{ fontFamily: 'orbitron' }} className="text-sm">
+          {' '}
+          {timerMin}
+        </span>
         <span className="text-xs text-navy mr-2 ml-1">분</span>
-        {timerSec}
+        <span style={{ fontFamily: 'orbitron' }} className="text-sm">
+          {' '}
+          {timerSec}
+        </span>
         <span className="text-xs text-navy ml-1 mr-2">초</span>
 
         <div className="flex">
           {isSolving ? (
             <FaRegStopCircle onClick={handleEnd} />
           ) : (
-            <FaRegPlayCircle
-              className="text-red-500 mr-1"
-              onClick={handleStart}
-            />
+            <FaRegPlayCircle onClick={handleStart} />
           )}
         </div>
       </div>

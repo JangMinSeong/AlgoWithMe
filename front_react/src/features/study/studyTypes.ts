@@ -14,7 +14,7 @@ export interface IProblemPage {
 }
 
 export interface IProblemInfo {
-  id: number
+  candidateId: number
   problemId: number
   url: string
   provider: string

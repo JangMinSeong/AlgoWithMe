@@ -4,6 +4,7 @@ import {
   editImage,
   editName,
   addCandidateProblems,
+  deleteCandidateProblem,
 } from '@/features/study/studySlice'
 import fetch from '@/lib/fetch'
 
@@ -36,10 +37,20 @@ const useStudy = () => {
       body: JSON.stringify({ teamId, problemId }),
       credentials: 'include',
     })
-      .then((res) => {
-        console.log(res)
-        // dispatch(addCandidateProblems(json)) // 이거 응답 받으면 추가하기
-      })
+      .then((res) => res.json())
+      .then((json) => dispatch(addCandidateProblems(json)))
+      .catch((err) => console.error(err))
+  }
+
+  const handleDeleteCandidateProblem = async (candidateId: number) => {
+    await fetch(`/study/problem`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(candidateId),
+      credentials: 'include',
+    })
+      .then((res) => console.log(res))
+      .then(() => dispatch(deleteCandidateProblem(candidateId)))
       .catch((err) => console.error(err))
   }
 
@@ -76,6 +87,7 @@ const useStudy = () => {
   return {
     handleFetchStudyInfo,
     handleAddCandidateProblems,
+    handleDeleteCandidateProblem,
     handleEditImage,
     handleEditName,
   }
