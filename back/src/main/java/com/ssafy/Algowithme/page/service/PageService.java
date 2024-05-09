@@ -22,6 +22,8 @@ import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.entity.UserTeam;
+import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,13 +35,18 @@ import java.util.*;
 @Transactional(readOnly = true)
 public class PageService {
 
+    private final UserTeamRepository userTeamRepository;
     private final TeamRepository teamRepository;
     private final PageRepository pageRepository;
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
     private final UserWorkspaceRepository userWorkspaceRepository;
 
-    public PageListResponse getPageList(Long teamId) {
+    public PageListResponse getPageList(Long teamId, User user) {
+        //팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
         // 팀 내 페이지 조회
         List<Page> pages = pageRepository.findByTeamIdOrderByParentIdAscOrdersAsc(teamId);
 
@@ -68,7 +75,11 @@ public class PageService {
     }
 
     @Transactional
-    public CreateDocsPageResponse createDocsPage(CreateDocsPageRequest request) {
+    public CreateDocsPageResponse createDocsPage(CreateDocsPageRequest request, User user) {
+        //팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), request.getTeamId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
         //팀 조회
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
@@ -80,7 +91,11 @@ public class PageService {
     }
 
     @Transactional
-    public CreateProblemPageResponse createProblemPage(CreateProblemPageRequest request) {
+    public CreateProblemPageResponse createProblemPage(CreateProblemPageRequest request, User user) {
+        //팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), request.getTeamId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
         //팀 조회
         Team team = teamRepository.findById(request.getTeamId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
@@ -134,13 +149,25 @@ public class PageService {
         return page;
     }
 
-    public void updatePosition(UpdatePagePositionRequest request) {
+    public void updatePosition(UpdatePagePositionRequest request, User user) {
 
     }
 
 
     @Transactional
     public MemoResponse getMemo(Long pageId, User user) {
+        // page 조회
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        // team 조회
+        Team team = teamRepository.findById(page.getTeam().getId())
+                        .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+
+        // 팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), team.getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+        
         // userId 와 pageId 로 조회
         Optional<UserWorkspace> optionalUserWorkspace = userWorkspaceRepository.findByWorkspaceIdAndUserId(pageId, user.getId());
 
@@ -151,9 +178,6 @@ public class PageService {
             userWorkspace = optionalUserWorkspace.get();
         } else {
             // 조회되지 않은 경우, 개인메모 생성 후 반환
-            Page page = pageRepository.findById(pageId)
-                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-
             userWorkspace = userWorkspaceRepository.save(UserWorkspace.builder()
                             .user(user)
                             .workspace(page)
@@ -190,6 +214,32 @@ public class PageService {
         //TODO : user의 page에 대한 권한 확인
 
         pageRepository.deleteById(pageId);
+    }
+
+    @Transactional
+    public void changeParentPage(User user, Long pageId, Long parentId) {
+        //TODO : user의 page에 대한 권한 확인
+
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        Page parentPage = pageRepository.findById(parentId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        Page checkPage;
+        checkPage = parentPage;
+
+        while (checkPage.getParent() != null) {
+            if (checkPage.getParent().getId().equals(pageId)) {
+                throw new CustomException(ExceptionStatus.PARENT_PAGE_CANNOT_BE_CHILD_PAGE);
+            }
+
+            checkPage = checkPage.getParent();
+        }
+
+        page.setParent(parentPage);
+
+        pageRepository.save(page);
     }
 }
 

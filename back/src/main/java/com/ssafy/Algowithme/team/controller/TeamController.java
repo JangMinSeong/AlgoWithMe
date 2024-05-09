@@ -1,7 +1,8 @@
 package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
-import com.ssafy.Algowithme.team.dto.request.ProblemAddRequest;
+import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
+import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.service.TeamService;
@@ -32,8 +33,22 @@ public class TeamController {
     }
 
     @PostMapping("/problem")
-    public ResponseEntity<Void> addCandidateProblem(@RequestBody ProblemAddRequest request) {
-        teamService.addCandidateProblem(request);
+    public ResponseEntity<AddProblemResponse> addCandidateProblem(@RequestBody AddProblemRequest request) {
+        return ResponseEntity.ok(teamService.addCandidateProblem(request));
+    }
+
+    @DeleteMapping("/problem")
+    @Operation(summary = "풀어볼 문제 삭제", description = "선택한 풀어볼 문제를 삭제한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "풀어볼 문제 삭제 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1103", description = "풀어볼 문제 삭제 권한이 없습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> deleteCandidateProblem(@AuthenticationPrincipal User user,
+                                                       @RequestBody Long candidateId) {
+        teamService.deleteCandidateProblem(user, candidateId);
         return ResponseEntity.ok().build();
     }
 
