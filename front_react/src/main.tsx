@@ -1,13 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import {
-    createBrowserRouter,
-    RouterProvider
-} from "react-router-dom"
-import App from './App.tsx'
+import { RouterProvider } from "react-router-dom"
+import { PersistGate } from 'redux-persist/integration/react'
 import './index.css'
 import router from "@/Router"
-import StoreProvider from "@/StoreProvider.tsx";
+import StoreProvider from "@/StoreProvider";
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

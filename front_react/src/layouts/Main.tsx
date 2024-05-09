@@ -32,6 +32,7 @@ export default function Layout() {
             : import.meta.env.VITE_API_URL
 
     useEffect(() => {
+
         const refreshTask = async () => {
             if (hasOngoingRequest.current) {
                 return
@@ -65,6 +66,9 @@ export default function Layout() {
                     console.log(isLoading)
                 })()
             } else {
+                if (location.pathname === '/') {
+                    navigate('/main')
+                }
                 setIsLoading(false)
             }
         }

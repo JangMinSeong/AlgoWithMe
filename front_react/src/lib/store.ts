@@ -1,4 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
+import storage from 'redux-persist/lib/storage'
+import {persistReducer, persistStore} from 'redux-persist'
 import authReducer from '@/features/auth/authSlice'
 import sidebarReducer from '@/features/sidebar/sidebarSlice'
 import timerReducer from '@/features/timer/timerSlice'
@@ -10,10 +12,18 @@ import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
 import studyReducer from '@/features/study/studySlice'
 
-export const makeStore = () =>
-	configureStore({
+const authPersistConfig = {
+	key: 'auth',
+	storage: storage,
+	whitelist: ['isAuthenticated', 'user']
+}
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer)
+
+export const makeStore = () => {
+	const store = configureStore({
 		reducer: {
-			auth: authReducer,
+			auth: persistedAuthReducer,
 			sidebar: sidebarReducer,
 			timer: timerReducer,
 			solving: solvingReducer,
@@ -26,6 +36,11 @@ export const makeStore = () =>
 		},
 	})
 
+	const persistor = persistStore(store)
+	return { store, persistor }
+}
+
+
 export type AppStore = ReturnType<typeof makeStore>
-export type RootState = ReturnType<AppStore['getState']>
-export type AppDispatch = AppStore['dispatch']
+export type RootState = ReturnType<AppStore['store']['getState']>
+export type AppDispatch = AppStore['store']['dispatch']
