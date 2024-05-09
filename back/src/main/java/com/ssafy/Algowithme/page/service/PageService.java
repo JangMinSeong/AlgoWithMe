@@ -215,6 +215,32 @@ public class PageService {
 
         pageRepository.deleteById(pageId);
     }
+
+    @Transactional
+    public void changeParentPage(User user, Long pageId, Long parentId) {
+        //TODO : user의 page에 대한 권한 확인
+
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        Page parentPage = pageRepository.findById(parentId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        Page checkPage;
+        checkPage = parentPage;
+
+        while (checkPage.getParent() != null) {
+            if (checkPage.getParent().getId().equals(pageId)) {
+                throw new CustomException(ExceptionStatus.PARENT_PAGE_CANNOT_BE_CHILD_PAGE);
+            }
+
+            checkPage = checkPage.getParent();
+        }
+
+        page.setParent(parentPage);
+
+        pageRepository.save(page);
+    }
 }
 
 

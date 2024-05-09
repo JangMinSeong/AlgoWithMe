@@ -124,4 +124,22 @@ public class PageController {
         pageService.deletePage(user, pageId);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/parent/{pageId}")
+    @Operation(summary = "부모 페이지 변경", description = "부모 페이지를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "부모 페이지 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1202", description = "자신의 자식페이지를 부모페이지로 할 수 없습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> changeParentPage(@AuthenticationPrincipal User user,
+                                                 @PathVariable Long pageId,
+                                                 @RequestBody Long parentId){
+        pageService.changeParentPage(user, pageId, parentId);
+        return ResponseEntity.ok().build();
+    }
 }
