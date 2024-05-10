@@ -28,13 +28,23 @@ public class TeamController {
     private final TeamService teamService;
 
     @PostMapping
+    @Operation(summary = "스터디 생성", description = "스터디를 생성한 후 teamId 를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "생성 성공", content = {@Content(schema = @Schema(implementation = TeamInfoResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "생성 실패"),
+    })
     public ResponseEntity<TeamInfoResponse> createTeam(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createTeam(user));
     }
 
     @PostMapping("/problem")
-    public ResponseEntity<AddProblemResponse> addCandidateProblem(@RequestBody AddProblemRequest request) {
-        return ResponseEntity.ok(teamService.addCandidateProblem(request));
+    @Operation(summary = "풀어볼 문제 추가", description = "선택한 문제를 풀어볼 문제에 추가한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "추가 성공", content = {@Content(schema = @Schema(implementation = AddProblemResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "추가 실패"),
+    })
+    public ResponseEntity<AddProblemResponse> addCandidateProblem(@RequestBody AddProblemRequest request, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(teamService.addCandidateProblem(request, user));
     }
 
     @DeleteMapping("/problem")
