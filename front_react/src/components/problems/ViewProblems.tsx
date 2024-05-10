@@ -50,7 +50,7 @@ const ViewProblems = ({ setParentChosenProblem }) => {
     <div>
       <div className="font-bold mb-4">현재 선택한 문제</div>
       <div className="pr-6">
-        {chosenProblem && (
+        {chosenProblem ? (
           <div className="flex bg-white h-[60px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors justify-between">
             <a
               id="problemLink"
@@ -97,6 +97,10 @@ const ViewProblems = ({ setParentChosenProblem }) => {
             >
               취소
             </div>
+          </div>
+        ) : (
+          <div className="h-[60px] flex items-center">
+            아직 선택한 문제가 없어요.
           </div>
         )}
       </div>

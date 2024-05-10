@@ -24,7 +24,17 @@ const StudyMainPage = () => {
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
 
+  const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
+
   // 로딩중 적용하기
+
+  const handleEditStudyName = (event) => {
+    const formData = new FormData(event.target)
+    const newName = formData.get('newName').toString()
+
+    handleEditName(currentStudyInfo.teamId, newName)
+    setIsEditingName(false)
+  }
 
   return (
     <div className="flex flex-col">
@@ -39,13 +49,22 @@ const StudyMainPage = () => {
               onMouseEnter={() => setIsShowingImgEditor(true)}
               onMouseLeave={() => setIsShowingImgEditor(false)}
             >
-              <img
-                src={currentStudyInfo.imageUrl}
-                alt="Bubbles"
-                width={80}
-                height={80}
-                className="mr-2"
-              />
+              {currentStudyInfo.imageUrl ? (
+                <img
+                  src={currentStudyInfo.imageUrl}
+                  alt="img"
+                  width={80}
+                  height={80}
+                  className="mr-2"
+                />
+              ) : (
+                <img
+                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
+                  alt="Bubbles"
+                  width={80}
+                  height={80}
+                />
+              )}
               <a
                 id="editImage"
                 href="a"
@@ -59,16 +78,53 @@ const StudyMainPage = () => {
                 )}
               </a>
             </span>
+
             <div className="flex text-2xl mb-2 mr-2">
-              <div className="flex items-center">
-                {currentStudyInfo.name}
-                <a id="editName" className={anchorTagCSS}>
-                  <GoPencil
-                    className="w-4 opacity-20"
-                    onClick={() => setIsEditingName(true)}
-                  />
-                </a>
-              </div>
+              {isEditingName ? (
+                <div className="flex items-center bg-white rounded-xl mr-2">
+                  <form
+                    id="name"
+                    onSubmit={handleEditStudyName}
+                    className="flex "
+                  >
+                    <input
+                      type="text"
+                      name="newName"
+                      required
+                      maxLength={8}
+                      defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
+                      placeholder="새로운 스터디 이름"
+                      className="text-sm p-2 w-28 rounded-xl "
+                    />
+                    <div className="flex items-center">
+                      <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
+                        저장
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setIsEditingName(false)
+                        }}
+                        className="rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
+                      >
+                        취소
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  {' '}
+                  {currentStudyInfo.name.replace(/"/gi, '')}
+                  <a id="editName" className={anchorTagCSS}>
+                    <GoPencil
+                      className="w-4 opacity-20"
+                      onClick={() => setIsEditingName(true)}
+                    />
+                  </a>
+                </div>
+              )}
+
               <div>와 함께한 지</div>
               <div className="text-purple-400 ml-2">
                 {currentStudyInfo.joinDay}
@@ -109,8 +165,8 @@ const StudyMainPage = () => {
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
             <div className="pr-10">
               <AddProblem groupId={groupId} />
-              {currentStudyInfo.candidateProblems.map((el) => (
-                <NextProblem problemInfo={el} key={el.id} />
+              {reversedCandidates.map((el) => (
+                <NextProblem problemInfo={el} key={el.problemId} />
               ))}
             </div>
           </div>

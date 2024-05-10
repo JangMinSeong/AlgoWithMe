@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import SideBarItem from './SideBarItem'
 import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 import fetch from '@/lib/fetch'

@@ -1,18 +1,18 @@
 import { useState } from 'react'
-import { RootState } from '@/lib/store'
-import { useSelector } from 'react-redux'
 import Button from '@/components/Button'
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
 import ViewProblems from './ViewProblems'
 import LevelSelector from './LevelSelector'
 import ProblemSearch from './ProblemSearch'
 import TempSelected from './TempSelected'
 import { IProblem } from '@/features/problems/problemSlice'
 import useStudy from '@/hooks/useStudy'
-import fetch from "@/lib/fetch.ts";
-import {useNavigate} from "react-router-dom";
-import useModal from "@/hooks/useModal.ts";
-import useSidebar from "@/hooks/useSidebar.ts";
+import fetch from '@/lib/fetch.ts'
+import { useNavigate } from 'react-router-dom'
+import useModal from '@/hooks/useModal.ts'
+import useSidebar from '@/hooks/useSidebar.ts'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
 
 interface Page {
   pageId: number
@@ -40,28 +40,6 @@ const AddProblemModal = ({
   const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
-
-  const existingCandidateProblems = useSelector(
-    (state: RootState) => state.study.candidateProblems,
-  )
-  const handleAddCandidate = async () => {
-    const duplicated = () => {
-      // 후보 리스트 전부 돌면서 동일한 아이디가 있으면
-      existingCandidateProblems.map((el) => {
-        if (el.problemId === chosenProblem.id) return true
-        return false
-      })
-    }
-
-    if (duplicated()) {
-      toast.error('이미 추가된 문제예요')
-    } else {
-      toast.success('문제가 추가되었어요')
-      console.log(chosenProblem.id)
-      handleAddCandidateProblems(groupId, chosenProblem.id)
-    }
-  }
-
   const handleAddProblem = async () => {
     const dataToCreate = {
       teamId: groupId,
@@ -85,20 +63,20 @@ const AddProblemModal = ({
     }
 
     const addSubPage = (
-        pages: Page[],
-        parentPageId: number,
-        newPage: Page,
+      pages: Page[],
+      parentPageId: number,
+      newPage: Page,
     ): Page[] =>
-        pages.map((page) => {
-          if (page.pageId === parentPageId) {
-            return { ...page, children: [...page.children, newPage] }
-          }
+      pages.map((page) => {
+        if (page.pageId === parentPageId) {
+          return { ...page, children: [...page.children, newPage] }
+        }
 
-          return {
-            ...page,
-            children: addSubPage(page.children, parentPageId, newPage),
-          }
-        })
+        return {
+          ...page,
+          children: addSubPage(page.children, parentPageId, newPage),
+        }
+      })
 
     if (pPageId === -1) {
       const updatedList = [...pageList, newPage]
@@ -111,7 +89,6 @@ const AddProblemModal = ({
     handleCloseModal()
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
-  // 여기서 문제를 선택하면, 선택한 문제의 Id를 가져온다.
 
   return (
     <div
@@ -152,7 +129,13 @@ const AddProblemModal = ({
             취소하기
           </Button>
           {type === 'addCandidates' ? (
-            <Button onClick={handleAddCandidate}>추가하기</Button>
+            <Button
+              onClick={() => {
+                handleAddCandidateProblems(groupId, chosenProblem.id)
+              }}
+            >
+              추가하기
+            </Button>
           ) : (
             <Button onClick={handleAddProblem}>생성하기</Button> // 페이지 생성 요청하기
           )}

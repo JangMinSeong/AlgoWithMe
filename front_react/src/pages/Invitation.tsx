@@ -1,38 +1,52 @@
 import { useEffect } from 'react'
-import {BrowserRouter as Router, Link, useParams} from 'react-router-dom';
-
-const API_URL =
-    import.meta.env.MODE === 'development'
-        ? import.meta.env.VITE_API_DEV_URL
-        : import.meta.env.VITE_API_URL
+import {
+  BrowserRouter as Router,
+  Link,
+  useParams,
+  useSearchParams,
+  useNavigate,
+} from 'react-router-dom'
+import fetch from '@/lib/fetch'
+import useStudy from '@/hooks/useStudy'
+import { RootState } from '@/lib/store'
+import { useSelector } from 'react-redux'
 
 const InvitationPage = () => {
-    const {groupId} = useParams()
+  const { groupId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const code = searchParams.get('code')
 
-    useEffect(() => {
-        const studyInfoRes = fetch(`${API_URL}/study/${groupId}`, {
-            method: 'GET',
-            credentials: 'include',
-        })
+  const { handleFetchStudyInfo } = useStudy()
+  const currentStudyName = useSelector((state: RootState) => state.study.name)
+  const isLoggedIn = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  )
 
-        // const groupName = studyInfoRes.data.group_name
-    }, [])
-
-    const handleJoinGroup = async () => {
-        const joinGroupRes = await fetch(`${API_URL}/study/member`, {
-            method: 'POST',
-            // body: JSON.stringify({ user_id: userId, group_id: Number(groupId) }),
-            credentials: 'include',
-        })
+  useEffect(() => {
+    if (isLoggedIn) {
+      handleFetchStudyInfo(Number(groupId))
+    } else {
+      navigate('/welcome')
     }
+  }, [])
 
-    return (
-        <div>
-            {'groupName'}그룹에 초대받았어요! 수락하시겠어요?
-            <Link to="/main">아니요</Link>
-            <button onClick={handleJoinGroup}>네</button>
-        </div>
-    )
+  const handleJoinGroup = async () => {
+    await fetch(`/study/member?encrypted=${code}`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then(() => navigate(`/${groupId}/study`))
+      .catch((err) => console.error(err))
+  }
+
+  return (
+    <div>
+      {currentStudyName}그룹에 초대받았어요! 수락하시겠어요?
+      <Link to="/main">아니요</Link>
+      <button onClick={handleJoinGroup}>네</button>
+    </div>
+  )
 }
 
 export default InvitationPage

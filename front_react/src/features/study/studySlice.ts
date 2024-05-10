@@ -3,9 +3,9 @@ import { IStudyState, IProblemInfo } from './studyTypes'
 
 const initialState: IStudyState = {
   teamId: 0,
-  name: '',
+  name: '이름없는 스터디',
   imageUrl: '',
-  joinDay: 0,
+  joinDay: 1,
   chart: [],
   solvedProblems: [],
   candidateProblems: [],
