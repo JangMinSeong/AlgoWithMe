@@ -4,10 +4,13 @@ import { RootState } from '@/lib/store'
 import SideBarItem from './SideBarItem'
 import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
+import fetch from '@/lib/fetch'
 import useSidebar from '@/hooks/useSidebar.ts'
 import { useEffect } from 'react'
 import useStudy from '@/hooks/useStudy'
 import { useNavigate } from 'react-router-dom'
+import {useWebSocket} from "@/hooks/useWebSocket.ts";
+
 
 const SideBar = ({ groupId }: { groupId: number }) => {
   const navigate = useNavigate()
@@ -17,6 +20,12 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
 
   const { setGId, setPages } = useSidebar()
+
+  const { connectToServer } = useWebSocket()
+
+  useEffect(() => {
+    connectToServer()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,6 +40,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         if (response.ok) {
           const data = await response.json()
           setPages(data.pageInfoList)
+          console.log(data.pageInfoList)
         } else {
           throw new Error('Network response was not ok.')
         }

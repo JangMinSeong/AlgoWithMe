@@ -39,7 +39,7 @@ public class CodeService {
     @Transactional
     public Long createPersonalCode(Long pageId, User user) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).deleted(false).build()).getId();
+        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).language(Language.C).deleted(false).build()).getId();
     }
 
     @Transactional
@@ -70,6 +70,14 @@ public class CodeService {
                         .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND))
         );
     }
+
+    public CodeByPageAndUserResponse getCodeByPage(Long pageId, User user) {
+        Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+        List<Long> ids = personalCodeRepository.findAllIdsByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
+        PersonalCode code = personalCodeRepository.findById(ids.getFirst()).orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND));
+        return new CodeByPageAndUserResponse(ids, PersonalCodeResponse.fromEntity(code));
+    }
+
 
     public CodeByPageAndUserResponse getPersonalCodeByPageAndUser(Long pageId, Integer userId) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));

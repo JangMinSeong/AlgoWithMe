@@ -28,12 +28,20 @@ interface ProblemProp {
   provider: string
   number: number
   editCodes: { language: string; frameCode: string }[]
+  pageId : number
+}
+
+interface PersonalCodeResponse {
+  id:number
+  language:string
+  code:string
 }
 
 const RightComponent: React.FC<ProblemProp> = ({
   provider,
   number,
   editCodes,
+  pageId,
 }) => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
@@ -42,6 +50,8 @@ const RightComponent: React.FC<ProblemProp> = ({
   const [resStatus, setResStatus] = React.useState(200)
   const [execTime, setExecTime] = React.useState(0)
 
+  const [codeIds , setCodeIds] = React.useState<number[]>([])
+  const [firstCode, setFirstCode] = React.useState<PersonalCodeResponse>()
   const [message, setMessage] = React.useState('')
   const onConnect = useSelector((state: RootState) => state.socket.connected)
   const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
@@ -56,6 +66,31 @@ const RightComponent: React.FC<ProblemProp> = ({
   const socketMessage: string = useSelector(
     (state: RootState) => state.socket?.message || '',
   )
+
+  useEffect(()=> {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/code/codeList?pageId=${pageId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+
+        const responseData = await response.json()
+        setCodeIds(responseData.codeIds)
+        setFirstCode(responseData.code)
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
+    }
+
+    fetchData()
+  })
 
   useEffect(() => {
     // TODO : 코드 에디터 id에 따라 구독 진행
@@ -77,7 +112,6 @@ const RightComponent: React.FC<ProblemProp> = ({
       language: '',
     }
 
-    // 가져온 코드, 언어, 입력 값을 로컬 스토리지에 저장합니다
     const dataToSave = {
       code,
       language,
@@ -86,12 +120,11 @@ const RightComponent: React.FC<ProblemProp> = ({
 
     if (provider === 'swea' && dataToSave.language === 'JAVA') {
       dataToSave.code = code.replace(
-        /public class Solution/g, // "public class Main"을 찾아서
-        'public class Main', // "public class Solution"으로 교체
+        /public class Solution/g,
+        'public class Main',
       )
     }
 
-    // localStorage.setItem('execute', JSON.stringify(dataToSave))
     const response = await fetch(`/code/execute`, {
       method: 'POST',
       headers: {
@@ -116,7 +149,6 @@ const RightComponent: React.FC<ProblemProp> = ({
       language: '',
     }
 
-    // 가져온 코드, 언어, 입력 값을 로컬 스토리지에 저장합니다
     const dataToSave = {
       code,
       language,
@@ -157,9 +189,11 @@ const RightComponent: React.FC<ProblemProp> = ({
     <div className="flex flex-col w-full h-full">
       <div style={{ flex: 2 }}>
         <CodeEditor
-          // ref={codeEditorRef}
           provider={provider}
           editCodes={editCodes}
+          idList={codeIds}
+          firstCode={firstCode}
+          pageId={pageId}
         />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">

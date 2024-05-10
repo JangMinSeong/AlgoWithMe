@@ -22,7 +22,7 @@ const router = createBrowserRouter([
             { path: ':groupId', element: <StudyLayout />,
                 children: [
                     { path: 'docs/:pageId', element: <Docs /> },
-                    { path: 'editor/:problemId', element: <Editor /> },
+                    { path: 'editor/:pageId', element: <Editor /> },
                     { path: 'study', element: <Study /> }
                 ]
             }
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         element: <StudyLayout />,
         children: [
             {
-                path: 'editor/:problemId',
+                path: 'editor/:pageId',
                 element: <Editor />
             }
         ]
