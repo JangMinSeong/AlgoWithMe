@@ -10,7 +10,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-@ToString
 public class Problem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

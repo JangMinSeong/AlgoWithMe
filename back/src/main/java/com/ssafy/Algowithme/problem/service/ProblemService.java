@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -71,41 +70,31 @@ public class ProblemService {
 
     public ProblemByTagsResponse getProblemByTag(String levels, int page) {
         // 태그 리스트
-        List<String> levelList = Arrays.asList(levels.split("%20"));
-        if(levelList.size() == 0) {
+        String[] levelList = levels.split(" ");
+        if(levelList.length == 0) {
             return ProblemByTagsResponse.create(0, 1, 1, new ArrayList<>());
         }
 
-        System.out.println("levelList size: " + levelList.size());
-        for(String level: levelList) {
-            System.out.println("level: " + level);
-        }
-
         // 태그 리스트로 문제 조회
-        List<Problem> problemList = problemRepository.findByLevelIn(levelList);
-        System.out.println("problemList size: " + problemList.size());
+        List<Problem> problemList = problemRepository.findByLevelInOrderByLevel(levelList);
         if(problemList.size() == 0) {
             return ProblemByTagsResponse.create(0, 1, 1, new ArrayList<>());
         }
 
-        for(Problem problem: problemList) {
-            System.out.println(problem.toString());
+        //조회 결과 수
+        int resultCount = problemList.size();
+
+        //전체 페이지 번호
+        int totalPages = resultCount/10 + (resultCount%10==0 ? 0 : 1);
+
+        //문제 리스트
+        List<ProblemInfo> problemInfoList = new ArrayList<>();
+        int startNum = 10 * (page - 1);
+        for(int i=startNum; i<startNum+10 && i<problemList.size(); i++) {
+            Problem problem = problemList.get(i);
+            problemInfoList.add(ProblemInfo.create(problem));
         }
-        return ProblemByTagsResponse.create(0, 1, 1, new ArrayList<>());
-//        //조회 결과 수
-//        int resultCount = problemList.size();
-//
-//        //전체 페이지 번호
-//        int totalPages = resultCount/10 + (resultCount%10==0 ? 0 : 1);
-//
-//        //문제 리스트
-//        List<ProblemInfo> problemInfoList = new ArrayList<>();
-//        int startNum = 10 * (page - 1);
-//        for(int i=startNum; i<startNum+10 && i<problemList.size(); i++) {
-//            Problem problem = problemList.get(i);
-//            problemInfoList.add(ProblemInfo.create(problem));
-//        }
-//
-//        return ProblemByTagsResponse.create(resultCount, page, totalPages, problemInfoList);
+
+        return ProblemByTagsResponse.create(resultCount, page, totalPages, problemInfoList);
     }
 }
