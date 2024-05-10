@@ -13,7 +13,7 @@ services:
       - algo-net
   front:
     build:
-      context: ./front
+      context: ./front_react
       dockerfile: Dockerfile
     ports:
       - "80:80"
