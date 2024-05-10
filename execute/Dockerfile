@@ -4,7 +4,13 @@ WORKDIR /execute
 
 COPY requirements.txt .
 
+RUN apt update && apt install -y \
+    build-essential \
+    openjdk-17-jdk\
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir --upgrade -r /execute/requirements.txt
+
 
 COPY . /execute/
 
