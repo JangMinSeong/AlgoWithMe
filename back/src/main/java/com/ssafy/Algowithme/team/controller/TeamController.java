@@ -3,6 +3,7 @@ package com.ssafy.Algowithme.team.controller;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
 import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
+import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.service.TeamService;
@@ -63,7 +64,7 @@ public class TeamController {
     }
 
     @GetMapping("/invite/{teamId}")
-    public ResponseEntity<String> createInviteUrl(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<InviteUrlResponse> createInviteUrl(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createInviteUrl(teamId, user));
     }
 

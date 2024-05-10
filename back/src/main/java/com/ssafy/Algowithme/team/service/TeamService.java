@@ -8,6 +8,7 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
 import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
+import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.entity.CandidateProblem;
@@ -92,12 +93,12 @@ public class TeamService {
         candidateProblemRepository.delete(candidateProblem);
     }
 
-    public String createInviteUrl(Long teamId, User user) {
+    public InviteUrlResponse createInviteUrl(Long teamId, User user) {
         Team team = teamRepository.findByIdAndDeletedFalse(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
         userTeamRepository.findByUserAndTeam(user, team)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_INVITE_UNAUTHORIZED));
-        return aes128Config.encryptAes("team" + "/" + teamId + "/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
+        return new InviteUrlResponse(aes128Config.encryptAes("team" + "/" + teamId + "/" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"))));
     }
 
     @Transactional
