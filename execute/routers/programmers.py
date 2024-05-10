@@ -167,11 +167,8 @@ async def mark_programmers_cpp(code_test: CodeTest):
     dir = os.getenv('BASE_DIR', '/tmp')
     path = os.path.join(dir, "main.cpp")
     executable_path = os.path.join(dir, "main")
-    solution_path = os.path.join(dir, "solution.h")
     with open(path, "w", encoding='utf-8') as file:
-        file.write(code_test.main)
-    with open(solution_path, "w", encoding='utf-8') as file:
-        file.write(code_test.solution)
+        file.write(create_cpp_main(code_test.main, code_test.solution))
     # compile
     compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
     if compile_process.returncode != 0:
@@ -203,6 +200,7 @@ async def mark_programmers_cpp(code_test: CodeTest):
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
         os.remove(path)
-    if os.path.exists(solution_path):
-        os.remove(solution_path)
     return {"status": 200, "results": results}
+
+def create_cpp_main(main: str, solution:str):
+    return "import cppyy\n" + "cppyy.cppdef(\"\"\"\n" + solution + "\"\"\"\n)\n" + main
