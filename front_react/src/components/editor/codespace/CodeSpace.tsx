@@ -16,6 +16,7 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
 import debounce from 'lodash.debounce'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import fetch from "@/lib/fetch.ts";
 
 interface CodeExample {
   mode: string
@@ -26,8 +27,14 @@ interface EditCode {
   frameCode: string
 }
 
-const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] }> =
-  forwardRef(({ provider, editCodes }, ref) => {
+interface PersonalCodeResponse {
+    id:number
+    language:string
+    code:string
+}
+
+const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number}> =
+  forwardRef(({ provider, editCodes,firstCode, idList, pageId }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
 
@@ -103,84 +110,104 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] }> =
 
     const [code, setCode] = useState<string>(languageOptions.C.value)
     const [tabs, setTabs] = useState<
-      { id: string; language: string; code: string }[]
+       number[]
     >([])
-    const [activeTab, setActiveTab] = useState<string>('1')
+    const [activeTab, setActiveTab] = useState<number>(1)
     const [showMoreTabs, setShowMoreTabs] = useState(false)
 
     const { sendMessage } = useWebSocket()
 
     useEffect(() => {
-      const storedTabs = localStorage.getItem('editorTabs')
-      if (storedTabs) {
-        const loadedTabs = JSON.parse(storedTabs)
-        setTabs(loadedTabs)
-        const initTab = loadedTabs[0].id
-        setActiveTab(initTab)
-        setLanguage(loadedTabs[0].language)
-        setCode(loadedTabs[0].code)
-      } else {
-        // Set a default tab if none are stored
-        const defaultTabs = [
-          { id: '1', language: 'C', code: languageOptions.C.value },
-        ]
-        setTabs(defaultTabs)
-        localStorage.setItem('editorTabs', JSON.stringify(defaultTabs)) // TODO:여기서 사용자 코드 리스트 가져오기
+      if (idList.length !== 0) {
+        setTabs(idList)
+        setActiveTab(firstCode.id)
+        setLanguage(firstCode.language)
+        setCode(firstCode.code)
+      } else if(tabs.length !== 0) {
+          const createInitCode = async () => {
+              const response = await fetch(`/code/${pageId}`, {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+              })
+              const responseData = await response.json()
+              console.log(responseData)
+              const newId = responseData
+              const defaultTabs = [newId]
+              setTabs(defaultTabs)
+              setActiveTab(newId)
+          }
+          createInitCode().then(() => {
+              setLanguage('C')
+              setCode(languageOptions.C.value)
+          })
       }
     }, [])
 
-    const addTab = () => {
-      const newId = (tabs.length + 1).toString()
-      const newTab = { id: newId, language: 'C', code: languageOptions.C.value }
-      const newTabs = [...tabs, newTab]
+    const addTab = async () => {
+      const response = await fetch(`/code/${pageId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const responseData = await response.json()
+      const newId = responseData
+      const newTabs = [...tabs, newId]
       setTabs(newTabs)
       setActiveTab(newId)
       setLanguage('C')
       setCode(languageOptions.C.value)
-      localStorage.setItem('editorTabs', JSON.stringify(newTabs)) // TODO : 여기서 코드 생성 api 요청
     }
 
-    const handleTabChange = (tabId: string) => {
+    const handleTabChange = async (tabId: number) => {
       setActiveTab(tabId)
-      const selectedTab = tabs.find((tab) => tab.id === tabId)
-      if (selectedTab) {
-        setLanguage(selectedTab.language)
-        setCode(selectedTab.code)
+        const response = await fetch(`/code/${tabId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        const responseData = await response.json()
+        setLanguage(responseData.language)
+        setCode(responseData.code)
+
         setShowMoreTabs(false)
-      }
     }
 
-    const saveCode = () => {
+    const saveCode = async () => {
       const currentCode = aceRef.current?.editor.getValue()
-      const updatedTabs = tabs.map((tab) => {
-        if (tab.id === activeTab) {
-          return { ...tab, code: currentCode, language }
-        }
-        return tab
-      })
-      setTabs(updatedTabs)
       setCode(currentCode)
-      localStorage.setItem('editorTabs', JSON.stringify(updatedTabs)) // TODO:여기서 코드 저장 api
+        const dataToSave = {
+            codeId:activeTab,
+            code,
+            language,
+        }
+        const response = await fetch(`/code/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body : JSON.stringify(dataToSave)
+        })
     }
 
-    const deleteCode = () => {
+    const deleteCode = async () => {
       if (tabs.length <= 1) {
         return
       }
+        const response = await fetch(`/code/${activeTab}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
 
-      const filteredTabs = tabs.filter((tab) => tab.id !== activeTab)
-      const renumberedTabs = filteredTabs.map((tab, index) => ({
-        ...tab,
-        id: String(index + 1),
-      }))
-
-      setTabs(renumberedTabs)
-      localStorage.setItem('editorTabs', JSON.stringify(renumberedTabs)) // TODO: 여기서 코드 저장 api
-
-      if (renumberedTabs.length > 0) {
-        setActiveTab(renumberedTabs[0].id)
-        setLanguage(renumberedTabs[0].language)
-        setCode(renumberedTabs[0].code)
+      if (tabs.length > 0) {
+        setActiveTab(tabs[0])
+        setLanguage(firstCode.language)
+        setCode(firstCode.code)
       }
     }
 
@@ -202,14 +229,14 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] }> =
       <div className="w-full h-full flex flex-col p-3 pt-0">
         <div className="flex items-center justify-between relative mb-1">
           <div>
-            {tabs.slice(0, 3).map((tab) => (
+            {tabs.slice(0, 3).map((tab,index) => (
               <button
-                key={tab.id}
-                onClick={() => handleTabChange(tab.id)}
+                key={tab}
+                onClick={() => handleTabChange(tab)}
                 className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${tab.id === activeTab ? 'bg-primary' : 'bg-navy'}`}
+              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
               >
-                {tab.id}
+                {index+1}
               </button>
             ))}
             {tabs.length > 3 && (
@@ -225,14 +252,14 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] }> =
                 className="absolute top-10 left-10 bg-white shadow-lg"
                 style={{ position: 'absolute', top: '100%', zIndex: 1000 }}
               >
-                {tabs.slice(3).map((tab) => (
+                {tabs.slice(3).map((tab,index) => (
                   <button
-                    key={tab.id}
-                    onClick={() => handleTabChange(tab.id)}
+                    key={tab}
+                    onClick={() => handleTabChange(tab)}
                     className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${tab.id === activeTab ? 'bg-primary' : 'bg-navy'}`}
+              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
                   >
-                    {tab.id}
+                    {index+4}
                   </button>
                 ))}
               </div>

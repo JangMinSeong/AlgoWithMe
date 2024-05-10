@@ -9,6 +9,7 @@ import useSidebar from '@/hooks/useSidebar.ts'
 import { useEffect } from 'react'
 import useStudy from '@/hooks/useStudy'
 import { useNavigate } from 'react-router-dom'
+import {useWebSocket} from "@/hooks/useWebSocket.ts";
 
 
 const SideBar = ({ groupId }: { groupId: number }) => {
@@ -19,6 +20,12 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
 
   const { setGId, setPages } = useSidebar()
+
+  const { connectToServer } = useWebSocket()
+
+  useEffect(() => {
+    connectToServer()
+  }, [])
 
   useEffect(() => {
     const fetchData = async () => {

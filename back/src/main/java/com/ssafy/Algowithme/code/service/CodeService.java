@@ -39,7 +39,7 @@ public class CodeService {
     @Transactional
     public Long createPersonalCode(Long pageId, User user) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
-        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).deleted(false).build()).getId();
+        return personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).language(Language.C).deleted(false).build()).getId();
     }
 
     @Transactional

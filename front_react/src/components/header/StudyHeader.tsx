@@ -1,20 +1,12 @@
 import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import Logo from '/logo.svg'
-import { RootState } from '@/lib/store'
-import { useEffect, useState } from 'react'
-import { useWebSocket } from '@/hooks/useWebSocket'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
 import GroupCall from '../groupcall/GroupCall'
 
 const StudyHeader = () => {
-  const { connectToServer } = useWebSocket()
-
-  useEffect(() => {
-    connectToServer()
-  }, [])
 
   return (
     <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">

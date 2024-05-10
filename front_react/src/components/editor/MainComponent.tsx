@@ -94,7 +94,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           provider={provider}
           number={number}
           editCodes={editCodes}
-          groupId={groupId}
+          pageId={pageId}
         />
       </div>
       <button
