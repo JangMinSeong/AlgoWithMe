@@ -29,6 +29,7 @@ interface ProblemProp {
   number: number
   editCodes: { language: string; frameCode: string }[]
   pageId : number
+  uid:string
 }
 
 interface PersonalCodeResponse {
@@ -42,6 +43,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   number,
   editCodes,
   pageId,
+    uid
 }) => {
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
@@ -85,12 +87,14 @@ const RightComponent: React.FC<ProblemProp> = ({
         setCodeIds(responseData.codeIds)
         setFirstCode(responseData.code)
       } catch (error) {
+        setCodeIds([])
+        setFirstCode(null)
         console.error('Failed to fetch data:', error)
       }
     }
 
     fetchData()
-  })
+  },[pageId])
 
   useEffect(() => {
     // TODO : 코드 에디터 id에 따라 구독 진행
@@ -152,7 +156,7 @@ const RightComponent: React.FC<ProblemProp> = ({
     const dataToSave = {
       code,
       language,
-      number,
+      uid,
     }
 
     const response = await fetch(`/code/${provider}`, {
@@ -189,6 +193,7 @@ const RightComponent: React.FC<ProblemProp> = ({
     <div className="flex flex-col w-full h-full">
       <div style={{ flex: 2 }}>
         <CodeEditor
+            ref={codeEditorRef}
           provider={provider}
           editCodes={editCodes}
           idList={codeIds}

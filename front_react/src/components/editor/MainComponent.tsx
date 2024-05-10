@@ -15,6 +15,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const user = useSelector((state: RootState) => state.auth.user)
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
   const [number, setNumber] = useState(0)
+  const [uid, setUid] = useState()
   const [provider, setProvider] = useState('')
   const [url, setUrl] = useState('')
   const [content, setContent] = useState('')
@@ -61,15 +62,16 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           setEditCodes(responseData.editCodesList || [])
         else setEditCodes(null)
         setNumber(responseData.number)
+        setUid(responseData.id)
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }
     }
     fetchProblemData()
-  }, [number])
+  }, [number,pageId])
 
   useEffect(() => {
-    connectToServer()
+    connectToServer(groupId)
   }, [connectToServer])
 
   const toggleCodeEditor = () => {
@@ -95,6 +97,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           number={number}
           editCodes={editCodes}
           pageId={pageId}
+          uid={uid}
         />
       </div>
       <button

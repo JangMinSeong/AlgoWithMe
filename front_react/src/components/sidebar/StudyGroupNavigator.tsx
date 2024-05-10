@@ -5,12 +5,16 @@ import { RootState } from '@/lib/store'
 import StudyGroupDropdown from './StudyGroupDropdown'
 import PageCreateButton from './PageCreateButton'
 
-const StudyGroupNavigator = (props: { groupId: number }) => {
+interface Study {
+    id: number
+    name: string
+    imageUrl: string
+}
+const StudyGroupNavigator = (props: { groupId: number, studyList : Study[] }) => {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false)
-  const studyGroups = useSelector((state: RootState) => state.sidebar.studyList)
 
   const currentGroupName =
-    studyGroups.find((group) => group.id === props.groupId)?.name ||
+    props.studyList.find((group) => group.id === props.groupId)?.name ||
     '오구오구스터디'
 
   const handleNavigatorOpen = () => {
@@ -29,7 +33,7 @@ const StudyGroupNavigator = (props: { groupId: number }) => {
         </div>
       </div>
       {/* 이걸 누르면 아래의 드랍다운이 펼쳐진다 */}
-      {isNavigatorOpen ? <StudyGroupDropdown /> : null}
+      {isNavigatorOpen ? <StudyGroupDropdown studyList={props.studyList}/> : null}
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useSidebar from '@/hooks/useSidebar'
 import DeleteButton from './DeleteButton'
 import PageCreateButton from './PageCreateButton'
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 
 interface IPage {
   pageId: number
@@ -22,9 +23,6 @@ const InStudyPageItem = (props: {
   const handleSubPageOpen = () => {
     setIsSubPagesOpen(!isSubPagesOpen)
     setPId(props.page.pageId)
-    if (props.page.docs)
-      navigate(`/${props.groupId}/docs/${props.page.pageId}`)
-    else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
   const menuItemWrapper =
       'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
@@ -38,10 +36,17 @@ const InStudyPageItem = (props: {
   const handleUnShowModifier = () => {
     setIsModifierShowing(false)
   }
+
+  const handleMovePage = () => {
+    if (props.page.docs)
+      navigate(`/${props.groupId}/docs/${props.page.pageId}`)
+    else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
+  }
+
   return (
       <div style={{ paddingLeft: pl }}>
         <div
-            onClick={handleSubPageOpen}
+            onClick={handleMovePage}
             className={menuItemWrapper}
             onMouseOver={handleShowModifier}
             onMouseOut={handleUnShowModifier}
@@ -57,7 +62,16 @@ const InStudyPageItem = (props: {
                         groupId={props.groupId}
                     />
                 )}
-                <DeleteButton />
+                <DeleteButton pageId={props.page.pageId}/>
+                {props.page.docs && props.page.children.length ? (
+                    <>
+                      {isSubPagesOpen ? (
+                          <MdKeyboardArrowUp onClick={handleSubPageOpen} />
+                      ) : (
+                          <MdKeyboardArrowDown onClick={handleSubPageOpen} />
+                      )}
+                    </>
+                ) : null}
               </div>
           )}
         </div>

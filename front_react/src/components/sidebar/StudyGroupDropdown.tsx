@@ -3,7 +3,13 @@ import { BiLayerPlus } from 'react-icons/bi'
 import useStudy from '@/hooks/useStudy'
 import { useNavigate } from 'react-router-dom'
 
-const StudyGroupDropdown = () => {
+interface Study {
+  id: number
+  name: string
+  imageUrl: string
+}
+
+const StudyGroupDropdown = (props: { studyList : Study[] }) => {
   const navigate = useNavigate()
   const { handleFetchStudyInfo } = useStudy()
   const dropdownItemCSS =
@@ -16,7 +22,7 @@ const StudyGroupDropdown = () => {
   return (
     <div className="flex flex-col w-48 text-sm border-b-2 ">
       <div>
-        {dummyStudyGroups.map((el) => (
+        {props.studyList.map((el) => (
           <div
             onClick={() => handleGoStudyMain(el.id)}
             className={dropdownItemCSS}
@@ -33,18 +39,3 @@ const StudyGroupDropdown = () => {
 }
 
 export default StudyGroupDropdown
-
-const dummyStudyGroups = [
-  {
-    id: '1',
-    name: '오구오구스터디',
-  },
-  {
-    id: '2',
-    name: '알고리즘 스터디',
-  },
-  {
-    id: '3',
-    name: '자스알고리즘 모임',
-  },
-]

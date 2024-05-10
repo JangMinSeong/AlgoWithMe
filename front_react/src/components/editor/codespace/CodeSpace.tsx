@@ -119,11 +119,16 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     useEffect(() => {
       if (idList.length !== 0) {
+          console.log(idList)
         setTabs(idList)
         setActiveTab(firstCode.id)
         setLanguage(firstCode.language)
-        setCode(firstCode.code)
+          if(firstCode.code)
+              setCode(firstCode.code)
+          else
+              setCode(languageOptions[firstCode.language].value)
       } else if(tabs.length !== 0) {
+          console.log("testetsettsetset")
           const createInitCode = async () => {
               const response = await fetch(`/code/${pageId}`, {
                   method: 'POST',
@@ -143,7 +148,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setCode(languageOptions.C.value)
           })
       }
-    }, [])
+    }, [pageId,idList])
 
     const addTab = async () => {
       const response = await fetch(`/code/${pageId}`, {
@@ -171,7 +176,10 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
         })
         const responseData = await response.json()
         setLanguage(responseData.language)
-        setCode(responseData.code)
+        if(responseData.code)
+            setCode(responseData.code)
+        else
+            setCode(languageOptions[responseData.language].value)
 
         setShowMoreTabs(false)
     }
@@ -205,9 +213,9 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
         })
 
       if (tabs.length > 0) {
-        setActiveTab(tabs[0])
-        setLanguage(firstCode.language)
-        setCode(firstCode.code)
+          const filteredTabs = tabs.filter((tab) => tab !== activeTab);
+          setTabs(filteredTabs);
+          handleTabChange(filteredTabs[0])
       }
     }
 
