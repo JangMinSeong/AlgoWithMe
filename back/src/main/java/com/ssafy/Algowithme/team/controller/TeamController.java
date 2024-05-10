@@ -7,6 +7,7 @@ import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
 import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
 import com.ssafy.Algowithme.team.service.TeamService;
+import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -19,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -146,5 +149,10 @@ public class TeamController {
                                            @PathVariable Long teamId) {
         teamService.deleteTeam(user, teamId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{teamId}/members")
+    public ResponseEntity<List<UserInfoResponse>> getTeamMembers(@PathVariable("teamId") Long teamId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(teamService.getTeamMembers(teamId, user));
     }
 }

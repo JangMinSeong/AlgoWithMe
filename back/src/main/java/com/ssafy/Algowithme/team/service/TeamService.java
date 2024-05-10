@@ -15,6 +15,7 @@ import com.ssafy.Algowithme.team.entity.CandidateProblem;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.candidateProblem.CandidateProblemRepository;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
+import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
@@ -27,6 +28,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -174,5 +176,16 @@ public class TeamService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
         teamRepository.delete(team);
+    }
+
+    public List<UserInfoResponse> getTeamMembers(Long teamId, User user) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+        userTeamRepository.findByUserAndTeam(user, team)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.GET_MEMBERS_UNAUTHORIZED));
+        return userTeamRepository.findAllByTeamId(teamId).stream()
+                .map(UserTeam::getUser)
+                .map(UserInfoResponse::fromEntity)
+                .toList();
     }
 }
