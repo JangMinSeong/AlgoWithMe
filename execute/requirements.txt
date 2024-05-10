@@ -1,0 +1,5 @@
+fastapi==0.111.0
+pydantic==2.7.1
+uvicorn==0.29.0
+cffi==1.16.0
+cppyy==3.1.2
