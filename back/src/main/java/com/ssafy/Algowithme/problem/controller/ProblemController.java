@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.problem.controller;
 
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
+import com.ssafy.Algowithme.problem.dto.response.ProblemByTagsResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
 import com.ssafy.Algowithme.problem.dto.response.RawProblemResponse;
 import com.ssafy.Algowithme.problem.service.ProblemService;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 
 @RestController
@@ -50,4 +53,15 @@ public class ProblemController {
     public ResponseEntity<ProblemByTitleResponse> getProblemByTitle(@RequestParam("title") String title, @RequestParam("page") int page) {
         return ResponseEntity.ok(problemService.getProblemByTitle(title, page));
     }
+
+    @GetMapping("/search/tag")
+    @Operation(summary = "문제 태그 조회", description = "문제의 태그로 문제 리스트를 반환한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = ProblemByTagsResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "조회 실패")
+    })
+    public ResponseEntity<ProblemByTagsResponse> getProblemByTag(@RequestParam("levels") String levels, @RequestParam("page") int page) {
+        return ResponseEntity.ok(problemService.getProblemByTag(levels, page));
+    }
+
 }
