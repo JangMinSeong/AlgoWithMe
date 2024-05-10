@@ -26,7 +26,6 @@ export function useWebSocket() {
       onConnect: () => {
         console.log('success')
         dispatch(setConnected(true))
-        subscribeToTopic(`/topic/notification/${groupId}`)
       },
       onStompError: (frame) => {
         console.error(
@@ -50,8 +49,10 @@ export function useWebSocket() {
   const subscribeToTopic = (topic: string) => {
     if (client && client.connected) {
       client.subscribe(topic, (message) => {
-        console.log("message receive")
+        console.log("message receive " + message.body.toString())
+        dispatch(addMessage(message.body.toString()))
       })
+      dispatch(subscribe(topic))
     } else {
       console.error('Attempted to sub while STOMP client is disconnected.')
     }
@@ -60,6 +61,7 @@ export function useWebSocket() {
   const unsubscribeFromTopic = (topic: string) => {
     if (client && client.connected) {
       client.unsubscribe(topic)
+      dispatch(unsubscribe())
     }
   }
 

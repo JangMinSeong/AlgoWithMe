@@ -5,6 +5,13 @@ import {RootState} from "@/lib/store.ts";
 import {setPageList} from "@/features/sidebar/sidebarSlice.ts";
 import fetch from '@/lib/fetch'
 
+interface Page {
+  pageId: number
+  title: string
+  docs: boolean
+  children: Page[]
+}
+
 const DeleteButton = (props: { pageId: number }) => {
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
   const dispatch = useDispatch();
@@ -24,16 +31,24 @@ const DeleteButton = (props: { pageId: number }) => {
     }
   }
 
-  function removePageById(pages, pageId) {
-    return pages.filter((page) => {
-      if (page.pageId === pageId) {
-        return false; // 페이지 제거
-      }
-      if (page.children.length > 0) {
-        page.children = removePageById(page.children, pageId); // 자식 페이지 재귀적 필터링
-      }
-      return true;
-    });
+  function removePageById(pages: Page[], pageId: number): Page[] {
+    return pages
+        .map((page) => {
+          // 모든 자식 페이지를 재귀적으로 처리
+          const updatedChildren = page.children.length > 0 ? removePageById(page.children, pageId) : [];
+
+          // 제거할 페이지가 아니면, 갱신된 자식 페이지를 포함하여 반환
+          if (page.pageId !== pageId) {
+            return {
+              ...page,
+              children: updatedChildren,
+            };
+          }
+
+          // 제거할 페이지를 찾으면, 해당 페이지를 필터링에서 제외
+          return null;
+        })
+        .filter(Boolean) as Page[];
   }
 
   const anchorTagCSS =

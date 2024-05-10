@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import CodeEditor from '@/components/editor/codespace/CodeSpace'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useSelector } from 'react-redux'
@@ -54,9 +54,6 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   const [codeIds , setCodeIds] = React.useState<number[]>([])
   const [firstCode, setFirstCode] = React.useState<PersonalCodeResponse>()
-  const [message, setMessage] = React.useState('')
-  const onConnect = useSelector((state: RootState) => state.socket.connected)
-  const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket() // 소켓 연결 시점(변경가능)
 
   const [resultBojAndPGList, setResultBojAndPGList] = React.useState<
     BojAndPGDetail[]
@@ -65,14 +62,40 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   const [saveInputText, setSaveInputText] = React.useState('')
 
-  const socketMessage: string = useSelector(
-    (state: RootState) => state.socket?.message || '',
-  )
+  const curUser = useSelector((state: RootState) => state.code.curUserId)
+  const myId = useSelector((state: RootState) => state.code.myId)
+  const [option ,setOption] = useState(false)
 
   useEffect(()=> {
-    const fetchData = async () => {
+    console.log(curUser + " " + myId)
+    if(curUser === myId) setOption(false)
+    else setOption(true)
+    const fetchMyData = async () => {
       try {
-        const response = await fetch(`/code/codeList?pageId=${pageId}`, {
+          const response = await fetch(`/code/codeList?pageId=${pageId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok')
+          }
+
+          const responseData = await response.json()
+          setCodeIds(responseData.codeIds)
+          setFirstCode(responseData.code)
+
+      } catch (error) {
+        setCodeIds([])
+        setFirstCode(null)
+        console.error('Failed to fetch data:', error)
+      }
+    }
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`/code/user?pageId=${pageId}&userId=${curUser}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -86,27 +109,18 @@ const RightComponent: React.FC<ProblemProp> = ({
         const responseData = await response.json()
         setCodeIds(responseData.codeIds)
         setFirstCode(responseData.code)
+
       } catch (error) {
         setCodeIds([])
         setFirstCode(null)
         console.error('Failed to fetch data:', error)
       }
     }
-
-    fetchData()
-  },[pageId])
-
-  useEffect(() => {
-    // TODO : 코드 에디터 id에 따라 구독 진행
-    if (onConnect) {
-      subscribeToTopic('/topic/message')
-      return () => unsubscribeFromTopic('/topic/message')
-    }
-  }, [onConnect])
-
-  useEffect(() => {
-    setMessage(socketMessage)
-  }, [socketMessage])
+    if(curUser === myId)
+      fetchMyData()
+    else
+      fetchUserData()
+  },[pageId,curUser])
 
   const handleInputRun = async () => {
     setIsLoading(true)
@@ -199,6 +213,7 @@ const RightComponent: React.FC<ProblemProp> = ({
           idList={codeIds}
           firstCode={firstCode}
           pageId={pageId}
+          option={option}
         />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">

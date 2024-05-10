@@ -67,7 +67,7 @@ public class TeamController {
     }
 
     @GetMapping("/invite/{teamId}")
-    public ResponseEntity<InviteUrlResponse> createInviteUrl(@PathVariable Long teamId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<InviteUrlResponse> createInviteUrl(@PathVariable("teamId") Long teamId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(teamService.createInviteUrl(teamId, user));
     }
 
