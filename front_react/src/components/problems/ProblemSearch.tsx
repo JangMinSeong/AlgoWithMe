@@ -1,7 +1,4 @@
 import { BiSearch } from 'react-icons/bi'
-import fetch from '@/lib/fetch'
-import { RootState } from '@/lib/store'
-import { useSelector } from 'react-redux'
 import useSearch from '@/hooks/useSearch'
 
 const ProblemSearch = () => {

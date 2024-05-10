@@ -102,9 +102,9 @@ const AddProblemModal = ({
         {/* 위쪽 */}
         <h2 className="text-lg font-bold mb-4">문제 검색하기</h2>
 
-        <div className="flex ">
+        <div className="flex justify-around">
           {/* 왼쪽 */}
-          <div className="w-[50%] mr-6">
+          <div className="w-[46%] h-[90%] overflow-y-scroll">
             <div className="font-bold mb-2">제목으로 검색하기</div>
             <ProblemSearch />
             <div className="w-full">
@@ -114,7 +114,7 @@ const AddProblemModal = ({
             </div>
           </div>
           {/* 오른쪽 */}
-          <div className="w-[50%]">
+          <div className="w-[46%]">
             <ViewProblems setParentChosenProblem={setChosenProblem} />
           </div>
         </div>

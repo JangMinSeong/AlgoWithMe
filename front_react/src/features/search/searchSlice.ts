@@ -7,7 +7,7 @@ interface ISearchState {
   problemInfoList: Array<IProblemInfo>
 }
 
-interface IProblemInfo {
+export interface IProblemInfo {
   problemId: number
   provider: string
   number: number
