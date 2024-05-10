@@ -13,5 +13,5 @@ public interface PageRepository extends JpaRepository<Page, Long> {
     int countByTeamIdAndParentIsNull(Long teamId);
 
     // 팀 내 페이지 조회 (parentId: 오름차순, orders: 오름차순)
-    List<Page> findByTeamIdOrderByParentIdAscOrdersAsc(Long teamId);
+    List<Page> findByTeamIdAndDeletedOrderByParentIdAscOrdersAsc(Long teamId, boolean deleted);
 }

@@ -22,7 +22,6 @@ import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
-import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,7 +47,7 @@ public class PageService {
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
         // 팀 내 페이지 조회
-        List<Page> pages = pageRepository.findByTeamIdOrderByParentIdAscOrdersAsc(teamId);
+        List<Page> pages = pageRepository.findByTeamIdAndDeletedOrderByParentIdAscOrdersAsc(teamId, false);
 
         HashMap<Long, PageInfo> pageInfoMap = new HashMap<>();
         List<PageInfo> result = new ArrayList<>();
