@@ -9,15 +9,28 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - JASYPT_KEY=${JASYPT_KEY}
+    networks:
+      - algo-net
   front:
     build:
       context: ./front
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+    networks:
+      - algo-net
   execute:
     build:
       context: ./execute
       dockerfile: Dockerfile
     ports:
       - "8082:8082"
+    networks:
+      - algo-net
+
+networks:
+  algo-net:
+    driver: bridge
