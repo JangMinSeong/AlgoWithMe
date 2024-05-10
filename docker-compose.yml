@@ -1,4 +1,9 @@
 version: '3.8'
+
+networks:
+  algo-net:
+    driver: bridge
+
 services:
   backend:
     build:
@@ -30,7 +35,3 @@ services:
       - "8082:8082"
     networks:
       - algo-net
-
-networks:
-  algo-net:
-    driver: bridge
