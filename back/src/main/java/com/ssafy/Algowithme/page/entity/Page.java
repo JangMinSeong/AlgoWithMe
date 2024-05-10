@@ -6,6 +6,7 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.team.entity.Team;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -34,6 +35,9 @@ public class Page extends BaseTime {
     private String content;
 
     private Double orders;
+
+    @ColumnDefault(value = "false")
+    private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

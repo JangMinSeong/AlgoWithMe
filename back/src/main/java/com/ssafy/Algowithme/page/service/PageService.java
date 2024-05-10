@@ -214,7 +214,26 @@ public class PageService {
     public void deletePage(User user, Long pageId) {
         //TODO : user의 page에 대한 권한 확인
 
-        pageRepository.deleteById(pageId);
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        page.setDeleted(true);
+
+        List<Page> deletedPage = new ArrayList<>();
+        deletedPage.add(page);
+
+        Queue<Page> pageQueue = new ArrayDeque<>(page.getChild());
+
+        while(!pageQueue.isEmpty()){
+            Page dPage = pageQueue.poll();
+
+            dPage.setDeleted(true);
+            deletedPage.add(dPage);
+
+            pageQueue.addAll(dPage.getChild());
+        }
+
+        pageRepository.saveAll(deletedPage);
     }
 
     @Transactional

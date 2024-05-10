@@ -34,7 +34,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .from(team)
                 .innerJoin(page).on(team.id.eq(page.team.id))
                 .innerJoin(workspaceTag).on(page.id.eq(workspaceTag.workspace.id))
-                .where(team.id.eq(teamId))
+                .where(team.id.eq(teamId), page.deleted.eq(false))
                 .groupBy(workspaceTag.tag)
                 .having(workspaceTag.tag.isNotNull())
                 .fetch();
@@ -62,7 +62,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .from(team)
                 .innerJoin(page).on(team.id.eq(page.team.id))
                 .innerJoin(problem).on(problem.id.eq(page.problem.id))
-                .where(team.id.eq(teamId))
+                .where(team.id.eq(teamId), page.deleted.eq(false))
                 .orderBy(page.updatedAt.desc())
                 .limit(3)
                 .fetch();

@@ -34,7 +34,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
                 .innerJoin(page).on(team.id.eq(page.team.id))
                 .innerJoin(workspaceTag).on(page.id.eq(workspaceTag.workspace.id))
-                .where(user.id.eq(userId))
+                .where(user.id.eq(userId), page.deleted.eq(false))
                 .groupBy(workspaceTag.tag)
                 .having(workspaceTag.tag.isNotNull())
                 .fetch();
@@ -117,7 +117,7 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
                 .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))
                 .innerJoin(page).on(team.id.eq(page.team.id))
-                .where(user.id.eq(userId), page.title.contains(word))
+                .where(user.id.eq(userId), page.title.contains(word), page.deleted.eq(false))
                 .fetch();
     }
 }
