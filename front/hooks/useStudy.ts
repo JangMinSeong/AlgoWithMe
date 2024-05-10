@@ -5,7 +5,7 @@ import fetch from '@/lib/fetch'
 const useStudy = () => {
   const dispatch = useDispatch()
 
-  const handleViewStudyInfo = async (teamId: number) => {
+  const handleFetchStudyInfo = async (teamId: number) => {
     await fetch(`/study/${teamId}`, {
       method: 'GET',
       credentials: 'include',
@@ -20,7 +20,7 @@ const useStudy = () => {
       })
   }
 
-  return { handleViewStudyInfo }
+  return { handleFetchStudyInfo }
 }
 
 export default useStudy

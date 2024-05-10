@@ -23,10 +23,10 @@ const InvitationPage = ({
       .catch((err) => console.error(err))
   }
 
-  const { handleViewStudyInfo } = useStudy(params.teamId)
+  const { handleFetchStudyInfo } = useStudy(params.teamId)
 
   useEffect(() => {
-    handleViewStudyInfo()
+    handleFetchStudyInfo()
   })
 
   const studyInfo = useSelector((state: RootState) => state.study)
