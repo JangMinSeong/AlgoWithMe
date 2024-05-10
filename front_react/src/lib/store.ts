@@ -13,6 +13,7 @@ import levelReducer from '@/features/levels/levelSlice'
 import studyReducer from '@/features/study/studySlice'
 import userReducer from '@/features/user/userSlice'
 import searchReducer from '@/features/search/searchSlice'
+import codeReducer from '@/features/code/codeSlice'
 
 const authPersistConfig = {
   key: 'auth',
@@ -37,6 +38,7 @@ export const makeStore = () => {
       study: studyReducer,
       userInfo: userReducer,
       search: searchReducer,
+      code: codeReducer,
     },
   })
 

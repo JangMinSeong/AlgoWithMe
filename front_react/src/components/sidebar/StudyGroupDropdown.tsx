@@ -5,7 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 
-const StudyGroupDropdown = () => {
+interface Study {
+  id: number
+  name: string
+  imageUrl: string
+}
+
+const StudyGroupDropdown = (props: { studyList : Study[] }) => {
   const navigate = useNavigate()
   const { handleFetchStudyInfo } = useStudy()
 
@@ -24,7 +30,7 @@ const StudyGroupDropdown = () => {
   return (
     <div className="flex flex-col w-48 text-sm border-b-2">
       <div>
-        {studyGroupList.map((el) => (
+        {props.studyList.map((el) => (
           <div
             onClick={() => handleGoStudyMain(el.id)}
             className={dropdownItemCSS}

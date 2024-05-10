@@ -34,7 +34,9 @@ const InvitationPage = () => {
   const handleJoinGroup = async () => {
     await fetch(`/study/member?encrypted=${code}`, {
       method: 'GET',
-      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     })
       .then(() => navigate(`/${groupId}/study`))
       .catch((err) => console.error(err))

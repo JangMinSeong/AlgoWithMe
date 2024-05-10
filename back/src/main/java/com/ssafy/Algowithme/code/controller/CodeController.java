@@ -25,7 +25,7 @@ public class CodeController {
     }
 
     @DeleteMapping("/{codeId}")
-    public ResponseEntity<String> deletePersonalCode(@PathVariable Long codeId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<String> deletePersonalCode(@PathVariable("codeId") Long codeId, @AuthenticationPrincipal User user) {
         codeService.deletePersonalCode(codeId, user);
         return ResponseEntity.ok("Success");
     }
