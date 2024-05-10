@@ -89,7 +89,6 @@ const AddProblemModal = ({
     handleCloseModal()
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
-  // 여기서 문제를 선택하면, 선택한 문제의 Id를 가져온다.
 
   return (
     <div
