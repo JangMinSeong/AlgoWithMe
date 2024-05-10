@@ -5,6 +5,8 @@ interface ISearchState {
   page: number
   totalPages: number
   problemInfoList: Array<IProblemInfo>
+  isLevel: boolean
+  searchTitle: string
 }
 
 export interface IProblemInfo {
@@ -30,6 +32,8 @@ const initialState: ISearchState = {
       url: '',
     },
   ],
+  isLevel: false,
+  searchTitle: '',
 }
 
 const searchSlice = createSlice({
@@ -45,6 +49,12 @@ const searchSlice = createSlice({
       state.totalPages = action.payload.totalPages
       state.problemInfoList = [...action.payload.problemInfoList]
     },
+    setIsLevel: (state: ISearchState, action: PayloadAction<boolean>) => {
+      state.isLevel = action.payload
+    },
+    setSearchTitle: (state: ISearchState, action: PayloadAction<string>) => {
+      state.searchTitle = action.payload
+    },
     // setNextPageSearchResult: (
     //   // to prefetch
     //   state: ISearchState,
@@ -56,5 +66,6 @@ const searchSlice = createSlice({
   },
 })
 
-export const { setInitialPageSearchResult } = searchSlice.actions
+export const { setInitialPageSearchResult, setIsLevel, setSearchTitle } =
+  searchSlice.actions
 export default searchSlice.reducer

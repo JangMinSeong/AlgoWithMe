@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { IProblemInfo } from '@/features/search/searchSlice'
+import Paginator from './Paginator'
 
 const ViewProblems = ({ setParentChosenProblem }) => {
   const [chosenProblem, setChosenProblem] = useState<IProblemInfo>()
@@ -177,6 +178,7 @@ const ViewProblems = ({ setParentChosenProblem }) => {
             ))}
         </div>
         {/* 검색결과조회끝 */}
+        <Paginator />
       </div>
     </div>
   )

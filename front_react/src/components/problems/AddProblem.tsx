@@ -1,14 +1,11 @@
 import { MdAddCircleOutline } from 'react-icons/md'
 import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
-import useProblems from '@/hooks/useProblems'
 
 const AddProblem = ({ groupId }: { groupId: string }) => {
   const [showModal, setShowModal] = useState(false)
-  const { viewAllProblems } = useProblems()
 
   const handleModal = () => {
-    viewAllProblems()
     document.body.style.overflow = 'hidden'
     setShowModal(true)
   }
