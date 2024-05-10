@@ -6,7 +6,7 @@ RUN apk add --no-cache libc6-compat
 FROM deps AS build
 WORKDIR /app
 
-COPY package.json  package-lock.json ./
+COPY package.json  package-lock.json .npmrc .env.local ./
 
 RUN npm ci
 
