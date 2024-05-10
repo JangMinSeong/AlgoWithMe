@@ -73,7 +73,7 @@ public class SecurityConfig {
 
         configuration.setAllowedOrigins(List.of(
                 "http://localhost:8080", "http://localhost:8081", "http://localhost:3000", "http://localhost:3001",
-                "https://localhost:8080", "https://localhost:8081", "https://localhost:3000", "https://localhost:3001",
+                "https://localhost:8080", "https://localhost:8081", "https://localhost:3000", "https://localhost:3001", "https://192.168.100.210:3001",
                 "https://k10d205.p.ssafy.io"
         ));
 

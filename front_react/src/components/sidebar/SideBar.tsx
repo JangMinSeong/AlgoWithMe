@@ -5,16 +5,24 @@ import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 import fetch from '@/lib/fetch'
 import useSidebar from '@/hooks/useSidebar.ts'
-import { useEffect } from 'react'
+import {useEffect, useState} from 'react'
 import useStudy from '@/hooks/useStudy'
 import { useNavigate } from 'react-router-dom'
 import {useWebSocket} from "@/hooks/useWebSocket.ts";
+
+interface Study {
+  id: number
+  name: string
+  imageUrl: string
+}
 
 
 const SideBar = ({ groupId }: { groupId: number }) => {
   const navigate = useNavigate()
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [studyList, setStudyList] = useState<Study[]>([])
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
 
@@ -23,8 +31,24 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
-    connectToServer()
-  }, [])
+    connectToServer(groupId)
+  }, [user])
+
+  useEffect(() => {
+    const fetchStudyList = async () => {
+      const response = await fetch(`/user/study`, {
+        method: 'GET',
+        headers: {
+          'content-Type' : 'application/json'
+        },
+      })
+      if(response.ok) {
+        const responseData = await response.json()
+        setStudyList(responseData)
+      }
+    }
+    fetchStudyList()
+  },[user])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,12 +86,13 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     <div>
       {isOpen && (
         <div
-          className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500`}
+          className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500"`}
         >
-          <StudyGroupNavigator groupId={groupId} />
+          <StudyGroupNavigator groupId={groupId} studyList={studyList}/>
           <div onClick={handleGoStudyMain} className={menuItemWrapper}>
             스터디 메인 페이지
           </div>
+          <div className={'overflow-auto'}>
           {pageList.map((el) => (
             <div>
               <InStudyPageItem
@@ -78,6 +103,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
               />
             </div>
           ))}
+          </div>
         </div>
       )}
     </div>

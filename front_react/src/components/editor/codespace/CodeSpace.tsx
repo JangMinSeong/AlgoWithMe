@@ -17,6 +17,9 @@ import 'ace-builds/src-noconflict/ext-code_lens'
 import debounce from 'lodash.debounce'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from "@/lib/fetch.ts";
+import {useSelector} from "react-redux";
+import {RootState} from "@/lib/store.ts";
+import {unsubscribe} from "@/features/socket/webSocketSlic.ts";
 
 interface CodeExample {
   mode: string
@@ -33,8 +36,8 @@ interface PersonalCodeResponse {
     code:string
 }
 
-const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number}> =
-  forwardRef(({ provider, editCodes,firstCode, idList, pageId }, ref) => {
+const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number; option:boolean}> =
+  forwardRef(({ provider, editCodes,firstCode, idList, pageId,option }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
 
@@ -115,15 +118,30 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
     const [activeTab, setActiveTab] = useState<number>(1)
     const [showMoreTabs, setShowMoreTabs] = useState(false)
 
+    const curTopic = useSelector((state: RootState) => state.socket.subscription)
+    const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
+    const socketCode = useSelector((state: RootState) => state.socket.message)
+    useEffect(() => {
+        if(curTopic)
+            unsubscribeFromTopic(curTopic)
+        if(option)
+            subscribeToTopic(`/topic/${activeTab}`)
+    },[activeTab])
+
     const { sendMessage } = useWebSocket()
 
     useEffect(() => {
       if (idList.length !== 0) {
+          console.log(idList)
         setTabs(idList)
         setActiveTab(firstCode.id)
         setLanguage(firstCode.language)
-        setCode(firstCode.code)
+          if(firstCode.code)
+              setCode(firstCode.code)
+          else
+              setCode(languageOptions[firstCode.language].value)
       } else if(tabs.length !== 0) {
+          console.log("testetsettsetset")
           const createInitCode = async () => {
               const response = await fetch(`/code/${pageId}`, {
                   method: 'POST',
@@ -143,7 +161,8 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setCode(languageOptions.C.value)
           })
       }
-    }, [])
+    }, [pageId,idList])
+
 
     const addTab = async () => {
       const response = await fetch(`/code/${pageId}`, {
@@ -171,7 +190,10 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
         })
         const responseData = await response.json()
         setLanguage(responseData.language)
-        setCode(responseData.code)
+        if(responseData.code)
+            setCode(responseData.code)
+        else
+            setCode(languageOptions[responseData.language].value)
 
         setShowMoreTabs(false)
     }
@@ -205,9 +227,9 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
         })
 
       if (tabs.length > 0) {
-        setActiveTab(tabs[0])
-        setLanguage(firstCode.language)
-        setCode(firstCode.code)
+          const filteredTabs = tabs.filter((tab) => tab !== activeTab);
+          setTabs(filteredTabs);
+          handleTabChange(filteredTabs[0])
       }
     }
 
@@ -220,7 +242,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     const handleCodeChange = debounce((newCode: string) => {
       console.log('Code changed:', newCode)
-      sendMessage('/app/message', newCode)
+      sendMessage(`/app/code/${activeTab}`, newCode)
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
@@ -264,14 +286,18 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
                 ))}
               </div>
             )}
-            <button
-              onClick={addTab}
-              className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-            >
-              +
-            </button>
+              {!option && (
+                <button
+                  onClick={addTab}
+                  className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                >
+                  +
+                </button>
+              )}
           </div>
           <div>
+              {!option && (
+                  <>
             <button
               onClick={deleteCode}
               className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
@@ -298,6 +324,8 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
                 </option>
               ))}
             </select>
+            </>
+            )}
           </div>
         </div>
         <div className="border border-gray-300 w-full h-full">
@@ -305,7 +333,8 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             ref={aceRef}
             mode={languageOptions[language].mode}
             name="UNIQUE_ID_OF_DIV"
-            value={code}
+            value={!option ? code : socketCode}
+            readOnly={option}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
             setOptions={{

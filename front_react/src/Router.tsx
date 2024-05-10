@@ -28,33 +28,15 @@ const router = createBrowserRouter([
           { path: 'study', element: <Study /> },
         ],
       },
-    ],
-  },
-  {
-    path: '/main',
-    element: <Main />,
-  },
-  {
-    path: '/loading',
-    element: <Loading />,
-  },
-  {
-    path: ':groupId',
-    element: <StudyLayout />,
-    children: [
       {
-        path: 'editor/:pageId',
-        element: <Editor />,
+        path: 'invitation/:groupId',
+        element: <Invitation />,
       },
     ],
   },
   {
-    path: '/:groupId/study',
-    element: <Study />,
-  },
-  {
-    path: '/invitation/:groupId',
-    element: <Invitation />,
+    path: '/loading',
+    element: <Loading />,
   },
 ])
 

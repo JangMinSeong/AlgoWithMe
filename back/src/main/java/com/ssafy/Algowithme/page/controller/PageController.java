@@ -120,7 +120,7 @@ public class PageController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> deletePage(@AuthenticationPrincipal User user,
-                                           @PathVariable Long pageId) {
+                                           @PathVariable("pageId") Long pageId) {
         pageService.deletePage(user, pageId);
         return ResponseEntity.ok().build();
     }
