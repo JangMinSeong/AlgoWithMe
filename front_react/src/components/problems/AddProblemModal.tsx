@@ -11,6 +11,8 @@ import fetch from '@/lib/fetch.ts'
 import { useNavigate } from 'react-router-dom'
 import useModal from '@/hooks/useModal.ts'
 import useSidebar from '@/hooks/useSidebar.ts'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
 
 interface Page {
   pageId: number
