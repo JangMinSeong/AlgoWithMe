@@ -7,6 +7,7 @@ import {
   deleteCandidateProblem,
 } from '@/features/study/studySlice'
 import fetch from '@/lib/fetch'
+import toast from 'react-hot-toast'
 
 const useStudy = () => {
   const dispatch = useDispatch()
@@ -38,8 +39,14 @@ const useStudy = () => {
       credentials: 'include',
     })
       .then((res) => res.json())
-      .then((json) => dispatch(addCandidateProblems(json)))
-      .catch((err) => console.error(err))
+      .then((json) => {
+        toast.success('문제가 추가되었어요')
+        dispatch(addCandidateProblems(json))
+      })
+      .catch((err) => {
+        toast.error('이미 추가된 문제예요')
+        console.error(err)
+      })
   }
 
   const handleDeleteCandidateProblem = async (candidateId: number) => {
@@ -70,18 +77,19 @@ const useStudy = () => {
   }
 
   const handleEditName = async (teamId: number, name: string) => {
-    await fetch(`/study/name/${teamId}}`, {
+    await fetch(`/study/name/${teamId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(name),
       credentials: 'include',
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json)
-        dispatch(editName(name)) // 이거 다시 확인해야함
+      .then(() => {
+        dispatch(editName(name))
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.log(teamId)
+        console.error(err)
+      })
   }
 
   return {

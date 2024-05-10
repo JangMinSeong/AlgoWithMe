@@ -7,6 +7,7 @@ import fetch from '@/lib/fetch'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import useSidebar from '@/hooks/useSidebar'
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate()
@@ -14,6 +15,8 @@ const MainPage: React.FC = () => {
   const [chartData, setChartData] = React.useState([])
   const [problemData, setProblemData] = React.useState([])
   const [studyData, setStudyData] = React.useState([])
+
+  const { setStudys } = useSidebar()
 
   useEffect(() => {
     if (user) {
@@ -32,6 +35,7 @@ const MainPage: React.FC = () => {
             setChartData(data.chart)
             setProblemData(data.problems)
             setStudyData(data.teams)
+            setStudys(data.teams)
           } else {
             throw new Error('Network response was not ok.')
           }

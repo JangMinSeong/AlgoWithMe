@@ -1,8 +1,13 @@
+import { RootState } from '@/lib/store'
+import { useSelector } from 'react-redux'
+
 const Avatar = () => {
+  const userImage = useSelector((state: RootState) => state.auth.user.imageUrl)
+
   return (
     <div>
       <img
-        src="/bojlogo.png"
+        src={userImage}
         alt="프로필"
         width={30}
         height={0}

@@ -68,6 +68,7 @@ const Timer = () => {
     if (confirm('풀이를 종료하시겠어요?')) {
       clearInterval(timerId.current)
       handleEndSolving()
+      handleChangeTimer({ hour: 0, min: 0, sec: 0 })
     }
   }
 
