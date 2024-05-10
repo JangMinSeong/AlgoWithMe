@@ -12,6 +12,8 @@ import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
 import studyReducer from '@/features/study/studySlice'
 import userReducer from '@/features/user/userSlice'
+import searchReducer from '@/features/search/searchSlice'
+
 const authPersistConfig = {
   key: 'auth',
   storage: storage,
@@ -34,6 +36,7 @@ export const makeStore = () => {
       levels: levelReducer,
       study: studyReducer,
       userInfo: userReducer,
+      search: searchReducer,
     },
   })
 
