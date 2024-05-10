@@ -20,7 +20,7 @@ public class CodeController {
     private final CodeService codeService;
 
     @PostMapping("/{pageId}")
-    public ResponseEntity<Long> createPersonalCode(@PathVariable Long pageId, @AuthenticationPrincipal User user) {
+    public ResponseEntity<Long> createPersonalCode(@PathVariable("pageId") Long pageId, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(codeService.createPersonalCode(pageId, user));
     }
 
@@ -43,12 +43,17 @@ public class CodeController {
     }
 
     @GetMapping("/{codeId}")
-    public ResponseEntity<PersonalCodeResponse> getPersonalCode(@PathVariable Long codeId) {
+    public ResponseEntity<PersonalCodeResponse> getPersonalCode(@PathVariable("codeId") Long codeId) {
         return ResponseEntity.ok(codeService.getPersonalCode(codeId));
     }
 
+    @GetMapping("/codeList")
+    public ResponseEntity<CodeByPageAndUserResponse> getCodeByPage(@RequestParam("pageId") Long pageId, @AuthenticationPrincipal User user) {
+        return ResponseEntity.ok(codeService.getCodeByPage(pageId, user));
+    }
+
     @GetMapping("/user")
-    public ResponseEntity<CodeByPageAndUserResponse> getPersonalCodeByPageAndUser(@RequestParam Long pageId, @RequestParam Integer userId) {
+    public ResponseEntity<CodeByPageAndUserResponse> getPersonalCodeByPageAndUser(@RequestParam("pageId") Long pageId, @RequestParam("userId") Integer userId) {
         return ResponseEntity.ok(codeService.getPersonalCodeByPageAndUser(pageId, userId));
     }
 

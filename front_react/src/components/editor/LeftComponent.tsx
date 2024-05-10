@@ -4,7 +4,7 @@ import WorkSpace from '@/components/editor/workspace/Workspace'
 import LeftHeader from '@/components/editor/LeftHeader'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
-import { useEditor } from '@tiptap/react'
+import {Editor, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TaskList from '@tiptap/extension-task-list'
@@ -90,7 +90,7 @@ const getInitialUser = (nickname: string | null): User => ({
   color: getRandomColor(),
 })
 
-const appId = import.meta.env.NEXT_PUBLIC_TIPTAP_ID as string
+const appId = import.meta.env.VITE_TIPTAP_ID as string
 
 const LeftComponent: React.FC<ProblemProp> = ({
                                                 url,
@@ -99,17 +99,13 @@ const LeftComponent: React.FC<ProblemProp> = ({
                                                 testCases,
                                                 nickname,
                                               }) => {
-  const [currentUser, setCurrentUser] = useState(getInitialUser(nickname))
-  const [activeTab, setActiveTab] = useState<
-      '문제보기' | '개인 메모장' | '워크스페이스'
-  >('문제보기')
+  const [memoId, setMemoId] = useState<string | undefined>(undefined);
+  const [currentUser] = useState(getInitialUser(nickname));
+  const [activeTab, setActiveTab] = useState<'문제보기' | '개인 메모장' | '워크스페이스'>('문제보기');
+  const [editorGroup, setEditorGroup] = useState<any>(null);
 
-  const ydocGroup = new Y.Doc()
-  const websocketProviderGroup = new TiptapCollabProvider({
-    appId,
-    name: room,
-    document: ydocGroup,
-  })
+  const [ydocGroup,setYdocGroup] = useState(new Y.Doc());
+  const [websocketProviderGroup, setWebsocketProviderGroup] = useState<TiptapCollabProvider | null>(null);
 
   const editorUser = useEditor({
     extensions: [
@@ -117,9 +113,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
       Highlight,
       TaskList,
       TaskItem,
-      Table.configure({
-        resizable: true,
-      }),
+      Table.configure({ resizable: true }),
       TableRow,
       TableCell,
       TableHeader,
@@ -139,53 +133,14 @@ const LeftComponent: React.FC<ProblemProp> = ({
         includeChildren: true,
         placeholder: ({ node }) => {
           if (node.type.name === 'detailsSummary') {
-            return '제목'
+            return '제목';
           }
-          return null
+          return null;
         },
       }),
       CharacterCount.configure({ limit: 10000 }),
     ],
-  })
-
-  const editorGroup = useEditor({
-    extensions: [
-      StarterKit.configure({ history: false }),
-      Highlight,
-      TaskList,
-      TaskItem,
-      Table.configure({
-        resizable: true,
-      }),
-      TableRow,
-      TableCell,
-      TableHeader,
-      Image,
-      Color,
-      TextStyle,
-      FontSize,
-      Details.configure({
-        persist: true,
-        HTMLAttributes: {
-          class: 'details',
-        },
-      }),
-      DetailsSummary,
-      DetailsContent,
-      Placeholder.configure({
-        includeChildren: true,
-        placeholder: ({ node }) => {
-          if (node.type.name === 'detailsSummary') {
-            return '제목'
-          }
-          return null
-        },
-      }),
-      CharacterCount.configure({ limit: 10000 }),
-      Collaboration.configure({ document: ydocGroup }),
-      CollaborationCursor.configure({ provider: websocketProviderGroup }),
-    ],
-  })
+  });
 
   const renderContent = () => {
     switch (activeTab) {
@@ -201,46 +156,109 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   useEffect(() => {
-    console.log(nickname)
     if (editorGroup) {
-      editorGroup.chain().focus().updateUser(currentUser).run()
+      editorGroup.chain().focus().updateUser(currentUser).run();
     }
-  }, [editorGroup, currentUser])
+  }, [editorGroup, currentUser]);
+
+  // 방이 바뀔 때마다 WebSocket을 재연결하기 위한 useEffect
+  useEffect(() => {
+    if(ydocGroup) ydocGroup.destroy()
+    const newYdoc = new Y.Doc()
+    const provider = new TiptapCollabProvider({
+      appId,
+      name: room,
+      document: newYdoc,
+    });
+    setWebsocketProviderGroup(provider);
+    setYdocGroup(newYdoc)
+    return () => provider.destroy(); // 이전 provider를 정리
+  }, [room]);
+
+  // Collaboration 및 CollaborationCursor 확장 기능에 새로운 provider 설정
+  useEffect(() => {
+    if (websocketProviderGroup && ydocGroup) {
+      const newEditorGroup = new Editor({
+        extensions: [
+          StarterKit.configure({ history: false }),
+          Highlight,
+          TaskList,
+          TaskItem,
+          Table.configure({ resizable: true }),
+          TableRow,
+          TableCell,
+          TableHeader,
+          Image,
+          Color,
+          TextStyle,
+          FontSize,
+          Details.configure({
+            persist: true,
+            HTMLAttributes: {
+              class: 'details',
+            },
+          }),
+          DetailsSummary,
+          DetailsContent,
+          Placeholder.configure({
+            includeChildren: true,
+            placeholder: ({ node }) => {
+              if (node.type.name === 'detailsSummary') {
+                return '제목';
+              }
+              return null;
+            },
+          }),
+          CharacterCount.configure({ limit: 10000 }),
+          Collaboration.configure({ document: ydocGroup }),
+          CollaborationCursor.configure({ provider: websocketProviderGroup }),
+        ],
+      });
+
+      setEditorGroup(newEditorGroup);
+    }
+  }, [websocketProviderGroup, ydocGroup]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`/memo/${room}`, {
+        const response = await fetch(`/page/memo/${room}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-        })
+        });
 
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          throw new Error('Network response was not ok');
         }
 
-        const responseData = await response.json()
+        const responseData = await response.json();
+        setMemoId(responseData.memoId);
 
         if (responseData.memo && editorUser) {
-          const doc = JSON.parse(responseData.memo)
-          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+          const doc = JSON.parse(responseData.memo);
+          editorUser.commands.setContent(doc, false); // 에디터에 저장된 내용을 로드
+        }
+        else{
+          editorUser.commands.setContent("",false);
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error)
+        console.error('Failed to fetch data:', error);
       }
-    }
-    fetchData()
-  }, [editorUser])
+    };
 
+    if (editorUser) {
+      fetchData();
+    }
+  }, [room, editorUser])
   const handleSave = async () => {
     if (editorUser) {
       const dataToSave = {
-        userWorkspaceId: room,
-        content: editorUser.getJSON(),
+        userWorkspaceId: memoId,
+        content: JSON.stringify(editorUser.getJSON()),
       }
-      const response = await fetch(`/memo`, {
+      const response = await fetch(`/page/memo`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

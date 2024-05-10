@@ -86,7 +86,8 @@ public class UserCustomRepositoryImpl implements UserCustomRepository {
         return jpaQueryFactory
                 .select(Projections.bean(TeamListDto.class,
                         team.id,
-                        team.name))
+                        team.name,
+                        team.imageUrl))
                 .from(user)
                 .innerJoin(userTeam).on(user.id.eq(userTeam.user.id))
                 .innerJoin(team).on(team.id.eq(userTeam.team.id))

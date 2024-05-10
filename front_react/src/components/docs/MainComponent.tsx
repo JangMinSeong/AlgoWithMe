@@ -1,11 +1,9 @@
-'use client'
-
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import WorkSpace from '@/components/editor/workspace/Workspace'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
-import { useEditor } from '@tiptap/react'
+import {Editor, useEditor} from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TaskList from '@tiptap/extension-task-list'
@@ -28,10 +26,11 @@ import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import Header from '@/components/docs/Header'
+import fetch from '@/lib/fetch'
 
 interface DocProp {
   room: string
-  pageId: number
+  groupId: number
 }
 
 const colors = [
@@ -88,19 +87,15 @@ const getInitialUser = (nickname: string | null): User => ({
 
 const appId = import.meta.env.VITE_TIPTAP_ID as string
 
-const MainComponent: React.FC<DocProp> = ({ room, pageId }) => {
-  const user = useSelector((state: RootState) => state.auth.user)
-  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
-  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>(
-    '개인 메모장',
-  )
+const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [memoId, setMemoId] = useState<string | undefined>(undefined);
+  const [currentUser, setCurrentUser] = useState(getInitialUser(null));
+  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>('개인 메모장');
+  const [editorGroup, setEditorGroup] = useState<any>(null);
 
-  const ydocGroup = new Y.Doc()
-  const websocketProviderGroup = new TiptapCollabProvider({
-    appId,
-    name: room,
-    document: ydocGroup,
-  })
+  const [ydocGroup,setYdocGroup] = useState(new Y.Doc());
+  const [websocketProviderGroup, setWebsocketProviderGroup] = useState<TiptapCollabProvider | null>(null);
 
   const editorUser = useEditor({
     extensions: [
@@ -108,9 +103,7 @@ const MainComponent: React.FC<DocProp> = ({ room, pageId }) => {
       Highlight,
       TaskList,
       TaskItem,
-      Table.configure({
-        resizable: true,
-      }),
+      Table.configure({ resizable: true }),
       TableRow,
       TableCell,
       TableHeader,
@@ -130,89 +123,145 @@ const MainComponent: React.FC<DocProp> = ({ room, pageId }) => {
         includeChildren: true,
         placeholder: ({ node }) => {
           if (node.type.name === 'detailsSummary') {
-            return '제목'
+            return '제목';
           }
-          return null
+          return null;
         },
       }),
       CharacterCount.configure({ limit: 10000 }),
     ],
-  })
-
-  const editorGroup = useEditor({
-    extensions: [
-      StarterKit.configure({ history: false }),
-      Highlight,
-      TaskList,
-      TaskItem,
-      Table.configure({
-        resizable: true,
-      }),
-      TableRow,
-      TableCell,
-      TableHeader,
-      Image,
-      Color,
-      TextStyle,
-      FontSize,
-      Details.configure({
-        persist: true,
-        HTMLAttributes: {
-          class: 'details',
-        },
-      }),
-      DetailsSummary,
-      DetailsContent,
-      Placeholder.configure({
-        includeChildren: true,
-        placeholder: ({ node }) => {
-          if (node.type.name === 'detailsSummary') {
-            return '제목'
-          }
-          return null
-        },
-      }),
-      CharacterCount.configure({ limit: 10000 }),
-      Collaboration.configure({ document: ydocGroup }),
-      CollaborationCursor.configure({ provider: websocketProviderGroup }),
-    ],
-  })
+  });
 
   const renderContent = () => {
     switch (activeTab) {
       case '개인 메모장':
-        return <WorkSpace editor={editorUser} />
+        return <WorkSpace editor={editorUser} />;
       case '워크스페이스':
-        return <WorkSpace editor={editorGroup} />
+        return <WorkSpace editor={editorGroup} />;
       default:
-        return '개인 메모장'
+        return '개인 메모장';
     }
-  }
+  };
 
   useEffect(() => {
-    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
-    console.log(currentUser)
-  }, [user])
+    setCurrentUser(getInitialUser(user !== null ? user.nickname : null));
+  }, [user]);
 
   useEffect(() => {
-    console.log(user)
     if (editorGroup) {
-      editorGroup.chain().focus().updateUser(currentUser).run()
+      editorGroup.chain().focus().updateUser(currentUser).run();
     }
-  }, [editorGroup, currentUser])
+  }, [editorGroup, currentUser]);
+
+  // 방이 바뀔 때마다 WebSocket을 재연결하기 위한 useEffect
+  useEffect(() => {
+    if(ydocGroup) ydocGroup.destroy()
+    const newYdoc = new Y.Doc()
+    const provider = new TiptapCollabProvider({
+      appId,
+      name: room,
+      document: newYdoc,
+    });
+    setWebsocketProviderGroup(provider);
+    setYdocGroup(newYdoc)
+    return () => provider.destroy(); // 이전 provider를 정리
+  }, [room]);
+
+  // Collaboration 및 CollaborationCursor 확장 기능에 새로운 provider 설정
+  useEffect(() => {
+    if (websocketProviderGroup && ydocGroup) {
+      const newEditorGroup = new Editor({
+        extensions: [
+          StarterKit.configure({ history: false }),
+          Highlight,
+          TaskList,
+          TaskItem,
+          Table.configure({ resizable: true }),
+          TableRow,
+          TableCell,
+          TableHeader,
+          Image,
+          Color,
+          TextStyle,
+          FontSize,
+          Details.configure({
+            persist: true,
+            HTMLAttributes: {
+              class: 'details',
+            },
+          }),
+          DetailsSummary,
+          DetailsContent,
+          Placeholder.configure({
+            includeChildren: true,
+            placeholder: ({ node }) => {
+              if (node.type.name === 'detailsSummary') {
+                return '제목';
+              }
+              return null;
+            },
+          }),
+          CharacterCount.configure({ limit: 10000 }),
+          Collaboration.configure({ document: ydocGroup }),
+          CollaborationCursor.configure({ provider: websocketProviderGroup }),
+        ],
+      });
+
+      setEditorGroup(newEditorGroup);
+    }
+  }, [websocketProviderGroup, ydocGroup]);
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('userMemo')
-    if (savedContent && editorUser) {
-      const doc = JSON.parse(savedContent)
-      editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
-    }
-  }, [editorUser])
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/page/memo/${room}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
 
-  const handleSave = () => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+
+        const responseData = await response.json();
+        setMemoId(responseData.memoId);
+
+        if (responseData.memo && editorUser) {
+          const doc = JSON.parse(responseData.memo);
+          editorUser.commands.setContent(doc, false); // 에디터에 저장된 내용을 로드
+        }
+        else{
+          editorUser.commands.setContent("",false);
+        }
+      } catch (error) {
+        console.error('Failed to fetch data:', error);
+      }
+    };
+
     if (editorUser) {
-      const content = editorUser.getJSON() // 에디터 내용을 JSON 형식으로 추출
-      localStorage.setItem('userMemo', JSON.stringify(content)) // 로컬 스토리지에 저장
+      fetchData();
+    }
+  }, [room, editorUser])
+
+  const handleSave = async () => {
+    if (editorUser) {
+      const dataToSave = {
+        userWorkspaceId: memoId,
+        content: JSON.stringify(editorUser.getJSON()),
+      }
+      const response = await fetch(`/page/memo`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSave),
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
     }
   }
 

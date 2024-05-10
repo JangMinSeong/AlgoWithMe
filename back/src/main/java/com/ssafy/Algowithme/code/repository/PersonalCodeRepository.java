@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface PersonalCodeRepository extends JpaRepository<PersonalCode, Long> {
-    List<Long> findAllIdsByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(Page workspace, User user);
+    List<PersonalCode> findAllByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(Page workspace, User user);
 }

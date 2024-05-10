@@ -4,8 +4,15 @@ import fetch from '@/lib/fetch'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import {RootState} from "@/lib/store.ts";
+import {useSelector} from "react-redux";
 
-const MainComponent: React.FC = () => {
+interface editorProp {
+  groupId : number
+  pageId : number
+}
+const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
+  const user = useSelector((state: RootState) => state.auth.user)
   const [codeEditorVisible, setCodeEditorVisible] = useState(true)
   const [number, setNumber] = useState(0)
   const [provider, setProvider] = useState('')
@@ -17,9 +24,10 @@ const MainComponent: React.FC = () => {
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchProblemData = async () => {
       try {
-        const response = await fetch(`/problem/92294`, {
+        console.log(pageId + ' ' + groupId )
+        const response = await fetch(`/problem/${pageId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -57,8 +65,7 @@ const MainComponent: React.FC = () => {
         console.error('Failed to fetch data:', error)
       }
     }
-
-    fetchData()
+    fetchProblemData()
   }, [number])
 
   useEffect(() => {
@@ -75,8 +82,9 @@ const MainComponent: React.FC = () => {
         <LeftComponent
           url={url}
           content={content}
-          room="test2"
+          room={`${pageId}`}
           testCases={testCases}
+          nickname={user.nickname}
         />
       </div>
       <div
@@ -86,6 +94,7 @@ const MainComponent: React.FC = () => {
           provider={provider}
           number={number}
           editCodes={editCodes}
+          pageId={pageId}
         />
       </div>
       <button
