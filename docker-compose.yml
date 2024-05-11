@@ -9,8 +9,9 @@ services:
     build:
       context: ./back
       dockerfile: Dockerfile
-    # ports:
-    #   - "8081:8081"
+    restart: always
+    expose:
+      - "8081"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - JASYPT_KEY=${JASYPT_KEY}
@@ -23,6 +24,10 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    restart: always
+    depends_on:
+      - backend
+      - execute
     volumes:
       - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
     networks:
@@ -31,7 +36,8 @@ services:
     build:
       context: ./execute
       dockerfile: Dockerfile
-    # ports:
-    #   - "8082:8082"
+    restart: always
+    expose:
+      - "8082"
     networks:
       - algo-net
