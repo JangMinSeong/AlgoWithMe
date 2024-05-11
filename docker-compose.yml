@@ -4,6 +4,11 @@ networks:
   algo-net:
     driver: bridge
 
+volumes:
+  config_volume:
+  ssl_volume:
+
+
 services:
   nginxproxy:
     image: nginx:latest
