@@ -11,8 +11,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+      - config_volume: ./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ssl_volume: /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
     restart: always
   backend:
     depends_on:
