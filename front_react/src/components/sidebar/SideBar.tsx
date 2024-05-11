@@ -31,7 +31,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const { connectToServer } = useWebSocket()
 
   useEffect(() => {
-    connectToServer(groupId)
+    connectToServer()
   }, [user])
 
   useEffect(() => {
