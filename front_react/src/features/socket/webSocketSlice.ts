@@ -34,9 +34,12 @@ const webSocketSlice = createSlice({
     unsubscribe(state) {
       state.subscription = ''
     },
+    initMessage(state) {
+      state.message = ''
+    }
   },
 })
 
-export const { setClient, setConnected, addMessage, subscribe, unsubscribe } =
+export const { setClient, setConnected, addMessage, subscribe, unsubscribe,initMessage } =
   webSocketSlice.actions
 export default webSocketSlice.reducer
