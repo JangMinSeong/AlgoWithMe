@@ -5,7 +5,18 @@ networks:
     driver: bridge
 
 services:
+  nginxproxy:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+    restart: always
   backend:
+    depends_on:
+      - nginxproxy
     build:
       context: ./back
       dockerfile: Dockerfile
@@ -18,21 +29,19 @@ services:
     networks:
       - algo-net
   front:
+    depends_on:
+      - nginxproxy
     build:
       context: ./front_react
       dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
+    expose:
+      - "80"
     restart: always
-    depends_on:
-      - backend
-      - execute
-    volumes:
-      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
     networks:
       - algo-net
   execute:
+    depends_on:
+      - nginxproxy
     build:
       context: ./execute
       dockerfile: Dockerfile
