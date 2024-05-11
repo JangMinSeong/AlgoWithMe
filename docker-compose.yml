@@ -39,14 +39,14 @@ services:
     restart: always
     networks:
       - algo-net
-  # execute:
-  #   depends_on:
-  #     - nginxproxy
-  #   build:
-  #     context: ./execute
-  #     dockerfile: Dockerfile
-  #   restart: always
-  #   expose:
-  #     - "8082"
-  #   networks:
-  #     - algo-net
+  execute:
+    depends_on:
+      - nginxproxy
+    build:
+      context: ./execute
+      dockerfile: Dockerfile
+    restart: always
+    expose:
+      - "8082"
+    networks:
+      - algo-net
