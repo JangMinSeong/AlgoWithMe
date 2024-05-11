@@ -19,4 +19,4 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY .nginx/nginx.conf /etc/nginx/conf.d/nginx.conf
 
-CMD ["sh", "-c", "sleep 20", "&&", "nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
