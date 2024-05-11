@@ -26,10 +26,20 @@ export function useWebSocket() {
   const client = useSelector((state: RootState) => state.socket.client);
   const [subscriptions, setSubscriptions] = useState<{ [key: string]: StompSubscription }>({});
   const [userSubscriptions, setUserSubscriptions] = useState<{ [key: string]: StompSubscription }>({});
-
+  const [studySubscripton, setStudySubscription] = useState<StompSubscription>()
   const connectToServer = (groupId:number) => {
     if (client !== null) {
       console.log('Already connected');
+      if(studySubscripton) {
+        studySubscripton.unsubscribe()
+
+        const subscription = client.subscribe(`/topic/study/${groupId}`, (message) => {
+          console.log('Message received:', message.body);
+          dispatch(setMessageUpdateStudy(message.body))
+          // 메시지 처리 로직 혹은 저장 로직 추가
+        });
+        setStudySubscription(subscription)
+      }
       return;
     }
     const newClient = new Client({
@@ -38,11 +48,12 @@ export function useWebSocket() {
         console.log('Connection successful');
         dispatch(setConnected(true));
 
-        newClient.subscribe(`/topic/study/${groupId}`, (message) => {
+        const subscription = newClient.subscribe(`/topic/study/${groupId}`, (message) => {
           console.log('Message received:', message.body);
           dispatch(setMessageUpdateStudy(message.body))
           // 메시지 처리 로직 혹은 저장 로직 추가
         });
+        setStudySubscription(subscription)
       },
       onStompError: (frame) => {
         console.error(`Broker reported error: ${frame.headers.message}`, frame.body);
