@@ -9,6 +9,7 @@ import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
 import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
+import useCode from "@/hooks/useCode.ts";
 
 interface BojAndPGDetail {
   status: number
@@ -65,59 +66,84 @@ const RightComponent: React.FC<ProblemProp> = ({
   const curUser = useSelector((state: RootState) => state.code.curUserId)
   const myId = useSelector((state: RootState) => state.code.myId)
   const [option ,setOption] = useState(false)
+  const {handleCurUserId} = useCode()
+  const updateMessage = useSelector((state: RootState) => state.socket.messageUserTabUpdate)
+  const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
+  const curTopic = useSelector((state:RootState) => state.socket.subscriptionUser)
+  useEffect(() => {
+    if(curTopic !== '' || myId === curUser) {
+      console.log(curTopic + " unsubscribe")
+      unsubscribeFromTopic(curTopic,true)
+    }
+    if(option || curUser !== myId) {
+      console.log(curTopic + "  subscribe")
+      subscribeToTopic(`/topic/codeTab/${curUser}`,true)
+    }
+  },[curUser])
+
+  const fetchMyData = async () => {
+    try {
+      const response = await fetch(`/code/codeList?pageId=${pageId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const responseData = await response.json()
+      setCodeIds(responseData.codeIds)
+      setFirstCode(responseData.code)
+
+    } catch (error) {
+      setCodeIds([])
+      setFirstCode(null)
+      console.error('Failed to fetch data:', error)
+    }
+  }
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch(`/code/user?pageId=${pageId}&userId=${curUser}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok')
+      }
+
+      const responseData = await response.json()
+      setCodeIds(responseData.codeIds)
+      setFirstCode(responseData.code)
+
+    } catch (error) {
+      setCodeIds([])
+      setFirstCode(null)
+      console.error('Failed to fetch data:', error)
+    }
+  }
+
+  useEffect(() => {
+    if(option) {
+      fetchUserData()
+    }
+  },[updateMessage])
 
   useEffect(()=> {
     console.log(curUser + " " + myId)
     if(curUser === myId) setOption(false)
     else setOption(true)
-    const fetchMyData = async () => {
-      try {
-          const response = await fetch(`/code/codeList?pageId=${pageId}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
 
-          if (!response.ok) {
-            throw new Error('Network response was not ok')
-          }
-
-          const responseData = await response.json()
-          setCodeIds(responseData.codeIds)
-          setFirstCode(responseData.code)
-
-      } catch (error) {
-        setCodeIds([])
-        setFirstCode(null)
-        console.error('Failed to fetch data:', error)
-      }
-    }
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`/code/user?pageId=${pageId}&userId=${curUser}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
-
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-
-        const responseData = await response.json()
-        setCodeIds(responseData.codeIds)
-        setFirstCode(responseData.code)
-
-      } catch (error) {
-        setCodeIds([])
-        setFirstCode(null)
-        console.error('Failed to fetch data:', error)
-      }
-    }
-    if(curUser === myId)
+    if(curUser === myId || curUser === 0) {
+      handleCurUserId(myId)
       fetchMyData()
+    }
     else
       fetchUserData()
   },[pageId,curUser])
@@ -197,8 +223,10 @@ const RightComponent: React.FC<ProblemProp> = ({
   }
 
   const handleSaveAndRun = () => {
-    codeEditorRef.current?.saveCode()
-    setSaveInputText(inputText)
+    if(curUser === myId) {
+      codeEditorRef.current?.saveCode()
+      setSaveInputText(inputText)
+    }
     if (inputText !== '') handleInputRun()
     else handleSampleRun()
   }

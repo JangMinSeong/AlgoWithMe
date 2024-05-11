@@ -4,15 +4,26 @@ import { Client } from '@stomp/stompjs'
 interface WebSocketState {
   client: Client | null
   connected: boolean
-  message: string
+  message: Code
   subscription: string
+  subscriptionUser: string
+  messageUserTabUpdate: string
+  messageStudyUpdate: string
+}
+
+interface Code {
+  language:string
+  code:string
 }
 
 const initialState: WebSocketState = {
   client: null,
   connected: false,
-  message: '',
+  message: {language:'',code:''},
   subscription: '',
+  subscriptionUser: '',
+  messageUserTabUpdate: '',
+  messageStudyUpdate:'',
 }
 
 const webSocketSlice = createSlice({
@@ -25,7 +36,7 @@ const webSocketSlice = createSlice({
     setConnected(state, action: PayloadAction<boolean>) {
       state.connected = action.payload
     },
-    addMessage(state, action: PayloadAction<string>) {
+    addMessage(state, action: PayloadAction<Code>) {
       state.message = action.payload
     },
     subscribe(state, action: PayloadAction<string>) {
@@ -35,11 +46,26 @@ const webSocketSlice = createSlice({
       state.subscription = ''
     },
     initMessage(state) {
-      state.message = ''
+      state.message = {language:'',code:''}
+    },
+    subscribeUser(state, action: PayloadAction<string>) {
+      state.subscriptionUser = action.payload
+    },
+    unsubscribeUser(state) {
+      state.subscriptionUser = ''
+    },
+    setMessageUpdateUserTab(state, action : PayloadAction<string>) {
+      state.messageUserTabUpdate = action.payload
+    },
+    initMessageUpdateUserTab(state) {
+      state.messageUserTabUpdate = ''
+    },
+    setMessageUpdateStudy(state, action:PayloadAction<string>) {
+      state.messageStudyUpdate = action.payload
     }
   },
 })
 
-export const { setClient, setConnected, addMessage, subscribe, unsubscribe,initMessage } =
+export const { setClient, setConnected, addMessage, subscribe, unsubscribe,initMessage,subscribeUser, unsubscribeUser,setMessageUpdateUserTab, initMessageUpdateUserTab,setMessageUpdateStudy } =
   webSocketSlice.actions
 export default webSocketSlice.reducer

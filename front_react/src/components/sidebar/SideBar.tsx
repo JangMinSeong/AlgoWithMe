@@ -16,6 +16,12 @@ interface Study {
   imageUrl: string
 }
 
+interface IPage {
+  pageId: number
+  title: string
+  docs: boolean
+  children: IPage[]
+}
 
 const SideBar = ({ groupId }: { groupId: number }) => {
   const navigate = useNavigate()
@@ -26,13 +32,15 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
 
+  const studyUpdate = useSelector((state:RootState) => state.socket.messageStudyUpdate)
+
   const { setGId, setPages } = useSidebar()
 
-  const { connectToServer } = useWebSocket()
+  const { connectToServer,sendUpdateMessage } = useWebSocket()
 
   useEffect(() => {
-    connectToServer()
-  }, [user])
+    connectToServer(groupId)
+  }, [user,groupId])
 
   useEffect(() => {
     const fetchStudyList = async () => {
@@ -50,27 +58,33 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     fetchStudyList()
   },[user])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(`/page/team/${groupId}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        })
+  const fetchData = async () => {
+    try {
+      const response = await fetch(`/page/team/${groupId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
-        if (response.ok) {
-          const data = await response.json()
-          setPages(data.pageInfoList)
-          console.log(data.pageInfoList)
-        } else {
-          throw new Error('Network response was not ok.')
-        }
-      } catch (error) {
-        console.error('Error fetching data: ', error)
+      if (response.ok) {
+        const data = await response.json()
+        setPages(data.pageInfoList)
+        console.log(data.pageInfoList)
+      } else {
+        throw new Error('Network response was not ok.')
       }
+    } catch (error) {
+      console.error('Error fetching data: ', error)
     }
+  }
+
+  useEffect(() => {
+    fetchData()
+  },[studyUpdate])
+
+
+  useEffect(() => {
     fetchData()
     setGId(groupId)
   }, [groupId])
@@ -81,6 +95,76 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     handleFetchStudyInfo(groupId)
     navigate(`/${groupId}/study`)
   }
+
+  const movePage = async (draggedId, targetId) => {
+    const isDescendant = (parent, childId) => {
+      if (!parent.children) return false;
+      return parent.children.some(child => child.pageId === childId || isDescendant(child, childId));
+    };
+
+    const deepCopyPages = (pages) => pages.map(page => ({
+      ...page,
+      children: page.children ? deepCopyPages(page.children) : []
+    }));
+
+    const findPage = (pages, pageId, parent = null) => {
+      for (let i = 0; i < pages.length; i++) {
+        if (pages[i].pageId === pageId) {
+          return { page: pages[i], parent };
+        }
+        if (pages[i].children) {
+          const result = findPage(pages[i].children, pageId, pages[i]);
+          if (result.page) return result;
+        }
+      }
+      return { page: null, parent: null };
+    };
+
+    const updatePageList = async (pages, draggedPageId, targetPageId) => {
+      let updatedPages = deepCopyPages(pages);
+      const { page: draggedPage, parent: draggedParent } = findPage(updatedPages, draggedPageId);
+      const { page: targetPage } = findPage(updatedPages, targetPageId);
+
+      if (!targetPage || !draggedPage || !targetPage.docs || isDescendant(draggedPage, targetPage.pageId)) {
+        console.error("Invalid operation: Move operation is not allowed.");
+        return pages;
+      }
+
+      if (!targetPage.children) {
+        targetPage.children = [];
+      }
+      targetPage.children.push(draggedPage);
+
+      // Remove draggedPage from its old parent
+      if (draggedParent && draggedParent.children) {
+        draggedParent.children = draggedParent.children.filter(child => child.pageId !== draggedPageId);
+      }
+      try {
+        const response = await fetch(`/page/parent/${draggedPageId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: targetPageId
+        });
+
+        if (!response.ok) throw new Error('Failed to update the parent on the server.');
+
+        sendUpdateMessage(`/app/study/${groupId}`, `update${draggedPageId} to ${targetPageId}`)
+
+        return updatedPages;
+      } catch (error) {
+        console.error('Error updating page parent:', error);
+        return pages;  // 에러가 발생하면 원본 페이지 반환
+      }
+    };
+
+    // 업데이트된 페이지 리스트로 상태 업데이트
+    const updatedPageList = await updatePageList(pageList, draggedId, targetId);
+    console.log(updatedPageList);
+    setPages(updatedPageList);
+  };
+
 
   return (
     <div>
@@ -100,6 +184,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
                 page={el}
                 key={el.pageId}
                 depth={0}
+                onMovePage={movePage}
               />
             </div>
           ))}
