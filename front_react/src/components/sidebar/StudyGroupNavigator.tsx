@@ -5,17 +5,22 @@ import { RootState } from '@/lib/store'
 import StudyGroupDropdown from './StudyGroupDropdown'
 import PageCreateButton from './PageCreateButton'
 
-const StudyGroupNavigator = (props: { groupId: number }) => {
+interface Study {
+    id: number
+    name: string
+    imageUrl: string
+}
+const StudyGroupNavigator = (props: { groupId: number, studyList : Study[] }) => {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false)
-  const studyGroups = useSelector((state: RootState) => state.sidebar.studyList)
 
   const currentGroupName =
-    studyGroups.find((group) => group.id === props.groupId)?.name ||
-    '이름없는 스터디'
 
+    props.studyList.find((group) => group.id === props.groupId)?.name ||
+    '오구오구스터디'
   const currentGroupImg =
-    studyGroups.find((group) => group.id === props.groupId)?.imageUrl ||
+      props.studyList.find((group) => group.id === props.groupId)?.imageUrl ||
     'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png'
+
 
   const handleNavigatorOpen = () => {
     setIsNavigatorOpen(!isNavigatorOpen)
@@ -39,7 +44,9 @@ const StudyGroupNavigator = (props: { groupId: number }) => {
           {isNavigatorOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
         </div>
       </div>
-      {isNavigatorOpen ? <StudyGroupDropdown /> : null}
+D
+      {/* 이걸 누르면 아래의 드랍다운이 펼쳐진다 */}
+      {isNavigatorOpen ? <StudyGroupDropdown studyList={props.studyList}/> : null}
     </div>
   )
 }

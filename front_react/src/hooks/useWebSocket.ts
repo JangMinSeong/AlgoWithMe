@@ -13,7 +13,7 @@ import { RootState } from '@/lib/store'
 export function useWebSocket() {
   const dispatch = useDispatch()
   const client = useSelector((state: RootState) => state.socket.client)
-  const connectToServer = () => {
+  const connectToServer = (groupId:number) => {
     if (client !== null) {
       console.log('already connect')
       return
@@ -49,7 +49,8 @@ export function useWebSocket() {
   const subscribeToTopic = (topic: string) => {
     if (client && client.connected) {
       client.subscribe(topic, (message) => {
-        dispatch(addMessage(message.body))
+        console.log("message receive " + message.body.toString())
+        dispatch(addMessage(message.body.toString()))
       })
       dispatch(subscribe(topic))
     } else {

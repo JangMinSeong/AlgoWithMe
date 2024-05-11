@@ -20,6 +20,7 @@ import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TeamService {
@@ -105,6 +107,7 @@ public class TeamService {
 
     @Transactional
     public void addTeamMember(String encrypted, User user) {
+        log.info("in add team member");
         String decrypted = aes128Config.decryptAes(encrypted);
         String[] data = decrypted.split("/");
         Long teamId = Long.parseLong(data[1]);
@@ -113,7 +116,15 @@ public class TeamService {
             throw new CustomException(ExceptionStatus.TEAM_INVITE_URL_EXPIRED);
         Team team = teamRepository.findByIdAndDeletedFalse(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
-        userTeamRepository.findByUserAndTeam(user, team).orElseGet(UserTeam::new);
+        Optional<UserTeam> userTeam = userTeamRepository.findByUserAndTeam(user, team);
+        if(userTeam.isEmpty()) {
+            userTeamRepository.save(UserTeam.builder()
+                    .user(user)
+                    .team(team)
+                    .manager(false)
+                    .visitedAt(LocalDateTime.now())
+                    .build());
+        }
     }
 
     @Transactional
