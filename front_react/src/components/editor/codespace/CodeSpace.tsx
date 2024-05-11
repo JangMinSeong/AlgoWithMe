@@ -19,7 +19,7 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from "@/lib/fetch.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store.ts";
-import {unsubscribe} from "@/features/socket/webSocketSlic.ts";
+import {unsubscribe} from "@/features/socket/webSocketSlice.ts";
 
 interface CodeExample {
   mode: string
@@ -242,7 +242,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     const handleCodeChange = debounce((newCode: string) => {
       console.log('Code changed:', newCode)
-      sendMessage(`/app/code/${activeTab}`, newCode)
+        if(!option) sendMessage(`/app/code/${activeTab}`, newCode)
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
@@ -333,7 +333,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             ref={aceRef}
             mode={languageOptions[language].mode}
             name="UNIQUE_ID_OF_DIV"
-            value={!option ? code : socketCode}
+            value={!option || socketCode === '' ? code : socketCode}
             readOnly={option}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
