@@ -1,8 +1,8 @@
 import { RiDeleteBin6Line } from 'react-icons/ri'
-import { Tooltip } from '@/components/ReactToolTip'
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "@/lib/store.ts";
-import {setPageList} from "@/features/sidebar/sidebarSlice.ts";
+import { Tooltip } from 'react-tooltip'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/lib/store.ts'
+import { setPageList } from '@/features/sidebar/sidebarSlice.ts'
 import fetch from '@/lib/fetch'
 
 interface Page {
@@ -14,7 +14,7 @@ interface Page {
 
 const DeleteButton = (props: { pageId: number }) => {
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
   const handleDelete = async (e) => {
     e.stopPropagation()
     if (window.confirm('모든 스터디원에게서 사라져요. 삭제하시겠어요?')) {
@@ -25,30 +25,31 @@ const DeleteButton = (props: { pageId: number }) => {
         },
       })
       if (pageDeleteRes.ok) {
-        const updatedPageList = removePageById(pageList, props.pageId);
-        dispatch(setPageList(updatedPageList)); // 상태 업데이트
+        const updatedPageList = removePageById(pageList, props.pageId)
+        dispatch(setPageList(updatedPageList)) // 상태 업데이트
       }
     }
   }
 
   function removePageById(pages: Page[], pageId: number): Page[] {
     return pages
-        .map((page) => {
-          // 모든 자식 페이지를 재귀적으로 처리
-          const updatedChildren = page.children.length > 0 ? removePageById(page.children, pageId) : [];
+      .map((page) => {
+        // 모든 자식 페이지를 재귀적으로 처리
+        const updatedChildren =
+          page.children.length > 0 ? removePageById(page.children, pageId) : []
 
-          // 제거할 페이지가 아니면, 갱신된 자식 페이지를 포함하여 반환
-          if (page.pageId !== pageId) {
-            return {
-              ...page,
-              children: updatedChildren,
-            };
+        // 제거할 페이지가 아니면, 갱신된 자식 페이지를 포함하여 반환
+        if (page.pageId !== pageId) {
+          return {
+            ...page,
+            children: updatedChildren,
           }
+        }
 
-          // 제거할 페이지를 찾으면, 해당 페이지를 필터링에서 제외
-          return null;
-        })
-        .filter(Boolean) as Page[];
+        // 제거할 페이지를 찾으면, 해당 페이지를 필터링에서 제외
+        return null
+      })
+      .filter(Boolean) as Page[]
   }
 
   const anchorTagCSS =

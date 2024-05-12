@@ -4,7 +4,7 @@ import { RootState } from '@/lib/store'
 import { useState, useEffect } from 'react'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
-import { Tooltip } from '@/components/ReactToolTip'
+import { Tooltip } from 'react-tooltip'
 
 const API_URL =
   import.meta.env.MODE === 'development'
