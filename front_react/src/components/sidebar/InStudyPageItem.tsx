@@ -169,13 +169,11 @@ const InStudyPageItem = (props: {
                 ) : null}
               </div>
           )}
-          <div className={"z-10"}>
             <EditDocModal
                 isOpen={showEditModal}
                 onClose={() => setShowEditModal(false)}
                 onSave={handleSave}
             />
-          </div>
         </div>
         {props.page.children?.length !== 0 &&
             isSubPagesOpen &&

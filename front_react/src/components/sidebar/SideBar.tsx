@@ -170,13 +170,13 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     <div>
       {isOpen && (
         <div
-          className={` w-48 min-w-48 h-screen fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500"`}
+          className={`w-48 min-w-48 h-full overflow-auto fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500"`}
         >
           <StudyGroupNavigator groupId={groupId} studyList={studyList}/>
           <div onClick={handleGoStudyMain} className={menuItemWrapper}>
             스터디 메인 페이지
           </div>
-          <div className={'overflow-auto'}>
+          <div className={"mb-5"}>
           {pageList.map((el) => (
             <div>
               <InStudyPageItem

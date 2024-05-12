@@ -24,17 +24,17 @@ public class GithubController {
     }
 
     @GetMapping("/repository/{repo}")
-    public ResponseEntity<List<String>> getBranches(@PathVariable String repo, @AuthenticationPrincipal User user) {
+    public ResponseEntity<List<String>> getBranches(@PathVariable("repo") String repo, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(githubService.getBranches(repo, user));
     }
 
     @GetMapping("/repository/{repo}/{branch}")
-    public ResponseEntity<List<String>> getDirectoryContent(@PathVariable String repo, @PathVariable String branch, @RequestParam String path, @AuthenticationPrincipal User user) {
+    public ResponseEntity<List<String>> getDirectoryContent(@PathVariable("repo") String repo, @PathVariable("branch") String branch, @RequestParam String path, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(githubService.getDirectoryStructure(repo, branch, path, user));
     }
 
     @PostMapping("/repository/{repo}/{branch}")
-    public ResponseEntity<String> uploadCode(@PathVariable String repo, @PathVariable String branch, @RequestBody CodeUploadRequest req, @AuthenticationPrincipal User user) {
+    public ResponseEntity<String> uploadCode(@PathVariable("repo") String repo, @PathVariable("branch") String branch, @RequestBody CodeUploadRequest req, @AuthenticationPrincipal User user) {
         githubService.uploadFile(repo, branch, req, user);
         return ResponseEntity.ok("Success");
     }

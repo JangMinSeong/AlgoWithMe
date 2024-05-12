@@ -4,11 +4,6 @@ networks:
   algo-net:
     driver: bridge
 
-volumes:
-  config_volume:
-  ssl_volume:
-
-
 services:
   nginxproxy:
     image: nginx:latest
@@ -16,9 +11,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - config_volume:./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - ssl_volume:/etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+      - /home/ubuntu/jenkins-data/workspace/Algowithme/.nginx:/etc/nginx/conf.d:ro
+      - /etc/letsencrypt:/etc/nginx/ssl:ro
     restart: always
+    networks:
+      - algo-net
   backend:
     depends_on:
       - nginxproxy
