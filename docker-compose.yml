@@ -12,7 +12,7 @@ services:
       - "443:443"
     volumes:
       - /home/ubuntu/jenkins-data/workspace/Algowithme/.nginx:/etc/nginx/conf.d:ro
-      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+      - /etc/letsencrypt:/etc/nginx/ssl:ro
     restart: always
     networks:
       - algo-net
