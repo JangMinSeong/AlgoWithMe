@@ -21,15 +21,10 @@ const GroupCall = () => {
 
   const connectToSession = async (token: string) => {
     const mySession = OV.initSession()
-
-    console.log(mySession)
-    console.log(token)
-
-    await mySession.connect(token)
-    console.log(mySession.connect(token))
-    setSession(mySession)
-
-    publishInSession()
+    await mySession.connect(token).then(() => {
+      setSession(mySession)
+      publishInSession()
+    })
   }
 
   const publishInSession = async () => {
@@ -37,7 +32,7 @@ const GroupCall = () => {
       const publisher = OV.initPublisher('publisher-container', {
         audioSource: undefined,
         videoSource: false,
-        publishAudio: false,
+        publishAudio: true,
         publishVideo: false,
       })
 
@@ -88,18 +83,23 @@ const GroupCall = () => {
       },
       credentials: 'include',
     })
-      .then(
-        async () =>
-          await fetch(`/openvidu/sessions/${groupId}/connections`, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            credentials: 'include',
-          }),
+      .then((res) => res.json())
+      .then((json) =>
+        fetch(`/openvidu/sessions/${json.sessionId}/connections`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          credentials: 'include',
+        }),
       )
       .then((res) => res.json())
-      .then((json) => connectToSession(json.token))
+      .then((json) => {
+        // const tokenStr = json.token
+        // const tokenIdx = tokenStr.indexOf('token=') + 6
+        // console.log(tokenStr.slice(tokenIdx))
+        connectToSession(json.token)
+      })
   } // fetchSessionAndToken
 
   const handleHeadphoneOff = () => {
