@@ -29,7 +29,7 @@ public class GithubController {
     }
 
     @GetMapping("/repository/{repo}/{branch}")
-    public ResponseEntity<List<String>> getDirectoryContent(@PathVariable("repo") String repo, @PathVariable("branch") String branch, @RequestParam String path, @AuthenticationPrincipal User user) {
+    public ResponseEntity<List<String>> getDirectoryContent(@PathVariable("repo") String repo, @PathVariable("branch") String branch, @RequestParam("path") String path, @AuthenticationPrincipal User user) {
         return ResponseEntity.ok(githubService.getDirectoryStructure(repo, branch, path, user));
     }
 
