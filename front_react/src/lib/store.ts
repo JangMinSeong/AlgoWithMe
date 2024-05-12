@@ -7,7 +7,6 @@ import timerReducer from '@/features/timer/timerSlice'
 import solvingReducer from '@/features/solving/solvingSlice'
 import websocketReducer from '@/features/socket/webSocketSlice.ts'
 import groupcallReducer from '@/features/groupcall/groupcallSlice'
-import problemReducer from '@/features/problems/problemSlice'
 import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
 import studyReducer from '@/features/study/studySlice'
@@ -32,7 +31,6 @@ export const makeStore = () => {
       solving: solvingReducer,
       socket: websocketReducer,
       groupcall: groupcallReducer,
-      problems: problemReducer,
       modal: modalReducer,
       levels: levelReducer,
       study: studyReducer,

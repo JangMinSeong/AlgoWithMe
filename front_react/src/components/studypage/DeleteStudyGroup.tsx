@@ -1,4 +1,3 @@
-import { BsPersonPlusFill } from 'react-icons/bs'
 import toast, { Toaster } from 'react-hot-toast'
 import fetch from '@/lib/fetch'
 import { MdDeleteForever } from 'react-icons/md'

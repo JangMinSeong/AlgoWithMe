@@ -7,6 +7,7 @@ interface ISearchState {
   problemInfoList: Array<IProblemInfo>
   isLevel: boolean
   searchTitle: string
+  chosenProblem: IProblemInfo
 }
 
 export interface IProblemInfo {
@@ -34,6 +35,14 @@ const initialState: ISearchState = {
   ],
   isLevel: false,
   searchTitle: '',
+  chosenProblem: {
+    problemId: 0,
+    provider: '',
+    number: 0,
+    title: '',
+    level: '',
+    url: '',
+  },
 }
 
 const searchSlice = createSlice({
@@ -63,9 +72,24 @@ const searchSlice = createSlice({
     //   state.page = state.page + 1
     //   state.problemInfoList = [...action.payload.problemInfoList]
     // },
+    setProblemChosen: (
+      state: ISearchState,
+      action: PayloadAction<IProblemInfo>,
+    ) => {
+      state.chosenProblem.problemId = action.payload.problemId
+      state.chosenProblem.level = action.payload.level
+      state.chosenProblem.number = action.payload.number
+      state.chosenProblem.title = action.payload.title
+      state.chosenProblem.provider = action.payload.provider
+      state.chosenProblem.url = action.payload.url
+    },
   },
 })
 
-export const { setInitialPageSearchResult, setIsLevel, setSearchTitle } =
-  searchSlice.actions
+export const {
+  setInitialPageSearchResult,
+  setIsLevel,
+  setSearchTitle,
+  setProblemChosen,
+} = searchSlice.actions
 export default searchSlice.reducer
