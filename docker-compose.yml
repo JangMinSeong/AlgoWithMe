@@ -4,11 +4,6 @@ networks:
   algo-net:
     driver: bridge
 
-volumes:
-  config_volume:
-  ssl_volume:
-
-
 services:
   nginxproxy:
     image: nginx:latest
@@ -16,8 +11,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - config_volume:./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
-      - ssl_volume:/etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl[:ro]
+      - ./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
     restart: always
   backend:
     depends_on:
