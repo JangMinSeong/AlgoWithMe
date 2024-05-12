@@ -40,31 +40,31 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
     <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
       <div className="flex space-x-1">
         <button
-          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)} // 모달 창 열기
+            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)}
         >
           문제 유형
         </button>
         {isTagSelectorOpen && (
-          <TagSelector
-            selectedTags={selectedTags}
-            toggleTag={toggleTag}
-            onClose={() => setIsTagSelectorOpen(false)} // 모달 창 닫기
-          />
+            <TagSelector
+                selectedTags={selectedTags}
+                toggleTag={toggleTag}
+                onClose={() => setIsTagSelectorOpen(false)}
+            />
         )}
       </div>
       <div className="flex space-x-1">
         {activeTab === '개인 메모장' && (
-          <button
-            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            onClick={() => handleSaveClick('저장')}
-          >
-            저장
-          </button>
+            <button
+                className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+                onClick={() => handleSaveClick('저장')}
+            >
+              저장
+            </button>
         )}
         <button
-          className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => handleButtonClick('정답')}
+            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            onClick={() => handleButtonClick('정답')}
         >
           정답
         </button>
