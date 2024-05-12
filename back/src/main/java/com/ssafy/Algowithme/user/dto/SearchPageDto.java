@@ -11,6 +11,7 @@ public class SearchPageDto {
 
     private Long id;
     private Long studyId;
+    private boolean isDoc;
     private String name;
     private String imageUrl;
 }
