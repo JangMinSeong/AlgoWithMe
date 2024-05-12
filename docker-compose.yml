@@ -11,7 +11,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./.nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - /home/ubuntu/jenkins-data/workspace/Algowithme/.nginx:/etc/nginx/conf.d:ro
       - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
     restart: always
   backend:
