@@ -12,7 +12,15 @@ const tags: Tag[] = [
   { key: 'BFS', label: 'BFS' },
   { key: 'BRUTEFORCE', label: '브루트포스' },
   { key: 'GREEDY', label: '그리디' },
-  { key: 'SHORTEST_PATH', label: '최단경로' },
+  { key: 'DP', label: '다이나믹 프로그래밍' },
+  { key: 'STRING', label: '문자열' },
+  { key: 'BINARY_SEARCH', label: '이분 탐색' },
+  { key: 'SIMULATION', label: '구현' },
+  { key: 'SORTING', label: '정렬' },
+  { key: 'BITMASK', label: '비트 마스킹' },
+  { key: 'BACKTRACKING', label: '백트래킹' },
+  { key: 'DATA_STRUCTURES', label: '자료구조' },
+  { key: 'GRAPH', label: '그래프' },
 ]
 
 // `TagSelector` 컴포넌트 인터페이스
@@ -23,25 +31,34 @@ interface TagSelectorProps {
 }
 
 const TagSelector: React.FC<TagSelectorProps> = ({
-  selectedTags,
-  toggleTag,
-  onClose,
-}) => (
-  <div className="tag-selector-modal">
-    <div className="modal-content">
-      {tags.map((tag) => (
-        <button
-          key={tag.key}
-          className={`pt-1 h-8 text-white border border-gray-100 rounded-md p-2 tag-button hover:bg-secondary ${
-            selectedTags.includes(tag.key) ? 'bg-primary' : 'bg-navy'
-          }`}
-          onClick={() => toggleTag(tag.key)}
-        >
-          {tag.label}
-        </button>
-      ))}
+                                                     selectedTags,
+                                                     toggleTag,
+                                                     onClose,
+                                                 }) => (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+        <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
+            <div className="flex flex-wrap justify-start gap-2">
+                {tags.map((tag) => (
+                    <button
+                        key={tag.key}
+                        className={`px-4 py-1 text-sm text-center font-medium rounded-md shadow transition-colors duration-200 ${
+                            selectedTags.includes(tag.key) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
+                        }`}
+                        onClick={() => toggleTag(tag.key)}
+                        style={{ minWidth: '5rem' }} // Ensure minimum width for smaller tags
+                    >
+                        {tag.label}
+                    </button>
+                ))}
+            </div>
+            <button
+                className="mt-4 py-1 px-4 bg-red-500 text-white rounded hover:bg-red-300 transition duration-200"
+                onClick={onClose}
+            >
+                닫기
+            </button>
+        </div>
     </div>
-  </div>
-)
+);
 
-export default TagSelector
+export default TagSelector;

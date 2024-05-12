@@ -10,6 +10,7 @@ import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
 import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
 import useCode from "@/hooks/useCode.ts";
+import GitHubExplorer from "@/components/github/GithubExplorer.tsx";
 
 interface BojAndPGDetail {
   status: number
@@ -39,6 +40,13 @@ interface PersonalCodeResponse {
   code:string
 }
 
+interface Repository {
+  name:string
+  fullname:string
+  description:string
+  isPrivate:boolean
+}
+
 const RightComponent: React.FC<ProblemProp> = ({
   provider,
   number,
@@ -46,6 +54,8 @@ const RightComponent: React.FC<ProblemProp> = ({
   pageId,
     uid
 }) => {
+  const [isGitHubExplorerOpen, setIsGitHubExplorerOpen] = React.useState(false)
+  const [repositories, setRepositories] = React.useState<Repository[]>([])
   const [inputText, setInputText] = React.useState('') // textarea 입력 값 관리
   const codeEditorRef = React.useRef<any>() // CodeEditor 접근을 위한 ref
   const [output, setOutput] = React.useState('')
@@ -231,6 +241,30 @@ const RightComponent: React.FC<ProblemProp> = ({
     else handleSampleRun()
   }
 
+  const handleGithub = async () => {
+    const response = await fetch(`/github/repository`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const responseData = await response.json();
+    setRepositories(responseData)
+    console.log(responseData)
+
+    setIsGitHubExplorerOpen(true)
+  }
+
+  const handleCloseGitHubExplorer = () => {
+    setIsGitHubExplorerOpen(false);
+  };
+
+
   return (
     <div className="flex flex-col w-full h-full">
       <div style={{ flex: 2 }}>
@@ -288,9 +322,16 @@ const RightComponent: React.FC<ProblemProp> = ({
           >
             실행하기
           </button>
-          <button className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2">
+          <button className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2" onClick={handleGithub}>
             GIT 저장하기
           </button>
+          {isGitHubExplorerOpen && (
+              <GitHubExplorer
+                  isOpen={isGitHubExplorerOpen}
+                  isClose={handleCloseGitHubExplorer}
+                  repositories={repositories}
+              />
+          )}
         </div>
       </div>
     </div>
