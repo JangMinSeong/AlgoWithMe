@@ -110,6 +110,7 @@ public class UserService {
             pageDtoList.add(SearchPageDto.builder()
                     .id(page.getId())
                     .studyId(page.getTeam().getId())
+                    .isDoc(page.getProblem() == null)
                     .name(getSearchPageName(page))
                     .imageUrl(page.getTeam().getImageUrl())
                     .build());
