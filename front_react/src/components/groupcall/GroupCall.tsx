@@ -6,7 +6,7 @@ import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import { Tooltip } from 'react-tooltip'
 import fetch from '@/lib/fetch'
 import { useParams } from 'react-router'
-import { OpenVidu, Session } from 'openvidu-browser'
+import { OpenVidu, Session, Subscriber, Publisher } from 'openvidu-browser'
 
 const OV = new OpenVidu()
 OV.enableProdMode()
@@ -18,6 +18,8 @@ const GroupCall = () => {
   const [activeSpeaker, setActiveSpeaker] = useState<string>()
   const [participants, setParticipants] = useState([])
   const [session, setSession] = useState<Session>()
+  const [subscriber, setSubscriber] = useState<Subscriber>()
+  const [publisher, setPublisher] = useState<Publisher>()
 
   const connectToSession = async (token: string) => {
     const mySession = OV.initSession()
@@ -29,24 +31,24 @@ const GroupCall = () => {
 
   const publishInSession = async () => {
     if (session) {
-      const publisher = OV.initPublisher('publisher-container', {
+      const myPublisher = OV.initPublisher('publisher-container', {
         audioSource: undefined,
         videoSource: false,
-        publishAudio: true,
+        publishAudio: undefined,
         publishVideo: false,
       })
 
-      await session.publish(publisher)
+      await session.publish(myPublisher).then(() => setPublisher(myPublisher))
 
       // 누군가 접속했을 때
       await session.on('streamCreated', (event) => {
         const subscriber = session.subscribe(event.stream, 'subscriberDiv')
         const nickname = event.stream.connection.data.split('=')[1]
+        console.log('누군가 들어왔다', nickname)
         setParticipants((prevParticipants) => [
           ...prevParticipants,
           { subscriber, nickname },
         ])
-        console.log(subscriber, '입장', nickname)
       })
 
       // 누군가 연결 끊었을 때
@@ -111,11 +113,13 @@ const GroupCall = () => {
     setIsHeadphoneOn(true)
   }
   const handleMicOff = () => {
-    // publisher.publishAudio(false)
+    publisher.publishAudio(false)
+    console.log('되긴하나')
     setIsMicOn(false)
   }
   const handleMicOn = () => {
-    // publisher.publishAudio(true)
+    publisher.publishAudio(true)
+    console.log('되긴하나')
     setIsMicOn(true)
   }
 
