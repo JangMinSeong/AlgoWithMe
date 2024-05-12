@@ -6,11 +6,10 @@ const EditModal = ({ isOpen, onClose, onSave }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4" onClick={onClose}>
+        <div className="fixed z-50 inset-0 bg-black bg-opacity-60 flex justify-center items-center p-4" onClick={onClose}>
             <div
                 className="bg-white p-8 rounded-xl shadow-2xl space-y-6 transform transition-all duration-300 scale-100 hover:scale-105"
-                onClick={(e) => e.stopPropagation()}
-                style={{zIndex:10000}}>
+                onClick={(e) => e.stopPropagation()}>
                 <h3 className="text-lg font-semibold text-center text-gray-900">페이지 제목 수정</h3>
                 <input
                     type="text"
