@@ -1,5 +1,3 @@
-'use client'
-
 import React, {
   forwardRef,
   useEffect,
@@ -19,7 +17,6 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from "@/lib/fetch.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store.ts";
-import {unsubscribe} from "@/features/socket/webSocketSlic.ts";
 
 interface CodeExample {
   mode: string
@@ -120,7 +117,9 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     const curTopic = useSelector((state: RootState) => state.socket.subscription)
     const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
-    const socketCode = useSelector((state: RootState) => state.socket.message)
+    const socketMessage = useSelector((state: RootState) => state.socket.message)
+      const myId = useSelector((state:RootState) => state.code.myId)
+
     useEffect(() => {
         if(curTopic)
             unsubscribeFromTopic(curTopic)
@@ -128,7 +127,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             subscribeToTopic(`/topic/${activeTab}`)
     },[activeTab])
 
-    const { sendMessage } = useWebSocket()
+    const { sendMessage, sendUpdateMessage } = useWebSocket()
 
     useEffect(() => {
       if (idList.length !== 0) {
@@ -141,7 +140,6 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
           else
               setCode(languageOptions[firstCode.language].value)
       } else if(tabs.length !== 0) {
-          console.log("testetsettsetset")
           const createInitCode = async () => {
               const response = await fetch(`/code/${pageId}`, {
                   method: 'POST',
@@ -159,6 +157,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
           createInitCode().then(() => {
               setLanguage('C')
               setCode(languageOptions.C.value)
+              if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `create ${myId} ${activeTab}`)
           })
       }
     }, [pageId,idList])
@@ -178,6 +177,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       setActiveTab(newId)
       setLanguage('C')
       setCode(languageOptions.C.value)
+        if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `add ${myId} ${activeTab}`)
     }
 
     const handleTabChange = async (tabId: number) => {
@@ -231,7 +231,16 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
           setTabs(filteredTabs);
           handleTabChange(filteredTabs[0])
       }
+        if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `delete  ${myId} ${activeTab}`)
     }
+    useEffect(() => {
+        if(option) {
+            if(socketMessage.code !== '') {
+                setCode(socketMessage.code)
+                setLanguage(socketMessage.language)
+            }
+        }
+    },[socketMessage])
 
     useImperativeHandle(ref, () => ({
       getCurrentTabInfo() {
@@ -242,7 +251,11 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     const handleCodeChange = debounce((newCode: string) => {
       console.log('Code changed:', newCode)
-      sendMessage(`/app/code/${activeTab}`, newCode)
+        const newMessage = {
+          language:language,
+            code:newCode
+        }
+        if(!option) sendMessage(`/app/code/${activeTab}`, newMessage)
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
@@ -333,7 +346,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             ref={aceRef}
             mode={languageOptions[language].mode}
             name="UNIQUE_ID_OF_DIV"
-            value={!option ? code : socketCode}
+            value={!option || socketMessage.code === '' ? code : socketMessage.code}
             readOnly={option}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}

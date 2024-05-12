@@ -4,34 +4,54 @@ networks:
   algo-net:
     driver: bridge
 
+volumes:
+  config_volume:
+  ssl_volume:
+
+
 services:
+  nginxproxy:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - config_volume:./.nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ssl_volume:/etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+    restart: always
   backend:
+    depends_on:
+      - nginxproxy
     build:
       context: ./back
       dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
+    restart: always
+    expose:
+      - "8081"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - JASYPT_KEY=${JASYPT_KEY}
     networks:
       - algo-net
   front:
+    depends_on:
+      - nginxproxy
     build:
       context: ./front_react
       dockerfile: Dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - /etc/letsencrypt/live/p.ssafy.io:/etc/nginx/ssl:ro
+    expose:
+      - "80"
+    restart: always
     networks:
       - algo-net
   execute:
+    depends_on:
+      - nginxproxy
     build:
       context: ./execute
       dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
+    restart: always
+    expose:
+      - "8082"
     networks:
       - algo-net
