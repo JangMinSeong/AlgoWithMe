@@ -22,11 +22,11 @@ const StudyMainPage = ({ params }: { params: { teamId: number } }) => {
   const [isEditingName, setIsEditingName] = useState(false)
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
-  const { handleViewStudyInfo } = useStudy()
+  const { handleFetchStudyInfo } = useStudy()
 
   useEffect(() => {
     console.log(params.teamId)
-    handleViewStudyInfo(params.teamId)
+    handleFetchStudyInfo(params.teamId)
   }, [params.teamId]) // 이렇게 받는게.. 맞나
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)

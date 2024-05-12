@@ -106,7 +106,7 @@ public class PageController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> changePageTitle(@AuthenticationPrincipal User user,
-                                                @PathVariable Long pageId,
+                                                @PathVariable("pageId") Long pageId,
                                                 @RequestBody String title) {
         pageService.changePageTitle(user, pageId, title);
         return ResponseEntity.ok().build();
@@ -137,7 +137,7 @@ public class PageController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> changeParentPage(@AuthenticationPrincipal User user,
-                                                 @PathVariable Long pageId,
+                                                 @PathVariable("pageId") Long pageId,
                                                  @RequestBody Long parentId){
         pageService.changeParentPage(user, pageId, parentId);
         return ResponseEntity.ok().build();

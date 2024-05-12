@@ -2,7 +2,7 @@ import { FiMic } from 'react-icons/fi'
 import { FiMicOff } from 'react-icons/fi'
 import { TbHeadphones } from 'react-icons/tb'
 import { TbHeadphonesOff } from 'react-icons/tb'
-import { Tooltip } from '@/components/ReactToolTip'
+import { Tooltip } from 'react-tooltip'
 
 import useGroupCall from '@/hooks/useGroupCall'
 import { useSelector } from 'react-redux'

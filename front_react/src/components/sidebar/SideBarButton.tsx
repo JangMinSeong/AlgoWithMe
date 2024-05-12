@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { CiMenuBurger } from 'react-icons/ci'
 import { HiOutlineChevronDoubleLeft } from 'react-icons/hi2'
-import { Tooltip } from '@/components/ReactToolTip'
+import { Tooltip } from 'react-tooltip'
 
 const SideBarButton = () => {
   const { handleCloseSidebar, handleOpenSidebar } = useSidebar()

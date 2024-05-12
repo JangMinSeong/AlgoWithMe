@@ -1,14 +1,11 @@
 import { MdAddCircleOutline } from 'react-icons/md'
 import { useState } from 'react'
 import AddProblemModal from './AddProblemModal'
-import useProblems from '@/hooks/useProblems'
 
 const AddProblem = ({ groupId }: { groupId: string }) => {
   const [showModal, setShowModal] = useState(false)
-  const { viewAllProblems } = useProblems()
 
   const handleModal = () => {
-    viewAllProblems()
     document.body.style.overflow = 'hidden'
     setShowModal(true)
   }
@@ -28,21 +25,21 @@ const AddProblem = ({ groupId }: { groupId: string }) => {
         </div>
         <div className="flex">
           <img
-            src="/SWEA.png"
+            src="/swea.png"
             alt="swea logo"
             width={20}
             height={20}
             className="rounded-full mr-2"
           />
           <img
-            src="/BOJ.png"
+            src="/baekjoon.png"
             alt="boj logo"
             width={20}
             height={20}
             className="rounded-full mr-2"
           />
           <img
-            src="/PROGRAMMERS.png"
+            src="/programmers.png"
             alt="programmers logo"
             width={20}
             height={20}
