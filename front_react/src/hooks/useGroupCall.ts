@@ -2,13 +2,7 @@ import { OpenVidu } from 'openvidu-browser'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import {
-  setSession,
   setMyUserName,
-  setMySessionId,
-  setMainStreamManager, // 필요 없을 수도
-  setSubscriber,
-  setPublisher,
-  setParticipants,
   turnMicOff,
   turnMicOn,
   turnHeadphoneOff,
@@ -18,12 +12,6 @@ import {
 
 const useGroupCall = () => {
   const dispatch = useDispatch()
-
-  const session = useSelector((state: RootState) => state.groupcall.session)
-  const publisher = useSelector((state: RootState) => state.groupcall.publisher)
-  const subscriber = useSelector(
-    (state: RootState) => state.groupcall.subscriber,
-  )
 
   const OV = new OpenVidu()
   OV.enableProdMode()
@@ -40,7 +28,7 @@ const useGroupCall = () => {
       dispatch(setSubscriber(subscriber))
       dispatch(setMyUserName(nickname))
       dispatch(
-          // @ts-ignore
+        // @ts-ignore
         setParticipants((prevParticipants) => [
           ...prevParticipants,
           { subscriber, nickname },
@@ -54,7 +42,7 @@ const useGroupCall = () => {
       dispatch(setSubscriber(undefined))
       dispatch(setMyUserName(undefined))
       dispatch(
-          // @ts-ignore
+        // @ts-ignore
         setParticipants((prevParticipants) =>
           prevParticipants.filter(
             (participant) => participant.nickname !== nickname,

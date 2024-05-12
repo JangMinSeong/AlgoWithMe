@@ -1,70 +1,106 @@
-import useGroupCall from '@/hooks/useGroupCall'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import { Tooltip } from 'react-tooltip'
+import fetch from '@/lib/fetch'
+import { useParams } from 'react-router'
+import { OpenVidu, Session } from 'openvidu-browser'
 
-const API_URL =
-  import.meta.env.MODE === 'development'
-    ? import.meta.env.VITE_API_DEV_URL
-    : import.meta.env.VITE_API_URL
+const OV = new OpenVidu()
+OV.enableProdMode()
 
 const GroupCall = () => {
+  const { groupId } = useParams()
   const [isHeadphoneOn, setIsHeadphoneOn] = useState(true)
   const [isMicOn, setIsMicOn] = useState(false)
+  const [activeSpeaker, setActiveSpeaker] = useState<string>()
+  const [participants, setParticipants] = useState([])
+  const [session, setSession] = useState<Session>()
 
-  const roomId = 'dummy'
-  const myUserName = useSelector(
-    (state: RootState) => state.groupcall.myUserName,
-  )
-  const activeSpeaker = useSelector(
-    (state: RootState) => state.groupcall.activeSpeaker,
-  )
-  const { connectToSession, disconnectSession } = useGroupCall()
+  const connectToSession = (token: string) => {
+    const mySession = OV.initSession()
 
-  useEffect(() => {
-    const fetchSessionAndConnect = async () => {
-      try {
-        // Fetching session ID
-        const sessionIdResponse = await fetch(`${API_URL}/openvidu/sessions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ customSessionId: roomId }),
-          credentials: 'include',
-        })
-        const sessionIdData = await sessionIdResponse.json()
-        const sessionId = sessionIdData.id // Assuming the ID is stored in the `id` property
+    console.log(mySession)
+    console.log(token)
 
-        // Fetching token
-        const tokenResponse = await fetch(
-          `${API_URL}/openvidu/sessions/${sessionId}/connections`,
-          {
+    mySession.connect(token)
+    console.log(mySession.connect(token))
+    setSession(mySession)
+
+    publishInSession()
+  }
+
+  const publishInSession = () => {
+    if (session) {
+      const publisher = OV.initPublisher(undefined, {
+        audioSource: undefined,
+        videoSource: false,
+        publishAudio: false,
+        publishVideo: false,
+      })
+
+      session.publish(publisher)
+
+      // 누군가 접속했을 때
+      session.on('streamCreated', (event) => {
+        const subscriber = session.subscribe(event.stream, undefined)
+        const nickname = event.stream.connection.data.split('=')[1]
+        setParticipants((prevParticipants) => [
+          ...prevParticipants,
+          { subscriber, nickname },
+        ])
+        console.log(subscriber, '입장', nickname)
+      })
+
+      // 누군가 연결 끊었을 때
+      session.on('streamDestroyed', (event) => {
+        event.preventDefault()
+        const nickname = event.stream.connection.data.split('=')[1]
+        setParticipants((prevParticipants) =>
+          prevParticipants.filter((item) => item.nickname !== nickname),
+        )
+        console.log('퇴장', nickname)
+      })
+
+      session.on('publisherStartSpeaking', (event) => {
+        setActiveSpeaker(event.connection.connectionId)
+        console.log('User ' + event.connection.connectionId + ' start speaking')
+      })
+
+      session.on('publisherStopSpeaking', (event) => {
+        setActiveSpeaker(undefined)
+        console.log('User ' + event.connection.connectionId + ' stop speaking')
+      })
+
+      session.on('exception', (exception) => {
+        console.warn(exception)
+      })
+    }
+  }
+
+  const fetchSessionAndToken = async () => {
+    await fetch(`/openvidu/sessions/${groupId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then(
+        async () =>
+          await fetch(`/openvidu/sessions/${groupId}/connections`, {
             headers: {
               'Content-Type': 'application/json',
             },
             method: 'POST',
-            body: JSON.stringify({ customSessionId: roomId }),
             credentials: 'include',
-          },
-        )
-        const tokenData = await tokenResponse.json()
-        const token = tokenData.token // Assuming the token is stored in the `token` property
-
-        // Connecting to the session
-        connectToSession(token)
-      } catch (error) {
-        console.error('Failed to fetch session or token:', error)
-      }
-    }
-
-    fetchSessionAndConnect()
-
-    return () => disconnectSession()
-  }, [])
+          }),
+      )
+      .then((res) => res.json())
+      .then((json) => connectToSession(json.token))
+  } // fetchSessionAndToken
 
   const handleHeadphoneOff = () => {
     // subscriber.subscribeToAudio(false)
@@ -83,9 +119,9 @@ const GroupCall = () => {
     setIsMicOn(true)
   }
 
-  const participants = useSelector(
-    (state: RootState) => state.groupcall.participants,
-  )
+  const disconnectSession = () => {
+    if (session) session.disconnect()
+  }
 
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
@@ -93,13 +129,15 @@ const GroupCall = () => {
     'rounded-xl bg-slate-200 text-xs flex pl-3 items-center justify-center h-6 mr-1 mb-1'
   return (
     <div className="flex">
-      <div className={chipCss}>참여하기</div>
+      <div className={chipCss} onClick={() => fetchSessionAndToken()}>
+        참여하기
+      </div>
 
       {participants.map((el, idx) => (
         <div>사람{idx + 1}</div>
         // activeSpeaker 인 사람은 빨간 링띄우기
       ))}
-      <div onClick={disconnectSession} className={chipCss}>
+      <div onClick={() => disconnectSession()} className={chipCss}>
         연결끊기
       </div>
 
