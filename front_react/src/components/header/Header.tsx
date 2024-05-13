@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -7,7 +5,6 @@ import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
 
 const MainHeader: React.FC = () => {
-
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
 
   return (
@@ -17,7 +14,7 @@ const MainHeader: React.FC = () => {
         <Logo />
       </div>
       <div className="shrink w-1/2">
-        <SearchDropdown items={items} />
+        <SearchDropdown />
       </div>
 
       {avatarUrl ? (
