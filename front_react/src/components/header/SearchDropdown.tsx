@@ -89,7 +89,7 @@ const SearchDropdown: React.FC = () => {
                   handleStudyItemClick(item.id)
                 }}
               >
-                {item.name}
+                {item.name.replace(/"/g, '')}
               </div>
             ))}
             {pageItems.map((item, index) => (
