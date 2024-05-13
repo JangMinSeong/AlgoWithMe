@@ -1,7 +1,6 @@
 import { useDispatch } from 'react-redux'
 import { loginSuccess, logout } from '@/features/auth/authSlice'
 import { User } from '@/features/auth/authTypes'
-import fetch from '@/lib/fetch'
 
 const useAuth = () => {
   const dispatch = useDispatch()
