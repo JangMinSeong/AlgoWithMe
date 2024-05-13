@@ -41,7 +41,7 @@ const StudyMainPage = () => {
     handleEditName(Number(groupId), newName)
     sendUpdateMessage(
       `/app/study/${groupId}`,
-      `updateTitle ${newName}`,
+      `updateTitle ${groupId} ${newName}`,
     )
 
     setIsEditingName(false)
