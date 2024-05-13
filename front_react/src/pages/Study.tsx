@@ -40,7 +40,7 @@ const StudyMainPage = () => {
   return (
     <div className="flex flex-col">
       {/* 스터디 소개 */}
-      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 pb-6 border-b-4 ">
+      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 pb-6 border-b-2 ">
         <span
           className="relative"
           onMouseEnter={() => setIsShowingImgEditor(true)}

@@ -27,13 +27,19 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
         if (directoryOpen && curDirectory) {
             const fetchDirectories = async () => {
                 setIsLoading(true);  // Start loading
-                const fullPath = `${directoryName}/${curDirectory}`;
+                const fullPath = `${directoryName}` ? `${directoryName}/${curDirectory}` : `${curDirectory}`;
+                const dataToPost = {
+                    repo:repoName,
+                    branch:branch,
+                    path:fullPath
+                }
                 try {
-                    const response = await fetch(`/github/repository/${repoName}/${branch}?path=${fullPath}`, {
-                        method: 'GET',
+                    const response = await fetch(`/github/directory`, {
+                        method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
+                        body:JSON.stringify(dataToPost)
                     });
 
                     if (!response.ok) {
@@ -84,7 +90,7 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
                                 branch={branch}
                                 repoName={repoName}
                                 directories={subDirectories}
-                                directoryName={`${directoryName}/${directory}`}
+                                directoryName={`${directoryName} ? ${directoryName}/${directory} : ${directory}`}
                                 depth={depth + 1}
                                 onDirectorySelect={onDirectorySelect}
                             />

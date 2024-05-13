@@ -63,7 +63,7 @@ public class GithubService {
         GitHub gitHub = getGitHub(user);
         try {
             GHRepository repository = gitHub.getMyself().getRepository(req.getRepo());
-            String path = req.getPath() + "/" + req.getFileName() + req.getLanguage().getExtension();
+            String path = req.getPath() + req.getFileName() + req.getLanguage().getExtension();
             try {
                 GHContent fileContent = repository.getFileContent(path, req.getBranch());
                 GHContentUpdateResponse response = fileContent.update(req.getContent(), req.getCommitMessage(), req.getBranch());

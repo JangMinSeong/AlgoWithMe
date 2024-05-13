@@ -1,10 +1,11 @@
 import { useDispatch } from 'react-redux'
 import { loginSuccess, logout } from '@/features/auth/authSlice'
 import { User } from '@/features/auth/authTypes'
+import { useNavigate } from 'react-router-dom'
 
 const useAuth = () => {
   const dispatch = useDispatch()
-
+  const navigate = useNavigate()
   const handleLogin = async (user: User) => {
     dispatch(loginSuccess(user))
   }
@@ -14,7 +15,8 @@ const useAuth = () => {
       method: 'GET',
       credentials: 'include',
     })
-    dispatch(logout())
+      .then(() => dispatch(logout()))
+      .then(() => navigate('/welcome'))
   }
 
   return { handleLogin, handleLogout }

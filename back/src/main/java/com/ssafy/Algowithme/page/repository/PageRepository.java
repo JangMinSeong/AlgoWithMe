@@ -14,4 +14,8 @@ public interface PageRepository extends JpaRepository<Page, Long> {
 
     // 팀 내 페이지 조회 (parentId: 오름차순, orders: 오름차순)
     List<Page> findByTeamIdAndDeletedOrderByParentIdAscOrdersAsc(Long teamId, boolean deleted);
+
+    List<Page> findByTeamIdAndDeletedAndParentIsNullOrderByOrders(Long id, boolean deleted);
+
+    List<Page> findByParentIdAndDeletedOrderByOrders(Long parentPageId, boolean deleted);
 }
