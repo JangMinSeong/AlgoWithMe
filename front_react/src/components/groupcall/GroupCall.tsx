@@ -14,9 +14,6 @@ interface IParticipant {
   nickname: string
 }
 
-const OV = new OpenVidu()
-OV.enableProdMode()
-
 const GroupCall = () => {
   const { groupId } = useParams()
   const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
@@ -29,12 +26,17 @@ const GroupCall = () => {
   const [subscriber, setSubscriber] = useState<Subscriber>()
   const [publisher, setPublisher] = useState<Publisher>()
 
-  const connectToSession = (token: string) => {
+  const OV = new OpenVidu()
+  OV.enableProdMode()
+
+  const connectToSession = async (token: string) => {
     // 이미 있으면 삭제하고 다시
+    if (session) session.disconnect()
 
     const mySession = OV.initSession()
     setSession(mySession)
-    mySession
+
+    await mySession
       .connect(token, myNickname)
       .then(() => publishInSession())
       .catch(() => toast.error('연결에 실패했어요. 잠시후 다시 시도해주세요.'))
@@ -56,8 +58,10 @@ const GroupCall = () => {
       await session.on('streamCreated', (event) => {
         const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
         setSubscriber(mySubscriber)
+
         const connectionId = event.stream.connection.connectionId
         const nickname = event.stream.connection.data
+
         setParticipants((prevParticipants) => [
           ...prevParticipants,
           { connectionId, nickname },
@@ -69,6 +73,7 @@ const GroupCall = () => {
       await session.on('streamDestroyed', (event) => {
         const connectionId = event.stream.connection.connectionId
         session.unsubscribe(subscriber)
+
         setSubscriber(null)
         setParticipants((prevParticipants) =>
           prevParticipants.filter((item) => item.connectionId !== connectionId),
