@@ -3,6 +3,8 @@ import React, { Fragment } from 'react'
 import ColorPickerItem from '@/components/editor/workspace/ColorPickerItem'
 import FontSizeControl from '@/components/editor/workspace/FontSizeControl'
 import MenuItem from './MenuItem'
+import {Editor} from "@tiptap/react";
+import fetch from '@/lib/fetch.ts'
 
 // MenuItemProps 인터페이스 정의
 interface MenuItemProps {
@@ -13,7 +15,12 @@ interface MenuItemProps {
   type?: string
 }
 
-const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
+interface MenuBarProp {
+  editor:Editor
+  pageId:string
+}
+
+const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
 
   const insertImageFromUrl = (url) => {
     editor.chain().focus().setImage({ src: url }).run();
@@ -21,44 +28,24 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
 
   const uploadAndInsertImage = async (file) => {
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
 
     try {
-      const response = await fetch('/path-to-your-upload-api', {
+      const response = await fetch(`/page/image/${pageId}`, {
         method: 'POST',
         body: formData,
       });
-      const data = await response.json();
-      if (data.url) {
-        insertImageFromUrl(data.url);
-      } else {
-        console.error('Failed to upload image');
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
+      const textResponse = await response.text();
+      //const responseData = await response.json();  // JSON 형태로 응답 데이터 파싱
+      console.log('Image uploaded and response received:', textResponse);
+      insertImageFromUrl(textResponse)
     } catch (error) {
       console.error('Error uploading image:', error);
     }
-  };
-
-  // const handleImageUpload = () => {
-  //   const input = document.createElement('input');
-  //   input.type = 'file';
-  //   input.accept = 'image/*';
-  //   input.onchange = async () => {
-  //     const file = input.files[0];
-  //     if (file) {
-  //       await uploadAndInsertImage(file);
-  //     }
-  //   };
-  //   input.click();
-  // };
-
-  const insertLocalImage = (file) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target.result;  // 이 URL은 이미지의 base64 인코딩된 데이터 URL입니다.
-      editor.chain().focus().setImage({ src: url }).run();
-    };
-    reader.readAsDataURL(file);  // 이미지 파일을 읽어 데이터 URL로 변환
   };
 
   const handleImageUpload = () => {
@@ -71,7 +58,7 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
 
       if (target.files && target.files.length > 0) {
         const file = target.files[0];
-        insertLocalImage(file)
+        uploadAndInsertImage(file)
       } else {
         console.log("No file selected.");
       }

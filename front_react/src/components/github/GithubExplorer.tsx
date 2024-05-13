@@ -21,7 +21,7 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
         const dataToSave = {
             repo : activeRepo,
             branch :activeBranch,
-            path : selectedDirectoryPath,
+            path : `${selectedDirectoryPath}` ? `${selectedDirectoryPath}/` : "" ,
             fileName : filename,
             language,
             content,

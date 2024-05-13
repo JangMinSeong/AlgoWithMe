@@ -119,7 +119,8 @@ export default function Layout() {
 
     return (
         <div className="flex">
-            <main className="ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`">
+            <main
+                className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
                 {(!isLoading) && <Outlet />}
                 {/*<Outlet />*/}
             </main>

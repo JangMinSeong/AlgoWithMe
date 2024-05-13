@@ -135,9 +135,9 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
   const renderContent = () => {
     switch (activeTab) {
       case '개인 메모장':
-        return <WorkSpace editor={editorUser} />;
+        return <WorkSpace editor={editorUser} pageId={room}/>;
       case '워크스페이스':
-        return <WorkSpace editor={editorGroup} />;
+        return <WorkSpace editor={editorGroup} pageId={room}/>;
       default:
         return '개인 메모장';
     }

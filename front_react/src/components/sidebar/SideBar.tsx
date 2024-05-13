@@ -169,27 +169,28 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   return (
     <div>
       {isOpen && (
-        <div
-          className={`w-48 min-w-48 h-full overflow-auto fixed left-2 top-16 bg-white bg-opacity-50 rounded-lg transition-all duration-500"`}
-        >
-          <StudyGroupNavigator groupId={groupId} studyList={studyList}/>
-          <div onClick={handleGoStudyMain} className={menuItemWrapper}>
-            스터디 메인 페이지
-          </div>
-          <div className={"mb-20"}>
-          {pageList.map((el) => (
-            <div>
-              <InStudyPageItem
-                groupId={groupId}
-                page={el}
-                key={el.pageId}
-                depth={0}
-                onMovePage={movePage}
-              />
+          <div
+              style={{maxWidth: '12rem', minWidth: '12rem', maxHeight: '86vh', overflow: 'auto'}}
+              className="h-full mb-0 relative bg-white bg-opacity-50 rounded-lg transition-all duration-500"
+          >
+            <StudyGroupNavigator groupId={groupId} studyList={studyList}/>
+            <div onClick={handleGoStudyMain} className={menuItemWrapper}>
+              스터디 메인 페이지
             </div>
-          ))}
+            <div className={""}>
+              {pageList.map((el) => (
+                  <div>
+                    <InStudyPageItem
+                        groupId={groupId}
+                        page={el}
+                        key={el.pageId}
+                        depth={0}
+                        onMovePage={movePage}
+                    />
+                  </div>
+              ))}
+            </div>
           </div>
-        </div>
       )}
     </div>
   )
