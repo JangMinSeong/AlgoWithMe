@@ -111,17 +111,17 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         children: page.children ? deepCopyPages(page.children) : [],
       }))
 
-    const findPage = (pages, pageId, parent = null) => {
+    const findPage = (pages, pageId, parent = null, index) => {
       for (let i = 0; i < pages.length; i++) {
         if (pages[i].pageId === pageId) {
-          return { page: pages[i], parent }
+          return { page: pages[i], parent, index: index + 1 }
         }
         if (pages[i].children) {
-          const result = findPage(pages[i].children, pageId, pages[i])
+          const result = findPage(pages[i].children, pageId, pages[i], 0)
           if (result.page) return result
         }
       }
-      return { page: null, parent: null }
+      return { page: null, parent: null, index: 0 }
     }
 
     const updatePageList = async (pages, draggedPageId, targetPageId) => {
@@ -129,8 +129,18 @@ const SideBar = ({ groupId }: { groupId: number }) => {
       const { page: draggedPage, parent: draggedParent } = findPage(
         updatedPages,
         draggedPageId,
+        null,
+        0,
       )
-      const { page: targetPage } = findPage(updatedPages, targetPageId)
+      const { page: targetPage, index: order } = findPage(
+        updatedPages,
+        targetPageId,
+        null,
+        0,
+      )
+
+      if (targetPage.children.some((child) => child.pageId === draggedPageId))
+        return pages
 
       if (
         !targetPage ||
@@ -153,13 +163,25 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           (child) => child.pageId !== draggedPageId,
         )
       }
+
+      const dataToPut = {
+        pageId: draggedPageId,
+        parentPageId: targetPageId,
+        order: order !== 0 ? order - 1 : 0,
+      }
+
+      const dataToPut = {
+        pageId: draggedPageId,
+        parentPageId: targetPageId,
+        order: order !== 0 ? order - 1 : 0,
+      }
       try {
-        const response = await fetch(`/page/parent/${draggedPageId}`, {
+        const response = await fetch(`/page/position`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: targetPageId,
+          body: JSON.stringify(dataToPut),
         })
 
         if (!response.ok)
