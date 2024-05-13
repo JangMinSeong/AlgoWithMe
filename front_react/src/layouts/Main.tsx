@@ -5,6 +5,7 @@ import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
 import generateSVGPath from '@/lib/computeControlPoints'
+import ScrollToTop from '@/components/ScrollToTop'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 export default function Layout() {
@@ -135,15 +136,14 @@ export default function Layout() {
     },
     onSuccess: (response) => response,
   })
-  
-    return (
-        <div className="flex">
-            <main
-                className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
-                {(!isLoading) && <Outlet />}
-                {/*<Outlet />*/}
-            </main>
-        </div>
-    )
 
+  return (
+    <div className="flex">
+      <ScrollToTop />
+      <main className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
+        {!isLoading && <Outlet />}
+        {/*<Outlet />*/}
+      </main>
+    </div>
+  )
 }
