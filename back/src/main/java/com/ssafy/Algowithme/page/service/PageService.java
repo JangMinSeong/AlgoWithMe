@@ -4,10 +4,7 @@ import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.util.S3Util;
 import com.ssafy.Algowithme.page.dto.PageInfo;
-import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
-import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
-import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
-import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
+import com.ssafy.Algowithme.page.dto.request.*;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.page.dto.response.MemoResponse;
@@ -154,11 +151,6 @@ public class PageService {
         return page;
     }
 
-    public void updatePosition(UpdatePagePositionRequest request, User user) {
-
-    }
-
-
     @Transactional
     public MemoResponse getMemo(Long pageId, User user) {
         // page 조회
@@ -279,6 +271,105 @@ public class PageService {
         String url = s3Util.uploadVideo(file, "/page" + pageId, LocalDateTime.now().toString());
 
         return url;
+    }
+
+    @Transactional
+    public void changePosition(User user, ChangePositionRequest request) {
+        //TODO : user의 page에 대한 권한 확인
+        //페이지 조회
+        Page page = pageRepository.findById(request.getPageId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        if(page.isDeleted()) {
+            throw new CustomException(ExceptionStatus.PAGE_NOT_FOUND);
+        }
+
+        //팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), page.getTeam().getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        //상위 페이지 변경 여부 확인
+        if((request.getParentPageId().equals(-1L) && page.getParent() == null) ||
+                (page.getParent() != null && request.getParentPageId().equals(page.getParent().getId()))) {
+            //기존 상위 페이지에서 order 변경
+            changeOrderCurrentParent(page, request.getParentPageId(), request.getOrder());
+        } else {
+            //기존 상위 페이지와 이후 상위 페이지에서 order 변경
+            changeOrderCurrentAndNextParent(page, request.getParentPageId(), request.getOrder());
+        }
+    }
+
+    private void changeOrderCurrentAndNextParent(Page page, Long nextParentPageId, int order) {
+        //기존 부모페이지에서 순서 변경
+        Long parentPageId = (page.getParent() == null ? -1L : page.getParent().getId());
+        List<Page> childrenPages = getChildrenPages(page, parentPageId);
+        childrenPages.remove(page.getOrders().intValue());
+        for(int i=0; i<childrenPages.size(); i++) {
+            Page child = childrenPages.get(i);
+            child.setOrders((double) i);
+        }
+
+        //이후 부모페이지에서 순서 변경
+        childrenPages = getChildrenPages(page, nextParentPageId);
+        childrenPages.add(order, page);
+        for(int i=0; i<childrenPages.size(); i++) {
+            Page child = childrenPages.get(i);
+            child.setOrders((double) i);
+        }
+
+        //이후 부모 페이지 조회 및 변경
+        validateAndUpdateParent(page, nextParentPageId);
+    }
+
+    private void validateAndUpdateParent(Page page, Long parentPageId) {
+        if(parentPageId.equals(-1L)) {
+            //최상위 페이지인 경우
+            page.setParent(null);
+        } else {
+            //최상위 페이지가 아닌 경우
+            //다음 부모 페이지 조회
+            Page nextParentPage = pageRepository.findById(parentPageId)
+                    .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+            //부모 페이지 유효성 확인
+            Page checkPage;
+            checkPage = nextParentPage;
+
+            while (checkPage.getParent() != null) {
+                if (checkPage.getParent().getId().equals(page.getId())) {
+                    throw new CustomException(ExceptionStatus.PARENT_PAGE_CANNOT_BE_CHILD_PAGE);
+                }
+                checkPage = checkPage.getParent();
+            }
+
+            page.setParent(nextParentPage);
+        }
+    }
+
+    private void changeOrderCurrentParent(Page page, Long parentPageId, int order) {
+        //위치 변동이 없을 경우
+        if(page.getOrders().equals((double) order)) return;
+
+        //자식 페이지 조회
+        List<Page> childrenPages = getChildrenPages(page, parentPageId);
+
+        //기존 페이지 순서 변경
+        childrenPages.remove(page.getOrders().intValue());
+        childrenPages.add(order, page);
+        for(int i=0; i<childrenPages.size(); i++) {
+            Page child = childrenPages.get(i);
+            child.setOrders((double) i);
+        }
+    }
+
+    private List<Page> getChildrenPages(Page page, Long parentPageId) {
+        List<Page> childrenPages;
+        if(parentPageId.equals(-1L)) {
+            childrenPages = pageRepository.findByTeamIdAndDeletedAndParentIsNullOrderByOrders(page.getTeam().getId(), false);
+        } else {
+            childrenPages = pageRepository.findByParentIdAndDeletedOrderByOrders(parentPageId, false);
+        }
+        return childrenPages;
     }
 }
 
