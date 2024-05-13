@@ -2,6 +2,7 @@ package com.ssafy.Algowithme.page.service;
 
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
+import com.ssafy.Algowithme.common.util.S3Util;
 import com.ssafy.Algowithme.page.dto.PageInfo;
 import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
 import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
@@ -22,11 +23,14 @@ import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -40,6 +44,7 @@ public class PageService {
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
     private final UserWorkspaceRepository userWorkspaceRepository;
+    private final S3Util s3Util;
 
     public PageListResponse getPageList(Long teamId, User user) {
         //팀원 여부 확인
@@ -259,6 +264,21 @@ public class PageService {
         page.setParent(parentPage);
 
         pageRepository.save(page);
+    }
+
+    public String uploadImage(User user, Long pageId, MultipartFile file) {
+        //페이지 확인
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        //팀원 여부 확인
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), page.getTeam().getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        //S3 이미지 저장
+        String url = s3Util.uploadVideo(file, "/page" + pageId, LocalDateTime.now().toString());
+
+        return url;
     }
 }
 
