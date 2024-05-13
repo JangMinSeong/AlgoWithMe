@@ -148,4 +148,7 @@ public class PageController {
                                               @RequestParam(value = "file") MultipartFile file) {
         return ResponseEntity.ok(pageService.uploadImage(user, pageId, file));
     }
+
+
+
 }
