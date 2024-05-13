@@ -1,4 +1,4 @@
-import LogoSrc from '@/public/logo/Logo.png'
+import LogoImg from '/logo.svg'
 
 interface LogoProps {
   className?: string
@@ -7,9 +7,13 @@ interface LogoProps {
 export default function Logo({ className }: LogoProps) {
   return (
     <img
-      src={LogoSrc}
+      src={LogoImg}
       alt="Logo"
-      className={`h-8 object-contain hover:cursor-pointer ${className || ''}`}
+      className={`hover:cursor-pointer ${className || ''}`}
+      width={80}
+      onClick={() => {
+        window.location.href = '/'
+      }}
     />
   )
 }
