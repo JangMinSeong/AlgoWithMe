@@ -47,16 +47,17 @@ const StudyHeader = (props: { groupId: number }) => {
 
   return (
     <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
-      <div className="flex items-center w-1/4">
+      <div className="flex items-center w-1/2">
         <SideBarButton />
         <Logo />
+        <div className="flex items-center ml-4">
+          {users.map((user) => (
+            <Avatar key={user.id} userInfo={user} isProfile={false} />
+          ))}
+          <GroupCall />
+        </div>
       </div>
-      <div className="flex items-center">
-        {users.map((user) => (
-          <Avatar key={user.id} userInfo={user} isProfile={false} />
-        ))}
-        <GroupCall />
-      </div>
+
       <div className="flex items-center">
         <Timer />
         {curUser && <Avatar userInfo={curUser} isProfile={true} />}

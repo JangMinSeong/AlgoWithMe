@@ -30,7 +30,7 @@ const Avatar = (props: { userInfo: UserInfo; isProfile: boolean }) => {
         curUser === props.userInfo.id && !props.isProfile
           ? 'border border-red-500 rounded-full'
           : ''
-      }`}
+      } mr-2`}
     >
       <img
         src={props.userInfo.imageUrl}
