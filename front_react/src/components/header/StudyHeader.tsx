@@ -1,13 +1,11 @@
-import { BrowserRouter as Router, Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import Logo from '/logo.svg'
+import Logo from '@/components/Logo'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
 import GroupCall from '../groupcall/GroupCall'
 import { useEffect, useState } from 'react'
 import fetch from '@/lib/fetch.ts'
-import { setPageList } from '@/features/sidebar/sidebarSlice.ts'
 import { RootState } from '@/lib/store.ts'
 import useCode from '@/hooks/useCode.ts'
 
@@ -51,9 +49,7 @@ const StudyHeader = (props: { groupId: number }) => {
     <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
       <div className="flex items-center w-1/4">
         <SideBarButton />
-        <Link to="/main">
-          <img src={Logo} alt="로고" width={80} height={0} />
-        </Link>
+        <Logo />
       </div>
       <div className="flex items-center">
         {users.map((user) => (
