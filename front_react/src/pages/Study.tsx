@@ -9,10 +9,11 @@ import SetTimer from '@/components/studypage/SetTimer'
 import { useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -22,6 +23,9 @@ const StudyMainPage = () => {
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
   const { handleEditName, handleEditImage } = useStudy()
+  const { sendUpdateMessage } = useWebSocket()
+
+  useEffect(() => {}, [])
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
 
@@ -34,6 +38,10 @@ const StudyMainPage = () => {
     const newName = formData.get('newName').toString()
 
     handleEditName(currentStudyInfo.teamId, newName)
+    sendUpdateMessage(
+      `/app/study/${currentStudyInfo.teamId}`,
+      `updateTitle ${newName}`,
+    )
     setIsEditingName(false)
   }
 
