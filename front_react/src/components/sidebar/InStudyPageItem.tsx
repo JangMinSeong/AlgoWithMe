@@ -132,7 +132,7 @@ const InStudyPageItem = (props: {
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           style={{paddingLeft: `${props.depth * 10}px`}}
-          className={`draggable-item ${isDragOver ? 'bg-blue-100 border-blue-500' : 'bg-white'} border`}
+          className={`draggable-item ${isDragOver ? 'bg-blue-100 border-gray-300' : 'bg-white'} border`}
       >
         <div
             onClick={handleMovePage}
@@ -140,7 +140,16 @@ const InStudyPageItem = (props: {
             onMouseOver={handleShowModifier}
             onMouseOut={handleUnShowModifier}
         >
-          <div style={{width: 192 - pl}} className="truncate ">
+          {
+            props.page.docs ?
+                <img
+                    src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png"
+                    alt="File Folder" width="25" height="25"/> :
+                <img
+                    src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20Facing%20Up.png"
+                    alt="Page Facing Up" width="25" height="25"/>
+          }
+          <div style={{width: 192 - pl}} className="truncate pl-2">
             {pageTitle ? pageTitle : '빈 페이지'}
           </div>
           {isModifierShowing && (
