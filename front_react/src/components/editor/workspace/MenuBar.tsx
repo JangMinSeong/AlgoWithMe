@@ -14,6 +14,72 @@ interface MenuItemProps {
 }
 
 const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
+
+  const insertImageFromUrl = (url) => {
+    editor.chain().focus().setImage({ src: url }).run();
+  };
+
+  const uploadAndInsertImage = async (file) => {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    try {
+      const response = await fetch('/path-to-your-upload-api', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await response.json();
+      if (data.url) {
+        insertImageFromUrl(data.url);
+      } else {
+        console.error('Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+
+  // const handleImageUpload = () => {
+  //   const input = document.createElement('input');
+  //   input.type = 'file';
+  //   input.accept = 'image/*';
+  //   input.onchange = async () => {
+  //     const file = input.files[0];
+  //     if (file) {
+  //       await uploadAndInsertImage(file);
+  //     }
+  //   };
+  //   input.click();
+  // };
+
+  const insertLocalImage = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const url = e.target.result;  // 이 URL은 이미지의 base64 인코딩된 데이터 URL입니다.
+      editor.chain().focus().setImage({ src: url }).run();
+    };
+    reader.readAsDataURL(file);  // 이미지 파일을 읽어 데이터 URL로 변환
+  };
+
+  const handleImageUpload = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+
+    input.onchange = (e) => {
+      const target = e.target as HTMLInputElement;
+
+      if (target.files && target.files.length > 0) {
+        const file = target.files[0];
+        insertLocalImage(file)
+      } else {
+        console.log("No file selected.");
+      }
+    };
+
+    input.click();
+  };
+
   const items: MenuItemProps[] = [
     {
       icon: 'bold',
@@ -135,10 +201,7 @@ const MenuBar: React.FC<{ editor: any }> = ({ editor }) => {
       icon: 'file-image-line',
       title: 'Image',
       action: () => {
-        const url = prompt('Enter image URL')
-        if (url) {
-          editor.chain().focus().setImage({ src: url }).run()
-        }
+          handleImageUpload();
       },
     },
     {
