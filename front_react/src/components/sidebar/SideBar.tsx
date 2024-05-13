@@ -169,12 +169,6 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         parentPageId: targetPageId,
         order: order !== 0 ? order - 1 : 0,
       }
-
-      const dataToPut = {
-        pageId: draggedPageId,
-        parentPageId: targetPageId,
-        order: order !== 0 ? order - 1 : 0,
-      }
       try {
         const response = await fetch(`/page/position`, {
           method: 'PUT',
