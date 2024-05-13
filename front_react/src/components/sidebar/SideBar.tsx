@@ -176,7 +176,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           <div onClick={handleGoStudyMain} className={menuItemWrapper}>
             스터디 메인 페이지
           </div>
-          <div className={"mb-5"}>
+          <div className={"mb-20"}>
           {pageList.map((el) => (
             <div>
               <InStudyPageItem

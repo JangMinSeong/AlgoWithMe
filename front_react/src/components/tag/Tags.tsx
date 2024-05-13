@@ -45,20 +45,23 @@ const TagSelector: React.FC<TagSelectorProps> = ({
                             selectedTags.includes(tag.key) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
                         }`}
                         onClick={() => toggleTag(tag.key)}
-                        style={{ minWidth: '5rem' }} // Ensure minimum width for smaller tags
+                        style={{minWidth: '5rem'}}
                     >
                         {tag.label}
                     </button>
                 ))}
             </div>
-            <button
-                className="mt-4 py-1 px-4 bg-red-500 text-white rounded hover:bg-red-300 transition duration-200"
-                onClick={onClose}
-            >
-                닫기
-            </button>
+            <div className="text-right mt-4">
+                <button
+                    className="py-1 px-4 bg-red-500 text-white rounded hover:bg-red-300 transition duration-200"
+                    onClick={onClose}
+                >
+                    닫기
+                </button>
+            </div>
         </div>
     </div>
+
 );
 
 export default TagSelector;

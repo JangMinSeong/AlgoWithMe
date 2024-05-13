@@ -330,6 +330,8 @@ const RightComponent: React.FC<ProblemProp> = ({
                   isOpen={isGitHubExplorerOpen}
                   isClose={handleCloseGitHubExplorer}
                   repositories={repositories}
+                  content={codeEditorRef.current?.getCurrentTabInfo().code}
+                  language={codeEditorRef.current?.getCurrentTabInfo().language}
               />
           )}
         </div>

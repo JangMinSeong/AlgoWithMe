@@ -22,11 +22,17 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName,onDi
         event.stopPropagation();
         onBranchSelect(branchName)
         setActiveBranch(activeBranch === branchName ? null : branchName);
-        const response = await fetch(`/github/repository/${repoName}/${branchName}?path=`, {
-            method: 'GET',
+        const dataToPost = {
+            repo:repoName,
+            branch:branchName,
+            path:""
+        }
+        const response = await fetch(`/github/directory`, {
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
+            body:JSON.stringify(dataToPost)
         });
 
         if (!response.ok) {
