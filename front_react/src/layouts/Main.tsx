@@ -7,14 +7,19 @@ import { User } from '@/features/auth/authTypes'
 import generateSVGPath from '@/lib/computeControlPoints'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import ScrollToTop from '@/components/ScrollToTop'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
 export default function Layout() {
   const user = useSelector((state: RootState) => state.auth.user)
   const { handleLogout, handleLogin } = useAuth()
   const [isLoading, setIsLoading] = useState(true)
   const hasOngoingRequest = useRef(false)
+  const hasOngoingRefreshRequest = useRef(false)
   const navigate = useNavigate()
   const location = useLocation()
+  const failedRequestQueue = useRef<
+    Array<{ url: string; options: RequestInit }>
+  >([])
 
   // 예제 점 배열
   const points = [
@@ -72,6 +77,7 @@ export default function Layout() {
         setIsLoading(false)
       }
     }
+    hasOngoingRequest.current = false
     refreshTask()
   }, [user])
 
@@ -92,25 +98,40 @@ export default function Layout() {
       },
     }),
     onError: async (response) => {
-      if (response.stateus === 401 && user) {
-        const refreshResponse = await fetch(`${baseUrl}/user/refresh`, {
-          method: 'POST',
-          credentials: 'include',
-        })
+      if (response.status === 401 && user) {
+        if (hasOngoingRefreshRequest.current) {
+          return
+        }
+        hasOngoingRefreshRequest.current = true
 
-        if (refreshResponse.ok) {
-          const newAccessToken = refreshResponse.headers
-            .get('Authorization')
-            ?.split(' ')[1]
+        try {
+          const refreshResponse = await fetch(`${baseUrl}/user/refresh`, {
+            method: 'POST',
+            credentials: 'include',
+          })
 
-          if (newAccessToken) {
-            const updatedUser = { ...user, accessToken: newAccessToken }
-            handleLogin(updatedUser)
+          if (refreshResponse.ok) {
+            const newAccessToken = refreshResponse.headers
+              .get('Authorization')
+              ?.split(' ')[1]
+
+            if (newAccessToken) {
+              const updatedUser = { ...user, accessToken: newAccessToken }
+              handleLogin(updatedUser)
+            } else {
+              handleLogout()
+              navigate('/welcome')
+            }
           } else {
             handleLogout()
+            navigate('/welcome')
           }
-        } else {
+        } catch (error) {
+          console.error('Error refreshing token:', error)
           handleLogout()
+          navigate('/welcome')
+        } finally {
+          hasOngoingRefreshRequest.current = false
         }
       }
     },
@@ -119,9 +140,9 @@ export default function Layout() {
 
   return (
     <div className="flex">
-      <main className="ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`">
+      <ScrollToTop />
+      <main className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
         {!isLoading && <Outlet />}
-        <ScrollToTop />
         {/*<Outlet />*/}
       </main>
     </div>

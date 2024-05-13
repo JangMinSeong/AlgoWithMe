@@ -16,12 +16,9 @@ export default function Layout() {
   return (
     <div className="flex">
       <ScrollToTop />
+
       <SideBar groupId={Number(groupId)} />
-      <main
-        className={`${
-          isSidebarOpen ? 'ml-52 mr-2' : 'mr-2'
-        } ml-2 w-dvw max-w-dvw transition-all duration-700`}
-      >
+      <main className="ml-2 w-dvw max-w-dvw transition-all duration-700">
         <div>
           <StudyHeader groupId={Number(groupId)} />
           <main className="bg-white bg-opacity-70 p-8 rounded-lg mr-6">

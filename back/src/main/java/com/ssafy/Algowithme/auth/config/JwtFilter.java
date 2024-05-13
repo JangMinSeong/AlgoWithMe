@@ -22,21 +22,30 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authorization = request.getHeader("Authorization");
+        try {
+            String authorization = request.getHeader("Authorization");
 
-        if(authorization == null || !authorization.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
+            if(authorization == null || !authorization.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = authorization.split(" ")[1];
+
+            JwtCode jwtCode = jwtUtil.validateToken(token);
+
+            if(jwtCode == JwtCode.ACCESS) {
+                Authentication authToken = jwtUtil.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            } else {
+                throw new ServletException("Invalild JWT Token");
+            }
+        } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Unauthorized: " + e.getMessage());
             return;
         }
 
-        String token = authorization.split(" ")[1];
-
-        JwtCode jwtCode = jwtUtil.validateToken(token);
-
-        if(jwtCode == JwtCode.ACCESS) {
-            Authentication authToken = jwtUtil.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
 
         filterChain.doFilter(request, response);
     }
