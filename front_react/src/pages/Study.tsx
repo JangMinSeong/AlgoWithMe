@@ -37,11 +37,13 @@ const StudyMainPage = () => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
 
-    handleEditName(currentStudyInfo.teamId, newName)
+
+    handleEditName(Number(groupId), newName)
     sendUpdateMessage(
-      `/app/study/${currentStudyInfo.teamId}`,
-      `updateTitle ${newName}`,
+      `/app/study/${groupId}`,
+      `updateTitle ${groupId} ${newName}`,
     )
+
     setIsEditingName(false)
   }
 

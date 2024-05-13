@@ -128,7 +128,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> changeTeamName(@AuthenticationPrincipal User user,
-                                                 @PathVariable Long teamId,
+                                                 @PathVariable("teamId") Long teamId,
                                                  @RequestBody String name) {
         teamService.changeTeamName(user, teamId, name);
         return ResponseEntity.ok().build();
