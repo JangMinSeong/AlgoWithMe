@@ -13,10 +13,14 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.entity.RawProblem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
+import com.ssafy.Algowithme.user.entity.User;
+import com.ssafy.Algowithme.user.entity.UserProblem;
+import com.ssafy.Algowithme.user.repository.UserProblemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,7 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
+    private final UserProblemRepository userProblemRepository;
     private final PageRepository pageRepository;
 
     public ResponseEntity<AllProblemResponse> getAll() {
@@ -108,5 +113,18 @@ public class ProblemService {
         }
 
         return ProblemByTagsResponse.create(resultCount, page, totalPages, problemInfoList);
+    }
+
+    @Transactional
+    public void storeProblemSolvingHistory(User user, Long problemId) {
+        //문제 조회
+        Problem problem = problemRepository.findById(problemId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
+
+        //제출 이력 저장
+        userProblemRepository.save(UserProblem.builder()
+                .user(user)
+                .problem(problem)
+                .build());
     }
 }
