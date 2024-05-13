@@ -1,10 +1,7 @@
 package com.ssafy.Algowithme.page.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
-import com.ssafy.Algowithme.page.dto.request.CreateDocsPageRequest;
-import com.ssafy.Algowithme.page.dto.request.CreateProblemPageRequest;
-import com.ssafy.Algowithme.page.dto.request.UpdateMemoRequest;
-import com.ssafy.Algowithme.page.dto.request.UpdatePagePositionRequest;
+import com.ssafy.Algowithme.page.dto.request.*;
 import com.ssafy.Algowithme.page.dto.response.CreateDocsPageResponse;
 import com.ssafy.Algowithme.page.dto.response.CreateProblemPageResponse;
 import com.ssafy.Algowithme.page.dto.response.MemoResponse;
@@ -63,17 +60,6 @@ public class PageController {
         return ResponseEntity.ok(pageService.createProblemPage(request, user));
     }
 
-    @PutMapping("/position")
-    @Operation(summary = "페이지 위치 변경", description = "페이지의 위치를 변경한다.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "페이지 위치 변경 성공"),
-            @ApiResponse(responseCode = "400", description = "페이지 위치 변경 실패", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
-    })
-    public ResponseEntity<?> updatePosition(@RequestBody UpdatePagePositionRequest request, @AuthenticationPrincipal User user) {
-        pageService.updatePosition(request, user);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/memo/{pageId}")
     @Operation(summary = "개인메모 조회", description = "pageId 에 해당하는 개인 메모를 조회한다. 조회가 안 될 경우 생성해서 반환한다.")
     @ApiResponses(value = {
@@ -126,10 +112,10 @@ public class PageController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/parent/{pageId}")
-    @Operation(summary = "부모 페이지 변경", description = "부모 페이지를 변경한다.")
+    @PutMapping("/position")
+    @Operation(summary = "페이지 위치 변경", description = "페이지 위치를 변경한다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "부모 페이지 변경 성공"),
+            @ApiResponse(responseCode = "200", description = "페이지 위치 변경 성공"),
             @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
@@ -137,10 +123,9 @@ public class PageController {
             @ApiResponse(responseCode = "1202", description = "자신의 자식페이지를 부모페이지로 할 수 없습니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<Void> changeParentPage(@AuthenticationPrincipal User user,
-                                                 @PathVariable("pageId") Long pageId,
-                                                 @RequestBody Long parentId){
-        pageService.changeParentPage(user, pageId, parentId);
+    public ResponseEntity<Void> changePosition(@AuthenticationPrincipal User user,
+                                               @RequestBody ChangePositionRequest request){
+        pageService.changePosition(user, request);
         return ResponseEntity.ok().build();
     }
 
