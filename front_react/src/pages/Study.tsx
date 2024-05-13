@@ -33,7 +33,7 @@ const StudyMainPage = () => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
 
-    handleEditName(currentStudyInfo.teamId, newName)
+    handleEditName(Number(groupId), newName)
     setIsEditingName(false)
   }
 

@@ -79,7 +79,7 @@ const StudyList: React.FC<StudyProp> = ({ studyList = [] }) => {
             key={study.id}
             imageSrc={study.imageUrl}
             date={new Date(study.visitedAt).toLocaleDateString('ko-KR')}
-            studyName={study.name}
+            studyName={study.name.replace(/"/g, '')}
             onClick={() => handleCardClick(study.id)}
             style={{ minWidth: 'calc(25% - 40px)' }} // 40px accounts for space-x-10 spacing
           />
