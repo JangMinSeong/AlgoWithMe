@@ -5,10 +5,10 @@ import StudyGroupNavigator from './StudyGroupNavigator'
 import InStudyPageItem from './InStudyPageItem'
 import fetch from '@/lib/fetch'
 import useSidebar from '@/hooks/useSidebar.ts'
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import useStudy from '@/hooks/useStudy'
 import { useNavigate } from 'react-router-dom'
-import {useWebSocket} from "@/hooks/useWebSocket.ts";
+import { useWebSocket } from '@/hooks/useWebSocket.ts'
 
 interface Study {
   id: number
@@ -32,31 +32,33 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const menuItemWrapper =
     'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors  flex items-center text-sm'
 
-  const studyUpdate = useSelector((state:RootState) => state.socket.messageStudyUpdate)
+  const studyUpdate = useSelector(
+    (state: RootState) => state.socket.messageStudyUpdate,
+  )
 
   const { setGId, setPages } = useSidebar()
 
-  const { connectToServer,sendUpdateMessage } = useWebSocket()
+  const { connectToServer, sendUpdateMessage } = useWebSocket()
 
   useEffect(() => {
     connectToServer(groupId)
-  }, [user,groupId])
+  }, [user, groupId])
 
   useEffect(() => {
     const fetchStudyList = async () => {
       const response = await fetch(`/user/study`, {
         method: 'GET',
         headers: {
-          'content-Type' : 'application/json'
+          'content-Type': 'application/json',
         },
       })
-      if(response.ok) {
+      if (response.ok) {
         const responseData = await response.json()
         setStudyList(responseData)
       }
     }
     fetchStudyList()
-  },[user])
+  }, [user])
 
   const fetchData = async () => {
     try {
@@ -81,8 +83,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
   useEffect(() => {
     fetchData()
-  },[studyUpdate])
-
+  }, [studyUpdate])
 
   useEffect(() => {
     fetchData()
@@ -98,46 +99,59 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
   const movePage = async (draggedId, targetId) => {
     const isDescendant = (parent, childId) => {
-      if (!parent.children) return false;
-      return parent.children.some(child => child.pageId === childId || isDescendant(child, childId));
-    };
+      if (!parent.children) return false
+      return parent.children.some(
+        (child) => child.pageId === childId || isDescendant(child, childId),
+      )
+    }
 
-    const deepCopyPages = (pages) => pages.map(page => ({
-      ...page,
-      children: page.children ? deepCopyPages(page.children) : []
-    }));
+    const deepCopyPages = (pages) =>
+      pages.map((page) => ({
+        ...page,
+        children: page.children ? deepCopyPages(page.children) : [],
+      }))
 
     const findPage = (pages, pageId, parent = null) => {
       for (let i = 0; i < pages.length; i++) {
         if (pages[i].pageId === pageId) {
-          return { page: pages[i], parent };
+          return { page: pages[i], parent }
         }
         if (pages[i].children) {
-          const result = findPage(pages[i].children, pageId, pages[i]);
-          if (result.page) return result;
+          const result = findPage(pages[i].children, pageId, pages[i])
+          if (result.page) return result
         }
       }
-      return { page: null, parent: null };
-    };
+      return { page: null, parent: null }
+    }
 
     const updatePageList = async (pages, draggedPageId, targetPageId) => {
-      let updatedPages = deepCopyPages(pages);
-      const { page: draggedPage, parent: draggedParent } = findPage(updatedPages, draggedPageId);
-      const { page: targetPage } = findPage(updatedPages, targetPageId);
+      let updatedPages = deepCopyPages(pages)
+      const { page: draggedPage, parent: draggedParent } = findPage(
+        updatedPages,
+        draggedPageId,
+      )
+      const { page: targetPage } = findPage(updatedPages, targetPageId)
 
-      if (!targetPage || !draggedPage || !targetPage.docs || isDescendant(draggedPage, targetPage.pageId)) {
-        console.error("Invalid operation: Move operation is not allowed.");
-        return pages;
+      if (
+        !targetPage ||
+        !draggedPage ||
+        !targetPage.docs ||
+        isDescendant(draggedPage, targetPage.pageId)
+      ) {
+        console.error('Invalid operation: Move operation is not allowed.')
+        return pages
       }
 
       if (!targetPage.children) {
-        targetPage.children = [];
+        targetPage.children = []
       }
-      targetPage.children.push(draggedPage);
+      targetPage.children.push(draggedPage)
 
       // Remove draggedPage from its old parent
       if (draggedParent && draggedParent.children) {
-        draggedParent.children = draggedParent.children.filter(child => child.pageId !== draggedPageId);
+        draggedParent.children = draggedParent.children.filter(
+          (child) => child.pageId !== draggedPageId,
+        )
       }
       try {
         const response = await fetch(`/page/parent/${draggedPageId}`, {
@@ -145,53 +159,57 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: targetPageId
-        });
+          body: targetPageId,
+        })
 
-        if (!response.ok) throw new Error('Failed to update the parent on the server.');
+        if (!response.ok)
+          throw new Error('Failed to update the parent on the server.')
 
-        sendUpdateMessage(`/app/study/${groupId}`, `update${draggedPageId} to ${targetPageId}`)
+        sendUpdateMessage(
+          `/app/study/${groupId}`,
+          `update${draggedPageId} to ${targetPageId}`,
+        )
 
-        return updatedPages;
+        return updatedPages
       } catch (error) {
-        console.error('Error updating page parent:', error);
-        return pages;  // 에러가 발생하면 원본 페이지 반환
+        console.error('Error updating page parent:', error)
+        return pages // 에러가 발생하면 원본 페이지 반환
       }
-    };
+    }
 
     // 업데이트된 페이지 리스트로 상태 업데이트
-    const updatedPageList = await updatePageList(pageList, draggedId, targetId);
-    console.log(updatedPageList);
-    setPages(updatedPageList);
-  };
-
+    const updatedPageList = await updatePageList(pageList, draggedId, targetId)
+    console.log(updatedPageList)
+    setPages(updatedPageList)
+  }
 
   return (
     <div>
-      {isOpen && (
-          <div
-              style={{maxWidth: '12rem', minWidth: '12rem', maxHeight: '86vh', overflow: 'auto'}}
-              className="h-full mb-0 relative bg-white bg-opacity-50 rounded-lg transition-all duration-500"
-          >
-            <StudyGroupNavigator groupId={groupId} studyList={studyList}/>
-            <div onClick={handleGoStudyMain} className={menuItemWrapper}>
-              스터디 메인 페이지
+      <div
+        style={{
+          maxWidth: '12rem',
+          minWidth: '12rem',
+        }}
+        className="h-full mb-10 relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
+      >
+        <StudyGroupNavigator groupId={groupId} studyList={studyList} />
+        <div onClick={handleGoStudyMain} className={menuItemWrapper}>
+          스터디 메인 페이지
+        </div>
+        <div className={''}>
+          {pageList.map((el) => (
+            <div>
+              <InStudyPageItem
+                groupId={groupId}
+                page={el}
+                key={el.pageId}
+                depth={0}
+                onMovePage={movePage}
+              />
             </div>
-            <div className={""}>
-              {pageList.map((el) => (
-                  <div>
-                    <InStudyPageItem
-                        groupId={groupId}
-                        page={el}
-                        key={el.pageId}
-                        depth={0}
-                        onMovePage={movePage}
-                    />
-                  </div>
-              ))}
-            </div>
-          </div>
-      )}
+          ))}
+        </div>
+      </div>
     </div>
   )
 }

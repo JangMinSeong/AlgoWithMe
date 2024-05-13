@@ -5,7 +5,6 @@ import useInterceptor from '@/hooks/useInterceptor'
 import useAuth from '@/hooks/useAuth'
 import { User } from '@/features/auth/authTypes'
 import generateSVGPath from '@/lib/computeControlPoints'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import ScrollToTop from '@/components/ScrollToTop'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 
