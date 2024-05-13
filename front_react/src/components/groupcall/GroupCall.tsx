@@ -39,8 +39,8 @@ const GroupCall = () => {
     setSession(mySession)
 
     mySession.on('streamCreated', (event) => {
-      const mySubscriber = mySession.subscribe(event.stream, '')
-
+      const mySubscriber = mySession.subscribe(event.stream, 'subscriberDiv')
+      setSubscriber(mySubscriber)
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       console.log(connectionId)
@@ -83,6 +83,7 @@ const GroupCall = () => {
     })
 
     mySession.publish(myPublisher)
+    setPublisher(myPublisher)
 
     mySession.on('connectionCreated', (event) => {
       const nickname = event.connection.data
@@ -113,22 +114,22 @@ const GroupCall = () => {
     })
   }
 
-  // const handleHeadphoneOff = () => {
-  //   subscriber.subscribeToAudio(false)
-  //   setIsHeadphoneOn(false)
-  // }
-  // const handleHeadphoneOn = () => {
-  //   subscriber.subscribeToAudio(true)
-  //   setIsHeadphoneOn(true)
-  // }
-  // const handleMicOff = () => {
-  //   publisher.publishAudio(false)
-  //   setIsMicOn(false)
-  // }
-  // const handleMicOn = () => {
-  //   publisher.publishAudio(true)
-  //   setIsMicOn(true)
-  // }
+  const handleHeadphoneOff = () => {
+    subscriber.subscribeToAudio(false)
+    setIsHeadphoneOn(false)
+  }
+  const handleHeadphoneOn = () => {
+    subscriber.subscribeToAudio(true)
+    setIsHeadphoneOn(true)
+  }
+  const handleMicOff = () => {
+    publisher.publishAudio(false)
+    setIsMicOn(false)
+  }
+  const handleMicOn = () => {
+    publisher.publishAudio(true)
+    setIsMicOn(true)
+  }
 
   const fetchSessionAndToken = async () => {
     await fetch(`/openvidu/sessions/${groupId}`, {
@@ -186,7 +187,7 @@ const GroupCall = () => {
       {session && (
         <div className="ml-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
           {isHeadphoneOn ? (
-            <div>
+            <div onClick={handleHeadphoneOff}>
               <a id="willOffHeadphone" className={anchorTagCSS}>
                 <TbHeadphones className="w-5 h-5" />
               </a>
@@ -195,7 +196,7 @@ const GroupCall = () => {
               </Tooltip>
             </div>
           ) : (
-            <div>
+            <div onClick={handleHeadphoneOn}>
               <a id="willOnHeadphone" className={anchorTagCSS}>
                 <TbHeadphonesOff className="w-5 h-5 text-red-400" />
               </a>
@@ -206,7 +207,7 @@ const GroupCall = () => {
           )}
 
           {isMicOn ? (
-            <div>
+            <div onClick={handleMicOff}>
               <a id="willOffMic" className={anchorTagCSS}>
                 <FiMic className="w-5 h-5" />
               </a>
@@ -215,7 +216,7 @@ const GroupCall = () => {
               </Tooltip>
             </div>
           ) : (
-            <div>
+            <div onClick={handleMicOn}>
               <a id="willOnMic" className={anchorTagCSS}>
                 <FiMicOff className="w-5 h-5 text-red-400" />
               </a>
