@@ -135,13 +135,15 @@ export default function Layout() {
     },
     onSuccess: (response) => response,
   })
+  
+    return (
+        <div className="flex">
+            <main
+                className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
+                {(!isLoading) && <Outlet />}
+                {/*<Outlet />*/}
+            </main>
+        </div>
+    )
 
-  return (
-    <div className="flex">
-      <main className="ml-2 w-dvw max-w-dvw mt-16 transition-all duration-700`">
-        {!isLoading && <Outlet />}
-        {/*<Outlet />*/}
-      </main>
-    </div>
-  )
 }
