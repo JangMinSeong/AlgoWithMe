@@ -165,37 +165,36 @@ async def mark_programmers_c(code_test: CodeTest):
 async def mark_programmers_cpp(code_test: CodeTest):
     results = []
     dir = os.getenv('BASE_DIR', '/tmp')
-    path = os.path.join(dir, "main.cpp")
+    path = os.path.join(dir, "main.py")
     executable_path = os.path.join(dir, "main")
     with open(path, "w", encoding='utf-8') as file:
         file.write(create_cpp_main(code_test.main, code_test.solution))
-    # compile
-    compile_process = subprocess.run(["g++", path, "-o", executable_path], capture_output=True, text=True)
-    if compile_process.returncode != 0:
-        return {"status": 422, "error": compile_process.stderr}
-    # run
+    try:
+        compile(code_test.main, "main.py", "exec")
+    except SyntaxError as e:
+        return {"status": 422, "error": str(e)} # 컴파일 에러
     for test_case in code_test.test_cases:
+        start_time = time.perf_counter()
         try:
-            start_time = time.perf_counter()
-            run_process = subprocess.Popen(
-                [executable_path],
+            process = subprocess.Popen(
+                ["python", path],
                 stdin=subprocess.PIPE, 
                 stdout=subprocess.PIPE, 
                 stderr=subprocess.PIPE, 
                 text=True
             )
             try:
-                output, errors = run_process.communicate(input=test_case.problem, timeout=10)
+                output, errors = process.communicate(input=test_case.problem, timeout=10)
                 elapsed_time = time.perf_counter() - start_time
                 elapsed_time_ms = int(elapsed_time * 1000)
-                if run_process.returncode != 0: # 런타임 에러
+                if process.returncode != 0: # 런타임 에러
                     results.append({"status": 400, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
                 else:
-                    results.append({"status":200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
+                    results.append({"status": 200, "input": test_case.problem, "expected": test_case.answer, "got": output.strip(), "passed": output.strip() == test_case.answer, "execution_time": elapsed_time_ms})
             except subprocess.TimeoutExpired: # 시간 초과
-                run_process.kill()
+                process.kill()
                 errors = 'Time limit exceeded'
-                results.append({"status":408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
+                results.append({"status": 408, "input": test_case.problem, "expected": test_case.answer, "got": errors, "passed": False})
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
     if os.path.exists(path):
