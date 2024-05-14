@@ -270,7 +270,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-full" style={{ height: '84vh' }}>
       <div style={{ flex: 2 }}>
         <CodeEditor
             ref={codeEditorRef}
