@@ -37,6 +37,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
   forwardRef(({ provider, editCodes,firstCode, idList, pageId,option }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
+    const [isInitCode, setIsInitCode]=  useState(false)
 
     const initialJavaCode = (() => {
       if (provider === 'swea') {
@@ -139,8 +140,9 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setCode(firstCode.code)
           else
               setCode(languageOptions[firstCode.language].value)
-      } else if(tabs.length !== 0) {
+      } else if(!option && !isInitCode) {
           const createInitCode = async () => {
+              console.log("in create init asdnlkfjanwsleknlaksenf")
               const response = await fetch(`/code/${pageId}`, {
                   method: 'POST',
                   headers: {
@@ -158,7 +160,10 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setLanguage('C')
               setCode(languageOptions.C.value)
               if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `create ${myId} ${activeTab}`)
+              setIsInitCode(true)
           })
+      } else {
+          setTabs([])
       }
     }, [pageId,idList])
 
