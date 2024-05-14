@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -128,10 +129,16 @@ public class ProblemService {
         Problem problem = problemRepository.findById(problemId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-        //제출 이력 저장
-        userProblemRepository.save(UserProblem.builder()
-                .user(user)
-                .problem(problem)
-                .build());
+        //제출 이력 조회
+        Optional<UserProblem> userProblem = userProblemRepository.findByUserIdAndProblemId(user.getId(), problemId);
+
+        //유저가 해당 문제에 대해 제출한 이력이 없는 경우
+        if(userProblem.isEmpty()) {
+            //제출 이력 저장
+            userProblemRepository.save(UserProblem.builder()
+                    .user(user)
+                    .problem(problem)
+                    .build());
+        }
     }
 }
