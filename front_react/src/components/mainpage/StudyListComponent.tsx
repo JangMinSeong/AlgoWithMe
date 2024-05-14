@@ -48,10 +48,7 @@ const StudyList: React.FC<StudyProp> = ({ studyList = [] }) => {
   ))
 
   return (
-    <div className="w-full relative">
-      <div className="w-full text-darkNavy text-lg text-left pl-5">
-        최근 스터디
-      </div>
+    <div className="w-full relative min-h-screen">
       <div className="flex flex-row justify-between items-center w-full mt-6 text-lg pl-5 pr-5">
         {studyList.length > maxVisibleStudies && (
           <>
