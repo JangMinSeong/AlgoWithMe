@@ -14,11 +14,11 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
     const [branches, setBranches] = useState<string[]>([])
     const [activeRepo, setActiveRepo] = useState<string | null>(null);
     const [selectedDirectoryPath, setSelectedDirectoryPath] = useState( "");
-    const [activeBranch, setActiveBranch] = useState("")
+    const [activeBranch, setActiveBranch] = useState(null)
     const [commitMessage, setCommitMessage] = useState("")
     const [filename, setFilename] = useState("")
     const [isSave, setIsSave] = React.useState(false)
-
+    const [naviText, setNaviTest] = useState("리포지토리 선택")
     // 디렉토리
     const [path, setPath] = useState("");
     const [directories, setDirectories] = useState<string[]>([])
@@ -45,10 +45,6 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
         }
         else alert("파일명과 커밋 메시지를 작성해주세요")
     }
-
-    const handleDirectorySelect = (path:string) => {
-        setSelectedDirectoryPath(path);
-    };
 
     const handleBranchSelect = (branch:string) => {
         setActiveBranch(branch);
@@ -81,11 +77,21 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
 
     if (!isOpen) return null;
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+        if(activeRepo===null && activeBranch===null)
+            setNaviTest("리포지토리 선택")
+        else if(activeRepo && activeBranch===null)
+            setNaviTest("브랜치 선택")
+        else if(activeRepo&&activeBranch)
+            setNaviTest("디렉토리 선택")
+    }, [activeRepo, activeBranch])
+
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-lg max-w-3xl w-full overflow-hidden">
                 <div className="p-5">
-                    <h2 className="text-xl font-bold mb-2">GitHub Repositories</h2>
+                    <h2 className="text-xl font-bold mb-2">{naviText}</h2>
                     {activeRepo && <span className={"text-sm"} onClick={() => {setActiveRepo(null); setActiveBranch(null); setPath("");} }>{activeRepo+'/'}</span>}
                     {activeBranch && <span className={"text-sm"} onClick={() => {setActiveBranch(null); setPath("");}}>{activeBranch+'/'}</span>}
                     <span className={"text-sm"} >{path}</span>
@@ -105,8 +111,7 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
                       <DirectoryExplorer branch={activeBranch} repoName={activeRepo} directories={directories}
                                          setDirectories={setDirectories} path={path} setPath={setPath} />
                       : <BranchExplorer branches={branches} repoName={activeRepo}
-                                        onDirectorySelect={handleDirectorySelect}
-                                        onBranchSelect={handleBranchSelect} />) : null
+                                        onBranchSelect={handleBranchSelect} setDirectories={setDirectories} />) : null
                     }
                 </div>
                 { activeBranch && <button>저장</button>} <button onClick={() => isClose()}>닫기</button>

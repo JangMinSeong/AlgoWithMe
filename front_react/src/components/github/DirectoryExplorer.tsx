@@ -13,9 +13,9 @@ interface DirectoryProps {
 
 const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directories, setDirectories, path, setPath}) => {
     // const [isLoading, setIsLoading] = useState<boolean>(false);
-    const fetchDirectories = async () => {
+    const fetchDirectories = async (directory) => {
         // setIsLoading(true);  // Start loading
-        const fullPath = `${path}`;
+        const fullPath = `${path}${directory}`;
         const dataToPost = {
             repo:repoName,
             branch:branch,
@@ -36,6 +36,7 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
 
             const responseData = await response.json();
             setDirectories(responseData.map((dir: string) => `${dir}/`));
+            console.log(responseData)
         } catch (error) {
             console.error('Failed to fetch branches:', error);
         } finally {
@@ -43,17 +44,10 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
             // onDirectorySelect(fullPath)
         }
     };
-    useEffect(() => {
-        fetchDirectories()
-    }, )
-    useEffect(()=>{
-        setDirectories(directories)
-    },[directories])
-
 
     const handleDirectoryClick = (event, directory: string) => {
         event.stopPropagation();
-        setDirectories([...directories, directory]);
+        fetchDirectories(directory);
         setPath(path+directory)
     };
 
