@@ -11,6 +11,7 @@ import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
 import useCode from "@/hooks/useCode.ts";
 import GitHubExplorer from "@/components/github/GithubExplorer.tsx";
+import {setCurUserId} from "@/features/code/codeSlice.ts";
 
 interface BojAndPGDetail {
   status: number
@@ -76,20 +77,13 @@ const RightComponent: React.FC<ProblemProp> = ({
   const curUser = useSelector((state: RootState) => state.code.curUserId)
   const myId = useSelector((state: RootState) => state.code.myId)
   const [option ,setOption] = useState(false)
+  const [isInit, setIsInit] = useState(false)
   const {handleCurUserId} = useCode()
   const updateMessage = useSelector((state: RootState) => state.socket.messageUserTabUpdate)
   const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
   const curTopic = useSelector((state:RootState) => state.socket.subscriptionUser)
-  useEffect(() => {
-    if(curTopic !== '' || myId === curUser) {
-      console.log(curTopic + " unsubscribe")
-      unsubscribeFromTopic(curTopic,true)
-    }
-    if(option || curUser !== myId) {
-      console.log(curTopic + "  subscribe")
-      subscribeToTopic(`/topic/codeTab/${curUser}`,true)
-    }
-  },[curUser])
+
+
 
   const fetchMyData = async () => {
     try {
@@ -105,12 +99,14 @@ const RightComponent: React.FC<ProblemProp> = ({
       }
 
       const responseData = await response.json()
+      setIsInit(false)
       setCodeIds(responseData.codeIds)
       setFirstCode(responseData.code)
 
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
+      setIsInit(true)
       console.error('Failed to fetch data:', error)
     }
   }
@@ -140,23 +136,31 @@ const RightComponent: React.FC<ProblemProp> = ({
   }
 
   useEffect(() => {
+    setOption(myId !== curUser)
+
+    if(curTopic !== '' || myId === curUser) {
+      console.log(curTopic + " unsubscribe")
+      unsubscribeFromTopic(curTopic,true)
+      fetchMyData()
+    }
+    if(option || curUser !== myId) {
+      console.log(curTopic + "  subscribe")
+      subscribeToTopic(`/topic/codeTab/${curUser}`,true)
+      fetchUserData()
+    }
+  },[curUser])
+
+  useEffect(() => {
     if(option) {
       fetchUserData()
     }
   },[updateMessage])
 
   useEffect(()=> {
-    console.log(curUser + " " + myId)
-    if(curUser === myId) setOption(false)
-    else setOption(true)
-
-    if(curUser === myId || curUser === 0) {
-      handleCurUserId(myId)
-      fetchMyData()
-    }
-    else
-      fetchUserData()
-  },[pageId,curUser])
+    handleCurUserId(myId)
+    setOption(false)
+    fetchMyData()
+  },[pageId])
 
   const handleInputRun = async () => {
     setIsLoading(true)
@@ -276,6 +280,7 @@ const RightComponent: React.FC<ProblemProp> = ({
           firstCode={firstCode}
           pageId={pageId}
           option={option}
+            isInit={isInit}
         />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">

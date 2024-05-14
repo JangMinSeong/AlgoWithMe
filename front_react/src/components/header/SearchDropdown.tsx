@@ -100,7 +100,7 @@ const SearchDropdown: React.FC = () => {
                       handlePageItemClick(item.id, item.studyId, item.isDoc)
                     }}
                 >
-                  {item.name}
+                  {item.name.replace(/"/g, '')}
                 </div>
             ))}
           </div>

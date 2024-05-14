@@ -28,9 +28,9 @@ const StudyGroupDropdown = (props: { studyList : Study[] }) => {
   }
 
   return (
-    <div className="flex flex-col w-48 text-sm border-b-2">
+    <div className="flex flex-col w-48 h-28 text-sm border-b-2 overflow-auto">
       <div>
-        {props.studyList.map((el) => (
+        {studyGroupList.map((el) => (
           <div
             onClick={() => handleGoStudyMain(el.id)}
             className={dropdownItemCSS}
