@@ -77,6 +77,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const curUser = useSelector((state: RootState) => state.code.curUserId)
   const myId = useSelector((state: RootState) => state.code.myId)
   const [option ,setOption] = useState(false)
+  const [isInit, setIsInit] = useState(false)
   const {handleCurUserId} = useCode()
   const updateMessage = useSelector((state: RootState) => state.socket.messageUserTabUpdate)
   const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
@@ -98,12 +99,14 @@ const RightComponent: React.FC<ProblemProp> = ({
       }
 
       const responseData = await response.json()
+      setIsInit(false)
       setCodeIds(responseData.codeIds)
       setFirstCode(responseData.code)
 
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
+      setIsInit(true)
       console.error('Failed to fetch data:', error)
     }
   }
@@ -277,6 +280,7 @@ const RightComponent: React.FC<ProblemProp> = ({
           firstCode={firstCode}
           pageId={pageId}
           option={option}
+            isInit={isInit}
         />
       </div>
       <div style={{ flex: 1 }} className="flex flex-col">
