@@ -71,18 +71,20 @@ const MainPage: React.FC = () => {
   return (
     <div>
       <MainHeader />
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <main className="flex w-full flex-col items-center justify-center text-center mt-0.5 pb-10">
-          <ChartProblem chartList={chartData} problemList={problemData} />
-          <StudyList studyList={studyData} />
-        </main>
+      <div className="2xl:container 2xl:mx-auto px-16">
+        <div className="flex flex-col items-center justify-center min-h-screen py-2">
+          <main className="flex w-full flex-col items-center justify-center text-center mt-0.5 pb-10">
+            <ChartProblem chartList={chartData} problemList={problemData} />
+            <StudyList studyList={studyData} />
+          </main>
 
-        <button
-          className="fixed bottom-4 right-4 w-12 h-12 bg-darkPurple text-background rounded-full shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out flex items-center justify-center text-2xl"
-          onClick={handleButtonClick}
-        >
-          +
-        </button>
+          <button
+            className="fixed bottom-4 right-4 w-12 h-12 bg-darkPurple text-background rounded-full shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out flex items-center justify-center text-2xl"
+            onClick={handleButtonClick}
+          >
+            +
+          </button>
+        </div>
       </div>
     </div>
   )

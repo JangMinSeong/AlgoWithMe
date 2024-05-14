@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     keyframes: {
       bounce: {
@@ -46,6 +43,7 @@ export default {
         foggyBlue: '0px 0px 20px 0 rgb(173 177 241 / 0.3)',
         foggyPink: '0px 0px 20px 0 rgb(250 220 255)',
         foggyPurple: '0px 0px 16px 0 rgb(165 109 242 / 0.16)',
+        searchShadow: '0 0 10px 1px rgba(0, 0, 0, 0.1)',
       },
       fontFamily: {
         orbitron: ['var(--font-orbitron)'],
@@ -54,4 +52,3 @@ export default {
   },
   plugins: [],
 }
-
