@@ -139,27 +139,10 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setCode(firstCode.code)
           else
               setCode(languageOptions[firstCode.language].value)
-      } else if(!option && isInit && tabs.length === 0) {
-          const createInitCode = async () => {
-              console.log("in create init asdnlkfjanwsleknlaksenf")
-              const response = await fetch(`/code/${pageId}`, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-              })
-              const responseData = await response.json()
-              console.log(responseData)
-              const newId = responseData
-              const defaultTabs = [newId]
-              setTabs(defaultTabs)
-              setActiveTab(newId)
-          }
-          createInitCode().then(() => {
-              setLanguage('C')
-              setCode(languageOptions.C.value)
-              if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `create ${myId} ${activeTab}`)
-          })
+      } else if(!option && isInit && tabs.length !== 0) {
+          addTab()
+      } else {
+          setTabs([])
       }
     }, [pageId,idList])
 
@@ -173,7 +156,11 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       })
       const responseData = await response.json()
       const newId = responseData
-      const newTabs = [...tabs, newId]
+        let newTabs = []
+        if(idList.length === 0)
+            newTabs = [newId]
+        else
+            newTabs = [...tabs, newId]
       setTabs(newTabs)
       setActiveTab(newId)
       setLanguage('C')
