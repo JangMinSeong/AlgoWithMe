@@ -13,7 +13,7 @@ import useSidebar from '@/hooks/useSidebar.ts'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { IProblemInfo } from '@/features/search/searchSlice'
-import {useWebSocket} from "@/hooks/useWebSocket.ts";
+import { useWebSocket } from '@/hooks/useWebSocket.ts'
 
 interface Page {
   pageId: number
@@ -37,7 +37,7 @@ const AddProblemModal = ({
 
   const navigate = useNavigate()
   const { handleCloseModal } = useModal()
-  const {sendUpdateMessage} = useWebSocket()
+  const { sendUpdateMessage } = useWebSocket()
   const { setPages } = useSidebar()
   const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
@@ -89,7 +89,10 @@ const AddProblemModal = ({
       console.log(updatedList)
     }
     handleCloseModal()
-    sendUpdateMessage(`/app/study/${groupId}`, `create page ${responseData.pageId}`)
+    sendUpdateMessage(
+      `/app/study/${groupId}`,
+      `create page ${responseData.pageId}`,
+    )
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
 

@@ -50,7 +50,7 @@ const AddProblem = ({ groupId }: { groupId: string }) => {
       {showModal && (
         <AddProblemModal
           clickModal={clickModal}
-          groupId={groupId}
+          groupId={Number(groupId)}
           type="addCandidates"
         />
       )}

@@ -12,8 +12,6 @@ import {
 import { Tooltip } from 'react-tooltip'
 
 const Paginator = () => {
-  const [currentPage, setCurrentPage] = useState()
-
   const isLevel = useSelector((state: RootState) => state.search.isLevel)
   const selected = useSelector((state: RootState) => state.levels.selected)
   const levels = selected.join(' ')
@@ -25,6 +23,7 @@ const Paginator = () => {
   )
 
   const { handleFetchResultByLevel, handleFetchResultByName } = useSearch()
+  const [currentPage, setCurrentPage] = useState()
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber)
@@ -42,10 +41,7 @@ const Paginator = () => {
         itemsCountPerPage={10}
         totalItemsCount={totalResult}
         pageRangeDisplayed={5}
-        onChange={(e) => {
-          handlePageChange(e)
-          console.log(e)
-        }}
+        onChange={handlePageChange}
         innerClass="flex justify-between items-center mt-4"
         prevPageText={<MdKeyboardArrowLeft />}
         firstPageText={<MdKeyboardDoubleArrowLeft />}

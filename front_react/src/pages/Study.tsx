@@ -25,12 +25,12 @@ const StudyMainPage = () => {
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
   const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
   const { sendUpdateMessage } = useWebSocket()
+  const currentStudyInfo = useSelector((state: RootState) => state.study)
 
   useEffect(() => {
     handleFetchStudyInfo(Number(groupId))
-  }, [])
+  }, [currentStudyInfo])
 
-  const currentStudyInfo = useSelector((state: RootState) => state.study)
   const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
 
   const handleEditStudyName = (event) => {

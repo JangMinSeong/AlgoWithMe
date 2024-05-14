@@ -75,7 +75,6 @@ const NextProblem: React.FC = ({
     }
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
-
   return (
     <div className={`w-full flex  rounded-lg mb-2`}>
       <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors justify-between">

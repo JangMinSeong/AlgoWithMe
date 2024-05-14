@@ -11,7 +11,6 @@ const ViewProblems = ({ setParentChosenProblem }) => {
   const searchResult = useSelector(
     (state: RootState) => state.search.problemInfoList,
   )
-
   const bojdata = {
     Bronze5: 1,
     Bronze4: 2,
