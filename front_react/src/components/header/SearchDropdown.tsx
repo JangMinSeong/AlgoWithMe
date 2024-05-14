@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 import fetch from "@/lib/fetch.ts";
 import {useNavigate} from "react-router-dom";
+import {useWebSocket} from "@/hooks/useWebSocket.ts";
 
 interface Study {
   id:number
@@ -23,6 +24,7 @@ const SearchDropdown: React.FC = () => {
   const [studyItems, setStudyItems] = useState<Study[]>([])
   const [pageItems, setPageItems] = useState<Page[]>([])
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const {connectToServer} =useWebSocket()
 
   useEffect(()=> {
     const fetchSearchList = async () => {
@@ -47,12 +49,12 @@ const SearchDropdown: React.FC = () => {
   }
 
   const handlePageItemClick = (id: number, studyId: number, isDoc: boolean) => {
+    connectToServer(studyId)
     setDropdownVisible(false)
-    // if(isDoc)
-    //   navigate(`/${studyId}/docs/${id}`)
-    // else
-    //   navigate(`/${studyId}/editor/${id}`)
-    navigate(`/${studyId}/study`)
+    if(isDoc)
+      navigate(`/${studyId}/docs/${id}`)
+    else
+      navigate(`/${studyId}/editor/${id}`)
   }
 
   useEffect(() => {
@@ -100,7 +102,7 @@ const SearchDropdown: React.FC = () => {
                       handlePageItemClick(item.id, item.studyId, item.isDoc)
                     }}
                 >
-                  {item.name.replace(/"/g, '')}
+                  {item.name.replace(/"/g, '').replace(/null/g,'빈 페이지')}
                 </div>
             ))}
           </div>

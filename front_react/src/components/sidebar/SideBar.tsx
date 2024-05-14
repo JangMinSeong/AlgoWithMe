@@ -35,8 +35,9 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const studyUpdate = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
+  const {handleEditName} = useStudy()
 
-  const { setGId, setPages } = useSidebar()
+  const { setGId, setPages, setStudys } = useSidebar()
 
   const { connectToServer, sendUpdateMessage } = useWebSocket()
 
@@ -58,6 +59,8 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     if (response.ok) {
       const responseData = await response.json()
       setStudyList(responseData)
+      setStudys(responseData)
+
       console.log(responseData)
     }
   }
@@ -84,10 +87,16 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    if(studyUpdate.startsWith('updateTitle'))
+    if(studyUpdate.startsWith('"updateTitle')) {
+      console.log("inttinetinewaitn aasaaaaa")
+
       fetchStudyList()
-    else
+    }
+    else {
+      console.log(studyUpdate)
+      console.log("asdasdasdawwwwwwwww")
       fetchPageData()
+    }
   }, [studyUpdate])
 
   useEffect(() => {
@@ -211,13 +220,13 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           maxWidth: '12rem',
           minWidth: '12rem',
         }}
-        className="h-full mb-10  relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
+        className="h-full mb-10 relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
       >
         <StudyGroupNavigator groupId={groupId} studyList={studyList} />
         <div onClick={handleGoStudyMain} className={menuItemWrapper}>
           스터디 메인 페이지
         </div>
-        <div className={''}>
+        <div className={' h-full max-h-dvh overflow-auto'}>
           {pageList.map((el) => (
             <div>
               <InStudyPageItem

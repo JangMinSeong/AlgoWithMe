@@ -6,7 +6,7 @@ import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
 import SetTimer from '@/components/studypage/SetTimer'
-import { useParams } from 'react-router-dom'
+import {useLocation, useParams} from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
 import { useState, useEffect } from 'react'
@@ -22,14 +22,35 @@ const StudyMainPage = () => {
   const [isEditingName, setIsEditingName] = useState(false)
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
-  const { handleEditName, handleEditImage } = useStudy()
-  const { sendUpdateMessage } = useWebSocket()
 
-  useEffect(() => {}, [])
+  const location = useLocation()
+  const { sendUpdateMessage } = useWebSocket()
+  const client = useSelector((state:RootState) => state.socket.client)
+
+  const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
+  const user = useSelector((state: RootState) => state.auth.user)
 
   const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
+  const updateStudyMessage = useSelector((state:RootState) => state.socket.messageStudyUpdate)
+
+  useEffect( () => {
+    console.log("1231232131232 " + location.state?.isInvite)
+    if (location.state?.isInvite && client && client.connected) {
+      console.log("in study main page afawlneflkanlfklwkefnawelfkn")
+      sendUpdateMessage(
+          `/app/study/${groupId}`,
+          `invite Member ${groupId} ${user.nickname}`,
+      )
+    }
+  },[client, location])
+
+  useEffect(() => {
+    if(updateStudyMessage.startsWith(`"invite Member`))
+      handleFetchStudyInfo(Number(groupId))
+  }, [updateStudyMessage])
+
 
   // 로딩중 적용하기
 
@@ -38,11 +59,12 @@ const StudyMainPage = () => {
     const newName = formData.get('newName').toString()
 
 
-    handleEditName(Number(groupId), newName)
-    sendUpdateMessage(
-      `/app/study/${groupId}`,
-      `updateTitle ${groupId} ${newName}`,
-    )
+    handleEditName(Number(groupId), newName).then(()=>{
+      sendUpdateMessage(
+          `/app/study/${groupId}`,
+          `updateTitle ${groupId} ${newName}`,
+      )
+    })
 
     setIsEditingName(false)
   }
