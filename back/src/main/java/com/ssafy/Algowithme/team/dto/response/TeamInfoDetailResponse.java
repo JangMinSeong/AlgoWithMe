@@ -23,4 +23,5 @@ public class TeamInfoDetailResponse {
     private List<SolvedProblemDto> solvedProblems;
     private List<CandidateProblemDto> candidateProblems;
     private List<RankDto> ranking;
+    private boolean manager;
 }

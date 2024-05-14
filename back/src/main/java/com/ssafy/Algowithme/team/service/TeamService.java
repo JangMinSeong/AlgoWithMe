@@ -147,6 +147,7 @@ public class TeamService {
                 .solvedProblems(teamRepository.getSolvedProblem(teamId))
                 .candidateProblems(teamRepository.getCandidateProblem(teamId))
                 .ranking(teamRepository.getRank(teamId))
+                .manager(userTeam.isManager())
                 .build();
     }
 
