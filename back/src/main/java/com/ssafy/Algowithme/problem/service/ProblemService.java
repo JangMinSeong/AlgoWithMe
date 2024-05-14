@@ -124,13 +124,17 @@ public class ProblemService {
     }
 
     @Transactional
-    public void storeProblemSolvingHistory(User user, Long problemId) {
+    public void storeProblemSolvingHistory(User user, Long pageId) {
+        //페이지 조회
+        Page page = pageRepository.findById(pageId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
         //문제 조회
-        Problem problem = problemRepository.findById(problemId)
+        Problem problem = problemRepository.findById(page.getProblem().getId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
         //제출 이력 조회
-        Optional<UserProblem> userProblem = userProblemRepository.findByUserIdAndProblemId(user.getId(), problemId);
+        Optional<UserProblem> userProblem = userProblemRepository.findByUserIdAndProblemId(user.getId(), problem.getId());
 
         //유저가 해당 문제에 대해 제출한 이력이 없는 경우
         if(userProblem.isEmpty()) {
