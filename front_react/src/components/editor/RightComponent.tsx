@@ -248,6 +248,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const handleSaveAndRun = () => {
     if(curUser === myId) {
       codeEditorRef.current?.saveCode()
+      codeSolve()
       setSaveInputText(inputText)
     }
     if (inputText !== '') handleInputRun()
