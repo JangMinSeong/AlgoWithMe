@@ -1,6 +1,6 @@
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { IProblemInfo } from '@/features/search/searchSlice'
 import Paginator from './Paginator'
