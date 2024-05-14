@@ -195,7 +195,8 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        teamRepository.delete(team);
+        team.setDeleted(true);
+        teamRepository.save(team);
     }
 
     @Transactional
