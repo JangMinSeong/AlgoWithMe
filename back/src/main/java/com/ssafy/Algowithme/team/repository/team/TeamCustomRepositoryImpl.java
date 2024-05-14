@@ -107,6 +107,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                                 .problemId(dto.getProblemId())
                                 .url(dto.getUrl())
                                 .provider(dto.getProvider().getName())
+                                .name(dto.getName())
                                 .number(dto.getNumber())
                                 .level(dto.getLevel())
                                 .build()));
