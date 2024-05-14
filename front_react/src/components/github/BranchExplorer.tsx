@@ -50,9 +50,9 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName,onDi
             {branches.map((branch, index) => (
                 <div key={index} className={`mr-4 px-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer`} onClick={(e) => handleBranchClick(e,branch)}>
                     {branch}
-                    {activeBranch === branch && (
-                        <DirectoryExplorer branch={branch} repoName={repoName} directories={directories} directoryName={""} depth={0} onDirectorySelect={onDirectorySelect}/>
-                    )}
+                    {/*{activeBranch === branch && (*/}
+                    {/*    <DirectoryExplorer branch={branch} repoName={repoName} directories={directories} directoryName={""} depth={0} onDirectorySelect={onDirectorySelect}/>*/}
+                    {/*)}*/}
                 </div>
             ))}
         </div>
