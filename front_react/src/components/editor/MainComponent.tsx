@@ -21,8 +21,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const [content, setContent] = useState('')
   const [testCases, setTestCases] = useState([])
   const [editCodes, setEditCodes] = useState([])
-
-  const { connectToServer } = useWebSocket()
+  const [tags, setTags] = useState([])
 
   useEffect(() => {
     const fetchProblemData = async () => {
@@ -63,16 +62,13 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         else setEditCodes(null)
         setNumber(responseData.number)
         setUid(responseData.id)
+        setTags(responseData.tagList)
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }
     }
     fetchProblemData()
   }, [number,pageId])
-
-  useEffect(() => {
-    connectToServer(groupId)
-  }, [connectToServer])
 
   const toggleCodeEditor = () => {
     setCodeEditorVisible(!codeEditorVisible)
@@ -87,6 +83,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           room={`${pageId}`}
           testCases={testCases}
           nickname={user.nickname}
+          tags={tags}
         />
       </div>
       <div

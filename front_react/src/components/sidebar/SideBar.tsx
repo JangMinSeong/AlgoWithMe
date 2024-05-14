@@ -20,6 +20,7 @@ interface IPage {
   pageId: number
   title: string
   docs: boolean
+  provider: string
   children: IPage[]
 }
 
@@ -229,6 +230,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
                 page={el}
                 key={el.pageId}
                 depth={0}
+                provider={el.provider}
                 onMovePage={movePage}
               />
             </div>

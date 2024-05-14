@@ -1,4 +1,5 @@
 import * as React from 'react'
+import fetch from "@/lib/fetch.ts";
 
 // 태그 인터페이스
 interface Tag {
@@ -28,15 +29,32 @@ interface TagSelectorProps {
   selectedTags: string[]
   toggleTag: (key: string) => void
   onClose: () => void
+    pageId:number
 }
 
 const TagSelector: React.FC<TagSelectorProps> = ({
                                                      selectedTags,
                                                      toggleTag,
                                                      onClose,
+                                                        pageId
                                                  }) => {
-    const handleSave = () => {
-        console.log(selectedTags)
+    const handleSave = async () => {
+        const dataToUpdate = {
+            pageId:pageId,
+            tagList:selectedTags
+        }
+
+        console.log(dataToUpdate)
+
+        await fetch(`/page/tag`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body:JSON.stringify(dataToUpdate)
+        }).then(()=> {
+            onClose()
+        })
     }
 
     return(
@@ -45,11 +63,11 @@ const TagSelector: React.FC<TagSelectorProps> = ({
                 <div className="flex flex-wrap justify-start gap-2">
                     {tags.map((tag) => (
                         <button
-                            key={tag.key}
+                            key={tag.label}
                             className={`px-4 py-1 text-sm text-center font-medium rounded-md shadow transition-colors duration-200 ${
-                                selectedTags.includes(tag.key) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
+                                selectedTags.includes(tag.label) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
                             }`}
-                            onClick={() => toggleTag(tag.key)}
+                            onClick={() => toggleTag(tag.label)}
                             style={{minWidth: '5rem'}}
                         >
                             {tag.label}

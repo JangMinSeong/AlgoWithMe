@@ -236,6 +236,15 @@ const RightComponent: React.FC<ProblemProp> = ({
     setIsLoading(false)
   }
 
+  const codeSolve = async () => {
+    await fetch(`/problem/${pageId}/solution`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }
+
   const handleSaveAndRun = () => {
     if(curUser === myId) {
       codeEditorRef.current?.saveCode()
