@@ -45,22 +45,24 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }, [user, groupId])
 
   useEffect(() => {
-    const fetchStudyList = async () => {
-      const response = await fetch(`/user/study`, {
-        method: 'GET',
-        headers: {
-          'content-Type': 'application/json',
-        },
-      })
-      if (response.ok) {
-        const responseData = await response.json()
-        setStudyList(responseData)
-      }
-    }
     fetchStudyList()
   }, [user])
 
-  const fetchData = async () => {
+  const fetchStudyList = async () => {
+    const response = await fetch(`/user/study`, {
+      method: 'GET',
+      headers: {
+        'content-Type': 'application/json',
+      },
+    })
+    if (response.ok) {
+      const responseData = await response.json()
+      setStudyList(responseData)
+      console.log(responseData)
+    }
+  }
+
+  const fetchPageData = async () => {
     try {
       const response = await fetch(`/page/team/${groupId}`, {
         method: 'GET',
@@ -82,11 +84,14 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    fetchData()
+    if(studyUpdate.startsWith('updateTitle'))
+      fetchStudyList()
+    else
+      fetchPageData()
   }, [studyUpdate])
 
   useEffect(() => {
-    fetchData()
+    fetchPageData()
     setGId(groupId)
   }, [groupId])
 
@@ -206,7 +211,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           maxWidth: '12rem',
           minWidth: '12rem',
         }}
-        className="h-full mb-10 relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
+        className="h-full mb-10  relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
       >
         <StudyGroupNavigator groupId={groupId} studyList={studyList} />
         <div onClick={handleGoStudyMain} className={menuItemWrapper}>
