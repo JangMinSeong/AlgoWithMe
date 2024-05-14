@@ -36,9 +36,7 @@ const StudyMainPage = () => {
   const updateStudyMessage = useSelector((state:RootState) => state.socket.messageStudyUpdate)
 
   useEffect( () => {
-    console.log("1231232131232 " + location.state?.isInvite)
     if (location.state?.isInvite && client && client.connected) {
-      console.log("in study main page afawlneflkanlfklwkefnawelfkn")
       sendUpdateMessage(
           `/app/study/${groupId}`,
           `invite Member ${groupId} ${user.nickname}`,
