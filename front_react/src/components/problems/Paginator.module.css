@@ -1,0 +1,18 @@
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.pagination li {
+  margin: 0 5px; /* 좌우 간격 조정 */
+}
+
+.pagination li a {
+  text-decoration: none; /* 링크 밑줄 제거 */
+  color: black; /* 링크 색상 */
+}
+
+.pagination li.active a {
+  color: red; /* 활성 페이지 링크 색상 */
+}
