@@ -24,6 +24,7 @@ public enum ExceptionStatus {
     CANDIDATE_PROBLEM_ALREADY_EXIST(1104, "이미 존재하는 문제 후보입니다."),
     GET_MEMBERS_UNAUTHORIZED(1105, "팀원 조회 권한이 없습니다."),
     USER_TEAM_UNAUTHORIZED(1106, "스터디 생성자만 사용 가능한 기능입니다."),
+    USER_TEAM_LEAVE_NOT_ACCEPTED(1107, "스터디 생성자는 스터디 탈퇴를 할 수 없습니다."),
 
     // page(12)
     PAGE_NOT_FOUND(1200, "페이지가 존재하지 않습니다."),

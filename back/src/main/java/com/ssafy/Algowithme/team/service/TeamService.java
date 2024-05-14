@@ -198,6 +198,18 @@ public class TeamService {
         teamRepository.delete(team);
     }
 
+    @Transactional
+    public void withdrawalTeam(User user, Long teamId) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        if(userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
+
+        userTeamRepository.delete(userTeam);
+    }
+
     public List<UserInfoResponse> getTeamMembers(Long teamId, User user) {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
