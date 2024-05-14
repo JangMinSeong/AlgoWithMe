@@ -1,10 +1,13 @@
 package com.ssafy.Algowithme.problem.dto.response;
 
+import com.ssafy.Algowithme.page.entity.WorkspaceTag;
 import com.ssafy.Algowithme.problem.dto.EditCode;
 import com.ssafy.Algowithme.problem.dto.TestCase;
 import com.ssafy.Algowithme.problem.entity.RawProblem;
+import com.ssafy.Algowithme.problem.type.Tag;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Builder
@@ -23,8 +26,13 @@ public class RawProblemResponse {
     private List<Integer> timeLimit;
     private List<TestCase> exampleList;
     private List<EditCode> editCodesList;
+    private List<String> tagList;
 
-    public static RawProblemResponse create(RawProblem rawProblem) {
+    public static RawProblemResponse create(RawProblem rawProblem, List<WorkspaceTag> workspaceTags) {
+        List<String> tagList = new ArrayList<>();
+        for(WorkspaceTag workspaceTag : workspaceTags) {
+            tagList.add(workspaceTag.getTag().getName());
+        }
         return RawProblemResponse.builder()
                 .id(rawProblem.getId())
                 .site(rawProblem.getSite())
@@ -36,6 +44,7 @@ public class RawProblemResponse {
                 .timeLimit(rawProblem.getTimeLimit())
                 .exampleList(rawProblem.getExampleList())
                 .editCodesList(rawProblem.getEditCodesList())
+                .tagList(tagList)
                 .build();
     }
 }

@@ -11,12 +11,15 @@ import com.ssafy.Algowithme.page.dto.response.MemoResponse;
 import com.ssafy.Algowithme.page.dto.response.PageListResponse;
 import com.ssafy.Algowithme.page.entity.Page;
 import com.ssafy.Algowithme.page.entity.UserWorkspace;
+import com.ssafy.Algowithme.page.entity.WorkspaceTag;
 import com.ssafy.Algowithme.page.repository.PageRepository;
 import com.ssafy.Algowithme.page.repository.UserWorkspaceRepository;
+import com.ssafy.Algowithme.page.repository.WorkspaceTagRepository;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.entity.RawProblem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
+import com.ssafy.Algowithme.problem.type.Tag;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
@@ -41,6 +44,7 @@ public class PageService {
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
     private final UserWorkspaceRepository userWorkspaceRepository;
+    private final WorkspaceTagRepository workspaceTagRepository;
     private final S3Util s3Util;
 
     public PageListResponse getPageList(Long teamId, User user) {
@@ -370,6 +374,43 @@ public class PageService {
             childrenPages = pageRepository.findByParentIdAndDeletedOrderByOrders(parentPageId, false);
         }
         return childrenPages;
+    }
+
+    @Transactional
+    public void updateTags(User user, UpdateTagsRequest request) {
+        //페이지 조회
+        Page page = pageRepository.findById(request.getPageId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
+
+        //팀원 여부 확인
+        userTeamRepository.findByUserIdAndTeamId(user.getId(), page.getTeam().getId())
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        //태그 리스트 조회
+        List<WorkspaceTag> prevTagList = workspaceTagRepository.findByWorkspaceId(page.getId());
+        List<WorkspaceTag> saveList = new ArrayList<>();
+
+        //요청된 태그 리스트
+        for(String tagName: request.getTagList()) {
+            boolean isPresent = false;
+            for(WorkspaceTag prevTag : prevTagList) {
+                if(prevTag.getTag().getName().equals(tagName)) {
+                    prevTagList.remove(prevTag);
+                    isPresent = true;
+                    break;
+                }
+            }
+            if(isPresent == false) {
+                saveList.add(WorkspaceTag.builder()
+                                .workspace(page)
+                                .tag(Tag.fromString(tagName))
+                                .build());
+            }
+        }
+
+        //변경된 tag 추가 및 삭제
+        workspaceTagRepository.saveAll(saveList);
+        workspaceTagRepository.deleteAll(prevTagList);
     }
 }
 
