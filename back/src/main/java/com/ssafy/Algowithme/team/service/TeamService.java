@@ -171,6 +171,10 @@ public class TeamService {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
+        if(!userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
+
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
@@ -182,6 +186,10 @@ public class TeamService {
     public void deleteTeam(User user, Long teamId) {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        if(!userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
