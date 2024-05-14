@@ -35,8 +35,9 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const studyUpdate = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
+  const {handleEditName} = useStudy()
 
-  const { setGId, setPages } = useSidebar()
+  const { setGId, setPages, setStudys } = useSidebar()
 
   const { connectToServer, sendUpdateMessage } = useWebSocket()
 
@@ -58,6 +59,8 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     if (response.ok) {
       const responseData = await response.json()
       setStudyList(responseData)
+      setStudys(responseData)
+
       console.log(responseData)
     }
   }
@@ -84,8 +87,12 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    if (studyUpdate.startsWith('updateTitle')) fetchStudyList()
-    else fetchPageData()
+    if(studyUpdate.startsWith('"updateTitle')) {
+      fetchStudyList()
+    }
+    else {
+      fetchPageData()
+    }
   }, [studyUpdate])
 
   useEffect(() => {

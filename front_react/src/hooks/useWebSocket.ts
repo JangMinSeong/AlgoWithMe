@@ -37,7 +37,7 @@ export function useWebSocket() {
       ? import.meta.env.VITE_API_DEV_URL
       : import.meta.env.VITE_API_URL
 
-  const connectToServer = (groupId: number) => {
+  const connectToServer = async (groupId: number) => {
     if (client !== null) {
       console.log('Already connected')
       if (studySubscripton) {
@@ -98,6 +98,7 @@ export function useWebSocket() {
       const subscription = client.subscribe(topic, (message) => {
         const parsedMessage = JSON.parse(message.body)
         if (isUserSubscription) {
+
           dispatch(setMessageUpdateUserTab(parsedMessage))
         } else {
           dispatch(addMessage(parsedMessage))

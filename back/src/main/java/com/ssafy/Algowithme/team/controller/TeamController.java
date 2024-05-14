@@ -90,7 +90,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<TeamInfoDetailResponse> getTeamInfoDetail(@AuthenticationPrincipal User user,
-                                                                    @PathVariable Long teamId) {
+                                                                    @PathVariable("teamId") Long teamId) {
         TeamInfoDetailResponse teamInfo = teamService.getTeamInfoDetail(user, teamId);
         return ResponseEntity.ok(teamInfo);
     }
@@ -110,7 +110,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<String> changeTeamImage(@AuthenticationPrincipal User user,
-                                                   @PathVariable Long teamId,
+                                                   @PathVariable("teamId") Long teamId,
                                                    @RequestParam(value = "file") MultipartFile file) {
         String url = teamService.changeTeamImage(user, teamId, file);
         return ResponseEntity.ok(url);
@@ -150,7 +150,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> deleteTeam(@AuthenticationPrincipal User user,
-                                           @PathVariable Long teamId) {
+                                           @PathVariable("teamId") Long teamId) {
         teamService.deleteTeam(user, teamId);
         return ResponseEntity.ok().build();
     }

@@ -27,8 +27,8 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onSave }) => {
 
   return (
     <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
-      <div className="transparent flex space-x-1 pb-2">
-        asdawdd
+      <div className="p-1 h-8 border border-transparent opacity-0">
+        {/* Invisible space */}
       </div>
       <div className="flex space-x-1">
         {activeTab === '개인 메모장' && (

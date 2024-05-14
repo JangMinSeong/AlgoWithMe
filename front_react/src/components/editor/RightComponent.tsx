@@ -295,7 +295,7 @@ const RightComponent: React.FC<ProblemProp> = ({
               />
             </div>
           ) : null}
-          <div className="flex-1 p-1 bg-white border border-gray-300 h-48 w-32">
+          <div className="flex-1 p-1 bg-white border border-gray-300 h-full w-32">
             {isLoading ? (
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
