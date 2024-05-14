@@ -3,7 +3,9 @@ package com.ssafy.Algowithme.problem.service;
 import com.ssafy.Algowithme.common.exception.CustomException;
 import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.page.entity.Page;
+import com.ssafy.Algowithme.page.entity.WorkspaceTag;
 import com.ssafy.Algowithme.page.repository.PageRepository;
+import com.ssafy.Algowithme.page.repository.WorkspaceTagRepository;
 import com.ssafy.Algowithme.problem.dto.ProblemInfo;
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTagsResponse;
@@ -13,6 +15,7 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.entity.RawProblem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.problem.repository.RawProblemRepository;
+import com.ssafy.Algowithme.problem.type.Tag;
 import com.ssafy.Algowithme.user.entity.User;
 import com.ssafy.Algowithme.user.entity.UserProblem;
 import com.ssafy.Algowithme.user.repository.UserProblemRepository;
@@ -33,6 +36,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final RawProblemRepository rawProblemRepository;
     private final UserProblemRepository userProblemRepository;
+    private final WorkspaceTagRepository workspaceTagRepository;
     private final PageRepository pageRepository;
 
     public ResponseEntity<AllProblemResponse> getAll() {
@@ -58,7 +62,10 @@ public class ProblemService {
         RawProblem rawProblem = rawProblemRepository.findById(problem.getUid())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-        return RawProblemResponse.create(rawProblem);
+        //태그 조회
+        List<WorkspaceTag> workspaceTags = workspaceTagRepository.findByWorkspaceId(pageId);
+
+        return RawProblemResponse.create(rawProblem, workspaceTags);
     }
 
     public ProblemByTitleResponse getProblemByTitle(String title, int page) {

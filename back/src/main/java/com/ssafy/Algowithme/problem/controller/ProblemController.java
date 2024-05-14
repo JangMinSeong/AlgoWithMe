@@ -76,4 +76,6 @@ public class ProblemController {
         problemService.storeProblemSolvingHistory(user, problemId);
         return ResponseEntity.ok().build();
     }
+
+
 }
