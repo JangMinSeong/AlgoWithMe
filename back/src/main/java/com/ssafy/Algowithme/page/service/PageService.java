@@ -131,6 +131,7 @@ public class PageService {
             //페이지(워크 스페이스) 생성 및 저장
             page = pageRepository.save(Page.builder()
                     .team(team)
+                    .title("빈 페이지")
                     .parent(null)
                     .orders((double) order)
                     .build());
@@ -145,6 +146,7 @@ public class PageService {
             //페이지(워크 스페이스) 생성 및 저장
             page = pageRepository.save(Page.builder()
                     .team(team)
+                    .title("빈 페이지")
                     .parent(parentPage)
                     .orders((double) order)
                     .build());
