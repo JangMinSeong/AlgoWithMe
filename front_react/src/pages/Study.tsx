@@ -29,7 +29,7 @@ const StudyMainPage = () => {
 
   useEffect(() => {
     handleFetchStudyInfo(Number(groupId))
-  }, [currentStudyInfo])
+  }, [])
 
   const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
 
