@@ -67,11 +67,8 @@ const useStudy = () => {
       body: formData,
       credentials: 'include',
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json)
-        dispatch(editImage(json)) // 이거 다시 확인해야함
-      })
+      .then((res) => res.text())
+      .then((text) => dispatch(editImage(text)))
       .catch((err) => console.error(err))
   }
 
