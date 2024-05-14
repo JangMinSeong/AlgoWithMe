@@ -149,6 +149,20 @@ public class PageController {
         return ResponseEntity.ok(pageService.uploadImage(user, pageId, file));
     }
 
-
+    @PutMapping("/tag")
+    @Operation(summary = "문제 페이지 태그 변경", description = "문제 페이지 안에 태그를 변경한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "태그 변경 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+    })
+    public ResponseEntity<Void> updateTags(@AuthenticationPrincipal User user, @RequestBody UpdateTagsRequest request) {
+        pageService.updateTags(user, request);
+        return ResponseEntity.ok().build();
+    }
 
 }

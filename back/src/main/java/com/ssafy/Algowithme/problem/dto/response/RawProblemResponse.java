@@ -26,12 +26,12 @@ public class RawProblemResponse {
     private List<Integer> timeLimit;
     private List<TestCase> exampleList;
     private List<EditCode> editCodesList;
-    private List<Tag> tagList;
+    private List<String> tagList;
 
     public static RawProblemResponse create(RawProblem rawProblem, List<WorkspaceTag> workspaceTags) {
-        List<Tag> tagList = new ArrayList<>();
+        List<String> tagList = new ArrayList<>();
         for(WorkspaceTag workspaceTag : workspaceTags) {
-            tagList.add(workspaceTag.getTag());
+            tagList.add(workspaceTag.getTag().getName());
         }
         return RawProblemResponse.builder()
                 .id(rawProblem.getId())
