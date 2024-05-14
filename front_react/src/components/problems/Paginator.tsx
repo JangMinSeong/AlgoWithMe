@@ -12,7 +12,7 @@ import {
 import { Tooltip } from 'react-tooltip'
 
 const Paginator = () => {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState()
 
   const isLevel = useSelector((state: RootState) => state.search.isLevel)
   const selected = useSelector((state: RootState) => state.levels.selected)
@@ -27,7 +27,7 @@ const Paginator = () => {
   const { handleFetchResultByLevel, handleFetchResultByName } = useSearch()
 
   const handlePageChange = (pageNumber) => {
-    // setCurrentPage(pageNumber)
+    setCurrentPage(pageNumber)
     if (isLevel) {
       handleFetchResultByLevel(levels, pageNumber)
     } else {

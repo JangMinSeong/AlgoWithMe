@@ -14,6 +14,7 @@ import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import LoadingComp from '@/components/LoadingComp'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -22,21 +23,19 @@ const StudyMainPage = () => {
   const [isEditingName, setIsEditingName] = useState(false)
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
-  const { handleEditName, handleEditImage } = useStudy()
+  const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
   const { sendUpdateMessage } = useWebSocket()
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    handleFetchStudyInfo(Number(groupId))
+  }, [])
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
-
   const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
-
-  // 로딩중 적용하기
 
   const handleEditStudyName = (event) => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
-
 
     handleEditName(Number(groupId), newName)
     sendUpdateMessage(
