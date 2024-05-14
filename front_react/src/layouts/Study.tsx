@@ -17,10 +17,10 @@ export default function Layout() {
     <div className="flex transition-all duration-700">
       <ScrollToTop />
       {isSidebarOpen && <SideBar groupId={Number(groupId)} />}
-      <main className="ml-2 w-dvw max-w-dvw ">
+      <main className="ml-2 w-dvw max-w-dvw">
         <div>
           <StudyHeader groupId={Number(groupId)} />
-          <main className="bg-white bg-opacity-70 p-8 rounded-lg mr-2">
+          <main className="bg-white bg-opacity-70 p-8 rounded-lg mr-2 h-screen overflow-y-scroll no-scrollbar">
             <Outlet />
           </main>
         </div>

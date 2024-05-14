@@ -10,13 +10,14 @@ import fetch from '@/lib/fetch'
 import useStudy from '@/hooks/useStudy'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
+import {useWebSocket} from "@/hooks/useWebSocket.ts";
 
 const InvitationPage = () => {
   const { groupId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const code = searchParams.get('code')
-
+  const {connectToServer,disconnectToServer} = useWebSocket()
   const { handleFetchStudyInfo } = useStudy()
   const currentStudyName = useSelector((state: RootState) => state.study.name)
   const isLoggedIn = useSelector(
@@ -25,10 +26,12 @@ const InvitationPage = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
+      connectToServer(Number(groupId))
       handleFetchStudyInfo(Number(groupId))
     } else {
       navigate('/welcome')
     }
+    return (disconnectToServer)
   }, [])
 
   const handleJoinGroup = async () => {
@@ -38,7 +41,9 @@ const InvitationPage = () => {
         'Content-Type': 'application/json',
       },
     })
-      .then(() => navigate(`/${groupId}/study`))
+      .then(() => {
+        navigate(`/${groupId}/study`, { state: { isInvite: true } , replace:true})
+      })
       .catch((err) => console.error(err))
   }
 

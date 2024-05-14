@@ -3,12 +3,18 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
+import { useScroll } from '@/hooks/useScroll.ts'
 
 const MainHeader: React.FC = () => {
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
+  const { y } = useScroll()
 
   return (
-    <header className="fixed top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
+    <header
+      className={`fixed top-0 left-0 right-0 w-full h-16 flex justify-between items-center backdrop-blur-2xl px-5 transition ease-in-out duration-300 ${
+        y > 0 ? 'shadow-md' : ''
+      }`}
+    >
       <div className="flex-none">
         {/*<SideBarButton />*/}
         <Logo />

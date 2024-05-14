@@ -11,7 +11,6 @@ const ViewProblems = ({ setParentChosenProblem }) => {
   const searchResult = useSelector(
     (state: RootState) => state.search.problemInfoList,
   )
-
   const bojdata = {
     Bronze5: 1,
     Bronze4: 2,
@@ -145,8 +144,16 @@ const ViewProblems = ({ setParentChosenProblem }) => {
                   <Tooltip anchorSelect="#problemLink" place="bottom">
                     문제 보러 가기
                   </Tooltip>
-                  <div className="truncate w-[80%]">
-                    {el.number}. {el.title}
+                  <div
+                    id={String(el.problemId)}
+                    className="w-[90%]"
+                    data-tooltip-id="titleTooltip"
+                    data-tooltip-content={el.title}
+                  >
+                    {el.number}.{' '}
+                    {el.title.length >= 7
+                      ? `${el.title.slice(0, 7)} ...`
+                      : el.title}
                   </div>
                 </div>
 
@@ -180,6 +187,7 @@ const ViewProblems = ({ setParentChosenProblem }) => {
         {/* 검색결과조회끝 */}
         <Paginator />
       </div>
+      <Tooltip id="titleTooltip" place="bottom" />
     </div>
   )
 }

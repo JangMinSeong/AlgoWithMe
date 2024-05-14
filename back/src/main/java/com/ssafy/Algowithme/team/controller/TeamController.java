@@ -90,7 +90,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<TeamInfoDetailResponse> getTeamInfoDetail(@AuthenticationPrincipal User user,
-                                                                    @PathVariable Long teamId) {
+                                                                    @PathVariable("teamId") Long teamId) {
         TeamInfoDetailResponse teamInfo = teamService.getTeamInfoDetail(user, teamId);
         return ResponseEntity.ok(teamInfo);
     }
@@ -110,7 +110,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<String> changeTeamImage(@AuthenticationPrincipal User user,
-                                                   @PathVariable Long teamId,
+                                                   @PathVariable("teamId") Long teamId,
                                                    @RequestParam(value = "file") MultipartFile file) {
         String url = teamService.changeTeamImage(user, teamId, file);
         return ResponseEntity.ok(url);
@@ -125,6 +125,8 @@ public class TeamController {
             @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1106", description = "스터디 생성자만 사용 가능한 기능입니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> changeTeamName(@AuthenticationPrincipal User user,
@@ -143,11 +145,30 @@ public class TeamController {
             @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1106", description = "스터디 생성자만 사용 가능한 기능입니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> deleteTeam(@AuthenticationPrincipal User user,
-                                           @PathVariable Long teamId) {
+                                           @PathVariable("teamId") Long teamId) {
         teamService.deleteTeam(user, teamId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/withdrawal/{teamId}")
+    @Operation(summary = "스터디 그룹 탈퇴", description = "스터디 그룹에서 탍퇴한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "스터디 그룹 탈퇴 성공"),
+            @ApiResponse(responseCode = "500", description = "Authorize가 존재하지 않거나 올바르지 않습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1006", description = "해당 사용자가 소속된 스터디 그룹이 아닙니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "1107", description = "스터디 생성자는 스터디 탈퇴를 할 수 없습니다.",
+                    content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+    })
+    public ResponseEntity<Void> withdrawalTeam(@AuthenticationPrincipal User user,
+                                               @PathVariable Long teamId) {
+        teamService.withdrawalTeam(user, teamId);
         return ResponseEntity.ok().build();
     }
 

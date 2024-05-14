@@ -71,9 +71,13 @@ public class CodeService {
         );
     }
 
+    @Transactional
     public CodeByPageAndUserResponse getCodeByPage(Long pageId, User user) {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         List<PersonalCode> codes = personalCodeRepository.findAllByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
+        if(codes.isEmpty()) {
+            codes.add(personalCodeRepository.save(PersonalCode.builder().user(user).workspace(workspace).language(Language.C).deleted(false).build()));
+        }
         return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(), PersonalCodeResponse.fromEntity(codes.getFirst()));
     }
 

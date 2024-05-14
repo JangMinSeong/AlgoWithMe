@@ -147,6 +147,7 @@ public class TeamService {
                 .solvedProblems(teamRepository.getSolvedProblem(teamId))
                 .candidateProblems(teamRepository.getCandidateProblem(teamId))
                 .ranking(teamRepository.getRank(teamId))
+                .manager(userTeam.isManager())
                 .build();
     }
 
@@ -171,6 +172,10 @@ public class TeamService {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
+        if(!userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
+
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
@@ -183,10 +188,27 @@ public class TeamService {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
+        if(!userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
+
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        teamRepository.delete(team);
+        team.setDeleted(true);
+        teamRepository.save(team);
+    }
+
+    @Transactional
+    public void withdrawalTeam(User user, Long teamId) {
+        UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
+
+        if(userTeam.isManager()) {
+            throw new CustomException(ExceptionStatus.USER_TEAM_UNAUTHORIZED);
+        }
+
+        userTeamRepository.delete(userTeam);
     }
 
     public List<UserInfoResponse> getTeamMembers(Long teamId, User user) {

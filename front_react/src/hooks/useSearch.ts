@@ -17,7 +17,6 @@ const useSearch = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log('요청한 페이지 정보 이름', json)
         dispatch(setInitialPageSearchResult(json))
         dispatch(setIsLevel(false))
         dispatch(setSearchTitle(title))
@@ -36,7 +35,6 @@ const useSearch = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log('요청한 페이지 정보 레벨', json)
         dispatch(setInitialPageSearchResult(json))
         dispatch(setIsLevel(true))
       })

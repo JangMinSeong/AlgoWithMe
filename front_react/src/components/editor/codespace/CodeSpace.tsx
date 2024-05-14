@@ -34,8 +34,8 @@ interface PersonalCodeResponse {
     code:string
 }
 
-const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number; option:boolean}> =
-  forwardRef(({ provider, editCodes,firstCode, idList, pageId,option }, ref) => {
+const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number; option:boolean ; isInit:boolean}> =
+  forwardRef(({ provider, editCodes,firstCode, idList, pageId,option, isInit }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
 
@@ -140,26 +140,10 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
               setCode(firstCode.code)
           else
               setCode(languageOptions[firstCode.language].value)
-      } else if(tabs.length !== 0) {
-          const createInitCode = async () => {
-              const response = await fetch(`/code/${pageId}`, {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/json',
-                  },
-              })
-              const responseData = await response.json()
-              console.log(responseData)
-              const newId = responseData
-              const defaultTabs = [newId]
-              setTabs(defaultTabs)
-              setActiveTab(newId)
-          }
-          createInitCode().then(() => {
-              setLanguage('C')
-              setCode(languageOptions.C.value)
-              if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `create ${myId} ${activeTab}`)
-          })
+      } else if(!option && isInit && tabs.length !== 0) {
+          addTab()
+      } else {
+          setTabs([])
       }
     }, [pageId,idList])
 
@@ -173,7 +157,11 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       })
       const responseData = await response.json()
       const newId = responseData
-      const newTabs = [...tabs, newId]
+        let newTabs = []
+        if(idList.length === 0)
+            newTabs = [newId]
+        else
+            newTabs = [...tabs, newId]
       setTabs(newTabs)
       setActiveTab(newId)
       setLanguage('C')
@@ -264,56 +252,61 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
     return (
       <div className="w-full h-full flex flex-col p-3 pt-0">
         <div className="flex items-center justify-between relative mb-1">
-          <div>
-            {tabs.slice(0, 3).map((tab,index) => (
-              <button
-                key={tab}
-                onClick={() => handleTabChange(tab)}
-                className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+            <div>
+                {tabs.slice(0, 3).map((tab, index) => (
+                    <button
+                        key={tab}
+                        onClick={() => handleTabChange(tab)}
+                        className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
               ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-              >
-                {index+1}
-              </button>
-            ))}
-            {tabs.length > 3 && (
-              <button
-                onClick={() => setShowMoreTabs(!showMoreTabs)}
-                className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-              >
-                ...
-              </button>
-            )}
-            {showMoreTabs && (
-              <div
-                className="absolute top-10 left-10 bg-white shadow-lg"
-                style={{ position: 'absolute', top: '100%', zIndex: 1000 }}
-              >
-                {tabs.slice(3).map((tab,index) => (
-                  <button
-                    key={tab}
-                    onClick={() => handleTabChange(tab)}
-                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-                  >
-                    {index+4}
-                  </button>
+                    >
+                        {index + 1}
+                    </button>
                 ))}
-              </div>
-            )}
-              {!option && (
-                <button
-                  onClick={addTab}
-                  className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-                >
-                  +
-                </button>
-              )}
-          </div>
-          <div>
-              {!option && (
-                  <>
-            <button
-              onClick={deleteCode}
+                {tabs.length > 3 && (
+                    <button
+                        onClick={() => setShowMoreTabs(!showMoreTabs)}
+                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                    >
+                        ...
+                    </button>
+                )}
+                {showMoreTabs && (
+                    <div
+                        className="absolute top-10 left-10 bg-white shadow-lg"
+                        style={{position: 'absolute', top: '100%', zIndex: 1000}}
+                    >
+                        {tabs.slice(3).map((tab, index) => (
+                            <button
+                                key={tab}
+                                onClick={() => handleTabChange(tab)}
+                                className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
+                            >
+                                {index + 4}
+                            </button>
+                        ))}
+                    </div>
+                )}
+                {tabs.length === 0 && (
+                    <div className="p-1 h-8 border border-transparent opacity-0">
+                        {/* Invisible space */}
+                    </div>
+                )}
+                {!option && (
+                    <button
+                        onClick={addTab}
+                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                    >
+                        +
+                    </button>
+                )}
+            </div>
+            <div>
+                {!option && (
+                    <>
+                        <button
+                            onClick={deleteCode}
               className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
             >
               삭제

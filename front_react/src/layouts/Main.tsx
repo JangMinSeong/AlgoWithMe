@@ -138,9 +138,9 @@ export default function Layout() {
   })
 
   return (
-    <div className="flex">
+    <div>
       <ScrollToTop />
-      <main className="ml-2 w-dvw h-full mt-16 transition-all duration-700 overflow-hidden">
+      <main className="ml-2 w-[98dvw] h-full mt-16 transition-all duration-700 overflow-hidden">
         {!isLoading && <Outlet />}
         {/*<Outlet />*/}
       </main>
