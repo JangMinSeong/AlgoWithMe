@@ -36,6 +36,7 @@ interface ProblemProp {
   room: string
   testCases: { problem: string; answer: string }[]
   nickname: string
+  tags:string[]
 }
 
 const colors = [
@@ -98,6 +99,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
                                                 room,
                                                 testCases,
                                                 nickname,
+                                                tags
                                               }) => {
   const [memoId, setMemoId] = useState<string | undefined>(undefined);
   const [currentUser] = useState(getInitialUser(nickname));
@@ -106,7 +108,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
 
   const [ydocGroup,setYdocGroup] = useState(new Y.Doc());
   const [websocketProviderGroup, setWebsocketProviderGroup] = useState<TiptapCollabProvider | null>(null);
-
+  const [updatedTags, setUpdatedTags] = useState<string[]> ([])
   const editorUser = useEditor({
     extensions: [
       StarterKit.configure({ history: false }),
@@ -141,6 +143,10 @@ const LeftComponent: React.FC<ProblemProp> = ({
       CharacterCount.configure({ limit: 10000 }),
     ],
   });
+
+  useEffect(() => {
+    setUpdatedTags(tags)
+  },[tags,room])
 
   const renderContent = () => {
     switch (activeTab) {
@@ -290,7 +296,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
   return (
       <div className="mt-0 m-3 flex flex-col">
         <div className="flex flex-row">
-          <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} />
+          <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} pageId={Number(room)} tags={updatedTags}/>
         </div>
         <div className="w-full" style={{ height: '72vh' }}>
           {renderContent()}

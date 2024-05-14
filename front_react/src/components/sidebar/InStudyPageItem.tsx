@@ -15,6 +15,7 @@ interface IPage {
   pageId: number
   title: string
   docs: boolean
+  provider:string
   children: IPage[]
 }
 
@@ -22,6 +23,7 @@ const InStudyPageItem = (props: {
   groupId: number,
   page: IPage,
   depth: number,
+  provider:string
   onMovePage: (draggedId: number, targetId: number) => void
 }) => {
   const navigate = useNavigate()
@@ -146,8 +148,11 @@ const InStudyPageItem = (props: {
                     src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png"
                     alt="File Folder" width="25" height="25"/> :
                 <img
-                    src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Page%20Facing%20Up.png"
-                    alt="Page Facing Up" width="25" height="25"/>
+                    src={`/${props.provider}.png`}
+                    width={20}
+                    height={20}
+                    className="rounded-full mr-2"
+                />
           }
           <div style={{width: 182 - pl}} className="truncate pl-2">
             {pageTitle ? pageTitle : '빈 페이지'}
@@ -193,6 +198,7 @@ const InStudyPageItem = (props: {
                       page={el}
                       key={el.pageId}
                       depth={props.depth + 1}
+                      provider={el.provider}
                       onMovePage={props.onMovePage}
                   />
                 </div>

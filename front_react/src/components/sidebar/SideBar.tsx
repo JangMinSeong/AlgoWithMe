@@ -20,6 +20,7 @@ interface IPage {
   pageId: number
   title: string
   docs: boolean
+  provider: string
   children: IPage[]
 }
 
@@ -35,7 +36,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const studyUpdate = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
-  const {handleEditName} = useStudy()
+  const {handleEditName, handleFetchStudyInfo} = useStudy()
 
   const { setGId, setPages, setStudys } = useSidebar()
 
@@ -89,6 +90,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   useEffect(() => {
     if(studyUpdate.startsWith('"updateTitle')) {
       fetchStudyList()
+      handleFetchStudyInfo(groupId)
     }
     else {
       fetchPageData()
@@ -99,8 +101,6 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     fetchPageData()
     setGId(groupId)
   }, [groupId])
-
-  const { handleFetchStudyInfo } = useStudy()
 
   const handleGoStudyMain = () => {
     handleFetchStudyInfo(groupId)
@@ -230,6 +230,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
                 page={el}
                 key={el.pageId}
                 depth={0}
+                provider={el.provider}
                 onMovePage={movePage}
               />
             </div>

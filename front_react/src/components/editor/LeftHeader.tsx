@@ -1,18 +1,25 @@
 'use client'
 
 import * as React from 'react'
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import TagSelector from '@/components/tag/Tags'
 
 interface LeftHeaderProps {
   activeTab: string
   onSave: () => void
   url: string
+  pageId:number
+  tags:string[]
 }
 
-const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
+const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url,pageId , tags}) => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]) // 선택된 태그를 관리하는 상태
   const [isTagSelectorOpen, setIsTagSelectorOpen] = useState(false)
+
+  useEffect (() => {
+    setSelectedTags(tags)
+    console.log(tags)
+  },[tags])
 
   const toggleTag = (key: string) => {
     setSelectedTags((prevTags) =>
@@ -46,6 +53,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
                 selectedTags={selectedTags}
                 toggleTag={toggleTag}
                 onClose={() => setIsTagSelectorOpen(false)}
+                pageId={pageId}
             />
         )}
       </div>

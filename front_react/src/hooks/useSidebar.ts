@@ -19,6 +19,7 @@ interface Page {
   pageId: number
   title: string
   docs: boolean
+  provider:string
   children: Page[]
 }
 
