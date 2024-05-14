@@ -22,10 +22,6 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
     )
   }
 
-  const handleButtonClick = (action: string) => {
-    console.log(`${action} button clicked`)
-  }
-
   const handleSaveClick = (action: string) => {
     if (action === '저장') {
       onSave() // 저장 버튼 클릭 시 onSave 호출
@@ -62,12 +58,6 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url }) => {
               저장
             </button>
         )}
-        <button
-            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            onClick={() => handleButtonClick('정답')}
-        >
-          정답
-        </button>
         <button
           className=" bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           onClick={() => handleProblemLinkClick()}

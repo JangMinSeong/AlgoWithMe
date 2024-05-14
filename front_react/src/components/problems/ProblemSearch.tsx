@@ -1,8 +1,13 @@
 import { BiSearch } from 'react-icons/bi'
 import useSearch from '@/hooks/useSearch'
+import { useEffect } from 'react'
 
 const ProblemSearch = () => {
   const { handleFetchResultByName } = useSearch()
+
+  useEffect(() => {
+    handleFetchResultByName('', 1)
+  })
 
   const handleSearchByName = (event) => {
     event.preventDefault()

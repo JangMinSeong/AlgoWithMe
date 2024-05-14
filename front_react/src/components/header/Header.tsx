@@ -1,5 +1,3 @@
-'use client'
-
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -7,18 +5,7 @@ import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
 
 const MainHeader: React.FC = () => {
-  interface Item {
-    id: number
-    description: string
-  }
-
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
-
-  const items: Item[] = [
-    { id: 1, description: '스터디 1' },
-    { id: 2, description: '스터디 2' },
-    { id: 3, description: '스터디 3' },
-  ]
 
   return (
     <header className="fixed top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
@@ -27,7 +14,7 @@ const MainHeader: React.FC = () => {
         <Logo />
       </div>
       <div className="shrink w-1/2">
-        <SearchDropdown items={items} />
+        <SearchDropdown />
       </div>
 
       {avatarUrl ? (

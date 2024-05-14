@@ -13,6 +13,7 @@ body {
   );
   background-position: center center;
   font-family: 'pretendard';
+  /* overflow: hidden; */
 }
 
 @layer utilities {

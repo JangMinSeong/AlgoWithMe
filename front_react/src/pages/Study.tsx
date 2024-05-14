@@ -1,6 +1,7 @@
 import PieChart from '@/components/mainpage/PieChart'
 import NextProblem from '@/components/problems/NextProblem'
 import InviteMember from '@/components/studypage/InviteMember'
+import DeleteStudyGroup from '@/components/studypage/DeleteStudyGroup'
 import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
@@ -8,10 +9,11 @@ import SetTimer from '@/components/studypage/SetTimer'
 import { useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -21,6 +23,9 @@ const StudyMainPage = () => {
   const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
   const { handleEditName, handleEditImage } = useStudy()
+  const { sendUpdateMessage } = useWebSocket()
+
+  useEffect(() => {}, [])
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
 
@@ -32,107 +37,116 @@ const StudyMainPage = () => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
 
-    handleEditName(currentStudyInfo.teamId, newName)
+
+    handleEditName(Number(groupId), newName)
+    sendUpdateMessage(
+      `/app/study/${groupId}`,
+      `updateTitle ${groupId} ${newName}`,
+    )
+
     setIsEditingName(false)
   }
 
   return (
     <div className="flex flex-col">
+      {/* 스터디 소개 */}
+      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 pb-6 border-b-2 ">
+        <span
+          className="relative"
+          onMouseEnter={() => setIsShowingImgEditor(true)}
+          onMouseLeave={() => setIsShowingImgEditor(false)}
+        >
+          {currentStudyInfo.imageUrl ? (
+            <img
+              src={currentStudyInfo.imageUrl}
+              alt="img"
+              width={80}
+              height={80}
+              className="mr-2"
+            />
+          ) : (
+            <img
+              src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
+              alt="Bubbles"
+              width={80}
+              height={80}
+            />
+          )}
+          <a
+            id="editImage"
+            href="a"
+            className={`${anchorTagCSS} absolute right-0 bottom-0`}
+          >
+            {isShowingImgEditor && (
+              <GoPencil
+                className="w-4 opacity-20"
+                onClick={() => setIsEditingImage(true)}
+              />
+            )}
+          </a>
+        </span>
+
+        {/* 스터디 이름 */}
+        <div className="flex text-3xl mb-2 mr-2 items-center">
+          {isEditingName ? (
+            <div className="flex items-center bg-transparent rounded-xl mr-2 ">
+              <form
+                id="name"
+                onSubmit={handleEditStudyName}
+                className="flex bg-transparent"
+              >
+                <input
+                  type="text"
+                  name="newName"
+                  required
+                  maxLength={8}
+                  defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
+                  placeholder="새로운 스터디 이름"
+                  className="text-3xl p-2 rounded-xl bg-transparent w-60"
+                />
+                <div className="flex items-center">
+                  <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
+                    저장
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setIsEditingName(false)
+                    }}
+                    className="rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
+                  >
+                    취소
+                  </button>
+                </div>
+              </form>
+            </div>
+          ) : (
+            <div className="flex items-center ">
+              {' '}
+              {currentStudyInfo.name.replace(/"/gi, '')}
+              <a id="editName" className={anchorTagCSS}>
+                <GoPencil
+                  className="w-4 opacity-20"
+                  onClick={() => setIsEditingName(true)}
+                />
+              </a>
+            </div>
+          )}
+          {/* 스터디 이름 */}
+
+          <div>와 함께한 지</div>
+          <div className="text-purple-400 ml-2">{currentStudyInfo.joinDay}</div>
+          <div>일째</div>
+        </div>
+        <div className="flex">
+          <InviteMember groupId={groupId} />
+          <DeleteStudyGroup groupId={groupId} />
+        </div>
+      </div>
       {/* 위 */}
       <div className=" flex flex-wrap">
         {/* 왼쪽 위 */}
         <div className=" w-[50%] mb-10 flex flex-col ">
-          {/* 스터디 소개 */}
-          <div className="mr-4  font-bold flex justify-between items-center h-[28%] mb-4 rounded-2xl p-2 ">
-            <span
-              className="relative"
-              onMouseEnter={() => setIsShowingImgEditor(true)}
-              onMouseLeave={() => setIsShowingImgEditor(false)}
-            >
-              {currentStudyInfo.imageUrl ? (
-                <img
-                  src={currentStudyInfo.imageUrl}
-                  alt="img"
-                  width={80}
-                  height={80}
-                  className="mr-2"
-                />
-              ) : (
-                <img
-                  src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
-                  alt="Bubbles"
-                  width={80}
-                  height={80}
-                />
-              )}
-              <a
-                id="editImage"
-                href="a"
-                className={`${anchorTagCSS} absolute right-0 bottom-0`}
-              >
-                {isShowingImgEditor && (
-                  <GoPencil
-                    className="w-4 opacity-20"
-                    onClick={() => setIsEditingImage(true)}
-                  />
-                )}
-              </a>
-            </span>
-
-            <div className="flex text-2xl mb-2 mr-2">
-              {isEditingName ? (
-                <div className="flex items-center bg-white rounded-xl mr-2">
-                  <form
-                    id="name"
-                    onSubmit={handleEditStudyName}
-                    className="flex "
-                  >
-                    <input
-                      type="text"
-                      name="newName"
-                      required
-                      maxLength={8}
-                      defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
-                      placeholder="새로운 스터디 이름"
-                      className="text-sm p-2 w-28 rounded-xl "
-                    />
-                    <div className="flex items-center">
-                      <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
-                        저장
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.preventDefault()
-                          setIsEditingName(false)
-                        }}
-                        className="rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
-                      >
-                        취소
-                      </button>
-                    </div>
-                  </form>
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  {' '}
-                  {currentStudyInfo.name.replace(/"/gi, '')}
-                  <a id="editName" className={anchorTagCSS}>
-                    <GoPencil
-                      className="w-4 opacity-20"
-                      onClick={() => setIsEditingName(true)}
-                    />
-                  </a>
-                </div>
-              )}
-
-              <div>와 함께한 지</div>
-              <div className="text-purple-400 ml-2">
-                {currentStudyInfo.joinDay}
-              </div>
-              <div>일 </div>
-            </div>
-            <InviteMember groupId={groupId} />
-          </div>
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[72%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
@@ -155,8 +169,8 @@ const StudyMainPage = () => {
       <div className="flex flex-wrap">
         <div className="mb-10 flex grow">
           <div className="w-[34%] grow mb-10 flex flex-col">
-            <div className="font-bold mb-4 mt-4">문제 풀이 시간 설정</div>
-            <div className="flex ">
+            <div className="font-bold mb-4 mt-4">풀이시간 설정하기</div>
+            <div className="flex justify-center">
               <SetTimer />
             </div>
           </div>

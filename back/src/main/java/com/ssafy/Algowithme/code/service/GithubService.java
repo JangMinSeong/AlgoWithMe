@@ -59,17 +59,17 @@ public class GithubService {
         }
     }
 
-    public void uploadFile(String repo, String branch, CodeUploadRequest req, User user) {
+    public void uploadFile(CodeUploadRequest req, User user) {
         GitHub gitHub = getGitHub(user);
         try {
-            GHRepository repository = gitHub.getMyself().getRepository(repo);
-            String path = req.getPath() + "/" + req.getFileName() + req.getLanguage().getExtension();
+            GHRepository repository = gitHub.getMyself().getRepository(req.getRepo());
+            String path = req.getPath() + req.getFileName() + req.getLanguage().getExtension();
             try {
-                GHContent fileContent = repository.getFileContent(path, branch);
-                GHContentUpdateResponse response = fileContent.update(req.getContent(), req.getCommitMessage(), branch);
+                GHContent fileContent = repository.getFileContent(path, req.getBranch());
+                GHContentUpdateResponse response = fileContent.update(req.getContent(), req.getCommitMessage(), req.getBranch());
             } catch (GHFileNotFoundException e) {
                 GHContentBuilder contentBuilder = repository.createContent();
-                contentBuilder.path(path).branch(branch).content(req.getContent()).message(req.getCommitMessage()).commit();
+                contentBuilder.path(path).branch(req.getBranch()).content(req.getContent()).message(req.getCommitMessage()).commit();
             }
         }
         catch (IOException e) {

@@ -1,11 +1,18 @@
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useSearch from '@/hooks/useSearch'
+import { useState } from 'react'
+import Pagination from 'react-js-pagination'
+import {
+  MdKeyboardArrowLeft,
+  MdKeyboardArrowRight,
+  MdKeyboardDoubleArrowLeft,
+  MdKeyboardDoubleArrowRight,
+} from 'react-icons/md'
+import { Tooltip } from 'react-tooltip'
 
 const Paginator = () => {
-  const totalPageNum = useSelector(
-    (state: RootState) => state.search.totalPages,
-  )
+  const [currentPage, setCurrentPage] = useState(1)
 
   const isLevel = useSelector((state: RootState) => state.search.isLevel)
   const selected = useSelector((state: RootState) => state.levels.selected)
@@ -13,23 +20,60 @@ const Paginator = () => {
   const searchTitle = useSelector(
     (state: RootState) => state.search.searchTitle,
   )
+  const totalResult = useSelector(
+    (state: RootState) => state.search.resultCount,
+  )
 
   const { handleFetchResultByLevel, handleFetchResultByName } = useSearch()
-  const pageArray = new Array(totalPageNum).fill(0)
 
-  const handleFetchPage = (pageNum) => {
+  const handlePageChange = (pageNumber) => {
+    // setCurrentPage(pageNumber)
     if (isLevel) {
-      handleFetchResultByLevel(levels, pageNum)
+      handleFetchResultByLevel(levels, pageNumber)
     } else {
-      handleFetchResultByName(searchTitle, pageNum)
+      handleFetchResultByName(searchTitle, pageNumber)
     }
   }
 
   return (
-    <div className="flex">
-      {pageArray.slice(1, 5).map((_, idx) => (
-        <button onClick={() => handleFetchPage(idx + 1)}>{idx + 1}</button>
-      ))}
+    <div>
+      <Pagination
+        activePage={currentPage}
+        itemsCountPerPage={10}
+        totalItemsCount={totalResult}
+        pageRangeDisplayed={5}
+        onChange={(e) => {
+          handlePageChange(e)
+          console.log(e)
+        }}
+        innerClass="flex justify-between items-center mt-4"
+        prevPageText={<MdKeyboardArrowLeft />}
+        firstPageText={<MdKeyboardDoubleArrowLeft />}
+        lastPageText={<MdKeyboardDoubleArrowRight />}
+        nextPageText={<MdKeyboardArrowRight />}
+        activeClass="rounded-full bg-primary text-white px-2 flex items-center justify-center"
+        itemClass="text-sm hover:bg-slate-300/50 hover:text-black rounded-full px-2 flex items-center justify-center"
+        itemClassFirst="py-2"
+        itemClassLast="py-2"
+        itemClassNext="py-2"
+        itemClassPrev="py-2"
+        linkClassFirst="goFirst"
+        linkClassLast="goLast"
+        linkClassPrev="goPrev"
+        linkClassNext="goNext"
+      />
+      <Tooltip anchorSelect=".goFirst" place="top">
+        첫 페이지
+      </Tooltip>
+      <Tooltip anchorSelect=".goLast" place="top">
+        마지막 페이지
+      </Tooltip>
+      <Tooltip anchorSelect=".goPrev" place="top">
+        이전 페이지
+      </Tooltip>
+      <Tooltip anchorSelect=".goNext" place="top">
+        다음 페이지
+      </Tooltip>
     </div>
   )
 }

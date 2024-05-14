@@ -43,7 +43,7 @@ public class AES128Config {
         try {
             cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec, ivParameterSpec);
             byte[] encryted = cipher.doFinal(plaintext.getBytes(ENCODING_TYPE));
-            return new String(Base64.getEncoder().encode(encryted), ENCODING_TYPE);
+            return new String(Base64.getUrlEncoder().encode(encryted), ENCODING_TYPE);
         } catch (Exception e) {
             throw new CustomException(ExceptionStatus.ENCRYPTION_FAILED);
         }
@@ -53,7 +53,7 @@ public class AES128Config {
     public String decryptAes(String plaintext) {
         try {
             cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-            byte[] decoded = Base64.getDecoder().decode(plaintext.getBytes(ENCODING_TYPE));
+            byte[] decoded = Base64.getUrlDecoder().decode(plaintext.getBytes(ENCODING_TYPE));
             return new String(cipher.doFinal(decoded), ENCODING_TYPE);
         } catch (Exception e) {
             throw new CustomException(ExceptionStatus.DECRYPTION_FAILED);

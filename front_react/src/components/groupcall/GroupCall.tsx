@@ -1,150 +1,233 @@
-import useGroupCall from '@/hooks/useGroupCall'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import { Tooltip } from 'react-tooltip'
+import fetch from '@/lib/fetch'
+import { useParams } from 'react-router'
+import { OpenVidu, Session, Subscriber, Publisher } from 'openvidu-browser'
+import toast, { Toaster } from 'react-hot-toast'
 
-const API_URL =
-  import.meta.env.MODE === 'development'
-    ? import.meta.env.VITE_API_DEV_URL
-    : import.meta.env.VITE_API_URL
+interface IParticipant {
+  connectionId: string
+  nickname: string
+}
 
 const GroupCall = () => {
-  const [isHeadphoneOn, setIsHeadphoneOn] = useState(true)
+  const { groupId } = useParams()
+  const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
+
+  const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
   const [isMicOn, setIsMicOn] = useState(false)
+  const [activeSpeaker, setActiveSpeaker] = useState<string>()
+  const [participants, setParticipants] = useState<Array<IParticipant>>([])
+  const [session, setSession] = useState<Session | null>()
+  const [subscriber, setSubscriber] = useState<Subscriber | null>()
+  const [publisher, setPublisher] = useState<Publisher | null>()
+  const [OV, setOV] = useState<OpenVidu>()
 
-  const roomId = 'dummy'
-  const myUserName = useSelector(
-    (state: RootState) => state.groupcall.myUserName,
-  )
-  const activeSpeaker = useSelector(
-    (state: RootState) => state.groupcall.activeSpeaker,
-  )
-  const { connectToSession, disconnectSession } = useGroupCall()
+  const connectToSession = async (token: string) => {
+    // 이미 있으면 삭제하고 다시
+    if (session) session.disconnect()
 
-  useEffect(() => {
-    const fetchSessionAndConnect = async () => {
-      try {
-        // Fetching session ID
-        const sessionIdResponse = await fetch(`${API_URL}/openvidu/sessions`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ customSessionId: roomId }),
-          credentials: 'include',
-        })
-        const sessionIdData = await sessionIdResponse.json()
-        const sessionId = sessionIdData.id // Assuming the ID is stored in the `id` property
+    const newOV = new OpenVidu()
+    setOV(newOV)
+    newOV.enableProdMode()
 
-        // Fetching token
-        const tokenResponse = await fetch(
-          `${API_URL}/openvidu/sessions/${sessionId}/connections`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            method: 'POST',
-            body: JSON.stringify({ customSessionId: roomId }),
-            credentials: 'include',
-          },
-        )
-        const tokenData = await tokenResponse.json()
-        const token = tokenData.token // Assuming the token is stored in the `token` property
+    const mySession = newOV.initSession()
+    setSession(mySession)
 
-        // Connecting to the session
-        connectToSession(token)
-      } catch (error) {
-        console.error('Failed to fetch session or token:', error)
-      }
-    }
+    mySession.on('streamCreated', (event) => {
+      const mySubscriber = mySession.subscribe(event.stream, 'subscriberDiv')
+      setSubscriber(mySubscriber)
+      const connectionId = event.stream.connection.connectionId
+      const nickname = event.stream.connection.data
+      console.log(connectionId)
 
-    fetchSessionAndConnect()
+      setParticipants((prevParticipants) => [
+        ...prevParticipants,
+        { connectionId, nickname },
+      ])
 
-    return () => disconnectSession()
-  }, [])
+      console.log('참가자목록', participants)
+    })
+
+    // 내가 연결 끊었을 때
+    mySession.on('streamDestroyed', (event) => {
+      const connectionId = event.stream.connection.connectionId
+      setParticipants((prevParticipants) =>
+        prevParticipants.filter((item) => item.connectionId !== connectionId),
+      )
+      const nickname = event.stream.connection.data
+      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+        icon: '👋',
+      })
+    })
+
+    mySession
+      .connect(token, myNickname)
+      .then(() => {
+        console.log('커넥트요청보냄')
+      })
+      .catch((err) => {
+        console.error(err)
+        toast.error('연결에 실패했어요. 잠시후 다시 시도해주세요.')
+      })
+
+    const myPublisher = newOV.initPublisher('', {
+      audioSource: undefined,
+      videoSource: false,
+      publishAudio: isMicOn,
+      publishVideo: isHeadphoneOn,
+    })
+
+    mySession.publish(myPublisher)
+    setPublisher(myPublisher)
+
+    mySession.on('connectionCreated', (event) => {
+      const nickname = event.connection.data
+      toast(`${nickname}님이 음성채팅에 입장했어요`, {
+        icon: '🙋‍♀️',
+      })
+    })
+
+    mySession.on('connectionDestroyed', (event) => {
+      const nickname = event.connection.data
+      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+        icon: '👋',
+      })
+    })
+
+    mySession.on('publisherStartSpeaking', (event) => {
+      setActiveSpeaker(event.connection.connectionId)
+      console.log('User ' + event.connection.connectionId + ' start speaking')
+    })
+
+    mySession.on('publisherStopSpeaking', (event) => {
+      setActiveSpeaker(undefined)
+      console.log('User ' + event.connection.connectionId + ' stop speaking')
+    })
+
+    mySession.on('exception', (exception) => {
+      console.warn(exception)
+    })
+  }
 
   const handleHeadphoneOff = () => {
-    // subscriber.subscribeToAudio(false)
+    subscriber.subscribeToAudio(false)
     setIsHeadphoneOn(false)
   }
   const handleHeadphoneOn = () => {
-    // subscriber.subscribeToAudio(true)
+    subscriber.subscribeToAudio(true)
     setIsHeadphoneOn(true)
   }
   const handleMicOff = () => {
-    // publisher.publishAudio(false)
+    publisher.publishAudio(false)
     setIsMicOn(false)
   }
   const handleMicOn = () => {
-    // publisher.publishAudio(true)
+    publisher.publishAudio(true)
     setIsMicOn(true)
   }
 
-  const participants = useSelector(
-    (state: RootState) => state.groupcall.participants,
-  )
+  const fetchSessionAndToken = async () => {
+    await fetch(`/openvidu/sessions/${groupId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((json) =>
+        fetch(`/openvidu/sessions/${json.sessionId}/connections`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+          credentials: 'include',
+        }),
+      )
+      .then((res) => res.json())
+      .then((json) => {
+        connectToSession(json.token)
+      })
+  } // fetchSessionAndToken
+
+  const disconnectSession = () => {
+    if (session) {
+      session.disconnect()
+      setSession(null)
+      setPublisher(null)
+      setParticipants([])
+    }
+  }
 
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
   const chipCss =
-    'rounded-xl bg-slate-200 text-xs flex pl-3 items-center justify-center h-6 mr-1 mb-1'
+    'rounded-xl bg-slate-200 text-xs flex px-3 items-center justify-center h-6 mr-1 mb-1'
   return (
-    <div className="flex">
-      <div className={chipCss}>참여하기</div>
+    <div className="flex items-center justify-center">
+      <div id="subscriberDiv" style={{ display: 'none' }}></div>
+      <div id="publisher-container" style={{ display: 'none' }}></div>
 
-      {participants.map((el, idx) => (
-        <div>사람{idx + 1}</div>
-        // activeSpeaker 인 사람은 빨간 링띄우기
-      ))}
-      <div onClick={disconnectSession} className={chipCss}>
-        연결끊기
-      </div>
+      {session ? (
+        <div onClick={() => disconnectSession()} className={chipCss}>
+          연결끊기
+        </div>
+      ) : (
+        <div className={chipCss} onClick={() => fetchSessionAndToken()}>
+          참여하기
+        </div>
+      )}
 
       {/* 오디오컨트롤 */}
-      <div className="ml-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
-        {isMicOn ? (
-          <div onClick={handleMicOff}>
-            <a id="willOffMic" className={anchorTagCSS}>
-              <FiMic className="w-5 h-5" />
-            </a>
-            <Tooltip anchorSelect="#willOffMic" place="bottom">
-              마이크 끄기
-            </Tooltip>
-          </div>
-        ) : (
-          <div onClick={handleMicOn}>
-            <a id="willOnMic" className={anchorTagCSS}>
-              <FiMicOff className="w-5 h-5 text-red-400" />
-            </a>
-            <Tooltip anchorSelect="#willOnMic" place="bottom">
-              마이크 켜기
-            </Tooltip>
-          </div>
-        )}
+      {session && (
+        <div className="ml-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
+          {isHeadphoneOn ? (
+            <div onClick={handleHeadphoneOff}>
+              <a id="willOffHeadphone" className={anchorTagCSS}>
+                <TbHeadphones className="w-5 h-5" />
+              </a>
+              <Tooltip anchorSelect="#willOffHeadphone" place="bottom">
+                헤드셋 소리 끄기
+              </Tooltip>
+            </div>
+          ) : (
+            <div onClick={handleHeadphoneOn}>
+              <a id="willOnHeadphone" className={anchorTagCSS}>
+                <TbHeadphonesOff className="w-5 h-5 text-red-400" />
+              </a>
+              <Tooltip anchorSelect="#willOnHeadphone" place="bottom">
+                헤드셋 소리 켜기
+              </Tooltip>
+            </div>
+          )}
 
-        {isHeadphoneOn ? (
-          <div onClick={handleHeadphoneOff}>
-            <a id="willOffHeadphone" className={anchorTagCSS}>
-              <TbHeadphones className="w-5 h-5" />
-            </a>
-            <Tooltip anchorSelect="#willOffHeadphone" place="bottom">
-              헤드셋 소리 끄기
-            </Tooltip>
-          </div>
-        ) : (
-          <div onClick={handleHeadphoneOn}>
-            <a id="willOnHeadphone" className={anchorTagCSS}>
-              <TbHeadphonesOff className="w-5 h-5 text-red-400" />
-            </a>
-            <Tooltip anchorSelect="#willOnHeadphone" place="bottom">
-              헤드셋 소리 켜기
-            </Tooltip>
-          </div>
-        )}
-      </div>
+          {isMicOn ? (
+            <div onClick={handleMicOff}>
+              <a id="willOffMic" className={anchorTagCSS}>
+                <FiMic className="w-5 h-5" />
+              </a>
+              <Tooltip anchorSelect="#willOffMic" place="bottom">
+                마이크 끄기
+              </Tooltip>
+            </div>
+          ) : (
+            <div onClick={handleMicOn}>
+              <a id="willOnMic" className={anchorTagCSS}>
+                <FiMicOff className="w-5 h-5 text-red-400" />
+              </a>
+              <Tooltip anchorSelect="#willOnMic" place="bottom">
+                마이크 켜기
+              </Tooltip>
+            </div>
+          )}
+        </div>
+      )}
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }

@@ -5,6 +5,7 @@ import com.ssafy.Algowithme.problem.dto.response.ProblemByTagsResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
 import com.ssafy.Algowithme.problem.dto.response.RawProblemResponse;
 import com.ssafy.Algowithme.problem.service.ProblemService;
+import com.ssafy.Algowithme.user.entity.User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -64,4 +66,14 @@ public class ProblemController {
         return ResponseEntity.ok(problemService.getProblemByTag(levels, page));
     }
 
+    @PostMapping("/{problemId}/solution")
+    @Operation(summary = "제출한 이력 기록", description = "유저가 해당 문제를 풀었던 시간을 기록한다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "기록 성공"),
+            @ApiResponse(responseCode = "400", description = "기록 실패")
+    })
+    public ResponseEntity<ProblemByTagsResponse> storeProblemSolvingHistory(@AuthenticationPrincipal User user, @PathVariable("problemId") Long problemId) {
+        problemService.storeProblemSolvingHistory(user, problemId);
+        return ResponseEntity.ok().build();
+    }
 }

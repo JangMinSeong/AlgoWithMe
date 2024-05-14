@@ -1,5 +1,6 @@
 package com.ssafy.Algowithme.team.dto;
 
+import com.ssafy.Algowithme.problem.type.Provider;
 import lombok.*;
 
 @Builder
@@ -7,12 +8,12 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SolvedProblemDto {
+public class CandidateProblemRawDto {
 
-    private long pageId;
-    private long problemId;
+    private Long candidateId;
+    private Long problemId;
     private String url;
-    private String provider;
+    private Provider provider;
     private int number;
     private String name;
     private String level;

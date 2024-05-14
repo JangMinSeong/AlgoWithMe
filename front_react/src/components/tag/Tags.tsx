@@ -34,31 +34,46 @@ const TagSelector: React.FC<TagSelectorProps> = ({
                                                      selectedTags,
                                                      toggleTag,
                                                      onClose,
-                                                 }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-        <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
-            <div className="flex flex-wrap justify-start gap-2">
-                {tags.map((tag) => (
+                                                 }) => {
+    const handleSave = () => {
+        console.log(selectedTags)
+    }
+
+    return(
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+            <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
+                <div className="flex flex-wrap justify-start gap-2">
+                    {tags.map((tag) => (
+                        <button
+                            key={tag.key}
+                            className={`px-4 py-1 text-sm text-center font-medium rounded-md shadow transition-colors duration-200 ${
+                                selectedTags.includes(tag.key) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
+                            }`}
+                            onClick={() => toggleTag(tag.key)}
+                            style={{minWidth: '5rem'}}
+                        >
+                            {tag.label}
+                        </button>
+                    ))}
+                </div>
+                <div className="flex flex-row justify-end text-right mt-4">
                     <button
-                        key={tag.key}
-                        className={`px-4 py-1 text-sm text-center font-medium rounded-md shadow transition-colors duration-200 ${
-                            selectedTags.includes(tag.key) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
-                        }`}
-                        onClick={() => toggleTag(tag.key)}
-                        style={{ minWidth: '5rem' }} // Ensure minimum width for smaller tags
+                        className="py-1 px-4 mr-2 bg-primary text-white rounded hover:bg-secondary transition duration-200"
+                        onClick={handleSave}
                     >
-                        {tag.label}
+                        저장
                     </button>
-                ))}
+                    <button
+                        className="py-1 px-4 bg-navy text-white rounded hover:bg-secondary transition duration-200"
+                        onClick={onClose}
+                    >
+                        닫기
+                    </button>
+                </div>
             </div>
-            <button
-                className="mt-4 py-1 px-4 bg-red-500 text-white rounded hover:bg-red-300 transition duration-200"
-                onClick={onClose}
-            >
-                닫기
-            </button>
         </div>
-    </div>
-);
+
+    );
+}
 
 export default TagSelector;

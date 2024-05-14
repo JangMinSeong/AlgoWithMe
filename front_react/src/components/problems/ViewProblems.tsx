@@ -1,6 +1,6 @@
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Tooltip } from 'react-tooltip'
 import { IProblemInfo } from '@/features/search/searchSlice'
 import Paginator from './Paginator'
@@ -145,8 +145,16 @@ const ViewProblems = ({ setParentChosenProblem }) => {
                   <Tooltip anchorSelect="#problemLink" place="bottom">
                     문제 보러 가기
                   </Tooltip>
-                  <div className="truncate w-[80%]">
-                    {el.number}. {el.title}
+                  <div
+                    id={String(el.problemId)}
+                    className="w-[90%]"
+                    data-tooltip-id="titleTooltip"
+                    data-tooltip-content={el.title}
+                  >
+                    {el.number}.{' '}
+                    {el.title.length >= 7
+                      ? `${el.title.slice(0, 7)} ...`
+                      : el.title}
                   </div>
                 </div>
 
@@ -180,6 +188,7 @@ const ViewProblems = ({ setParentChosenProblem }) => {
         {/* 검색결과조회끝 */}
         <Paginator />
       </div>
+      <Tooltip id="titleTooltip" place="bottom" />
     </div>
   )
 }

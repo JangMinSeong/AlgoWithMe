@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
@@ -6,20 +6,31 @@ import StudyGroupDropdown from './StudyGroupDropdown'
 import PageCreateButton from './PageCreateButton'
 
 interface Study {
-    id: number
-    name: string
-    imageUrl: string
+  id: number
+  name: string
+  imageUrl: string
 }
-const StudyGroupNavigator = (props: { groupId: number, studyList : Study[] }) => {
+const StudyGroupNavigator = (props: {
+  groupId: number
+  studyList: Study[]
+}) => {
   const [isNavigatorOpen, setIsNavigatorOpen] = useState(false)
-
-  const currentGroupName =
-
+  const [curStudyList, setCurStudyList] = useState<Study[]>([])
+  const [currentGroupName, setCurGroupName] = useState<string> (
     props.studyList.find((group) => group.id === props.groupId)?.name ||
-    '오구오구스터디'
-  const currentGroupImg =
+    '오구오구스터디')
+  const [currentGroupImg,setCurGroupImg] = useState<string>(
       props.studyList.find((group) => group.id === props.groupId)?.imageUrl ||
-    'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png'
+    'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png')
+
+
+    useEffect ( () => {
+        setCurStudyList(props.studyList)
+        setCurGroupName(props.studyList.find((group) => group.id === props.groupId)?.name ||
+            '오구오구스터디')
+        setCurGroupImg(props.studyList.find((group) => group.id === props.groupId)?.imageUrl ||
+            'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png')
+    },[props.studyList])
 
 
   const handleNavigatorOpen = () => {
@@ -44,9 +55,8 @@ const StudyGroupNavigator = (props: { groupId: number, studyList : Study[] }) =>
           {isNavigatorOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
         </div>
       </div>
-D
       {/* 이걸 누르면 아래의 드랍다운이 펼쳐진다 */}
-      {isNavigatorOpen ? <StudyGroupDropdown studyList={props.studyList}/> : null}
+      {isNavigatorOpen ? <StudyGroupDropdown studyList={curStudyList}/> : null}
     </div>
   )
 }

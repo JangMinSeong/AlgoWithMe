@@ -4,9 +4,7 @@ import com.querydsl.core.Tuple;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.Algowithme.team.dto.CandidateProblemDto;
-import com.ssafy.Algowithme.team.dto.RankDto;
-import com.ssafy.Algowithme.team.dto.SolvedProblemDto;
+import com.ssafy.Algowithme.team.dto.*;
 import com.ssafy.Algowithme.user.dto.SolvedTagCountDto;
 import lombok.RequiredArgsConstructor;
 
@@ -50,8 +48,8 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
 
     @Override
     public List<SolvedProblemDto> getSolvedProblem(Long teamId) {
-        return jpaQueryFactory
-                .select(Projections.fields(SolvedProblemDto.class,
+        List<SolvedProblemRawDto> solvedProblemRawDtoList =
+                jpaQueryFactory.select(Projections.fields(SolvedProblemRawDto.class,
                         page.id.as("pageId"),
                         problem.id.as("problemId"),
                         problem.url,
@@ -66,12 +64,27 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .orderBy(page.updatedAt.desc())
                 .limit(3)
                 .fetch();
+
+        List<SolvedProblemDto> result = new ArrayList<>();
+
+        solvedProblemRawDtoList.forEach(dto ->
+                result.add(SolvedProblemDto.builder()
+                                .pageId(dto.getPageId())
+                                .problemId(dto.getProblemId())
+                                .url(dto.getUrl())
+                                .provider(dto.getProvider().getName())
+                                .number(dto.getNumber())
+                                .name(dto.getName())
+                                .level(dto.getLevel())
+                                .build()));
+
+        return result;
     }
 
     @Override
     public List<CandidateProblemDto> getCandidateProblem(Long teamId) {
-        return jpaQueryFactory
-                .select(Projections.bean(CandidateProblemDto.class,
+        List<CandidateProblemRawDto> candidateProblemRawDtoList =
+                jpaQueryFactory.select(Projections.bean(CandidateProblemRawDto.class,
                         candidateProblem.id.as("candidateId"),
                         problem.id.as("problemId"),
                         problem.url,
@@ -85,6 +98,20 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                 .where(team.id.eq(teamId))
                 .orderBy(candidateProblem.id.asc())
                 .fetch();
+
+        List<CandidateProblemDto> result = new ArrayList<>();
+
+        candidateProblemRawDtoList.forEach(dto ->
+                result.add(CandidateProblemDto.builder()
+                                .candidateId(dto.getCandidateId())
+                                .problemId(dto.getProblemId())
+                                .url(dto.getUrl())
+                                .provider(dto.getProvider().getName())
+                                .number(dto.getNumber())
+                                .level(dto.getLevel())
+                                .build()));
+
+        return result;
     }
 
     @Override

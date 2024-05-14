@@ -1,6 +1,5 @@
 package com.ssafy.Algowithme.team.dto;
 
-import com.ssafy.Algowithme.problem.type.Provider;
 import lombok.*;
 
 @Builder
@@ -13,7 +12,7 @@ public class CandidateProblemDto {
     private Long candidateId;
     private Long problemId;
     private String url;
-    private Provider provider;
+    private String provider;
     private int number;
     private String name;
     private String level;

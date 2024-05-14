@@ -116,7 +116,7 @@ public class UserController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<PageSearchResponse> searchPage(@AuthenticationPrincipal User user,
-                                                         @RequestParam String word) {
+                                                         @RequestParam("word") String word) {
         PageSearchResponse searchResult = userService.searchPage(user, word);
         return ResponseEntity.ok(searchResult);
     }

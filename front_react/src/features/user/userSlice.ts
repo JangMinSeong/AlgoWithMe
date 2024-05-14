@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IUserState {
   id: number
+  nickname: string
 }
 
 const initialState: IUserState = {
   id: 0,
+  nickname: '',
 }
 
 const userSlice = createSlice({
@@ -15,8 +17,11 @@ const userSlice = createSlice({
     setUserId: (state: IUserState, action: PayloadAction<number>) => {
       state.id = action.payload
     },
+    setUserNickname: (state: IUserState, action: PayloadAction<string>) => {
+      state.nickname = action.payload
+    },
   },
 })
 
-export const { setUserId } = userSlice.actions
+export const { setUserId, setUserNickname } = userSlice.actions
 export default userSlice.reducer

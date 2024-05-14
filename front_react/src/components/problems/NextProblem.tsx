@@ -1,6 +1,17 @@
 import { IProblemInfo } from '@/features/study/studyTypes'
 import { Tooltip } from 'react-tooltip'
 import useStudy from '@/hooks/useStudy'
+import useSidebar from '@/hooks/useSidebar.ts'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store'
+
+interface Page {
+  pageId: number
+  title: string
+  docs: boolean
+  children: Page[]
+}
 
 const NextProblem: React.FC = ({
   problemInfo,
@@ -8,6 +19,62 @@ const NextProblem: React.FC = ({
   problemInfo: IProblemInfo
 }) => {
   const { handleDeleteCandidateProblem } = useStudy()
+  const navigate = useNavigate()
+  const { groupId } = useParams()
+
+  const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
+  const pageList = useSelector((state: RootState) => state.sidebar.pageList)
+
+  const { setPages } = useSidebar()
+
+  const handleAddProblem = async () => {
+    const dataToCreate = {
+      teamId: groupId,
+      pageId: pPageId,
+      problemId: problemInfo.problemId,
+    }
+    console.log(dataToCreate)
+    const response = await fetch('/page/problem', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToCreate),
+    })
+    const responseData = await response.json()
+    const newPage = {
+      pageId: responseData.pageId,
+      title: responseData.title,
+      docs: false,
+      children: [],
+    }
+
+    const addSubPage = (
+      pages: Page[],
+      parentPageId: number,
+      newPage: Page,
+    ): Page[] =>
+      pages.map((page) => {
+        if (page.pageId === parentPageId) {
+          return { ...page, children: [...page.children, newPage] }
+        }
+
+        return {
+          ...page,
+          children: addSubPage(page.children, parentPageId, newPage),
+        }
+      })
+
+    if (pPageId === -1) {
+      const updatedList = [...pageList, newPage]
+      setPages(updatedList)
+    } else {
+      const updatedList = addSubPage(pageList, pPageId, newPage)
+      setPages(updatedList)
+      console.log(updatedList)
+    }
+    navigate(`/${groupId}/editor/${responseData.pageId}`)
+  }
 
   return (
     <div className={`w-full flex  rounded-lg mb-2`}>
@@ -35,7 +102,10 @@ const NextProblem: React.FC = ({
           {problemInfo.number}. {problemInfo.name}
         </div>
 
-        <div className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
+        <div
+          onClick={handleAddProblem}
+          className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
+        >
           문제풀기
         </div>
         <div

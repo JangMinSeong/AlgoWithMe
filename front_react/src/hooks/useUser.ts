@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux'
-import { setUserId } from '@/features/user/userSlice'
+import { setUserId, setUserNickname } from '@/features/user/userSlice'
 
 const useUser = () => {
   const dispatch = useDispatch()
@@ -8,7 +8,11 @@ const useUser = () => {
     dispatch(setUserId(id))
   }
 
-  return { handleSetUserId }
+  const handleSetUserNickname = (nickname: string) => {
+    dispatch(setUserNickname(nickname))
+  }
+
+  return { handleSetUserId, handleSetUserNickname }
 }
 
 export default useUser
