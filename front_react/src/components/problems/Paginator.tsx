@@ -27,7 +27,7 @@ const Paginator = () => {
   const { handleFetchResultByLevel, handleFetchResultByName } = useSearch()
 
   const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber)
+    // setCurrentPage(pageNumber)
     if (isLevel) {
       handleFetchResultByLevel(levels, pageNumber)
     } else {
@@ -42,7 +42,10 @@ const Paginator = () => {
         itemsCountPerPage={10}
         totalItemsCount={totalResult}
         pageRangeDisplayed={5}
-        onChange={handlePageChange}
+        onChange={(e) => {
+          handlePageChange(e)
+          console.log(e)
+        }}
         innerClass="flex justify-between items-center mt-4"
         prevPageText={<MdKeyboardArrowLeft />}
         firstPageText={<MdKeyboardDoubleArrowLeft />}

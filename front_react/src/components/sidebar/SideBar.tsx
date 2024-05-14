@@ -84,10 +84,8 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    if(studyUpdate.startsWith('updateTitle'))
-      fetchStudyList()
-    else
-      fetchPageData()
+    if (studyUpdate.startsWith('updateTitle')) fetchStudyList()
+    else fetchPageData()
   }, [studyUpdate])
 
   useEffect(() => {
@@ -211,13 +209,13 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           maxWidth: '12rem',
           minWidth: '12rem',
         }}
-        className="h-full mb-10  relative bg-white bg-opacity-50 rounded-lg transition-all duration-700"
+        className=" mb-10  relative bg-white bg-opacity-50 rounded-lg transition-all duration-700 h-screen overflow-y-scroll no-scrollbar"
       >
         <StudyGroupNavigator groupId={groupId} studyList={studyList} />
         <div onClick={handleGoStudyMain} className={menuItemWrapper}>
           스터디 메인 페이지
         </div>
-        <div className={''}>
+        <div>
           {pageList.map((el) => (
             <div>
               <InStudyPageItem
