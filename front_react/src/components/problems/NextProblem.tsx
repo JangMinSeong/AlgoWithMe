@@ -5,6 +5,7 @@ import useSidebar from '@/hooks/useSidebar.ts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import fetch from '@/lib/fetch.ts'
 
 interface Page {
   pageId: number
@@ -30,7 +31,7 @@ const NextProblem: React.FC = ({
   const handleAddProblem = async () => {
     const dataToCreate = {
       teamId: groupId,
-      pageId: pPageId,
+      pageId: pPageId === 0 ? -1 : pPageId,
       problemId: problemInfo.problemId,
     }
     console.log(dataToCreate)
@@ -45,6 +46,7 @@ const NextProblem: React.FC = ({
     const newPage = {
       pageId: responseData.pageId,
       title: responseData.title,
+      provider:problemInfo.provider,
       docs: false,
       children: [],
     }
@@ -73,6 +75,7 @@ const NextProblem: React.FC = ({
       setPages(updatedList)
       console.log(updatedList)
     }
+    handleDeleteCandidateProblem(problemInfo.candidateId)
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
   return (
