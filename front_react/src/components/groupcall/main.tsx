@@ -62,7 +62,7 @@ const Main = () => {
 
     session.on('streamCreated', (event) => {
       console.log('스트림생성')
-      const mySubscriber = session.subscribe(event.stream, '')
+      const mySubscriber = session.subscribe(event.stream, undefined)
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       console.log(connectionId)
@@ -141,8 +141,8 @@ const Main = () => {
           const publishers = OV.initPublisher(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: isMicOn, // 여기 수정
-            publishVideo: false, // 여기 수정
+            publishAudio: true, // 여기 수정
+            publishVideo: true, // 여기 수정
           })
 
           setPublisher(publishers)

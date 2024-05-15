@@ -95,7 +95,7 @@ const StudyMainPage = () => {
               src={URL.createObjectURL(newImage)}
               width={80}
               height={80}
-              className="mr-2"
+              className="mr-2 rounded-full"
             />
           ) : (
             <div>
@@ -104,7 +104,7 @@ const StudyMainPage = () => {
                 alt="img"
                 width={80}
                 height={80}
-                className="mr-2"
+                className="mr-2 rounded-full"
               />{' '}
             </div>
           )}
