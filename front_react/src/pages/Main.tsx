@@ -71,7 +71,7 @@ const MainPage: React.FC = () => {
   return (
     <div>
       <MainHeader />
-      <div className="2xl:container 2xl:mx-auto px-16">
+      <div className="2xl:container 2xl:mx-auto px-16 mt-16">
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
           <main className="flex w-full h-auto flex-col items-center justify-center text-center mt-0.5 pb-10">
             <ChartProblem chartList={chartData} problemList={problemData} />

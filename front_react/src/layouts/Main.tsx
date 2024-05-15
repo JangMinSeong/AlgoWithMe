@@ -140,9 +140,8 @@ export default function Layout() {
   return (
     <div>
       <ScrollToTop />
-      <main className="ml-2 w-[98dvw] h-full mt-16 transition-all duration-700 overflow-hidden">
-        {!isLoading && <Outlet />}
-        {/*<Outlet />*/}
+      <main className="w-dvw h-full transition-all duration-700 overflow-hidden">
+        {!isLoading ? <Outlet /> : <div className="fixed h-dvh w-dvw" />}
       </main>
     </div>
   )
