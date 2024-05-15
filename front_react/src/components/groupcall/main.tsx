@@ -12,6 +12,8 @@ import { useParams } from 'react-router-dom'
 import toast, { Toaster } from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import { FiMic, FiMicOff } from 'react-icons/fi'
+import { Tooltip } from 'react-tooltip'
 
 const Main = () => {
   const { groupId } = useParams()
@@ -59,7 +61,8 @@ const Main = () => {
     if (session === '') return
 
     session.on('streamCreated', (event) => {
-      const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
+      console.log('스트림생성')
+      const mySubscriber = session.subscribe(event.stream, '')
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       console.log(connectionId)
@@ -69,11 +72,16 @@ const Main = () => {
         { connectionId, nickname, mySubscriber },
       ])
 
+      toast(`${nickname}님이 음성채팅에 입장했어요`, {
+        icon: '🙋‍♀️',
+      })
+
       console.log('참가자목록', participants)
     })
 
     session.on('streamDestroyed', (event) => {
       event.preventDefault
+      console.log('스트림파괴')
       const connectionId = event.stream.connection.connectionId
       setParticipants((prevParticipants) =>
         prevParticipants.filter((item) => item.connectionId !== connectionId),
@@ -88,21 +96,25 @@ const Main = () => {
       if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
         setSubscriber(null)
       }
+      //   const nickname = event.stream.connection.data
+      //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+      //     icon: '👋',
+      //   })
     })
 
-    session.on('connectionCreated', (event) => {
-      const nickname = event.connection.data
-      toast(`${nickname}님이 음성채팅에 입장했어요`, {
-        icon: '🙋‍♀️',
-      })
-    })
+    // session.on('connectionCreated', (event) => {
+    //   const nickname = event.connection.data
+    //   toast(`${nickname}님이 음성채팅에 입장했어요`, {
+    //     icon: '🙋‍♀️',
+    //   })
+    // })
 
-    session.on('connectionDestroyed', (event) => {
-      const nickname = event.connection.data
-      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-        icon: '👋',
-      })
-    })
+    // session.on('connectionDestroyed', (event) => {
+    //   const nickname = event.connection.data
+    //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+    //     icon: '👋',
+    //   })
+    // })
 
     session.on('publisherStartSpeaking', (event) => {
       setActiveSpeaker(event.connection.connectionId)
@@ -129,7 +141,7 @@ const Main = () => {
           const publishers = OV.initPublisher(undefined, {
             audioSource: undefined,
             videoSource: undefined,
-            publishAudio: true, // 여기 수정
+            publishAudio: isMicOn, // 여기 수정
             publishVideo: false, // 여기 수정
           })
 
@@ -170,19 +182,57 @@ const Main = () => {
     createSession()
   }, [session, OV, sessionId])
 
-  return (
-    <div>
-      <>
-        <JoinButton joinSession={joinSession} outSession={leaveSession} />
+  const handleMicOff = () => {
+    publisher.publishAudio(false)
+    console.log(publisher)
+    setIsMicOn(false)
+  }
+  const handleMicOn = () => {
+    publisher.publishAudio(true)
+    console.log(publisher)
 
-        <Session
+    setIsMicOn(true)
+  }
+
+  const anchorTagCSS =
+    'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
+
+  return (
+    <div className="flex">
+      <JoinButton joinSession={joinSession} outSession={leaveSession} />
+
+      {/* 오디오컨트롤 */}
+      {session && (
+        <div className="mr-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2  w-fit rounded-3xl ">
+          {isMicOn ? (
+            <div onClick={handleMicOff}>
+              <a id="willOffMic" className={anchorTagCSS}>
+                <FiMic className="w-4 h-4" />
+              </a>
+              <Tooltip anchorSelect="#willOffMic" place="bottom">
+                마이크 끄기
+              </Tooltip>
+            </div>
+          ) : (
+            <div onClick={handleMicOn}>
+              <a id="willOnMic" className={anchorTagCSS}>
+                <FiMicOff className="w-4 h-4 text-red-400" />
+              </a>
+              <Tooltip anchorSelect="#willOnMic" place="bottom">
+                마이크 켜기
+              </Tooltip>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* <Session
           publisher={publisher as Publisher}
           subscriber={subscriber as Subscriber}
           participants={participants}
-        />
+        /> */}
 
-        <Toaster position="bottom-center" reverseOrder={false} />
-      </>
+      <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )
 }
