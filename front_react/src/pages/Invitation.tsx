@@ -10,16 +10,20 @@ import fetch from '@/lib/fetch'
 import useStudy from '@/hooks/useStudy'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
-import {useWebSocket} from "@/hooks/useWebSocket.ts";
+import { useWebSocket } from '@/hooks/useWebSocket.ts'
 
 const InvitationPage = () => {
   const { groupId } = useParams()
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const code = searchParams.get('code')
-  const {connectToServer,disconnectToServer} = useWebSocket()
+  const { connectToServer, disconnectToServer } = useWebSocket()
   const { handleFetchStudyInfo } = useStudy()
+
   const currentStudyName = useSelector((state: RootState) => state.study.name)
+  const currentStudyImg = useSelector(
+    (state: RootState) => state.study.imageUrl,
+  )
   const isLoggedIn = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   )
@@ -31,7 +35,7 @@ const InvitationPage = () => {
     } else {
       navigate('/welcome')
     }
-    return (disconnectToServer)
+    return disconnectToServer
   }, [])
 
   const handleJoinGroup = async () => {
@@ -42,25 +46,48 @@ const InvitationPage = () => {
       },
     })
       .then(() => {
-        navigate(`/${groupId}/study`, { state: { isInvite: true } , replace:true})
+        navigate(`/${groupId}/study`, {
+          state: { isInvite: true },
+          replace: true,
+        })
       })
       .catch((err) => console.error(err))
   }
 
   return (
-      <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg max-w-sm mx-auto mt-20">
-        <h2 className="text-lg text-gray-800 font-semibold mb-4">{currentStudyName} 그룹에 초대받았어요!</h2>
+    <div className="h-screen flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg max-w-sm mx-auto px-10">
+        <img
+          src={currentStudyImg}
+          width={180}
+          height={180}
+          alt="스터디이미지"
+          className="rounded-full"
+        />
+        <h2 className=" text-gray-800 mb-8 flex items-center flex-col">
+          <div className="text-3xl font-bold mb-4">
+            {currentStudyName.replace(/"/gi, '')}
+          </div>
+          <div className="text-lg  font-semibold">그룹에 초대받았어요!</div>
+        </h2>
         <p className="text-gray-600 mb-6">이 그룹에 가입하시겠어요?</p>
         <div className="flex gap-4">
-          <Link to="/main" className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-150">
+          <Link
+            to="/main"
+            className="w-20 px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-150 text-center"
+          >
             아니요
           </Link>
-          <button onClick={handleJoinGroup} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150">
+          <button
+            onClick={handleJoinGroup}
+            className="w-20 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150 text-center"
+          >
             네
           </button>
         </div>
       </div>
-  );
+    </div>
+  )
 }
 
 export default InvitationPage

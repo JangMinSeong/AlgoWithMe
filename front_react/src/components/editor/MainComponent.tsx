@@ -4,13 +4,13 @@ import fetch from '@/lib/fetch'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import {RootState} from "@/lib/store.ts";
-import {useSelector} from "react-redux";
+import { RootState } from '@/lib/store.ts'
+import { useSelector } from 'react-redux'
 import { FaGripLinesVertical } from 'react-icons/fa'
 
 interface editorProp {
-  groupId : number
-  pageId : number
+  groupId: number
+  pageId: number
 }
 const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const user = useSelector((state: RootState) => state.auth.user)
@@ -27,7 +27,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   useEffect(() => {
     const fetchProblemData = async () => {
       try {
-        console.log(pageId + ' ' + groupId )
+        console.log(pageId + ' ' + groupId)
         const response = await fetch(`/problem/${pageId}`, {
           method: 'GET',
           headers: {
@@ -69,13 +69,14 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
       }
     }
     fetchProblemData()
-  }, [number,pageId])
+  }, [number, pageId])
 
   const toggleCodeEditor = () => {
     setCodeEditorVisible(!codeEditorVisible)
   }
 
   const handleCenterDivider = () => {
+    // Todo: 좌우로 이동할 수 있게 변경해야함
     setCodeEditorVisible(!codeEditorVisible)
   }
 
@@ -95,7 +96,9 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
-        className={`transition-width duration-500 ease-in-out ${codeEditorVisible ? 'flex-1' : 'w-0 hidden'}`}
+        className={`transition-width duration-500 ease-in-out ${
+          codeEditorVisible ? 'flex-1' : 'w-0 hidden'
+        }`}
       >
         <RightComponent
           provider={provider}

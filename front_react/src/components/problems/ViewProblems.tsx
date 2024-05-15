@@ -11,6 +11,8 @@ const ViewProblems = ({ setParentChosenProblem }) => {
   const searchResult = useSelector(
     (state: RootState) => state.search.problemInfoList,
   )
+
+  const totalNum = useSelector((state: RootState) => state.search.resultCount)
   const bojdata = {
     Bronze5: 1,
     Bronze4: 2,
@@ -115,7 +117,12 @@ const ViewProblems = ({ setParentChosenProblem }) => {
       </div>
 
       <div className="mt-4 ">
-        <div className="font-bold mb-4">검색 결과 </div>
+        <div className="font-bold mb-4">
+          검색 결과
+          <span className="text-sm text-slate-500 font-light ml-2">
+            ({totalNum} 문제)
+          </span>
+        </div>
 
         {/* 검색결과조회 */}
         <div className="h-[300px] overflow-y-scroll">

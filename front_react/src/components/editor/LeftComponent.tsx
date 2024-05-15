@@ -300,7 +300,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
   // }
 
   return (
-    <div className="flex flex-col h-full max-h-full">
+    <div className="flex flex-col h-full">
       <div className="flex flex-row h-12">
         <LeftHeader
           activeTab={activeTab}
@@ -310,7 +310,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
           tags={updatedTags}
         />
       </div>
-      <div className="grow overflow-auto">
+      <div className="grow">
         {renderContent()}
       </div>
       <div className="flex flex-row justify-between">
