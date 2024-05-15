@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { Tooltip } from 'react-tooltip'
+import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 
 const Main = () => {
   const { groupId } = useParams()
@@ -26,6 +27,7 @@ const Main = () => {
   const [OV, setOV] = useState<OpenVidu | null>(null)
   const [activeSpeaker, setActiveSpeaker] = useState<string>()
   const [isMicOn, setIsMicOn] = useState(false)
+  const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
   const [participants, setParticipants] = useState([])
 
   const leaveSession = useCallback(() => {
@@ -81,7 +83,10 @@ const Main = () => {
     })
 
     session.on('streamDestroyed', (event) => {
-      event.preventDefault
+      event.preventDefault()
+      if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
+        setSubscriber(null)
+      }
       console.log('스트림파괴')
       const connectionId = event.stream.connection.connectionId
       setParticipants((prevParticipants) =>
@@ -93,15 +98,12 @@ const Main = () => {
       })
     })
 
-    session.on('streamDestroyed', (event) => {
-      if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
-        setSubscriber(null)
-      }
-      //   const nickname = event.stream.connection.data
-      //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-      //     icon: '👋',
-      //   })
-    })
+    // session.on('streamDestroyed', (event) => {
+    //   //   const nickname = event.stream.connection.data
+    //   //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+    //   //     icon: '👋',
+    //   //   })
+    // })
 
     // session.on('connectionCreated', (event) => {
     //   const nickname = event.connection.data
@@ -136,9 +138,9 @@ const Main = () => {
         if (OV) {
           const publishers = OV.initPublisher('publisherDiv', {
             audioSource: undefined,
-            videoSource: undefined,
-            publishAudio: true, // 여기 수정
-            publishVideo: true, // 여기 수정
+            videoSource: false,
+            publishAudio: isMicOn, // 여기 수정
+            publishVideo: false, // 여기 수정
           })
 
           setPublisher(publishers)
@@ -178,6 +180,17 @@ const Main = () => {
     createSession()
   }, [session, OV, sessionId])
 
+  const handleHeadphoneOff = () => {
+    console.log(subscriber)
+    subscriber.subscribeToAudio(false)
+    setIsHeadphoneOn(false)
+  }
+  const handleHeadphoneOn = () => {
+    console.log(subscriber)
+    subscriber.subscribeToAudio(true)
+    setIsHeadphoneOn(true)
+  }
+
   const handleMicOff = () => {
     publisher.publishAudio(false)
     console.log(publisher)
@@ -200,6 +213,26 @@ const Main = () => {
       {/* 오디오컨트롤 */}
       {session && (
         <div className="mr-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2  w-fit rounded-3xl ">
+          {isHeadphoneOn ? (
+            <div onClick={handleHeadphoneOff}>
+              <a id="willOffHeadphone" className={anchorTagCSS}>
+                <TbHeadphones className="w-5 h-5" />
+              </a>
+              <Tooltip anchorSelect="#willOffHeadphone" place="bottom">
+                헤드셋 소리 끄기
+              </Tooltip>
+            </div>
+          ) : (
+            <div onClick={handleHeadphoneOn}>
+              <a id="willOnHeadphone" className={anchorTagCSS}>
+                <TbHeadphonesOff className="w-5 h-5 text-red-400" />
+              </a>
+              <Tooltip anchorSelect="#willOnHeadphone" place="bottom">
+                헤드셋 소리 켜기
+              </Tooltip>
+            </div>
+          )}
+
           {isMicOn ? (
             <div onClick={handleMicOff}>
               <a id="willOffMic" className={anchorTagCSS}>
