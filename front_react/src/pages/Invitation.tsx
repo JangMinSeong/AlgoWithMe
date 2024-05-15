@@ -48,12 +48,19 @@ const InvitationPage = () => {
   }
 
   return (
-    <div>
-      {currentStudyName}그룹에 초대받았어요! 수락하시겠어요?
-      <Link to="/main">아니요</Link>
-      <button onClick={handleJoinGroup}>네</button>
-    </div>
-  )
+      <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg max-w-sm mx-auto mt-20">
+        <h2 className="text-lg text-gray-800 font-semibold mb-4">{currentStudyName} 그룹에 초대받았어요!</h2>
+        <p className="text-gray-600 mb-6">이 그룹에 가입하시겠어요?</p>
+        <div className="flex gap-4">
+          <Link to="/main" className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400 transition duration-150">
+            아니요
+          </Link>
+          <button onClick={handleJoinGroup} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-150">
+            네
+          </button>
+        </div>
+      </div>
+  );
 }
 
 export default InvitationPage

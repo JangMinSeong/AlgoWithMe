@@ -40,7 +40,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
   const { setGId, setPages, setStudys } = useSidebar()
 
-  const { connectToServer, sendUpdateMessage } = useWebSocket()
+  const { connectToServer, sendUpdateMessage, subscribeStudy } = useWebSocket()
 
   useEffect(() => {
     connectToServer(groupId)
@@ -99,6 +99,9 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
   useEffect(() => {
     fetchPageData()
+    fetchStudyList()
+    handleFetchStudyInfo(groupId)
+    subscribeStudy(groupId)
     setGId(groupId)
   }, [groupId])
 
@@ -148,12 +151,6 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         null,
         0,
       )
-
-      console.log(targetPage)
-      console.log(targetParent)
-      console.log(draggedPage)
-      console.log(draggedParent)
-      console.log(order)
 
       /// 폴더 내 순서 변경
       if(targetPage.docs === false) {
