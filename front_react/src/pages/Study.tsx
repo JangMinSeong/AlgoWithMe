@@ -6,7 +6,7 @@ import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
 import SetTimer from '@/components/studypage/SetTimer'
-import {useLocation, useParams} from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
 import { useState, useEffect } from 'react'
@@ -21,31 +21,33 @@ const StudyMainPage = () => {
   const anchorTagCSS =
     'w-6 h-6 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors '
   const [isEditingName, setIsEditingName] = useState(false)
-  const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
   const location = useLocation()
   const { sendUpdateMessage } = useWebSocket()
-  const client = useSelector((state:RootState) => state.socket.client)
+  const client = useSelector((state: RootState) => state.socket.client)
 
   const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
   const user = useSelector((state: RootState) => state.auth.user)
 
-  const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
-  const updateStudyMessage = useSelector((state:RootState) => state.socket.messageStudyUpdate)
-
-  useEffect( () => {
-    if (location.state?.isInvite && client && client.connected) {
-      sendUpdateMessage(
-          `/app/study/${groupId}`,
-          `invite Member ${groupId} ${user.nickname}`,
-      )
-    }
-  },[client, location])
+  // const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
+  const updateStudyMessage = useSelector(
+    (state: RootState) => state.socket.messageStudyUpdate,
+  )
 
   useEffect(() => {
-    if(updateStudyMessage.startsWith(`"invite Member`))
+    if (location.state?.isInvite && client && client.connected) {
+      sendUpdateMessage(
+        `/app/study/${groupId}`,
+        `invite Member ${groupId} ${user.nickname}`,
+      )
+    }
+  }, [client, location])
+
+  useEffect(() => {
+    handleFetchStudyInfo(Number(groupId))
+    if (updateStudyMessage.startsWith(`"invite Member`))
       handleFetchStudyInfo(Number(groupId))
   }, [updateStudyMessage])
 
@@ -53,14 +55,30 @@ const StudyMainPage = () => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
 
-    handleEditName(Number(groupId), newName).then(()=>{
+    handleEditName(Number(groupId), newName).then(() => {
       sendUpdateMessage(
-          `/app/study/${groupId}`,
-          `updateTitle ${groupId} ${newName}`,
+        `/app/study/${groupId}`,
+        `updateTitle ${groupId} ${newName}`,
       )
     })
 
     setIsEditingName(false)
+  }
+
+  const prevImage = currentStudyInfo.imageUrl
+    ? currentStudyInfo.imageUrl
+    : 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png'
+
+  const [newImage, setNewImage] = useState<File | null>(null)
+
+  const handleEditStudyImage = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files[0]
+    setNewImage(file)
+    const formData = new FormData()
+    formData.append('file', file)
+    handleEditImage(Number(groupId), formData)
   }
 
   return (
@@ -72,33 +90,40 @@ const StudyMainPage = () => {
           onMouseEnter={() => setIsShowingImgEditor(true)}
           onMouseLeave={() => setIsShowingImgEditor(false)}
         >
-          {currentStudyInfo.imageUrl ? (
+          {newImage ? (
             <img
-              src={currentStudyInfo.imageUrl}
-              alt="img"
+              src={URL.createObjectURL(newImage)}
               width={80}
               height={80}
               className="mr-2"
             />
           ) : (
-            <img
-              src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
-              alt="Bubbles"
-              width={80}
-              height={80}
-            />
+            <div>
+              <img
+                src={prevImage}
+                alt="img"
+                width={80}
+                height={80}
+                className="mr-2"
+              />{' '}
+            </div>
           )}
+
           <a
             id="editImage"
-            href="a"
             className={`${anchorTagCSS} absolute right-0 bottom-0`}
           >
             {isShowingImgEditor && (
-              <GoPencil
-                className="w-4 opacity-20"
-                onClick={() => setIsEditingImage(true)}
-              />
+              <label htmlFor="imageInput">
+                <GoPencil className="w-4 opacity-20" />
+              </label>
             )}
+            <input
+              id="imageInput"
+              type="file"
+              onChange={handleEditStudyImage}
+              className="hidden"
+            />
           </a>
         </span>
 
@@ -195,7 +220,7 @@ const StudyMainPage = () => {
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
             <div className="pr-10">
               <AddProblem groupId={groupId} />
-              {reversedCandidates.map((el) => (
+              {currentStudyInfo.candidateProblems.map((el) => (
                 <NextProblem problemInfo={el} key={el.problemId} />
               ))}
             </div>

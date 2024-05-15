@@ -1,13 +1,16 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
 import { useScroll } from '@/hooks/useScroll.ts'
+import UserProfile from '@/components/mainpage/UserProfile.tsx'
 
 const MainHeader: React.FC = () => {
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
   const { y } = useScroll()
+  const [showProfile, setShowProfile] = React.useState<boolean>(false)
+  const avatarRef = useRef<HTMLImageElement>(null)
 
   return (
     <header
@@ -16,7 +19,6 @@ const MainHeader: React.FC = () => {
       }`}
     >
       <div className="flex-none">
-        {/*<SideBarButton />*/}
         <Logo />
       </div>
       <div className="shrink w-1/2">
@@ -24,14 +26,23 @@ const MainHeader: React.FC = () => {
       </div>
 
       {avatarUrl ? (
-        <div className="flex-none">
+        <div className="relative flex-none">
           <img
             src={avatarUrl}
             alt="Profile Image"
             width={40}
             height={40}
-            className="rounded-full shadow-md"
+            className="rounded-full shadow-md hover:cursor-pointer"
+            onClick={() => setShowProfile(!showProfile)}
+            ref={avatarRef}
           />
+          {showProfile && (
+            <UserProfile
+              avatarUrl={avatarUrl}
+              onClose={() => setShowProfile(false)}
+              avatarRef={avatarRef}
+            />
+          )}
         </div>
       ) : (
         <div>profile</div>
