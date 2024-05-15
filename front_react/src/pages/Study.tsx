@@ -212,7 +212,7 @@ const StudyMainPage = () => {
         {/* 오른쪽 위 파이차트 */}
         <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
-          <div className="flex items-center justify-center h-64 ">
+          <div className="flex items-center justify-center h-72 ">
             <PieChart chartList={currentStudyInfo.chart} />
           </div>
         </div>
