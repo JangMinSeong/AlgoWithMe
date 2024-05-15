@@ -226,11 +226,11 @@ const Main = () => {
         </div>
       )}
 
-      {/* <Session
-          publisher={publisher as Publisher}
-          subscriber={subscriber as Subscriber}
-          participants={participants}
-        /> */}
+      <Session
+        publisher={publisher as Publisher}
+        subscriber={subscriber as Subscriber}
+        participants={participants}
+      />
 
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>

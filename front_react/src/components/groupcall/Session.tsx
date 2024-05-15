@@ -26,9 +26,12 @@ const Session = (props: ISessionProps) => {
   }, [props.subscriber])
 
   return (
-    <div>
+    <div className="flex">
       {props.participants.map((participant) => (
-        <div key={participant.connectionId}>사람</div>
+        <div key={participant.connectionId}>참</div>
+      ))}
+      {subscribers.map((subscriber) => (
+        <div key={subscriber.id}>섭</div>
       ))}
     </div>
   )
