@@ -14,18 +14,22 @@ export default function Layout() {
   const isModalOpen = useSelector((state: RootState) => state.modal.isOpen)
 
   return (
-    <div className="h-full w-dvw flex transition-all duration-700">
-      <ScrollToTop />
-      {isSidebarOpen && <SideBar groupId={Number(groupId)} />}
-      <main className="h-full w-dvw max-w-dvw">
-        <div className="h-full">
-          <StudyHeader groupId={Number(groupId)} />
-          <main className="h-full overflow-y-scroll no-scrollbar">
-            <Outlet />
-          </main>
-        </div>
-      </main>
-      {isModalOpen && <PageCreateModal />}
+    <div className="flex flex-col h-dvh pt-16">
+      <div className="w-full h-px bg-gradient-to-r from-violet-500 to-fuchsia-500" />
+      <div className="h-full w-dvw flex transition-all duration-700">
+        <ScrollToTop />
+        {isSidebarOpen && <SideBar groupId={Number(groupId)} />}
+        <main className="h-full w-dvw max-w-dvw">
+          <div className="h-full">
+            <StudyHeader groupId={Number(groupId)} />
+            <main className="h-full overflow-y-scroll no-scrollbar">
+              <Outlet />
+            </main>
+          </div>
+        </main>
+        {isModalOpen && <PageCreateModal />}
+      </div>
     </div>
+
   )
 }

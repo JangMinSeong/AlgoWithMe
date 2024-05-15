@@ -6,6 +6,7 @@ import RightComponent from '@/components/editor/RightComponent'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import {RootState} from "@/lib/store.ts";
 import {useSelector} from "react-redux";
+import { FaGripLinesVertical } from 'react-icons/fa'
 
 interface editorProp {
   groupId : number
@@ -74,9 +75,13 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
     setCodeEditorVisible(!codeEditorVisible)
   }
 
+  const handleCenterDivider = () => {
+    setCodeEditorVisible(!codeEditorVisible)
+  }
+
   return (
-    <div className="flex flex-row items-stretch w-full h-full overflow-hidden pt-0">
-      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
+    <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
+      <div className="bg-white mt-0 flex-1 transition-all duration-500 ease-in-out w-10">
         <LeftComponent
           url={url}
           content={content}
@@ -86,8 +91,11 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           tags={tags}
         />
       </div>
+      <div className="flex border-x-2 border-gray-300 h-full w-4 bg-white hover:bg-gray-100 hover:cursor-pointer items-center" onClick={() => handleCenterDivider()}>
+        <FaGripLinesVertical className="text-sm text-gray-500" />
+      </div>
       <div
-        className={`mt-1 transition-width duration-500 ease-in-out ${codeEditorVisible ? 'flex-1' : 'w-0 hidden'}`}
+        className={`transition-width duration-500 ease-in-out ${codeEditorVisible ? 'flex-1' : 'w-0 hidden'}`}
       >
         <RightComponent
           provider={provider}

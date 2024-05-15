@@ -40,7 +40,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url,pageId ,
   }
 
   return (
-    <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
+    <div className="text-white flex justify-between items-center w-full">
       <div className="flex space-x-1">
         <button
             className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"

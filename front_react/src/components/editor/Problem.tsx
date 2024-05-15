@@ -25,7 +25,7 @@ const Problem: React.FC<ProblemProp> = ({ content, testCases }) => {
 
   return (
     <div
-      className="bg-white w-full h-full overflow-auto p-2 border border-gray-300"
+      className="bg-white w-full h-full overflow-auto p-2"
       dangerouslySetInnerHTML={{
         __html: `
           ${content}

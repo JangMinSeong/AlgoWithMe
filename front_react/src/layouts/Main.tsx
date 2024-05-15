@@ -140,9 +140,9 @@ export default function Layout() {
   return (
     <div>
       <ScrollToTop />
-      <main className="w-dvw h-dvh transition-all duration-700 overflow-hidden">
+      <main className="w-dvw h-full transition-all duration-700 overflow-hidden">
         {!isLoading ?
-          <div className="pt-16 h-dvh">
+          <div className="h-full">
             <Outlet />
           </div>
           : <div className="fixed h-dvh w-dvw" />}
