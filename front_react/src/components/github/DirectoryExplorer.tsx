@@ -9,9 +9,10 @@ interface DirectoryProps {
     setDirectories: (selected:string[]) => void;
     path : string;
     setPath : (selected:string) => void;
+    setIsLoading: (arg:boolean) => void;
 }
 
-const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directories, setDirectories, path, setPath}) => {
+const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directories, setDirectories, path, setPath, setIsLoading}) => {
     // const [isLoading, setIsLoading] = useState<boolean>(false);
     const fetchDirectories = async (directory) => {
         // setIsLoading(true);  // Start loading
@@ -40,12 +41,13 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
         } catch (error) {
             console.error('Failed to fetch branches:', error);
         } finally {
-            // setIsLoading(false);
+            setIsLoading(false);
             // onDirectorySelect(fullPath)
         }
     };
 
     const handleDirectoryClick = (event, directory: string) => {
+        setIsLoading(true)
         event.stopPropagation();
         fetchDirectories(directory);
         setPath(path+directory)
@@ -56,15 +58,18 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({ branch, repoName, directo
     }
 
     return (
-        <div className="flex flex-col mb-1 space-y-1 w-full overflow-y-auto h-full">
-            {directories.map((directory, index) => (
-                <>
-                <div key={index} className="mr-4 px-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer" onClick={(e) => handleDirectoryClick(e,directory)}>
-                    {directory}
-                </div>
-                </>
-            ))}
-        </div>
+      <div className="space-y-1">
+          {directories.map((directory, index) => (
+            <div
+              key={index}
+              className="flex items-center mr-4 px-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer"
+              onClick={(e) => handleDirectoryClick(e, directory)}
+            >
+                <img src="/folder.png" alt="folder" width={20} height={20} className="mr-2" />
+                <span>{directory}</span>
+            </div>
+          ))}
+      </div>
     );
 };
 

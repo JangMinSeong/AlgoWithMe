@@ -7,9 +7,10 @@ interface BranchExplorerProps {
     repoName: string;
     onBranchSelect: (branchName: string) => void;
     setDirectories: (selected:string[]) => void;
+    setIsLoading: (arg:boolean) => void;
 }
 
-const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName , onBranchSelect, setDirectories}) => {
+const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName , onBranchSelect, setDirectories, setIsLoading}) => {
     const [activeBranch, setActiveBranch] = useState<string | null>(null);
 
     if (branches.length === 0) {
@@ -18,6 +19,7 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName , on
 
     const handleBranchClick = async (event,branchName) => {
         event.stopPropagation();
+        setIsLoading(true);
         onBranchSelect(branchName)
         setActiveBranch(activeBranch === branchName ? null : branchName);
         const dataToPost = {
@@ -39,18 +41,24 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName , on
 
         const responseData = await response.json();
         setDirectories(responseData.map((dir: string) => `${dir}/`));
+        setIsLoading(false)
         console.log(responseData)
     }
 
     return (
-        <div className="flex flex-col space-y-1 w-full overflow-y-auto h-full">
-            {branches.map((branch, index) => (
-                <div key={index} className={`mr-4 px-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer`} onClick={(e) => handleBranchClick(e,branch)}>
-                    {branch}
-                </div>
-            ))}
-        </div>
-    );
+      <div className="flex flex-col space-y-1 w-full overflow-y-auto h-full">
+          {branches.map((branch, index) => (
+            <div key={index}
+                 className="flex items-center mr-4 px-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer"
+                 onClick={(e) => handleBranchClick(e, branch)}>
+      <span className="mr-2">
+        <img src="/branch.png" alt="branch" width={20} height={20} />
+      </span>
+                <span>{branch}</span>
+            </div>
+          ))}
+      </div>
+    )
 };
 
 export default BranchExplorer;

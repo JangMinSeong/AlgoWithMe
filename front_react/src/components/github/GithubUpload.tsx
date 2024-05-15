@@ -48,7 +48,7 @@ const GithubUpload: React.FC<uploadProp> = ({ content, language, setActiveUpload
               onChange={(e) => setCommitMessage(e.target.value)}
             ></textarea>
         </div>
-        <div className={`mb-3 w-full flex justify-end`}>
+        <div className={`mb-3 w-full h-9 flex justify-end`}>
           <>
             <input
               className="w-full pl-5 border border-gray-300 ml-2"
@@ -56,7 +56,7 @@ const GithubUpload: React.FC<uploadProp> = ({ content, language, setActiveUpload
               value={filename}
               onChange={(e) => setFilename(e.target.value)}
             />
-            <div className={'text-sm text-gray-500 pr-10 pt-5 pl-2'}>.{language}</div>
+            <div className={'text-sm text-gray-500 w-4 pr-10 pt-5 pl-2'}>.{language}</div>
             <div className="text-right pr-2">
               <button onClick={handleSaveButton}
                       className="py-2 px-4 bg-fuchsia-300 text-white rounded hover:bg-navy">
