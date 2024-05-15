@@ -56,7 +56,7 @@ const StudyHeader = (props: { groupId: number }) => {
   }, [props.groupId, nickname])
 
   return (
-    <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center bg-white bg-opacity-50 rounded-xl px-5">
+    <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center px-5">
       <div className="flex items-center w-1/2">
         <SideBarButton />
         <Logo />

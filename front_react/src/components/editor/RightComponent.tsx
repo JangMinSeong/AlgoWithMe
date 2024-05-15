@@ -280,7 +280,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
 
   return (
-    <div className="flex flex-col w-full h-full" style={{ height: '100vh'}}>
+    <div className="flex flex-col w-full h-full">
       <div style={{ flex: 1}} className={"h-full"}>
         <CodeEditor
             ref={codeEditorRef}
@@ -293,19 +293,19 @@ const RightComponent: React.FC<ProblemProp> = ({
             isInit={isInit}
         />
       </div>
-      <div style={{ flex: 1 }}>
-        <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1 h-full" style={{maxHeight: '27vh'}}>
+      <div className="flex flex-col flex-1">
+        <div className="flex flex-row flex-1 border-gray-300 h-full">
           {provider !== 'programmers' ? (
-            <div className="flex-1 border border-gray-300 bg-white" >
+            <div className="flex-1 bg-white" >
               <textarea
-                className="w-full resize-none p-2 h-full overflow-auto"
+                className="w-full resize-none p-2 h-full overflow-auto bg-white"
                 placeholder="Enter text here..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
           ) : null}
-          <div className="flex-1 p-1 bg-white border border-gray-300 w-32 h-full" style={{ overflow: 'auto' }}>
+          <div className="flex-1 p-1 bg-white w-32 h-full" style={{ overflow: 'auto' }}>
             {isLoading ? (
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
@@ -330,7 +330,7 @@ const RightComponent: React.FC<ProblemProp> = ({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-end p-5 pt-0 pr-3">
+        <div className="flex flex-row justify-end bg-white">
           <button
             onClick={handleSaveAndRun}
             className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"

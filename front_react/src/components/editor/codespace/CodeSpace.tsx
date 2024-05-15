@@ -249,8 +249,8 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
     }, 500) // 500 ms debounce period
 
     return (
-      <div className="w-full h-full flex flex-col p-3 pt-0">
-        <div className="flex items-center justify-between relative mb-1">
+      <div className="w-full h-full">
+        <div className="bg-white flex items-center justify-between relative h-12">
             <div>
                 {tabs.slice(0, 3).map((tab, index) => (
                     <button
@@ -288,7 +288,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
                     </div>
                 )}
                 {tabs.length === 0 && (
-                    <div className="p-1 h-8 border border-transparent opacity-0">
+                    <div className="border border-transparent opacity-0">
                         {/* Invisible space */}
                     </div>
                 )}
@@ -334,7 +334,7 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             )}
           </div>
         </div>
-        <div className="border border-gray-300 w-full h-full">
+        <div className="w-full h-full pb-12">
           <AceEditor
             ref={aceRef}
             mode={languageOptions[language].mode}

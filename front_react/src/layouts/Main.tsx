@@ -141,7 +141,11 @@ export default function Layout() {
     <div>
       <ScrollToTop />
       <main className="w-dvw h-full transition-all duration-700 overflow-hidden">
-        {!isLoading ? <Outlet /> : <div className="fixed h-dvh w-dvw" />}
+        {!isLoading ?
+          <div className="h-full">
+            <Outlet />
+          </div>
+          : <div className="fixed h-dvh w-dvw" />}
       </main>
     </div>
   )
