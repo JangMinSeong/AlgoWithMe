@@ -165,18 +165,22 @@ const StudyMainPage = () => {
             <div className="flex items-center ">
               {' '}
               {currentStudyInfo.name.replace(/"/gi, '')}
-              <a id="editName" className={anchorTagCSS}>
-                <GoPencil
-                  className="w-4 opacity-20"
-                  onClick={() => setIsEditingName(true)}
-                />
-              </a>
+              {currentStudyInfo.manager && (
+                <a id="editName" className={anchorTagCSS}>
+                  <GoPencil
+                    className="w-4 opacity-20"
+                    onClick={() => setIsEditingName(true)}
+                  />
+                </a>
+              )}
             </div>
           )}
           {/* 스터디 이름 */}
 
           <div>와 함께한 지</div>
-          <div className="text-purple-400 ml-2">{currentStudyInfo.joinDay}</div>
+          <div className="text-purple-400 ml-2">
+            {currentStudyInfo.joinDay === 0 ? 1 : currentStudyInfo.joinDay}
+          </div>
           <div>일째</div>
         </div>
         <div className="flex">
@@ -195,6 +199,9 @@ const StudyMainPage = () => {
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
             <div className="flex overflow-x-scroll no-scrollbar mx-2">
+              {currentStudyInfo.ranking.length === 0 && (
+                <div>랭킹이 없어요. 문제를 풀어보세요!</div>
+              )}
               {currentStudyInfo.ranking.map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}

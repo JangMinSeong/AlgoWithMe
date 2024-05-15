@@ -9,6 +9,10 @@ import { useRef } from 'react'
 const Timer = () => {
   const { handleChangeTimer } = useTimer()
 
+  const initialHour = useSelector((state: RootState) => state.timer.initialhour)
+  const initialMin = useSelector((state: RootState) => state.timer.initialmin)
+  const initialSec = useSelector((state: RootState) => state.timer.initialsec)
+
   const timerHour = useSelector((state: RootState) => state.timer.hour)
   const timerMin = useSelector((state: RootState) => state.timer.min)
   const timerSec = useSelector((state: RootState) => state.timer.sec)
@@ -39,6 +43,11 @@ const Timer = () => {
       if (totalRemainSec <= 0) {
         toast('풀이 시간이 종료되었어요', { icon: '⏱' })
         handleEndSolving()
+        handleChangeTimer({
+          hour: initialHour,
+          min: initialMin,
+          sec: initialSec,
+        })
         clearInterval(timerId.current)
       }
 
@@ -68,7 +77,7 @@ const Timer = () => {
     if (confirm('풀이를 종료하시겠어요?')) {
       clearInterval(timerId.current)
       handleEndSolving()
-      handleChangeTimer({ hour: 0, min: 0, sec: 0 })
+      handleChangeTimer({ hour: initialHour, min: initialMin, sec: initialSec })
     }
   }
 

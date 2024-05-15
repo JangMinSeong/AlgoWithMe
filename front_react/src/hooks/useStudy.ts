@@ -41,6 +41,7 @@ const useStudy = () => {
       .then((res) => res.json())
       .then((json) => {
         toast.success('문제가 추가되었어요')
+        console.log(json)
         dispatch(addCandidateProblems(json))
       })
       .catch((err) => {

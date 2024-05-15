@@ -14,7 +14,7 @@ const SetTimer = () => {
   const [timerHour, setTimerHour] = useState(hour)
   const [timerMin, setTimerMin] = useState(min)
 
-  const { handleChangeTimer } = useTimer()
+  const { handleSetTimer, handleChangeTimer } = useTimer()
 
   const handleActivateTimerEdit = () => {
     if (isSolving) {
@@ -34,6 +34,7 @@ const SetTimer = () => {
 
     setIsActiveEditing(false)
 
+    handleSetTimer({ hour: newHour, min: newMin, sec: 0 })
     handleChangeTimer({ hour: newHour, min: newMin, sec: 0 })
   }
 
