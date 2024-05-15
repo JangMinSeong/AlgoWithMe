@@ -140,10 +140,10 @@ const StudyMainPage = () => {
                   type="text"
                   name="newName"
                   required
-                  maxLength={8}
+                  maxLength={16}
                   defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
                   placeholder="새로운 스터디 이름"
-                  className="text-3xl p-2 rounded-xl bg-transparent w-60"
+                  className="text-3xl p-2 rounded-xl bg-transparent w-80"
                 />
                 <div className="flex items-center">
                   <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
@@ -189,18 +189,20 @@ const StudyMainPage = () => {
         {/* 왼쪽 위 */}
         <div className=" w-[50%] mb-10 flex flex-col ">
           {/* 멤버랭킹 */}
-          <div className="mr-4 flex flex-col h-[72%]">
+          <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            {currentStudyInfo.ranking.map((el, idx) => (
-              <ActiveProfileItem key={el.id} person={el} rank={idx} />
-            ))}
+            <div className="flex overflow-x-scroll no-scrollbar mx-2">
+              {currentStudyInfo.ranking.map((el, idx) => (
+                <ActiveProfileItem key={el.id} person={el} rank={idx} />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* 오른쪽 위 파이차트 */}
         <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
-          <div className="flex items-center justify-center h-80 ">
+          <div className="flex items-center justify-center h-64 ">
             <PieChart chartList={currentStudyInfo.chart} />
           </div>
         </div>

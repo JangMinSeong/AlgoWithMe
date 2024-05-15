@@ -15,7 +15,7 @@ const PrevProblem = ({
 
   return (
     <div onClick={handleGoPrevStudy} className={`w-full flex rounded-lg mb-2`}>
-      <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors justify-between">
+      <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors">
         <a
           id="problemLink"
           target="_blank"
@@ -35,13 +35,13 @@ const PrevProblem = ({
         <Tooltip anchorSelect="#problemLink" place="bottom">
           문제 보러 가기
         </Tooltip>
-        <div className="w-[56%]">
+        <div>
           {problemPageInfo.number}. {problemPageInfo.name}
         </div>
 
-        <div className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
+        {/* <div className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
           이부분 수정하기
-        </div>
+        </div> */}
       </div>
     </div>
   )

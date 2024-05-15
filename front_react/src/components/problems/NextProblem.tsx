@@ -46,7 +46,7 @@ const NextProblem: React.FC = ({
     const newPage = {
       pageId: responseData.pageId,
       title: responseData.title,
-      provider:problemInfo.provider,
+      provider: problemInfo.provider,
       docs: false,
       children: [],
     }
@@ -90,6 +90,7 @@ const NextProblem: React.FC = ({
         >
           {' '}
           <img
+            // src="/swea.png"
             src={`/${problemInfo.provider}.png`}
             alt="로고"
             width={20}
@@ -100,8 +101,15 @@ const NextProblem: React.FC = ({
         <Tooltip anchorSelect="#problemLink" place="bottom">
           문제 보러 가기
         </Tooltip>
-        <div className="w-[56%]">
-          {problemInfo.number}. {problemInfo.name}
+        <div
+          className="w-[56%]"
+          data-tooltip-id="titleTooltip"
+          data-tooltip-content={problemInfo.name}
+        >
+          {problemInfo.number}.{' '}
+          {problemInfo.name.length >= 11
+            ? `${problemInfo.name.slice(0, 11)} ...`
+            : problemInfo.name}
         </div>
 
         <div
@@ -117,6 +125,7 @@ const NextProblem: React.FC = ({
           삭제
         </div>
       </div>
+      <Tooltip id="titleTooltip" place="bottom" />
     </div>
   )
 }
