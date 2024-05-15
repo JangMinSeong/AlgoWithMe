@@ -181,7 +181,10 @@ const StudyMainPage = () => {
         </div>
         <div className="flex">
           <InviteMember groupId={groupId} />
-          <DeleteStudyGroup groupId={groupId} />
+          <DeleteStudyGroup
+            groupId={groupId}
+            isManager={currentStudyInfo.manager}
+          />
         </div>
       </div>
       {/* 위 */}
