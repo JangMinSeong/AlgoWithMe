@@ -185,7 +185,7 @@ const InStudyPageItem = (props: {
             {props.page.docs && (
               <>
                 <GoPencil
-                  className="w-4 mr-2 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors opacity-40"
+                  className="w-4 mr-1 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors opacity-40"
                   onClick={handleEdit}
                 />
 
@@ -199,9 +199,15 @@ const InStudyPageItem = (props: {
             {props.page.docs && props.page.children.length ? (
               <>
                 {isSubPagesOpen ? (
-                  <MdKeyboardArrowUp onClick={handleSubPageOpen} />
+                  <MdKeyboardArrowUp
+                    className="w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
+                    onClick={handleSubPageOpen}
+                  />
                 ) : (
-                  <MdKeyboardArrowDown onClick={handleSubPageOpen} />
+                  <MdKeyboardArrowDown
+                    className="w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
+                    onClick={handleSubPageOpen}
+                  />
                 )}
               </>
             ) : null}

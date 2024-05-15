@@ -53,7 +53,7 @@ const DeleteButton = (props: { pageId: number }) => {
   }
 
   const anchorTagCSS =
-    'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
+    'w-6 h-6 mr-1 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
 
   return (
     <div>
