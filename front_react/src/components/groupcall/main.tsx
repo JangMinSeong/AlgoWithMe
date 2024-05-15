@@ -62,11 +62,12 @@ const Main = () => {
 
     session.on('streamCreated', (event) => {
       console.log('스트림생성')
-      const mySubscriber = session.subscribe(event.stream, undefined)
+      const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       console.log(connectionId)
 
+      setSubscriber(mySubscriber)
       setParticipants((prevParticipants) => [
         ...prevParticipants,
         { connectionId, nickname, mySubscriber },
@@ -130,15 +131,10 @@ const Main = () => {
   useEffect(() => {
     if (session === '') return
 
-    session.on('streamCreated', (event) => {
-      const subscribers = session.subscribe(event.stream, '')
-      setSubscriber(subscribers)
-    })
-
     const connectToSession = (token) => {
       session.connect(token, myNickname).then(() => {
         if (OV) {
-          const publishers = OV.initPublisher(undefined, {
+          const publishers = OV.initPublisher('publisherDiv', {
             audioSource: undefined,
             videoSource: undefined,
             publishAudio: true, // 여기 수정
@@ -231,6 +227,9 @@ const Main = () => {
         subscriber={subscriber as Subscriber}
         participants={participants}
       />
+
+      <div style={{ display: 'none' }} id="subscriberDiv"></div>
+      <div style={{ display: 'none' }} id="publisherDiv"></div>
 
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>

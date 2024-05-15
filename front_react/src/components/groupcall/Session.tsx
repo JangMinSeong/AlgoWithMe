@@ -28,10 +28,14 @@ const Session = (props: ISessionProps) => {
   return (
     <div className="flex">
       {props.participants.map((participant) => (
-        <div key={participant.connectionId}>참</div>
+        <div key={participant.connectionId} className="invisible">
+          참
+        </div>
       ))}
       {subscribers.map((subscriber) => (
-        <div key={subscriber.id}>섭</div>
+        <div key={subscriber.id} className="invisible">
+          섭
+        </div>
       ))}
     </div>
   )
