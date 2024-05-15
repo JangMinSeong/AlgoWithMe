@@ -39,4 +39,5 @@ export interface IStudyState {
   solvedProblems: Array<IProblemPage> | []
   candidateProblems: Array<IProblemInfo> | []
   ranking: Array<IRanking> | []
+  manager: boolean
 }

@@ -5,18 +5,24 @@ import { MenuItemProps } from './MenuItem'
 const ColorPickerItem: React.FC<MenuItemProps & { editor: any }> = ({
   editor,
   isActive,
-}) => (
-  <input
-    type="color"
-    className={`menu-item${isActive() ? ' is-active' : ''}`}
-    onInput={(event) =>
-      editor.chain().focus().setColor(event.target).run()
-    }
-    value={editor.getAttributes('textStyle').color || '#000000'}
-    title="Color"
-    data-testid="setColor"
-    style={{ width: '2rem' }}
-  />
-)
+}) => {
+    const currentColor = editor.getAttributes('textStyle').color || '#000000';
+
+    return (
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <input
+                type="color"
+                onInput={(event) => {
+                    const newColor = event.target.value;
+                    editor.chain().focus().setColor(newColor).run();
+                }}
+                value={currentColor}
+                title="Color"
+                data-testid="setColor"
+                style={{ width: '2rem' }}
+            />
+        </div>
+    );
+}
 
 export default ColorPickerItem

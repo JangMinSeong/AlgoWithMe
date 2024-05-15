@@ -5,6 +5,7 @@ import useSidebar from '@/hooks/useSidebar.ts'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
+import fetch from '@/lib/fetch.ts'
 
 interface Page {
   pageId: number
@@ -30,7 +31,7 @@ const NextProblem: React.FC = ({
   const handleAddProblem = async () => {
     const dataToCreate = {
       teamId: groupId,
-      pageId: pPageId,
+      pageId: pPageId === 0 ? -1 : pPageId,
       problemId: problemInfo.problemId,
     }
     console.log(dataToCreate)
@@ -45,6 +46,7 @@ const NextProblem: React.FC = ({
     const newPage = {
       pageId: responseData.pageId,
       title: responseData.title,
+      provider: problemInfo.provider,
       docs: false,
       children: [],
     }
@@ -73,9 +75,9 @@ const NextProblem: React.FC = ({
       setPages(updatedList)
       console.log(updatedList)
     }
+    handleDeleteCandidateProblem(problemInfo.candidateId)
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
-
   return (
     <div className={`w-full flex  rounded-lg mb-2`}>
       <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors justify-between">
@@ -88,6 +90,7 @@ const NextProblem: React.FC = ({
         >
           {' '}
           <img
+            // src="/swea.png"
             src={`/${problemInfo.provider}.png`}
             alt="로고"
             width={20}
@@ -98,8 +101,15 @@ const NextProblem: React.FC = ({
         <Tooltip anchorSelect="#problemLink" place="bottom">
           문제 보러 가기
         </Tooltip>
-        <div className="w-[56%]">
-          {problemInfo.number}. {problemInfo.name}
+        <div
+          className="w-[56%]"
+          data-tooltip-id="titleTooltip"
+          data-tooltip-content={problemInfo.name}
+        >
+          {problemInfo.number}.{' '}
+          {problemInfo.name.length >= 11
+            ? `${problemInfo.name.slice(0, 11)} ...`
+            : problemInfo.name}
         </div>
 
         <div
@@ -115,6 +125,7 @@ const NextProblem: React.FC = ({
           삭제
         </div>
       </div>
+      <Tooltip id="titleTooltip" place="bottom" />
     </div>
   )
 }

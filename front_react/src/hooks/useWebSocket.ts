@@ -31,28 +31,31 @@ export function useWebSocket() {
   const [userSubscriptions, setUserSubscriptions] = useState<{
     [key: string]: StompSubscription
   }>({})
-  const [studySubscripton, setStudySubscription] = useState<StompSubscription>()
+  const [studySubscripton, setStudySubscription] = useState< StompSubscription>()
+  const [studyTopic, setStudyTopic] = useState<string>()
   const baseUrl =
     import.meta.env.MODE === 'development'
       ? import.meta.env.VITE_API_DEV_URL
       : import.meta.env.VITE_API_URL
 
-  const connectToServer = (groupId: number) => {
+  const connectToServer = async (groupId: number) => {
     if (client !== null) {
       console.log('Already connected')
-      if (studySubscripton) {
-        studySubscripton.unsubscribe()
-
-        const subscription = client.subscribe(
-          `/topic/study/${groupId}`,
-          (message) => {
-            console.log('Message received:', message.body)
-            dispatch(setMessageUpdateStudy(message.body))
-            // 메시지 처리 로직 혹은 저장 로직 추가
-          },
-        )
-        setStudySubscription(subscription)
-      }
+      // if (studySubscripton) {
+      //
+      //   studySubscripton.unsubscribe()
+      //
+      //   const subscription = client.subscribe(
+      //     `/topic/study/${groupId}`,
+      //     (message) => {
+      //       console.log('Message received:', message.body)
+      //       dispatch(setMessageUpdateStudy(message.body))
+      //       // 메시지 처리 로직 혹은 저장 로직 추가
+      //     },
+      //   )
+      //   setStudyTopic(`/topic/study/${groupId}`)
+      //   setStudySubscription(subscription)
+      // }
       return
     }
     const newClient = new Client({
@@ -69,6 +72,7 @@ export function useWebSocket() {
             // 메시지 처리 로직 혹은 저장 로직 추가
           },
         )
+        console.log(subscription)
         setStudySubscription(subscription)
       },
       onStompError: (frame) => {
@@ -87,6 +91,19 @@ export function useWebSocket() {
     dispatch(setClient(newClient))
   }
 
+  const subscribeStudy = (topic : string) => {
+    if (client && client.connected) {
+      if(topic === studyTopic) return
+      if(studySubscripton) {studySubscripton.unsubscribe()}
+      const subscription = client.subscribe(topic, (message) => {
+        console.log('Message received:', message.body)
+        dispatch(setMessageUpdateStudy(message.body))
+        // 메시지 처리 로직 혹은 저장 로직 추가
+      })
+      setStudySubscription(subscription)
+    }
+  }
+
   const disconnectToServer = () => {
     Object.values(subscriptions).forEach((sub) => sub.unsubscribe())
     setSubscriptions({})
@@ -98,6 +115,7 @@ export function useWebSocket() {
       const subscription = client.subscribe(topic, (message) => {
         const parsedMessage = JSON.parse(message.body)
         if (isUserSubscription) {
+
           dispatch(setMessageUpdateUserTab(parsedMessage))
         } else {
           dispatch(addMessage(parsedMessage))
@@ -171,5 +189,6 @@ export function useWebSocket() {
     unsubscribeFromTopic,
     sendMessage,
     sendUpdateMessage,
+    subscribeStudy,
   }
 }

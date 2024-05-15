@@ -1,27 +1,19 @@
-import { BiLinkExternal } from 'react-icons/bi'
 import { IProblemPage } from '@/features/study/studyTypes'
+import { Tooltip } from 'react-tooltip'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const PrevProblem = ({
   problemPageInfo,
 }: {
   problemPageInfo: IProblemPage
 }) => {
-  // 누르면 문제페이지로 이동해야함
+  const navigate = useNavigate()
+  const { groupId } = useParams()
+  const handleGoPrevStudy = () => {
+    navigate(`/${groupId}/editor/${problemPageInfo.pageId}`)
+  }
 
   return (
-<<<<<<< Updated upstream
-    <div className="flex w-full bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 hover:bg-dimmedPurple hover:bg-opacity-80 hover:border-opacity-0 transition-colors">
-      <img
-        src={`/${problemPageInfo.provider}.png`}
-        alt="로고"
-        width={20}
-        height={20}
-        className="rounded-full mr-4 "
-      />
-      <div className="mr-2 w-[80%]">
-        {problemPageInfo.number}
-        {problemPageInfo.name}
-=======
     <div onClick={handleGoPrevStudy} className={`w-full flex rounded-lg mb-2`}>
       <div className="flex grow bg-white h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue hover:bg-dimmedPurple hover:bg-opacity-100 hover:border-opacity-0 transition-colors">
         <a
@@ -33,7 +25,7 @@ const PrevProblem = ({
         >
           {' '}
           <img
-            src={import.meta.env.PUBLIC_URL`/${problemPageInfo.provider}.png`}
+            src={`/${problemPageInfo.provider}.png`}
             alt="로고"
             width={20}
             height={20}
@@ -50,16 +42,7 @@ const PrevProblem = ({
         {/* <div className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
           이부분 수정하기
         </div> */}
->>>>>>> Stashed changes
       </div>
-      <a
-        target="_blank"
-        rel="noreferrer"
-        href={problemPageInfo.url}
-        aria-label="문제링크"
-      >
-        <BiLinkExternal />
-      </a>
     </div>
   )
 }

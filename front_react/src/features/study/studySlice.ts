@@ -10,6 +10,7 @@ const initialState: IStudyState = {
   solvedProblems: [],
   candidateProblems: [],
   ranking: [],
+  manager: false,
 }
 
 const studyState = createSlice({
@@ -25,6 +26,7 @@ const studyState = createSlice({
       state.solvedProblems = [...action.payload.solvedProblems]
       state.candidateProblems = [...action.payload.candidateProblems]
       state.ranking = [...action.payload.ranking]
+      state.manager = action.payload.manager
     },
     editImage: (state: IStudyState, action: PayloadAction<string>) => {
       state.imageUrl = action.payload
@@ -43,7 +45,7 @@ const studyState = createSlice({
       action: PayloadAction<number>,
     ) => {
       state.candidateProblems = state.candidateProblems.filter(
-        (item) => item.candidateId !== action.payload,
+        (item: IProblemInfo) => item.candidateId !== action.payload,
       )
     },
   },

@@ -236,9 +236,19 @@ const RightComponent: React.FC<ProblemProp> = ({
     setIsLoading(false)
   }
 
+  const codeSolve = async () => {
+    await fetch(`/problem/${pageId}/solution`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  }
+
   const handleSaveAndRun = () => {
     if(curUser === myId) {
       codeEditorRef.current?.saveCode()
+      codeSolve()
       setSaveInputText(inputText)
     }
     if (inputText !== '') handleInputRun()
@@ -270,8 +280,8 @@ const RightComponent: React.FC<ProblemProp> = ({
 
 
   return (
-    <div className="flex flex-col w-full h-full">
-      <div style={{ flex: 2 }}>
+    <div className="flex flex-col w-full h-full" style={{ height: '100vh'}}>
+      <div style={{ flex: 1}} className={"h-full"}>
         <CodeEditor
             ref={codeEditorRef}
           provider={provider}
@@ -283,19 +293,19 @@ const RightComponent: React.FC<ProblemProp> = ({
             isInit={isInit}
         />
       </div>
-      <div style={{ flex: 1 }} className="flex flex-col">
-        <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1">
+      <div style={{ flex: 1 }}>
+        <div className="flex flex-row flex-1 border-gray-300 p-3 pt-0 pb-1 h-full" style={{maxHeight: '27vh'}}>
           {provider !== 'programmers' ? (
-            <div className="flex-1 border border-gray-300 bg-white">
+            <div className="flex-1 border border-gray-300 bg-white" >
               <textarea
-                className="w-full h-full resize-none p-2 overflow-auto"
+                className="w-full resize-none p-2 h-full overflow-auto"
                 placeholder="Enter text here..."
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
               />
             </div>
           ) : null}
-          <div className="flex-1 p-1 bg-white border border-gray-300 h-48 w-32">
+          <div className="flex-1 p-1 bg-white border border-gray-300 w-32 h-full" style={{ overflow: 'auto' }}>
             {isLoading ? (
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (

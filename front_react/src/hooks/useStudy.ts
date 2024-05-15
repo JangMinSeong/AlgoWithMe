@@ -41,6 +41,7 @@ const useStudy = () => {
       .then((res) => res.json())
       .then((json) => {
         toast.success('문제가 추가되었어요')
+        console.log(json)
         dispatch(addCandidateProblems(json))
       })
       .catch((err) => {
@@ -61,18 +62,14 @@ const useStudy = () => {
       .catch((err) => console.error(err))
   }
 
-  const handleEditImage = async (teamId: number, file: string) => {
-    await fetch(`/study/image/${teamId}}`, {
+  const handleEditImage = async (teamId: number, formData) => {
+    await fetch(`/study/image/${teamId}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ file }),
+      body: formData,
       credentials: 'include',
     })
-      .then((res) => res.json())
-      .then((json) => {
-        console.log(json)
-        dispatch(editImage(json)) // 이거 다시 확인해야함
-      })
+      .then((res) => res.text())
+      .then((text) => dispatch(editImage(text)))
       .catch((err) => console.error(err))
   }
 

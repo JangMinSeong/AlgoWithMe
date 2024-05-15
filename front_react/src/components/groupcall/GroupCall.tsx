@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import { useState } from 'react'
 import { FiMic, FiMicOff } from 'react-icons/fi'
-import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
+// import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import { Tooltip } from 'react-tooltip'
 import fetch from '@/lib/fetch'
 import { useParams } from 'react-router'
@@ -18,7 +18,7 @@ const GroupCall = () => {
   const { groupId } = useParams()
   const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
 
-  const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
+  // const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
   const [isMicOn, setIsMicOn] = useState(false)
   const [activeSpeaker, setActiveSpeaker] = useState<string>()
   const [participants, setParticipants] = useState<Array<IParticipant>>([])
@@ -28,7 +28,6 @@ const GroupCall = () => {
   const [OV, setOV] = useState<OpenVidu>()
 
   const connectToSession = async (token: string) => {
-    // 이미 있으면 삭제하고 다시
     if (session) session.disconnect()
 
     const newOV = new OpenVidu()
@@ -40,21 +39,20 @@ const GroupCall = () => {
 
     mySession.on('streamCreated', (event) => {
       const mySubscriber = mySession.subscribe(event.stream, 'subscriberDiv')
-      setSubscriber(mySubscriber)
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       console.log(connectionId)
 
       setParticipants((prevParticipants) => [
         ...prevParticipants,
-        { connectionId, nickname },
+        { connectionId, nickname, mySubscriber },
       ])
 
       console.log('참가자목록', participants)
     })
 
-    // 내가 연결 끊었을 때
     mySession.on('streamDestroyed', (event) => {
+      event.preventDefault
       const connectionId = event.stream.connection.connectionId
       setParticipants((prevParticipants) =>
         prevParticipants.filter((item) => item.connectionId !== connectionId),
@@ -77,9 +75,9 @@ const GroupCall = () => {
 
     const myPublisher = newOV.initPublisher('', {
       audioSource: undefined,
-      videoSource: false,
+      videoSource: undefined,
       publishAudio: isMicOn,
-      publishVideo: isHeadphoneOn,
+      publishVideo: false,
     })
 
     mySession.publish(myPublisher)
@@ -114,20 +112,25 @@ const GroupCall = () => {
     })
   }
 
-  const handleHeadphoneOff = () => {
-    subscriber.subscribeToAudio(false)
-    setIsHeadphoneOn(false)
-  }
-  const handleHeadphoneOn = () => {
-    subscriber.subscribeToAudio(true)
-    setIsHeadphoneOn(true)
-  }
+  // const handleHeadphoneOff = () => {
+  //   console.log(subscriber)
+  //   subscriber.subscribeToAudio(false)
+  //   setIsHeadphoneOn(false)
+  // }
+  // const handleHeadphoneOn = () => {
+  //   console.log(subscriber)
+  //   subscriber.subscribeToAudio(true)
+  //   setIsHeadphoneOn(true)
+  // }
   const handleMicOff = () => {
     publisher.publishAudio(false)
+    console.log(publisher)
     setIsMicOn(false)
   }
   const handleMicOn = () => {
     publisher.publishAudio(true)
+    console.log(publisher)
+
     setIsMicOn(true)
   }
 
@@ -166,27 +169,15 @@ const GroupCall = () => {
 
   const anchorTagCSS =
     'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
-  const chipCss =
-    'rounded-xl bg-slate-200 text-xs flex px-3 items-center justify-center h-6 mr-1 mb-1'
   return (
     <div className="flex items-center justify-center">
       <div id="subscriberDiv" style={{ display: 'none' }}></div>
       <div id="publisher-container" style={{ display: 'none' }}></div>
 
-      {session ? (
-        <div onClick={() => disconnectSession()} className={chipCss}>
-          연결끊기
-        </div>
-      ) : (
-        <div className={chipCss} onClick={() => fetchSessionAndToken()}>
-          참여하기
-        </div>
-      )}
-
       {/* 오디오컨트롤 */}
       {session && (
-        <div className="ml-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2 py-2 w-fit rounded-3xl shadow-foggyPurple">
-          {isHeadphoneOn ? (
+        <div className="mr-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2  w-fit rounded-3xl ">
+          {/* {isHeadphoneOn ? (
             <div onClick={handleHeadphoneOff}>
               <a id="willOffHeadphone" className={anchorTagCSS}>
                 <TbHeadphones className="w-5 h-5" />
@@ -204,12 +195,12 @@ const GroupCall = () => {
                 헤드셋 소리 켜기
               </Tooltip>
             </div>
-          )}
+          )} */}
 
           {isMicOn ? (
             <div onClick={handleMicOff}>
               <a id="willOffMic" className={anchorTagCSS}>
-                <FiMic className="w-5 h-5" />
+                <FiMic className="w-4 h-4" />
               </a>
               <Tooltip anchorSelect="#willOffMic" place="bottom">
                 마이크 끄기
@@ -218,7 +209,7 @@ const GroupCall = () => {
           ) : (
             <div onClick={handleMicOn}>
               <a id="willOnMic" className={anchorTagCSS}>
-                <FiMicOff className="w-5 h-5 text-red-400" />
+                <FiMicOff className="w-4 h-4 text-red-400" />
               </a>
               <Tooltip anchorSelect="#willOnMic" place="bottom">
                 마이크 켜기
@@ -227,6 +218,23 @@ const GroupCall = () => {
           )}
         </div>
       )}
+
+      {session ? (
+        <div
+          onClick={() => disconnectSession()}
+          className="rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
+        >
+          연결끊기
+        </div>
+      ) : (
+        <div
+          className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
+          onClick={() => fetchSessionAndToken()}
+        >
+          참여하기
+        </div>
+      )}
+
       <Toaster position="bottom-center" reverseOrder={false} />
     </div>
   )

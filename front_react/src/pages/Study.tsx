@@ -6,7 +6,7 @@ import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
 import SetTimer from '@/components/studypage/SetTimer'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
 import { useState, useEffect } from 'react'
@@ -14,37 +14,71 @@ import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
+import LoadingComp from '@/components/LoadingComp'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
   const anchorTagCSS =
     'w-6 h-6 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors '
   const [isEditingName, setIsEditingName] = useState(false)
-  const [isEditingImage, setIsEditingImage] = useState(false)
   const [isShowingImgEditor, setIsShowingImgEditor] = useState(false)
-  const { handleEditName, handleEditImage } = useStudy()
+  const location = useLocation()
   const { sendUpdateMessage } = useWebSocket()
+  const client = useSelector((state: RootState) => state.socket.client)
 
-  useEffect(() => {}, [])
+  const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
+  const user = useSelector((state: RootState) => state.auth.user)
 
-  const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
+  // const reversedCandidates = [...currentStudyInfo.candidateProblems].reverse()
+  const updateStudyMessage = useSelector(
+    (state: RootState) => state.socket.messageStudyUpdate,
+  )
 
-  // 로딩중 적용하기
+  useEffect(() => {
+    if (location.state?.isInvite && client && client.connected) {
+      sendUpdateMessage(
+        `/app/study/${groupId}`,
+        `invite Member ${groupId} ${user.nickname}`,
+      )
+    }
+  }, [client, location])
+
+  useEffect(() => {
+    handleFetchStudyInfo(Number(groupId))
+    if (updateStudyMessage.startsWith(`"invite Member`))
+      handleFetchStudyInfo(Number(groupId))
+  }, [updateStudyMessage])
 
   const handleEditStudyName = (event) => {
     const formData = new FormData(event.target)
     const newName = formData.get('newName').toString()
 
-
-    handleEditName(Number(groupId), newName)
-    sendUpdateMessage(
-      `/app/study/${groupId}`,
-      `updateTitle ${groupId} ${newName}`,
-    )
+    handleEditName(Number(groupId), newName).then(() => {
+      sendUpdateMessage(
+        `/app/study/${groupId}`,
+        `updateTitle ${groupId} ${newName}`,
+      )
+    })
 
     setIsEditingName(false)
+  }
+
+  const prevImage = currentStudyInfo.imageUrl
+    ? currentStudyInfo.imageUrl
+    : 'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png'
+
+  const [newImage, setNewImage] = useState<File | null>(null)
+
+  const handleEditStudyImage = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = e.target.files[0]
+    setNewImage(file)
+    const formData = new FormData()
+    formData.append('file', file)
+    handleEditImage(Number(groupId), formData)
   }
 
   return (
@@ -56,33 +90,40 @@ const StudyMainPage = () => {
           onMouseEnter={() => setIsShowingImgEditor(true)}
           onMouseLeave={() => setIsShowingImgEditor(false)}
         >
-          {currentStudyInfo.imageUrl ? (
+          {newImage ? (
             <img
-              src={currentStudyInfo.imageUrl}
-              alt="img"
+              src={URL.createObjectURL(newImage)}
               width={80}
               height={80}
-              className="mr-2"
+              className="mr-2 rounded-full"
             />
           ) : (
-            <img
-              src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png"
-              alt="Bubbles"
-              width={80}
-              height={80}
-            />
+            <div>
+              <img
+                src={prevImage}
+                alt="img"
+                width={80}
+                height={80}
+                className="mr-2 rounded-full"
+              />{' '}
+            </div>
           )}
+
           <a
             id="editImage"
-            href="a"
             className={`${anchorTagCSS} absolute right-0 bottom-0`}
           >
             {isShowingImgEditor && (
-              <GoPencil
-                className="w-4 opacity-20"
-                onClick={() => setIsEditingImage(true)}
-              />
+              <label htmlFor="imageInput">
+                <GoPencil className="w-4 opacity-20" />
+              </label>
             )}
+            <input
+              id="imageInput"
+              type="file"
+              onChange={handleEditStudyImage}
+              className="hidden"
+            />
           </a>
         </span>
 
@@ -99,10 +140,10 @@ const StudyMainPage = () => {
                   type="text"
                   name="newName"
                   required
-                  maxLength={8}
+                  maxLength={16}
                   defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
                   placeholder="새로운 스터디 이름"
-                  className="text-3xl p-2 rounded-xl bg-transparent w-60"
+                  className="text-3xl p-2 rounded-xl bg-transparent w-80"
                 />
                 <div className="flex items-center">
                   <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
@@ -124,23 +165,30 @@ const StudyMainPage = () => {
             <div className="flex items-center ">
               {' '}
               {currentStudyInfo.name.replace(/"/gi, '')}
-              <a id="editName" className={anchorTagCSS}>
-                <GoPencil
-                  className="w-4 opacity-20"
-                  onClick={() => setIsEditingName(true)}
-                />
-              </a>
+              {currentStudyInfo.manager && (
+                <a id="editName" className={anchorTagCSS}>
+                  <GoPencil
+                    className="w-4 opacity-20"
+                    onClick={() => setIsEditingName(true)}
+                  />
+                </a>
+              )}
             </div>
           )}
           {/* 스터디 이름 */}
 
           <div>와 함께한 지</div>
-          <div className="text-purple-400 ml-2">{currentStudyInfo.joinDay}</div>
+          <div className="text-purple-400 ml-2">
+            {currentStudyInfo.joinDay === 0 ? 1 : currentStudyInfo.joinDay}
+          </div>
           <div>일째</div>
         </div>
         <div className="flex">
           <InviteMember groupId={groupId} />
-          <DeleteStudyGroup groupId={groupId} />
+          <DeleteStudyGroup
+            groupId={groupId}
+            isManager={currentStudyInfo.manager}
+          />
         </div>
       </div>
       {/* 위 */}
@@ -148,18 +196,23 @@ const StudyMainPage = () => {
         {/* 왼쪽 위 */}
         <div className=" w-[50%] mb-10 flex flex-col ">
           {/* 멤버랭킹 */}
-          <div className="mr-4 flex flex-col h-[72%]">
+          <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            {currentStudyInfo.ranking.map((el, idx) => (
-              <ActiveProfileItem key={el.id} person={el} rank={idx} />
-            ))}
+            <div className="flex overflow-x-scroll no-scrollbar mx-2">
+              {currentStudyInfo.ranking.length === 0 && (
+                <div>랭킹이 없어요. 문제를 풀어보세요!</div>
+              )}
+              {currentStudyInfo.ranking.map((el, idx) => (
+                <ActiveProfileItem key={el.id} person={el} rank={idx} />
+              ))}
+            </div>
           </div>
         </div>
 
         {/* 오른쪽 위 파이차트 */}
         <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
-          <div className="flex items-center justify-center h-80 ">
+          <div className="flex items-center justify-center h-72 ">
             <PieChart chartList={currentStudyInfo.chart} />
           </div>
         </div>
@@ -179,7 +232,7 @@ const StudyMainPage = () => {
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
             <div className="pr-10">
               <AddProblem groupId={groupId} />
-              {reversedCandidates.map((el) => (
+              {currentStudyInfo.candidateProblems.map((el) => (
                 <NextProblem problemInfo={el} key={el.problemId} />
               ))}
             </div>

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import fetch from '@/lib/fetch.ts'
 import { RootState } from '@/lib/store.ts'
 import useCode from '@/hooks/useCode.ts'
+import Main from '../groupcall/main'
 
 interface UserInfo {
   id: number
@@ -20,28 +21,37 @@ const StudyHeader = (props: { groupId: number }) => {
   const [curUser, setCurUser] = useState<UserInfo | null>(null)
   const nickname = useSelector((state: RootState) => state.auth.user.nickname) // 현재 사용자 닉네임 가져오기
   const { handleUserList, handleMyId, handleCurUserId } = useCode()
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await fetch(`/study/${props.groupId}/members`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      if (response.ok) {
-        const responseData = await response.json()
-        setUsers(responseData)
+  const updateStudyMessage = useSelector(
+    (state: RootState) => state.socket.messageStudyUpdate,
+  )
 
-        // 현재 사용자 닉네임과 일치하는 사용자 찾기
-        const foundUser = responseData.find(
-          (user: UserInfo) => user.nickname === nickname,
-        )
-        setCurUser(foundUser || null)
-        handleMyId(foundUser.id)
-        handleUserList(responseData)
-        if (curUser === 0) handleCurUserId(foundUser.id)
-      }
+  const fetchUsers = async () => {
+    const response = await fetch(`/study/${props.groupId}/members`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.ok) {
+      const responseData = await response.json()
+      setUsers(responseData)
+
+      // 현재 사용자 닉네임과 일치하는 사용자 찾기
+      const foundUser = responseData.find(
+        (user: UserInfo) => user.nickname === nickname,
+      )
+      setCurUser(foundUser || null)
+      handleMyId(foundUser.id)
+      handleUserList(responseData)
+      if (curUser === 0) handleCurUserId(foundUser.id)
     }
+  }
+
+  useEffect(() => {
+    if (updateStudyMessage.startsWith(`"invite Member`)) fetchUsers()
+  }, [updateStudyMessage])
+
+  useEffect(() => {
     fetchUsers()
   }, [props.groupId, nickname])
 
@@ -50,11 +60,11 @@ const StudyHeader = (props: { groupId: number }) => {
       <div className="flex items-center w-1/2">
         <SideBarButton />
         <Logo />
-        <div className="flex items-center ml-4">
+        <div className="flex items-center ml-10">
           {users.map((user) => (
             <Avatar key={user.id} userInfo={user} isProfile={false} />
           ))}
-          <GroupCall />
+          <Main />
         </div>
       </div>
 

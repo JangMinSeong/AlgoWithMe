@@ -6,6 +6,7 @@ import com.ssafy.Algowithme.common.exception.ExceptionStatus;
 import com.ssafy.Algowithme.common.util.S3Util;
 import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
+import com.ssafy.Algowithme.team.dto.ImageUrlDto;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
 import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
 import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
@@ -152,7 +153,7 @@ public class TeamService {
     }
 
     @Transactional
-    public String changeTeamImage(User user, Long teamId, MultipartFile file) {
+    public ImageUrlDto changeTeamImage(User user, Long teamId, MultipartFile file) {
         UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
@@ -164,7 +165,7 @@ public class TeamService {
         team.setImageUrl(url);
         teamRepository.save(team);
 
-        return url;
+        return ImageUrlDto.builder().url(url).build();
     }
 
     @Transactional
@@ -195,7 +196,8 @@ public class TeamService {
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        teamRepository.delete(team);
+        team.setDeleted(true);
+        teamRepository.save(team);
     }
 
     @Transactional

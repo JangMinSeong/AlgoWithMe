@@ -1,5 +1,6 @@
 package com.ssafy.Algowithme.problem.controller;
 
+import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.problem.dto.response.AllProblemResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTagsResponse;
 import com.ssafy.Algowithme.problem.dto.response.ProblemByTitleResponse;
@@ -40,6 +41,7 @@ public class ProblemController {
     @Operation(summary = "문제 세부정보 조회", description = "페이지 아이디로 문제의 세부정보를 반환한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "조회 성공", content = {@Content(schema = @Schema(implementation = RawProblemResponse.class))}),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
             @ApiResponse(responseCode = "1400", description = "조회 실패")
     })
     public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("pageId") Long pageId) {
@@ -66,14 +68,15 @@ public class ProblemController {
         return ResponseEntity.ok(problemService.getProblemByTag(levels, page));
     }
 
-    @PostMapping("/{problemId}/solution")
+    @PostMapping("/{pageId}/solution")
     @Operation(summary = "제출한 이력 기록", description = "유저가 해당 문제를 풀었던 시간을 기록한다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "기록 성공"),
-            @ApiResponse(responseCode = "400", description = "기록 실패")
+            @ApiResponse(responseCode = "400", description = "기록 실패"),
+            @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    public ResponseEntity<ProblemByTagsResponse> storeProblemSolvingHistory(@AuthenticationPrincipal User user, @PathVariable("problemId") Long problemId) {
-        problemService.storeProblemSolvingHistory(user, problemId);
+    public ResponseEntity<Void> storeProblemSolvingHistory(@AuthenticationPrincipal User user, @PathVariable("pageId") Long pageId) {
+        problemService.storeProblemSolvingHistory(user, pageId);
         return ResponseEntity.ok().build();
     }
 }

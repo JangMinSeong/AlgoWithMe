@@ -20,6 +20,7 @@ interface IPage {
   pageId: number
   title: string
   docs: boolean
+  provider: string
   children: IPage[]
 }
 
@@ -35,10 +36,11 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const studyUpdate = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
+  const {handleEditName, handleFetchStudyInfo} = useStudy()
 
-  const { setGId, setPages } = useSidebar()
+  const { setGId, setPages, setStudys } = useSidebar()
 
-  const { connectToServer, sendUpdateMessage } = useWebSocket()
+  const { connectToServer, sendUpdateMessage, subscribeStudy } = useWebSocket()
 
   useEffect(() => {
     connectToServer(groupId)
@@ -58,6 +60,8 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     if (response.ok) {
       const responseData = await response.json()
       setStudyList(responseData)
+      setStudys(responseData)
+
       console.log(responseData)
     }
   }
@@ -84,16 +88,22 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    if (studyUpdate.startsWith('updateTitle')) fetchStudyList()
-    else fetchPageData()
+    if(studyUpdate.startsWith('"updateTitle')) {
+      fetchStudyList()
+      handleFetchStudyInfo(groupId)
+    }
+    else {
+      fetchPageData()
+    }
   }, [studyUpdate])
 
   useEffect(() => {
     fetchPageData()
+    fetchStudyList()
+    handleFetchStudyInfo(groupId)
+    subscribeStudy(groupId)
     setGId(groupId)
   }, [groupId])
-
-  const { handleFetchStudyInfo } = useStudy()
 
   const handleGoStudyMain = () => {
     handleFetchStudyInfo(groupId)
@@ -117,7 +127,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
     const findPage = (pages, pageId, parent = null, index) => {
       for (let i = 0; i < pages.length; i++) {
         if (pages[i].pageId === pageId) {
-          return { page: pages[i], parent, index: index + 1 }
+          return { page: pages[i], parent, index: i }
         }
         if (pages[i].children) {
           const result = findPage(pages[i].children, pageId, pages[i], 0)
@@ -135,23 +145,59 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         null,
         0,
       )
-      const { page: targetPage, index: order } = findPage(
+      const { page: targetPage, parent:targetParent, index: order } = findPage(
         updatedPages,
         targetPageId,
         null,
         0,
       )
 
-      if (targetPage.children.some((child) => child.pageId === draggedPageId))
-        return pages
+      /// 폴더 내 순서 변경
+      if(targetPage.docs === false) {
+        console.log("폴더 내 순서 변경")
+        const dataToPut = {
+          pageId: draggedPageId,
+          parentPageId: targetParent ? targetParent.pageId : -1,
+          order: order,
+        }
+        try {
+          const response = await fetch(`/page/position`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToPut),
+          })
 
+          if (!response.ok)
+            throw new Error('Failed to update the parent on the server.')
+
+          sendUpdateMessage(
+              `/app/study/${groupId}`,
+              `update${draggedPageId} to ${targetPageId} order ${order}`,
+          )
+
+          return updatedPages
+        } catch (error) {
+          console.error('Error updating page parent:', error)
+          return pages // 에러가 발생하면 원본 페이지 반환
+        }
+      }
+
+      //동일 폴더로 옮겼을 경우
+      if (targetPage.children.some((child) => child.pageId === draggedPageId)) {
+        console.log("동일 폴더")
+        return pages
+      }
+
+      //파일 이동이 되면 안되는 경우
       if (
         !targetPage ||
         !draggedPage ||
         !targetPage.docs ||
         isDescendant(draggedPage, targetPage.pageId)
       ) {
-        console.error('Invalid operation: Move operation is not allowed.')
+        console.error('파일이동 안됨')
         return pages
       }
 
@@ -167,10 +213,12 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         )
       }
 
+
+      console.log("폴더 이동")
       const dataToPut = {
         pageId: draggedPageId,
         parentPageId: targetPageId,
-        order: order !== 0 ? order - 1 : 0,
+        order: 0,
       }
       try {
         const response = await fetch(`/page/position`, {
@@ -186,7 +234,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
         sendUpdateMessage(
           `/app/study/${groupId}`,
-          `update${draggedPageId} to ${targetPageId}`,
+          `update${draggedPageId} to ${targetPageId} order ${order}`,
         )
 
         return updatedPages
@@ -223,6 +271,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
                 page={el}
                 key={el.pageId}
                 depth={0}
+                provider={el.provider}
                 onMovePage={movePage}
               />
             </div>

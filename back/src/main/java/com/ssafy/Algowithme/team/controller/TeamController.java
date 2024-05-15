@@ -1,6 +1,7 @@
 package com.ssafy.Algowithme.team.controller;
 
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
+import com.ssafy.Algowithme.team.dto.ImageUrlDto;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
 import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
 import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
@@ -90,7 +91,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<TeamInfoDetailResponse> getTeamInfoDetail(@AuthenticationPrincipal User user,
-                                                                    @PathVariable Long teamId) {
+                                                                    @PathVariable("teamId") Long teamId) {
         TeamInfoDetailResponse teamInfo = teamService.getTeamInfoDetail(user, teamId);
         return ResponseEntity.ok(teamInfo);
     }
@@ -109,10 +110,10 @@ public class TeamController {
             @ApiResponse(responseCode = "1800", description = "S3 파일 업로드에 실패했습니다.",
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
-    public ResponseEntity<String> changeTeamImage(@AuthenticationPrincipal User user,
-                                                   @PathVariable Long teamId,
-                                                   @RequestParam(value = "file") MultipartFile file) {
-        String url = teamService.changeTeamImage(user, teamId, file);
+    public ResponseEntity<ImageUrlDto> changeTeamImage(@AuthenticationPrincipal User user,
+                                                       @PathVariable("teamId") Long teamId,
+                                                       @RequestParam(value = "file") MultipartFile file) {
+        ImageUrlDto url = teamService.changeTeamImage(user, teamId, file);
         return ResponseEntity.ok(url);
     }
 
@@ -150,7 +151,7 @@ public class TeamController {
                     content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
     })
     public ResponseEntity<Void> deleteTeam(@AuthenticationPrincipal User user,
-                                           @PathVariable Long teamId) {
+                                           @PathVariable("teamId") Long teamId) {
         teamService.deleteTeam(user, teamId);
         return ResponseEntity.ok().build();
     }

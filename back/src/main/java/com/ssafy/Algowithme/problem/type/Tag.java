@@ -12,4 +12,12 @@ public enum Tag {
     SORTING("정렬"), BITMASK("비트 마스킹"), BACKTRACKING("백트래킹"),
     DATA_STRUCTURES("자료구조"), GRAPH("그래프"), ;
     final private String name;
+    public static Tag fromString(String text) {
+        for (Tag tag : Tag.values()) {
+            if (tag.getName().equalsIgnoreCase(text)) {
+                return tag;
+            }
+        }
+        return null;
+    }
 }
