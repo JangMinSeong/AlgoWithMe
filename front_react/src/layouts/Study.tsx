@@ -14,13 +14,13 @@ export default function Layout() {
   const isModalOpen = useSelector((state: RootState) => state.modal.isOpen)
 
   return (
-    <div className="flex transition-all duration-700">
+    <div className="h-full w-dvw flex transition-all duration-700">
       <ScrollToTop />
       {isSidebarOpen && <SideBar groupId={Number(groupId)} />}
-      <main className="ml-2 w-dvw max-w-dvw">
-        <div>
+      <main className="h-full w-dvw max-w-dvw">
+        <div className="h-full">
           <StudyHeader groupId={Number(groupId)} />
-          <main className="bg-white bg-opacity-70 p-8 rounded-lg mr-2 h-screen overflow-y-scroll no-scrollbar">
+          <main className="h-full overflow-y-scroll no-scrollbar">
             <Outlet />
           </main>
         </div>

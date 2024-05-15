@@ -39,7 +39,7 @@ const AddProblem = ({ groupId }: { groupId: string }) => {
             className="rounded-full mr-2"
           />
           <img
-            src="/programmers.png"
+            src="/programmers_backup.png"
             alt="programmers logo"
             width={20}
             height={20}

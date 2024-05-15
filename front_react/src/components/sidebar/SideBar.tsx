@@ -209,7 +209,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
           maxWidth: '12rem',
           minWidth: '12rem',
         }}
-        className=" mb-10  relative bg-white bg-opacity-50 rounded-lg transition-all duration-700 h-screen overflow-y-scroll no-scrollbar"
+        className="relative bg-transparent transition-all duration-700 h-full overflow-y-scroll no-scrollbar"
       >
         <StudyGroupNavigator groupId={groupId} studyList={studyList} />
         <div onClick={handleGoStudyMain} className={menuItemWrapper}>

@@ -37,10 +37,10 @@ const StudyGroupNavigator = (props: {
     setIsNavigatorOpen(!isNavigatorOpen)
   }
   return (
-    <div className="rounded-t-lg ">
+    <div>
       <div
         onClick={handleNavigatorOpen}
-        className="pl-2 h-10 hover:bg-navy hover:bg-opacity-30 rounded-t-lg transition-colors text-sm flex items-center justify-between border-b-2 font-bold"
+        className="pl-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors text-sm flex items-center justify-between border-b-2 font-bold"
       >
         <img
           src={currentGroupImg}

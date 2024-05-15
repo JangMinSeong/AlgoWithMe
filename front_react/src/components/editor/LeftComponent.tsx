@@ -288,15 +288,15 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   return (
-      <div className="mt-0 m-3 flex flex-col">
+      <div className="flex flex-col h-full">
         <div className="flex flex-row">
           <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} />
         </div>
-        <div className="w-full" style={{ height: '72vh' }}>
+        <div className="grow">
           {renderContent()}
         </div>
         <div className="flex flex-row justify-between">
-          <div className="flex border-b-2 w-10">
+          <div className="flex w-10">
             {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
                 <button
                     key={tab}
