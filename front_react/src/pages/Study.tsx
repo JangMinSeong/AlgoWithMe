@@ -177,7 +177,7 @@ const StudyMainPage = () => {
           )}
           {/* 스터디 이름 */}
 
-          <div>와 함께한 지</div>
+          <div>그룹과 함께한 지</div>
           <div className="text-purple-400 ml-2">
             {currentStudyInfo.joinDay === 0 ? 1 : currentStudyInfo.joinDay}
           </div>

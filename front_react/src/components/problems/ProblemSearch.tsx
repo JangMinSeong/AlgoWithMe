@@ -7,7 +7,7 @@ const ProblemSearch = () => {
 
   useEffect(() => {
     handleFetchResultByName('', 1)
-  })
+  }, [])
 
   const handleSearchByName = (event) => {
     event.preventDefault()
