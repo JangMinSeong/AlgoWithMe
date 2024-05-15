@@ -71,10 +71,13 @@ const MainPage: React.FC = () => {
   return (
     <div>
       <MainHeader />
-      <div className="2xl:container 2xl:mx-auto px-16">
+      <div className="2xl:container 2xl:mx-auto px-16 mt-16">
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-          <main className="flex w-full flex-col items-center justify-center text-center mt-0.5 pb-10">
+          <main className="flex w-full h-auto flex-col items-center justify-center text-center mt-0.5 pb-10">
             <ChartProblem chartList={chartData} problemList={problemData} />
+            <div className="w-full text-darkNavy text-lg text-left pl-5 sticky top-0">
+              최근 스터디
+            </div>
             <StudyList studyList={studyData} />
           </main>
 

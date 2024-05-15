@@ -14,7 +14,7 @@ const MainHeader: React.FC = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 w-full h-16 flex justify-between items-center backdrop-blur-2xl px-5 transition ease-in-out duration-300 ${
+      className={`fixed z-[100] top-0 left-0 right-0 w-full h-16 flex justify-between items-center backdrop-blur-md px-5 transition ease-in-out duration-300 ${
         y > 0 ? 'shadow-md' : ''
       }`}
     >
