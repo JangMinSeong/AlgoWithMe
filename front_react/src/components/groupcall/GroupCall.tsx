@@ -75,7 +75,7 @@ const GroupCall = () => {
 
     const myPublisher = newOV.initPublisher('', {
       audioSource: undefined,
-      videoSource: false,
+      videoSource: undefined,
       publishAudio: isMicOn,
       publishVideo: false,
     })
