@@ -45,6 +45,65 @@ const Problem: React.FC<ProblemProp> = ({ content, testCases }) => {
               padding: 8px; /* 테이블 셀 내부 여백 */
               text-align: left; /* 텍스트 정렬 */
             }
+            section {
+              display: block;
+            }
+            .headline {
+            display: block;
+    margin: 10px 0 25px 0;
+    border-bottom: 1px dotted #e4e9f0;
+            }
+            .problem-section {
+            color: #333;
+    font-size: 13px;
+    line-height: 1.6;
+            }
+            .headline h2, .headline h3, .headline h4 {
+            border-bottom: 2px solid #0076C0;
+            margin: 0 0 -2px 0;
+    padding-bottom: 5px;
+    display: inline-block;
+            }
+            .headline h2 {
+            font-size: 22px;
+            }
+            h1, h2, h3, h4, h5, h6 {
+    color: #585f69;
+    margin-top: 5px;
+    text-shadow: none;
+    font-weight: normal;
+    font-family: 'Open Sans', sans-serif;
+}
+h2 {
+    font-size: 24px;
+    line-height: 33px;
+}
+.problem-text {
+    font-size: medium;
+    line-height: 30px;
+}
+p, li, li a {
+    color: #555;
+}
+p {
+    margin: 0 0 10px;
+}
+.problem-text {
+    font-size: medium;
+    line-height: 30px;
+}
+img {
+    vertical-align: middle;
+    border: 0;
+}
+.col-md-12 {
+        width: 100%;
+                float: left;
+                position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+    }
           </style>
         `,
       }}
