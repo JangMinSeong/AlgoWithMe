@@ -4,7 +4,7 @@ import WorkSpace from '@/components/editor/workspace/Workspace'
 import LeftHeader from '@/components/editor/LeftHeader'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
-import {Editor, useEditor} from '@tiptap/react'
+import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TaskList from '@tiptap/extension-task-list'
@@ -29,6 +29,7 @@ import { RootState } from '@/lib/store'
 import useSolving from '@/hooks/useSolving'
 import { useSelector } from 'react-redux'
 import fetch from '@/lib/fetch'
+import useTimer from '@/hooks/useTimer'
 
 interface ProblemProp {
   url: string
@@ -36,7 +37,7 @@ interface ProblemProp {
   room: string
   testCases: { problem: string; answer: string }[]
   nickname: string
-  tags:string[]
+  tags: string[]
 }
 
 const colors = [
@@ -77,7 +78,7 @@ const names = [
 ]
 
 const getRandomElement = <T,>(list: T[]): T =>
-    list[Math.floor(Math.random() * list.length)]
+  list[Math.floor(Math.random() * list.length)]
 const getRandomColor = (): string => getRandomElement(colors)
 const getRandomName = (): string => getRandomElement(names)
 
@@ -94,21 +95,24 @@ const getInitialUser = (nickname: string | null): User => ({
 const appId = import.meta.env.VITE_TIPTAP_ID as string
 
 const LeftComponent: React.FC<ProblemProp> = ({
-                                                url,
-                                                content,
-                                                room,
-                                                testCases,
-                                                nickname,
-                                                tags
-                                              }) => {
-  const [memoId, setMemoId] = useState<string | undefined>(undefined);
-  const [currentUser] = useState(getInitialUser(nickname));
-  const [activeTab, setActiveTab] = useState<'문제보기' | '개인 메모장' | '워크스페이스'>('문제보기');
-  const [editorGroup, setEditorGroup] = useState<any>(null);
+  url,
+  content,
+  room,
+  testCases,
+  nickname,
+  tags,
+}) => {
+  const [memoId, setMemoId] = useState<string | undefined>(undefined)
+  const [currentUser] = useState(getInitialUser(nickname))
+  const [activeTab, setActiveTab] = useState<
+    '문제보기' | '개인 메모장' | '워크스페이스'
+  >('문제보기')
+  const [editorGroup, setEditorGroup] = useState<any>(null)
 
-  const [ydocGroup,setYdocGroup] = useState(new Y.Doc());
-  const [websocketProviderGroup, setWebsocketProviderGroup] = useState<TiptapCollabProvider | null>(null);
-  const [updatedTags, setUpdatedTags] = useState<string[]> ([])
+  const [ydocGroup, setYdocGroup] = useState(new Y.Doc())
+  const [websocketProviderGroup, setWebsocketProviderGroup] =
+    useState<TiptapCollabProvider | null>(null)
+  const [updatedTags, setUpdatedTags] = useState<string[]>([])
   const editorUser = useEditor({
     extensions: [
       StarterKit.configure({ history: false }),
@@ -135,27 +139,27 @@ const LeftComponent: React.FC<ProblemProp> = ({
         includeChildren: true,
         placeholder: ({ node }) => {
           if (node.type.name === 'detailsSummary') {
-            return '제목';
+            return '제목'
           }
-          return null;
+          return null
         },
       }),
       CharacterCount.configure({ limit: 10000 }),
     ],
-  });
+  })
 
   useEffect(() => {
     setUpdatedTags(tags)
-  },[tags,room])
+  }, [tags, room])
 
   const renderContent = () => {
     switch (activeTab) {
       case '문제보기':
         return <Problem content={content} testCases={testCases} />
       case '개인 메모장':
-        return <WorkSpace editor={editorUser} pageId={room}/>
+        return <WorkSpace editor={editorUser} pageId={room} />
       case '워크스페이스':
-        return <WorkSpace editor={editorGroup} pageId={room}/>
+        return <WorkSpace editor={editorGroup} pageId={room} />
       default:
         return '문제'
     }
@@ -163,23 +167,23 @@ const LeftComponent: React.FC<ProblemProp> = ({
 
   useEffect(() => {
     if (editorGroup) {
-      editorGroup.chain().focus().updateUser(currentUser).run();
+      editorGroup.chain().focus().updateUser(currentUser).run()
     }
-  }, [editorGroup, currentUser]);
+  }, [editorGroup, currentUser])
 
   // 방이 바뀔 때마다 WebSocket을 재연결하기 위한 useEffect
   useEffect(() => {
-    if(ydocGroup) ydocGroup.destroy()
+    if (ydocGroup) ydocGroup.destroy()
     const newYdoc = new Y.Doc()
     const provider = new TiptapCollabProvider({
       appId,
       name: room,
       document: newYdoc,
-    });
-    setWebsocketProviderGroup(provider);
+    })
+    setWebsocketProviderGroup(provider)
     setYdocGroup(newYdoc)
-    return () => provider.destroy(); // 이전 provider를 정리
-  }, [room]);
+    return () => provider.destroy() // 이전 provider를 정리
+  }, [room])
 
   // Collaboration 및 CollaborationCursor 확장 기능에 새로운 provider 설정
   useEffect(() => {
@@ -210,20 +214,20 @@ const LeftComponent: React.FC<ProblemProp> = ({
             includeChildren: true,
             placeholder: ({ node }) => {
               if (node.type.name === 'detailsSummary') {
-                return '제목';
+                return '제목'
               }
-              return null;
+              return null
             },
           }),
           CharacterCount.configure({ limit: 10000 }),
           Collaboration.configure({ document: ydocGroup }),
           CollaborationCursor.configure({ provider: websocketProviderGroup }),
         ],
-      });
+      })
 
-      setEditorGroup(newEditorGroup);
+      setEditorGroup(newEditorGroup)
     }
-  }, [websocketProviderGroup, ydocGroup]);
+  }, [websocketProviderGroup, ydocGroup])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -233,29 +237,28 @@ const LeftComponent: React.FC<ProblemProp> = ({
           headers: {
             'Content-Type': 'application/json',
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok')
         }
 
-        const responseData = await response.json();
-        setMemoId(responseData.memoId);
+        const responseData = await response.json()
+        setMemoId(responseData.memoId)
 
         if (responseData.memo && editorUser) {
-          const doc = JSON.parse(responseData.memo);
-          editorUser.commands.setContent(doc, false); // 에디터에 저장된 내용을 로드
-        }
-        else{
-          editorUser.commands.setContent("",false);
+          const doc = JSON.parse(responseData.memo)
+          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+        } else {
+          editorUser.commands.setContent('', false)
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch data:', error)
       }
-    };
+    }
 
     if (editorUser) {
-      fetchData();
+      fetchData()
     }
   }, [room, editorUser])
   const handleSave = async () => {
@@ -278,62 +281,71 @@ const LeftComponent: React.FC<ProblemProp> = ({
     }
   }
 
-  const isSolving = useSelector((state: RootState) => state.solving.isSolving)
-  const { handleStartSolving, handleEndSolving } = useSolving()
+  // const isSolving = useSelector((state: RootState) => state.solving.isSolving)
+  // const { handleStartSolving, handleEndSolving } = useSolving()
+  // const {handleChangeTimer} = useTimer()
 
-  const handleStart = () => {
-    const solvingStartTime = new Date().getTime()
-    localStorage.setItem('startedAt', String(solvingStartTime))
-    handleStartSolving()
-  }
-  const handleEnd = () => {
-    if (confirm('풀이를 종료하시겠어요?')) {
-      handleEndSolving()
-      localStorage.removeItem('startedAt')
-    }
-  }
+  // const handleStart = () => {
+  //   const solvingStartTime = new Date().getTime()
+  //   localStorage.setItem('startedAt', String(solvingStartTime))
+  //   handleStartSolving()
+  //   handleChangeTimer({})
+  // }
+
+  // const handleEnd = () => {
+  //   if (confirm('풀이를 종료하시겠어요?')) {
+  //     handleEndSolving()
+  //     localStorage.removeItem('startedAt')
+  //   }
+  // }
 
   return (
-      <div className="mt-0 m-3 flex flex-col">
-        <div className="flex flex-row">
-          <LeftHeader activeTab={activeTab} onSave={handleSave} url={url} pageId={Number(room)} tags={updatedTags}/>
+    <div className="mt-0 m-3 flex flex-col">
+      <div className="flex flex-row">
+        <LeftHeader
+          activeTab={activeTab}
+          onSave={handleSave}
+          url={url}
+          pageId={Number(room)}
+          tags={updatedTags}
+        />
+      </div>
+      <div className="w-full" style={{ height: '72vh' }}>
+        {renderContent()}
+      </div>
+      <div className="flex flex-row justify-between">
+        <div className="flex border-b-2 w-10">
+          {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
+            <button
+              key={tab}
+              className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
+                activeTab === tab ? 'bg-primary' : 'bg-navy'
+              } rounded-t-none`}
+              onClick={() => setActiveTab(tab as any)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
-        <div className="w-full" style={{ height: '72vh' }}>
-          {renderContent()}
-        </div>
-        <div className="flex flex-row justify-between">
-          <div className="flex border-b-2 w-10">
-            {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
-                <button
-                    key={tab}
-                    className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
-                        activeTab === tab ? 'bg-primary' : 'bg-navy'
-                    } rounded-t-none`}
-                    onClick={() => setActiveTab(tab as any)}
-                >
-                  {tab}
-                </button>
-            ))}
-          </div>
-          <div>
-            {isSolving ? (
-                <button
-                    onClick={handleEnd}
-                    className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-                >
-                  풀이 종료하기
-                </button>
-            ) : (
-                <button
-                    onClick={handleStart}
-                    className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-                >
-                  풀이 시작하기
-                </button>
-            )}
-          </div>
+        <div>
+          {/* {isSolving ? (
+            <button
+              onClick={handleEnd}
+              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
+            >
+              풀이 종료하기
+            </button>
+          ) : (
+            <button
+              onClick={handleStart}
+              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
+            >
+              풀이 시작하기
+            </button>
+          )} */}
         </div>
       </div>
+    </div>
   )
 }
 
