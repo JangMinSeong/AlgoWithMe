@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import fetch from '@/lib/fetch.ts'
 import { RootState } from '@/lib/store.ts'
 import useCode from '@/hooks/useCode.ts'
+import Main from '../groupcall/main'
 
 interface UserInfo {
   id: number
@@ -63,7 +64,7 @@ const StudyHeader = (props: { groupId: number }) => {
           {users.map((user) => (
             <Avatar key={user.id} userInfo={user} isProfile={false} />
           ))}
-          <GroupCall />
+          <Main />
         </div>
       </div>
 

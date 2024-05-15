@@ -1,13 +1,29 @@
+import { useState } from 'react'
 interface IJoinButtonProps {
   joinSession: () => void
-  sessionId: string
+  outSession: () => void
 }
 
 const JoinButton = (props: IJoinButtonProps) => {
-  const handleOnClick = () => {
+  const [isInSession, setIsInsession] = useState(false)
+  const handleJoin = () => {
     props.joinSession()
+    setIsInsession(true)
   }
-  return <button onClick={handleOnClick}>참여하기</button>
+
+  const handleQuit = () => {
+    props.outSession()
+    setIsInsession(false)
+  }
+  return (
+    <div>
+      {isInSession ? (
+        <button onClick={handleQuit}>퇴장하기</button>
+      ) : (
+        <button onClick={handleJoin}>입장하기</button>
+      )}
+    </div>
+  )
 }
 
 export default JoinButton
