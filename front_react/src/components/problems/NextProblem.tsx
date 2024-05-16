@@ -86,8 +86,8 @@ const NextProblem: React.FC = ({
           data-tooltip-content={problemInfo.name}
         >
           {problemInfo.number}.{' '}
-          {problemInfo.name.length >= 11
-            ? `${problemInfo.name.slice(0, 11)} ...`
+          {problemInfo.name.length >= 16
+            ? `${problemInfo.name.slice(0, 16)} ...`
             : problemInfo.name}
         </div>
 
