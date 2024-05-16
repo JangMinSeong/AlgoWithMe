@@ -343,10 +343,11 @@ const RightComponent: React.FC<ProblemProp> = ({
             실행하기
           </button>
           <button
-            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 flex items-center"
             onClick={handleGithub}
           >
-            GIT 저장하기
+            <img src="/public/logo/github/github-mark-white.png" alt="icon" className="h-6 w-6 mr-2" />
+            <span>Upload</span>
           </button>
           {isGitHubExplorerOpen && (
             <GitHubExplorer

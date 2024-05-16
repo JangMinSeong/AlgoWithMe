@@ -319,7 +319,7 @@ const CodeEditor: React.FC<{
                                 <button
                                     key={tab}
                                     onClick={() => handleTabChange(tab)}
-                                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+                                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300 w-9 h-10
                           ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
                                 >
                                     {index + 1}
@@ -331,7 +331,7 @@ const CodeEditor: React.FC<{
                                         setShowMoreTabs(!showMoreTabs)
                                         setShowAvatar(false)
                                     }}
-                                    className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                                    className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300 w-9 h-10"
                                 >
                                     ...
                                 </button>
@@ -345,7 +345,7 @@ const CodeEditor: React.FC<{
                                         <button
                                             key={tab}
                                             onClick={() => handleTabChange(tab)}
-                                            className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+                                            className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300 w-9 h-10
                           ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
                                         >
                                             {index + 4}
@@ -361,7 +361,7 @@ const CodeEditor: React.FC<{
                             {!option && (
                                 <button
                                     onClick={addTab}
-                                    className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                                    className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300 w-9 h-10"
                                 >
                                     +
                                 </button>
