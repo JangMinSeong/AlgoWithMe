@@ -389,7 +389,7 @@ const CodeEditor: React.FC<{
                                         setLanguage(e.target.value)
                                         setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
                                     }}
-                                    className="mr-0"
+                                    className="mb-1 rounded-md"
                                 >
                                     {Object.keys(languageOptions).map((lang) => (
                                         <option key={lang} value={lang}>

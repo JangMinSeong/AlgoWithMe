@@ -43,7 +43,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url,pageId ,
     <div className="text-white flex justify-between items-center w-full">
       <div className="flex space-x-1">
         <button
-            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 ml-2"
             onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)}
         >
           문제 유형
@@ -59,19 +59,22 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url,pageId ,
       </div>
       <div className="flex space-x-1">
         {activeTab === '개인 메모장' && (
-            <button
-                className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-                onClick={() => handleSaveClick('저장')}
-            >
-              저장
-            </button>
+          <button
+            className="bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            onClick={() => handleSaveClick('저장')}
+          >
+            저장
+          </button>
         )}
-        <button
-          className=" bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-          onClick={() => handleProblemLinkClick()}
-        >
-          문제 링크
-        </button>
+        {/*<button*/}
+        {/*  className=" bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"*/}
+        {/*  onClick={() => handleProblemLinkClick()}*/}
+        {/*>*/}
+        {/*  <img src='/public/link.png' className='w-5 h-5'/>*/}
+        {/*</button>*/}
+        <span className="hover:bg-gray-400 w-7 h-7 flex items-center justify-center rounded-md mr-2">
+          <img src="/public/link.png" className="w-5 h-5" onClick={() => handleProblemLinkClick()} />
+        </span>
       </div>
     </div>
   )
