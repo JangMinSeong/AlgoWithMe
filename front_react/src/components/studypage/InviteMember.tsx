@@ -3,7 +3,7 @@ import toast, { Toaster } from 'react-hot-toast'
 import fetch from '@/lib/fetch'
 
 const InviteMember = ({ groupId }: { groupId: string }) => {
-  const BASE_URL = 'https://k10d205.p.ssafy.io'
+  const BASE_URL = import.meta.env.MODE === 'development' ? "https://localhost:3001" : "https://k10d205.p.ssafy.io"
 
   const handleGetInviLink = async () => {
     await fetch(`/study/invite/${groupId}`, {
