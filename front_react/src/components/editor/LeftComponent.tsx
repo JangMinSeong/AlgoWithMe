@@ -26,8 +26,13 @@ import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import Problem from '@/components/editor/Problem'
 import fetch from '@/lib/fetch'
+import { Tooltip } from 'react-tooltip'
 
 interface ProblemProp {
+  title: string
+  level: string
+  number: number
+  provider: string
   url: string
   content: string
   room: string
@@ -91,6 +96,10 @@ const getInitialUser = (nickname: string | null): User => ({
 const appId = import.meta.env.VITE_TIPTAP_ID as string
 
 const LeftComponent: React.FC<ProblemProp> = ({
+  title,
+  level,
+  number,
+  provider,
   url,
   content,
   room,
@@ -277,28 +286,14 @@ const LeftComponent: React.FC<ProblemProp> = ({
     }
   }
 
-  // const isSolving = useSelector((state: RootState) => state.solving.isSolving)
-  // const { handleStartSolving, handleEndSolving } = useSolving()
-  // const {handleChangeTimer} = useTimer()
-
-  // const handleStart = () => {
-  //   const solvingStartTime = new Date().getTime()
-  //   localStorage.setItem('startedAt', String(solvingStartTime))
-  //   handleStartSolving()
-  //   handleChangeTimer({})
-  // }
-
-  // const handleEnd = () => {
-  //   if (confirm('풀이를 종료하시겠어요?')) {
-  //     handleEndSolving()
-  //     localStorage.removeItem('startedAt')
-  //   }
-  // }
-
   return (
-    <div className="flex flex-col h-full max-h-full">
-      <div className="flex flex-row min-h-12 border-b-[1px] border-blueishPurple">
+    <div className="flex flex-col h-full max-h-full ml-2">
+      <div className="">
         <LeftHeader
+          title={title}
+          level={level}
+          number={number}
+          provider={provider}
           activeTab={activeTab}
           onSave={handleSave}
           url={url}
@@ -306,39 +301,29 @@ const LeftComponent: React.FC<ProblemProp> = ({
           tags={updatedTags}
         />
       </div>
-      <div className="grow overflow-auto">{renderContent()}</div>
-      <div className="flex flex-row justify-between border-t-[1px] border-blueishPurple">
-        <div className="flex w-10">
+      <div className="flex">
+        <div className="flex flex-col h-40">
           {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
-              className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
+              className={`w-8 flex-1 text-center text-wrap whitespace-nowrap  hover:bg-primary/50 rounded-l-md rounded-tl-md text-white text-sm transition-colors ${
                 activeTab === tab ? 'bg-primary' : 'bg-navy'
               } rounded-t-none`}
               onClick={() => setActiveTab(tab as any)}
+              data-tooltip-id="codeTabName"
+              data-tooltip-content={tab}
             >
-              {tab}
+              {tab === '문제보기' && '📚'}
+              {tab === '개인 메모장' && '✍'}
+              {tab === '워크스페이스' && '👩🏻‍🤝‍🧑🏻'}
             </button>
           ))}
         </div>
-        <div>
-          {/* {isSolving ? (
-            <button
-              onClick={handleEnd}
-              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-            >
-              풀이 종료하기
-            </button>
-          ) : (
-            <button
-              onClick={handleStart}
-              className="mt-2 h-8 pt-1 text-white bg-primary hover:bg-secondary p-2 rounded-md"
-            >
-              풀이 시작하기
-            </button>
-          )} */}
+        <div className="grow overflow-auto border-t-[1px] border-blueishPurple h-[80vh]">
+          {renderContent()}
         </div>
       </div>
+      <Tooltip id="codeTabName" place="left" />
     </div>
   )
 }

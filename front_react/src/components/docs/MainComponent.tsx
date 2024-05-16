@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import WorkSpace from '@/components/editor/workspace/Workspace'
 import * as Y from 'yjs'
 import { TiptapCollabProvider } from '@hocuspocus/provider'
-import {Editor, useEditor} from '@tiptap/react'
+import { Editor, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Highlight from '@tiptap/extension-highlight'
 import TaskList from '@tiptap/extension-task-list'
@@ -27,6 +27,7 @@ import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import Header from '@/components/docs/Header'
 import fetch from '@/lib/fetch'
+import { Tooltip } from 'react-tooltip'
 
 interface DocProp {
   room: string
@@ -88,14 +89,17 @@ const getInitialUser = (nickname: string | null): User => ({
 const appId = import.meta.env.VITE_TIPTAP_ID as string
 
 const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
-  const user = useSelector((state: RootState) => state.auth.user);
-  const [memoId, setMemoId] = useState<string | undefined>(undefined);
-  const [currentUser, setCurrentUser] = useState(getInitialUser(null));
-  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>('개인 메모장');
-  const [editorGroup, setEditorGroup] = useState<any>(null);
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [memoId, setMemoId] = useState<string | undefined>(undefined)
+  const [currentUser, setCurrentUser] = useState(getInitialUser(null))
+  const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>(
+    '개인 메모장',
+  )
+  const [editorGroup, setEditorGroup] = useState<any>(null)
 
-  const [ydocGroup,setYdocGroup] = useState(new Y.Doc());
-  const [websocketProviderGroup, setWebsocketProviderGroup] = useState<TiptapCollabProvider | null>(null);
+  const [ydocGroup, setYdocGroup] = useState(new Y.Doc())
+  const [websocketProviderGroup, setWebsocketProviderGroup] =
+    useState<TiptapCollabProvider | null>(null)
 
   const editorUser = useEditor({
     extensions: [
@@ -123,49 +127,49 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
         includeChildren: true,
         placeholder: ({ node }) => {
           if (node.type.name === 'detailsSummary') {
-            return '제목';
+            return '제목'
           }
-          return null;
+          return null
         },
       }),
       CharacterCount.configure({ limit: 10000 }),
     ],
-  });
+  })
 
   const renderContent = () => {
     switch (activeTab) {
       case '개인 메모장':
-        return <WorkSpace editor={editorUser} pageId={room}/>;
+        return <WorkSpace editor={editorUser} pageId={room} />
       case '워크스페이스':
-        return <WorkSpace editor={editorGroup} pageId={room}/>;
+        return <WorkSpace editor={editorGroup} pageId={room} />
       default:
-        return '개인 메모장';
+        return '개인 메모장'
     }
-  };
+  }
 
   useEffect(() => {
-    setCurrentUser(getInitialUser(user !== null ? user.nickname : null));
-  }, [user]);
+    setCurrentUser(getInitialUser(user !== null ? user.nickname : null))
+  }, [user])
 
   useEffect(() => {
     if (editorGroup) {
-      editorGroup.chain().focus().updateUser(currentUser).run();
+      editorGroup.chain().focus().updateUser(currentUser).run()
     }
-  }, [editorGroup, currentUser]);
+  }, [editorGroup, currentUser])
 
   // 방이 바뀔 때마다 WebSocket을 재연결하기 위한 useEffect
   useEffect(() => {
-    if(ydocGroup) ydocGroup.destroy()
+    if (ydocGroup) ydocGroup.destroy()
     const newYdoc = new Y.Doc()
     const provider = new TiptapCollabProvider({
       appId,
       name: room,
       document: newYdoc,
-    });
-    setWebsocketProviderGroup(provider);
+    })
+    setWebsocketProviderGroup(provider)
     setYdocGroup(newYdoc)
-    return () => provider.destroy(); // 이전 provider를 정리
-  }, [room]);
+    return () => provider.destroy() // 이전 provider를 정리
+  }, [room])
 
   // Collaboration 및 CollaborationCursor 확장 기능에 새로운 provider 설정
   useEffect(() => {
@@ -196,20 +200,20 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
             includeChildren: true,
             placeholder: ({ node }) => {
               if (node.type.name === 'detailsSummary') {
-                return '제목';
+                return '제목'
               }
-              return null;
+              return null
             },
           }),
           CharacterCount.configure({ limit: 10000 }),
           Collaboration.configure({ document: ydocGroup }),
           CollaborationCursor.configure({ provider: websocketProviderGroup }),
         ],
-      });
+      })
 
-      setEditorGroup(newEditorGroup);
+      setEditorGroup(newEditorGroup)
     }
-  }, [websocketProviderGroup, ydocGroup]);
+  }, [websocketProviderGroup, ydocGroup])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -219,29 +223,28 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-        });
+        })
 
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error('Network response was not ok')
         }
 
-        const responseData = await response.json();
-        setMemoId(responseData.memoId);
+        const responseData = await response.json()
+        setMemoId(responseData.memoId)
 
         if (responseData.memo && editorUser) {
-          const doc = JSON.parse(responseData.memo);
-          editorUser.commands.setContent(doc, false); // 에디터에 저장된 내용을 로드
-        }
-        else{
-          editorUser.commands.setContent("",false);
+          const doc = JSON.parse(responseData.memo)
+          editorUser.commands.setContent(doc, false) // 에디터에 저장된 내용을 로드
+        } else {
+          editorUser.commands.setContent('', false)
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error);
+        console.error('Failed to fetch data:', error)
       }
-    };
+    }
 
     if (editorUser) {
-      fetchData();
+      fetchData()
     }
   }, [room, editorUser])
 
@@ -268,26 +271,29 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
   return (
     <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
-        <Header activeTab={activeTab} onSave={handleSave} room={Number(room)}/>
+        <Header activeTab={activeTab} onSave={handleSave} room={Number(room)} />
       </div>
-      <div className="w-full" style={{ height: '72vh' }}>
-        {renderContent()}
-      </div>
-      <div className="flex flex-row justify-between">
-        <div className="flex border-b-2 w-10">
+      <div className="flex">
+        <div className="flex flex-col w-8 h-40">
           {['개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
-              className={` h-8 flex-1 p-2 pt-1 border border-gray-300 text-center whitespace-nowrap hover:bg-secondary rounded-b-md text-white ${
+              className={` h-8 flex-1 text-center whitespace-nowrap text-wrap hover:bg-primary/50 rounded-l-md text-white text-sm transition-colors ${
                 activeTab === tab ? 'bg-primary' : 'bg-navy'
               } rounded-t-none`}
               onClick={() => setActiveTab(tab as any)}
+              data-tooltip-id="tabName"
+              data-tooltip-content={tab}
             >
-              {tab}
+              {tab === '개인 메모장' ? '✍' : '👩🏻‍🤝‍🧑🏻'}
             </button>
           ))}
         </div>
+        <div className="w-full" style={{ height: '72vh' }}>
+          {renderContent()}
+        </div>
       </div>
+      <Tooltip id="tabName" place="left" />
     </div>
   )
 }
