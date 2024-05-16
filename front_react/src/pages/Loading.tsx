@@ -46,7 +46,13 @@ function Login() {
                     if (accessToken) {
                         const user = { nickname, imageUrl, accessToken }
                         await handleLogin(user)
-                        navigate('/main')
+                        const inviteUrl = localStorage.getItem('invite_url')
+                        console.log(inviteUrl)
+                        if (inviteUrl) {
+                            localStorage.removeItem('invite_url')
+                            window.location.assign(inviteUrl)
+                        }
+                        else navigate('/main')
                     }
                 } else {
                     navigate('/')
