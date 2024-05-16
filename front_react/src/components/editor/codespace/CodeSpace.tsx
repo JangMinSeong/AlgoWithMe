@@ -17,6 +17,8 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from "@/lib/fetch.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store.ts";
+import Avatar from "@/components/editor/codespace/Avatar.tsx";
+import useCode from "@/hooks/useCode.ts";
 
 interface CodeExample {
   mode: string
@@ -119,6 +121,11 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
     const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
     const socketMessage = useSelector((state: RootState) => state.socket.message)
       const myId = useSelector((state:RootState) => state.code.myId)
+
+      const userList = useSelector((state:RootState) => state.code.userList)
+      const curUser = useSelector((state: RootState) => state.code.curUserId)
+      const [showAvatar, setShowAvatar] = useState(false)
+      const { handleCurUserId } = useCode()
 
     useEffect(() => {
         if(curTopic)
@@ -267,98 +274,129 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
 
+
+      const handleShowAvatar = () => {
+          setShowAvatar(!showAvatar)
+          setShowMoreTabs(false)
+      }
+
+      const handleAvatarList = (id:number) => {
+        setShowAvatar(false)
+        handleCurUserId(id)
+      }
+
     return (
       <div className="w-full h-full">
-        <div className="bg-white flex items-center justify-between relative h-12">
-            <div>
-                {tabs.slice(0, 3).map((tab, index) => (
-                    <button
-                        key={tab}
-                        onClick={() => handleTabChange(tab)}
-                        className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+          <div className="bg-white flex items-center justify-between h-12">
+              <div className={"flex-1 relative"}>
+                  <div className={"flex flex-row"}>
+                      <div className="flex flex-row items-start ml-2">
+                          {userList.map((user) => (
+                              user.id === curUser && (
+                                  <Avatar key={user.id} userInfo={user} click={handleShowAvatar} />
+                              )
+                          ))}
+                          {showAvatar && (
+                              <div className={"absolute flex flex-row top-12 left-2 bg-transparent shadow-lg z-30"}>
+                                  {userList.map((user) => (
+                                      user.id !== curUser && (<Avatar key={user.id} userInfo={user} click={null} clickList={()=>handleAvatarList(user.id)} />)
+                                  ))}
+                              </div>
+                          )}
+                  </div>
+
+                  {tabs.slice(0, 3).map((tab, index) => (
+                      <button
+                          key={tab}
+                          onClick={() => handleTabChange(tab)}
+                          className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
               ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                {tabs.length > 3 && (
-                    <button
-                        onClick={() => setShowMoreTabs(!showMoreTabs)}
-                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-                    >
-                        ...
-                    </button>
-                )}
-                {showMoreTabs && (
-                    <div
-                        className="absolute top-10 left-10 bg-white shadow-lg"
-                        style={{position: 'absolute', top: '100%', zIndex: 1000}}
-                    >
-                        {tabs.slice(3).map((tab, index) => (
-                            <button
-                                key={tab}
-                                onClick={() => handleTabChange(tab)}
-                                className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+                      >
+                          {index + 1}
+                      </button>
+                  ))}
+                  {tabs.length > 3 && (
+                      <button
+                          onClick={() => {
+                              setShowMoreTabs(!showMoreTabs)
+                              setShowAvatar(false)
+                          }}
+                          className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                      >
+                          ...
+                      </button>
+                  )}
+                  {showMoreTabs && (
+                      <div
+                          className="absolute top-10 left-28 bg-white shadow-lg"
+                          style={{position: 'absolute', top: '100%', zIndex: 1000}}
+                      >
+                          {tabs.slice(3).map((tab, index) => (
+                              <button
+                                  key={tab}
+                                  onClick={() => handleTabChange(tab)}
+                                  className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
               ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-                            >
-                                {index + 4}
-                            </button>
-                        ))}
-                    </div>
-                )}
-                {tabs.length === 0 && (
-                    <div className="border border-transparent opacity-0">
-                        {/* Invisible space */}
-                    </div>
-                )}
-                {!option && (
-                    <button
-                        onClick={addTab}
-                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-                    >
-                        +
-                    </button>
-                )}
-            </div>
-            <div>
-                {!option && (
-                    <>
-                        <button
-                            onClick={deleteCode}
-              className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            >
-              삭제
-            </button>
-            <button
-              onClick={saveCode}
-              className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            >
-              저장
-            </button>
-            <select
-              value={language}
-              onChange={(e) => {
-                setLanguage(e.target.value)
-                setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
-              }}
-              className="w-1/3"
-            >
-              {Object.keys(languageOptions).map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang}
-                </option>
-              ))}
-            </select>
-            </>
-            )}
+                              >
+                                  {index + 4}
+                              </button>
+                          ))}
+                      </div>
+                  )}
+                  {tabs.length === 0 && (
+                      <div className="border border-transparent opacity-0">
+                          {/* Invisible space */}
+                      </div>
+                  )}
+                  {!option && (
+                      <button
+                          onClick={addTab}
+                          className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+                      >
+                          +
+                      </button>
+                  )}
+                  </div>
+              </div>
+              <div className={"flex-1 items-end"}>
+                  {!option && (
+                      <>
+                          <button
+                              onClick={saveCode}
+                              className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+                          >
+                              저장
+                          </button>
+                          <button
+                              onClick={deleteCode}
+                              className="mr-1 bg-navy hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 mr-3"
+                          >
+                              삭제
+                          </button>
+                          <select
+                              value={language}
+                              onChange={(e) => {
+                                  setLanguage(e.target.value)
+                                  setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
+                              }}
+                              className="mr-0"
+                          >
+                              {Object.keys(languageOptions).map((lang) => (
+                                  <option key={lang} value={lang}>
+                                      {lang}
+                                  </option>
+                              ))}
+                          </select>
+                      </>
+                  )}
+              </div>
           </div>
-        </div>
-        <div className="w-full h-full pb-12">
-          <AceEditor
-            ref={aceRef}
-            mode={languageOptions[language].mode}
-            name="UNIQUE_ID_OF_DIV"
-            value={!option || socketMessage.code === '' ? code : socketMessage.code}
+          <div className="w-full h-full pb-12">
+              <AceEditor
+                  ref={aceRef}
+                  mode={languageOptions[language].mode}
+                  name="UNIQUE_ID_OF_DIV"
+                  value={!option || socketMessage.code === '' ? code : socketMessage.code}
             readOnly={option}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
