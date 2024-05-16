@@ -9,7 +9,7 @@ const ActiveProfileItem = ({
   rank: number
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center w-[30%]">
+    <div className="flex flex-col items-center justify-center w-[26%]">
       <div className="font-bold text-lg mb-6 px-4 rounded-xl py-1 border-b">
         {rank === 0 && '🥇 1등'} {rank === 1 && '🥈 2등'}
         {rank === 2 && '🥉 3등'}

@@ -94,9 +94,7 @@ const Main = () => {
       console.log('스트림파괴')
       const nickname = event.stream.connection.data
       handleUnsetOnline(nickname)
-      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-        icon: '👋',
-      })
+
       // const connectionId = event.stream.connection.connectionId
     })
 
