@@ -75,22 +75,14 @@ const Main = () => {
       console.log('스트림생성')
       const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
-      const nickname = event.stream.connection.data
+      // const nickname = event.stream.connection.data
       console.log(connectionId)
 
-      const memberData = memberList.find((item) => item.nickname === nickname)
-      const member = {
-        nickname: nickname,
-        imageUrl: memberData.imageUrl,
-        isSpeaking: false,
-      }
-
       setSubscriber(mySubscriber)
-      handleSetOnline(member)
 
-      toast(`${nickname}님이 음성채팅에 입장했어요`, {
-        icon: '🙋‍♀️',
-      })
+      // toast(`${nickname}님이 음성채팅에 입장했어요`, {
+      //   icon: '🙋‍♀️',
+      // })
     })
 
     session.on('streamDestroyed', (event) => {
@@ -99,12 +91,12 @@ const Main = () => {
         setSubscriber(null)
       }
       console.log('스트림파괴')
-      // const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
       handleUnsetOnline(nickname)
       toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
         icon: '👋',
       })
+      // const connectionId = event.stream.connection.connectionId
     })
 
     // session.on('streamDestroyed', (event) => {
@@ -114,19 +106,29 @@ const Main = () => {
     //   //   })
     // })
 
-    // session.on('connectionCreated', (event) => {
-    //   const nickname = event.connection.data
-    //   toast(`${nickname}님이 음성채팅에 입장했어요`, {
-    //     icon: '🙋‍♀️',
-    //   })
-    // })
+    session.on('connectionCreated', (event) => {
+      const nickname = event.connection.data
+      const memberData = memberList.find((item) => item.nickname === nickname)
+      const member = {
+        nickname: nickname,
+        imageUrl: memberData.imageUrl,
+        isSpeaking: false,
+      }
 
-    // session.on('connectionDestroyed', (event) => {
-    //   const nickname = event.connection.data
-    //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-    //     icon: '👋',
-    //   })
-    // })
+      handleSetOnline(member)
+
+      toast(`${nickname}님이 음성채팅에 입장했어요`, {
+        icon: '🙋‍♀️',
+      })
+    })
+
+    session.on('connectionDestroyed', (event) => {
+      const nickname = event.connection.data
+      handleUnsetOnline(nickname)
+      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+        icon: '👋',
+      })
+    })
 
     session.on('publisherStartSpeaking', (event) => {
       handleSetSpeaker(event.connection.data)

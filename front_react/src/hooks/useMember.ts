@@ -11,10 +11,12 @@ const useMember = () => {
   const dispatch = useDispatch()
 
   const handleSetOnline = (props: IMember) => {
+    console.log('온라인추가', props)
     dispatch(setOnline(props))
   }
 
   const handleUnsetOnline = (props: string) => {
+    console.log('오프라인됨', props)
     dispatch(unsetOnline(props))
   }
 

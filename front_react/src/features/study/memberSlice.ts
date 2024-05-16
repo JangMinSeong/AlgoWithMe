@@ -19,8 +19,12 @@ const memberSlice = createSlice({
   initialState,
   reducers: {
     setOnline: (state: IMemberSlice, action: PayloadAction<IMember>) => {
-      // 스터디의 유저 목록 중에서 해당 nickname을 가진 유저의 imageurl을 받아와야함
-      state.onlineMembers = [...state.onlineMembers, action.payload]
+      const isDuplicate = state.onlineMembers.findIndex(
+        (item) => item.nickname === action.payload.nickname,
+      )
+      if (isDuplicate === -1) {
+        state.onlineMembers = [...state.onlineMembers, action.payload]
+      }
     },
 
     unsetOnline: (state: IMemberSlice, action: PayloadAction<string>) => {

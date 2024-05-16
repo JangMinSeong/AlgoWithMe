@@ -32,6 +32,9 @@ const StudyHeader = (props: { groupId: number }) => {
     (state: RootState) => state.member.onlineMembers,
   )
 
+  // 중복 제거
+  // const removeDuplicateList = onlineMembers.filter
+
   // const updateStudyMessage = useSelector(
   //   (state: RootState) => state.socket.messageStudyUpdate,
   // )

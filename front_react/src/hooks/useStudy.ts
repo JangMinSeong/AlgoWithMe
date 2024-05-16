@@ -38,7 +38,10 @@ const useStudy = () => {
       credentials: 'include',
     })
       .then((res) => res.json())
-      .then((json) => dispatch(viewStudyMembers(json)))
+      .then((json) => {
+        console.log('멤버', json)
+        dispatch(viewStudyMembers(json))
+      })
   }
 
   const handleAddCandidateProblems = async (
