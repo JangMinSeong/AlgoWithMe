@@ -22,8 +22,7 @@ const NextProblem: React.FC = ({
   const { handleDeleteCandidateProblem } = useStudy()
   const navigate = useNavigate()
   const { groupId } = useParams()
-
-  const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
+  
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
   const { setPages } = useSidebar()
@@ -31,7 +30,7 @@ const NextProblem: React.FC = ({
   const handleAddProblem = async () => {
     const dataToCreate = {
       teamId: groupId,
-      pageId: pPageId === 0 ? -1 : pPageId,
+      pageId: -1,
       problemId: problemInfo.problemId,
     }
     console.log(dataToCreate)
@@ -51,30 +50,8 @@ const NextProblem: React.FC = ({
       children: [],
     }
 
-    const addSubPage = (
-      pages: Page[],
-      parentPageId: number,
-      newPage: Page,
-    ): Page[] =>
-      pages.map((page) => {
-        if (page.pageId === parentPageId) {
-          return { ...page, children: [...page.children, newPage] }
-        }
-
-        return {
-          ...page,
-          children: addSubPage(page.children, parentPageId, newPage),
-        }
-      })
-
-    if (pPageId === -1) {
-      const updatedList = [...pageList, newPage]
-      setPages(updatedList)
-    } else {
-      const updatedList = addSubPage(pageList, pPageId, newPage)
-      setPages(updatedList)
-      console.log(updatedList)
-    }
+    const updatedList = [...pageList, newPage]
+    setPages(updatedList)
     handleDeleteCandidateProblem(problemInfo.candidateId)
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }

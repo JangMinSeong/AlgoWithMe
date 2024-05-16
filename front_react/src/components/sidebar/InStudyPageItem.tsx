@@ -41,6 +41,9 @@ const InStudyPageItem = (props: {
   const [showEditModal, setShowEditModal] = useState(false)
   const [pageTitle, setPageTitle] = useState(props.page.title)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
+
+  const curPageId = useSelector((state:RootState) => state.sidebar.pageId)
+
   const { setPages } = useSidebar()
   const { sendUpdateMessage } = useWebSocket()
 
@@ -136,6 +139,7 @@ const InStudyPageItem = (props: {
   }
 
   const handleMovePage = () => {
+    setPId(props.page.pageId)
     if (props.page.docs) navigate(`/${props.groupId}/docs/${props.page.pageId}`)
     else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
@@ -154,7 +158,7 @@ const InStudyPageItem = (props: {
     >
       <div
         onClick={handleMovePage}
-        className={`${menuItemWrapper} ${
+        className={`${menuItemWrapper} ${curPageId === props.page.pageId && "bg-gray-300" } ${
           isDragOver
             ? 'bg-blue-100 border-blue-500'
             : 'hover:bg-navy hover:bg-opacity-30'
