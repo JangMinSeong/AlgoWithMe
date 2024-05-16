@@ -8,5 +8,6 @@ import java.util.Optional;
 
 @Repository
 public interface TeamRepository extends JpaRepository<Team, Long>, TeamCustomRepository {
-    Optional<Team> findByIdAndDeletedFalse(Long id);
+
+  Optional<Team> findByIdAndDeletedFalse(Long id);
 }

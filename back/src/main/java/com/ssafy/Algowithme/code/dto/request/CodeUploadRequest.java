@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CodeUploadRequest {
-    private String repo;
-    private String branch;
-    private String path;
-    private String fileName;
-    private Language language;
-    private String content;
-    private String commitMessage;
+
+  private String repo;
+  private String branch;
+  private String path;
+  private String fileName;
+  private Language language;
+  private String content;
+  private String commitMessage;
 }

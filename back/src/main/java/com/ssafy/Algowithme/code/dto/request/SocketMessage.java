@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SocketMessage {
-    private String language;
-    private String code;
+
+  private String language;
+  private String code;
 }

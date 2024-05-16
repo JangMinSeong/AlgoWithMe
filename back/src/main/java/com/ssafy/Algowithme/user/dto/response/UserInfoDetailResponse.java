@@ -14,8 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserInfoDetailResponse {
 
-    private Integer id;
-    private List<SolvedTagCountDto> chart;
-    private List<StudiedProblemDto> problems;
-    private List<RecentTeamDto> teams;
+  private Integer id;
+  private List<SolvedTagCountDto> chart;
+  private List<StudiedProblemDto> problems;
+  private List<RecentTeamDto> teams;
 }

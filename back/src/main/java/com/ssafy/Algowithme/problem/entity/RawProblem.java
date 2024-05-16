@@ -17,15 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 @Document(collection = "problem")
 public class RawProblem {
-    @Id
-    private String id;
-    private String site;
-    private String url;
-    private int number;
-    private String title;
-    private String content;
-    private String level;
-    private List<Integer> timeLimit;
-    private List<TestCase> exampleList;
-    private List<EditCode> editCodesList;
+
+  @Id
+  private String id;
+  private String site;
+  private String url;
+  private int number;
+  private String title;
+  private String content;
+  private String level;
+  private List<Integer> timeLimit;
+  private List<TestCase> exampleList;
+  private List<EditCode> editCodesList;
 }

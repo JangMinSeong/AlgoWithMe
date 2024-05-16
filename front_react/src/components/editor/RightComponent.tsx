@@ -139,7 +139,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   useEffect(() => {
     setOption(myId !== curUser)
-
+    
     if (curTopic !== '' || myId === curUser) {
       console.log(curTopic + ' unsubscribe')
       unsubscribeFromTopic(curTopic, true)

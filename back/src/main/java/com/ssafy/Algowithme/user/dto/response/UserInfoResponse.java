@@ -10,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 public class UserInfoResponse {
 
-    private Integer id;
-    private String nickname;
-    private String imageUrl;
+  private Integer id;
+  private String nickname;
+  private String imageUrl;
 
-    static public UserInfoResponse fromEntity (User entity) {
-        return new UserInfoResponse(entity.getId(), entity.getNickname(), entity.getImageUrl());
-    }
+  static public UserInfoResponse fromEntity(User entity) {
+    return new UserInfoResponse(entity.getId(), entity.getNickname(), entity.getImageUrl());
+  }
 }

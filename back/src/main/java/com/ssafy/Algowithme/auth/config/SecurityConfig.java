@@ -28,71 +28,75 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtFilter jwtFilter;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+  private final JwtFilter jwtFilter;
+  private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .sessionManagement(manage -> manage.sessionCreationPolicy(
-                        SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/*").permitAll()
-                        .requestMatchers("/user/info").hasRole("USER")
-                        .anyRequest().permitAll()
-                )
-                .exceptionHandling(config ->
-                        config.authenticationEntryPoint(authenticationEntryPoint())
-                                .accessDeniedHandler(jwtAccessDeniedHandler))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(Customizer.withDefaults());
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .httpBasic(AbstractHttpConfigurer::disable)
+        .sessionManagement(manage -> manage.sessionCreationPolicy(
+            SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/user/*").permitAll()
+            .requestMatchers("/user/info").hasRole("USER")
+            .anyRequest().permitAll()
+        )
+        .exceptionHandling(config ->
+            config.authenticationEntryPoint(authenticationEntryPoint())
+                .accessDeniedHandler(jwtAccessDeniedHandler))
+        .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+        .cors(Customizer.withDefaults());
 
-        return httpSecurity.build();
-    }
+    return httpSecurity.build();
+  }
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new CustomAuthenticationEntryPoint();
-    }
+  @Bean
+  public AuthenticationEntryPoint authenticationEntryPoint() {
+    return new CustomAuthenticationEntryPoint();
+  }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return web -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
-    }
+  @Bean
+  public WebSecurityCustomizer webSecurityCustomizer() {
+    return web -> web.ignoring()
+        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+  }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+  @Bean
+  public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of(
-                "http://localhost:8080", "http://localhost:8081", "http://localhost:3000", "http://localhost:3001",
-                "https://localhost:8080", "https://localhost:8081", "https://localhost:3000", "https://localhost:3001", "https://192.168.100.210:3001",
-                "https://k10d205.p.ssafy.io"
-        ));
+    configuration.setAllowedOrigins(List.of(
+        "http://localhost:8080", "http://localhost:8081", "http://localhost:3000",
+        "http://localhost:3001",
+        "https://localhost:8080", "https://localhost:8081", "https://localhost:3000",
+        "https://localhost:3001", "https://192.168.100.210:3001",
+        "https://k10d205.p.ssafy.io"
+    ));
 
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-        configuration.addExposedHeader("Authorization");
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE"));
+    configuration.setAllowedHeaders(List.of("*"));
+    configuration.setAllowCredentials(true);
+    configuration.addExposedHeader("Authorization");
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
 
-        return source;
-    }
+    return source;
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        ProviderManager providerManager = (ProviderManager) config.getAuthenticationManager();
-        providerManager.setEraseCredentialsAfterAuthentication(false);
-        return providerManager;
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(
+      AuthenticationConfiguration config) throws Exception {
+    ProviderManager providerManager = (ProviderManager) config.getAuthenticationManager();
+    providerManager.setEraseCredentialsAfterAuthentication(false);
+    return providerManager;
+  }
 
 }

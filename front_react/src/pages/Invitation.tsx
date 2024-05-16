@@ -11,6 +11,7 @@ import useStudy from '@/hooks/useStudy'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import { useWebSocket } from '@/hooks/useWebSocket.ts'
+import toast, { Toaster } from 'react-hot-toast'
 
 const InvitationPage = () => {
   const { groupId } = useParams()
@@ -24,6 +25,11 @@ const InvitationPage = () => {
   const currentStudyImg = useSelector(
     (state: RootState) => state.study.imageUrl,
   )
+
+  const studyImage =
+    currentStudyImg ||
+    'https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Symbols/Bubbles.png'
+
   const isLoggedIn = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   )
@@ -51,18 +57,21 @@ const InvitationPage = () => {
           replace: true,
         })
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        toast.error('유효하지 않은 초대코드예요.')
+        console.error(err)
+      })
   }
 
   return (
-    <div className="h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg max-w-sm mx-auto px-10">
+    <div className="h-screen flex items-center justify-center ">
+      <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg mx-auto w-[30%] ">
         <img
-          src={currentStudyImg}
-          width={180}
-          height={180}
+          src={studyImage}
+          width={140}
+          height={140}
           alt="스터디이미지"
-          className="rounded-full"
+          className="rounded-full mb-4"
         />
         <h2 className=" text-gray-800 mb-8 flex items-center flex-col">
           <div className="text-3xl font-bold mb-4">
@@ -86,6 +95,7 @@ const InvitationPage = () => {
           </button>
         </div>
       </div>
+      <Toaster position="bottom-center" />
     </div>
   )
 }

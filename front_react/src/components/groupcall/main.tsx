@@ -15,24 +15,34 @@ import { RootState } from '@/lib/store'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { Tooltip } from 'react-tooltip'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
+import useMember from '@/hooks/useMember'
 
 const Main = () => {
   const { groupId } = useParams()
   const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
+  const {
+    handleSetOnline,
+    handleUnsetOnline,
+    handleSetSpeaker,
+    handleUnsetSpeaker,
+  } = useMember()
 
   const [session, setSession] = useState<OVSession | ''>('')
   const [sessionId, setSessionId] = useState<string>('')
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [publisher, setPublisher] = useState<Publisher | null>(null)
   const [OV, setOV] = useState<OpenVidu | null>(null)
-  const [activeSpeaker, setActiveSpeaker] = useState<string>()
+  // const [activeSpeaker, setActiveSpeaker] = useState<string>()
   const [isMicOn, setIsMicOn] = useState(false)
   const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
-  const [participants, setParticipants] = useState([])
+  // const [participants, setParticipants] = useState([])
+
+  const memberList = useSelector((State: RootState) => State.study.memberList)
 
   const leaveSession = useCallback(() => {
     if (session) session.disconnect()
 
+    handleUnsetOnline(myNickname)
     setOV(null)
     setSession('')
     setSessionId('')
@@ -66,20 +76,14 @@ const Main = () => {
       console.log('스트림생성')
       const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
-      const nickname = event.stream.connection.data
+      // const nickname = event.stream.connection.data
       console.log(connectionId)
 
       setSubscriber(mySubscriber)
-      setParticipants((prevParticipants) => [
-        ...prevParticipants,
-        { connectionId, nickname, mySubscriber },
-      ])
 
-      toast(`${nickname}님이 음성채팅에 입장했어요`, {
-        icon: '🙋‍♀️',
-      })
-
-      console.log('참가자목록', participants)
+      // toast(`${nickname}님이 음성채팅에 입장했어요`, {
+      //   icon: '🙋‍♀️',
+      // })
     })
 
     session.on('streamDestroyed', (event) => {
@@ -88,14 +92,12 @@ const Main = () => {
         setSubscriber(null)
       }
       console.log('스트림파괴')
-      const connectionId = event.stream.connection.connectionId
-      setParticipants((prevParticipants) =>
-        prevParticipants.filter((item) => item.connectionId !== connectionId),
-      )
       const nickname = event.stream.connection.data
+      handleUnsetOnline(nickname)
       toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
         icon: '👋',
       })
+      // const connectionId = event.stream.connection.connectionId
     })
 
     // session.on('streamDestroyed', (event) => {
@@ -105,28 +107,38 @@ const Main = () => {
     //   //   })
     // })
 
-    // session.on('connectionCreated', (event) => {
-    //   const nickname = event.connection.data
-    //   toast(`${nickname}님이 음성채팅에 입장했어요`, {
-    //     icon: '🙋‍♀️',
-    //   })
-    // })
+    session.on('connectionCreated', (event) => {
+      const nickname = event.connection.data
+      const memberData = memberList.find((item) => item.nickname === nickname)
+      const member = {
+        nickname: nickname,
+        imageUrl: memberData.imageUrl,
+        isSpeaking: false,
+      }
 
-    // session.on('connectionDestroyed', (event) => {
-    //   const nickname = event.connection.data
-    //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-    //     icon: '👋',
-    //   })
-    // })
+      handleSetOnline(member)
+
+      toast(`${nickname}님이 음성채팅에 입장했어요`, {
+        icon: '🙋‍♀️',
+      })
+    })
+
+    session.on('connectionDestroyed', (event) => {
+      const nickname = event.connection.data
+      handleUnsetOnline(nickname)
+      toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+        icon: '👋',
+      })
+    })
 
     session.on('publisherStartSpeaking', (event) => {
-      setActiveSpeaker(event.connection.connectionId)
-      console.log('User ' + event.connection.connectionId + '가 말하고 있어요')
+      handleSetSpeaker(event.connection.data)
+      console.log('User ' + event.connection.data + '가 말하고 있어요')
     })
 
     session.on('publisherStopSpeaking', (event) => {
-      setActiveSpeaker(undefined)
-      console.log('User ' + event.connection.connectionId + '가 말을 멈췄어요')
+      handleUnsetSpeaker(event.connection.data)
+      console.log('User ' + event.connection.data + '가 말을 멈췄어요')
     })
   }, [subscriber, session])
 
@@ -182,25 +194,24 @@ const Main = () => {
 
   const handleHeadphoneOff = () => {
     console.log(subscriber)
-    subscriber.subscribeToAudio(false)
     setIsHeadphoneOn(false)
+    subscriber.subscribeToAudio(false)
   }
   const handleHeadphoneOn = () => {
     console.log(subscriber)
-    subscriber.subscribeToAudio(true)
     setIsHeadphoneOn(true)
+    subscriber.subscribeToAudio(true)
   }
 
   const handleMicOff = () => {
+    setIsMicOn(false)
     publisher.publishAudio(false)
     console.log(publisher)
-    setIsMicOn(false)
   }
   const handleMicOn = () => {
-    publisher.publishAudio(true)
-    console.log(publisher)
-
     setIsMicOn(true)
+    console.log(publisher)
+    publisher.publishAudio(true)
   }
 
   const anchorTagCSS =
@@ -255,11 +266,11 @@ const Main = () => {
         </div>
       )}
 
-      <Session
+      {/* <Session
         publisher={publisher as Publisher}
         subscriber={subscriber as Subscriber}
         participants={participants}
-      />
+      /> */}
 
       <div style={{ display: 'none' }} id="subscriberDiv"></div>
       <div style={{ display: 'none' }} id="publisherDiv"></div>

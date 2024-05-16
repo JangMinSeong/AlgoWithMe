@@ -15,13 +15,13 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamInfoDetailResponse {
 
-    private Long teamId;
-    private String name;
-    private String imageUrl;
-    private int joinDay;
-    private List<SolvedTagCountDto> chart;
-    private List<SolvedProblemDto> solvedProblems;
-    private List<CandidateProblemDto> candidateProblems;
-    private List<RankDto> ranking;
-    private boolean manager;
+  private Long teamId;
+  private String name;
+  private String imageUrl;
+  private int joinDay;
+  private List<SolvedTagCountDto> chart;
+  private List<SolvedProblemDto> solvedProblems;
+  private List<CandidateProblemDto> candidateProblems;
+  private List<RankDto> ranking;
+  private boolean manager;
 }

@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import LoadingComp from '@/components/LoadingComp'
+import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -79,6 +80,21 @@ const StudyMainPage = () => {
     const formData = new FormData()
     formData.append('file', file)
     handleEditImage(Number(groupId), formData)
+  }
+  const [startIdx, setStartIdx] = useState(0)
+  const [endIdx, setEndIdx] = useState(3)
+  const visibleRanking = currentStudyInfo.ranking.slice(startIdx, endIdx + 1)
+
+  const handleLeftArrow = () => {
+    const newStIdx = Math.max(0, startIdx - 3)
+    setStartIdx(newStIdx)
+    setEndIdx(Math.min(newStIdx + 3, currentStudyInfo.ranking.length))
+  }
+
+  const handleRightArrow = () => {
+    const newEndIdx = Math.min(endIdx + 3, currentStudyInfo.ranking.length)
+    setEndIdx(newEndIdx)
+    setStartIdx(Math.max(newEndIdx - 3, 0))
   }
 
   return (
@@ -198,13 +214,20 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex overflow-x-scroll no-scrollbar mx-2">
+            <div className="flex mx-2 items-center justify-between">
+              <button onClick={handleLeftArrow}>
+                {' '}
+                <IoIosArrowDropleft className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
+              </button>
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
-              {currentStudyInfo.ranking.map((el, idx) => (
+              {visibleRanking.map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}
+              <button onClick={handleRightArrow}>
+                <IoIosArrowDropright className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
+              </button>
             </div>
           </div>
         </div>

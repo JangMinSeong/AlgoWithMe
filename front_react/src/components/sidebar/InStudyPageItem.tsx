@@ -31,7 +31,7 @@ const InStudyPageItem = (props: {
   const { setPId } = useSidebar()
 
   const menuItemWrapper =
-    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
+    'border px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
 
   const pl = props.depth
 
@@ -41,6 +41,9 @@ const InStudyPageItem = (props: {
   const [showEditModal, setShowEditModal] = useState(false)
   const [pageTitle, setPageTitle] = useState(props.page.title)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
+
+  const curPageId = useSelector((state:RootState) => state.sidebar.pageId)
+
   const { setPages } = useSidebar()
   const { sendUpdateMessage } = useWebSocket()
 
@@ -136,6 +139,7 @@ const InStudyPageItem = (props: {
   }
 
   const handleMovePage = () => {
+    setPId(props.page.pageId)
     if (props.page.docs) navigate(`/${props.groupId}/docs/${props.page.pageId}`)
     else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
@@ -150,11 +154,11 @@ const InStudyPageItem = (props: {
       style={{ paddingLeft: `${props.depth * (10 / props.depth)}px` }}
       className={`draggable-item ${
         isDragOver ? 'bg-blue-100 border-gray-300' : 'bg-white'
-      } border`}
+      }`}
     >
       <div
         onClick={handleMovePage}
-        className={`${menuItemWrapper} ${
+        className={`${menuItemWrapper} ${curPageId === props.page.pageId && "bg-gray-300" } ${
           isDragOver
             ? 'bg-blue-100 border-blue-500'
             : 'hover:bg-navy hover:bg-opacity-30'
@@ -166,15 +170,15 @@ const InStudyPageItem = (props: {
           <img
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png"
             alt="File Folder"
-            width="25"
-            height="25"
+            width="15"
+            height="15"
           />
         ) : (
           <img
             src={`/${props.provider}.png`}
-            width={20}
-            height={20}
-            className="rounded-full mr-2"
+            width={15}
+            height={15}
+            className="rounded-full"
           />
         )}
         <div style={{ width: 182 - pl }} className="truncate pl-2">

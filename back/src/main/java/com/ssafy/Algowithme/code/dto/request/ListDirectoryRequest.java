@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ListDirectoryRequest {
-    private String repo;
-    private String branch;
-    private String path;
+
+  private String repo;
+  private String branch;
+  private String path;
 }

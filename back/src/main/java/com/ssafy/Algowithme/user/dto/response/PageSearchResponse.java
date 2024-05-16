@@ -13,6 +13,6 @@ import java.util.List;
 @Builder
 public class PageSearchResponse {
 
-    private List<SearchStudyDto> studies;
-    private List<SearchPageDto> pages;
+  private List<SearchStudyDto> studies;
+  private List<SearchPageDto> pages;
 }

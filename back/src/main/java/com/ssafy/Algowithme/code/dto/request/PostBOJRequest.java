@@ -11,7 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostBOJRequest {
-    private String code;
-    private int limit_time;
-    private List<TestCase> test_cases;
+
+  private String code;
+  private int limit_time;
+  private List<TestCase> test_cases;
 }

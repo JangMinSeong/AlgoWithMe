@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomUserDetailService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findById(Integer.parseInt(username))
-                .orElseThrow(() -> new UsernameNotFoundException("해당하는 회원이 없습니다."));
-    }
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return userRepository.findById(Integer.parseInt(username))
+        .orElseThrow(() -> new UsernameNotFoundException("해당하는 회원이 없습니다."));
+  }
 }

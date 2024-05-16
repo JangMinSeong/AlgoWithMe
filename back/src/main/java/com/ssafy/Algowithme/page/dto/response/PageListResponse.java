@@ -13,5 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageListResponse {
-    private List<PageInfo> pageInfoList;
+
+  private List<PageInfo> pageInfoList;
 }

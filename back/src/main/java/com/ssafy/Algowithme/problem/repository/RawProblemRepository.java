@@ -8,4 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface RawProblemRepository extends MongoRepository<RawProblem, String> {
+
 }

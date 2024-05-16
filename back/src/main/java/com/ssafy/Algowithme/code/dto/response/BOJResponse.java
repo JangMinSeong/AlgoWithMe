@@ -10,7 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BOJResponse {
-    private int status;
-    private String error;
-    private List<BOJDetail> results;
+
+  private int status;
+  private String error;
+  private List<BOJDetail> results;
 }

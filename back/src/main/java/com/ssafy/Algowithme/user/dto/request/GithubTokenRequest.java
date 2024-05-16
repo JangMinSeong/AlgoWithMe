@@ -10,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 public class GithubTokenRequest {
 
-    @JsonProperty("client_id")
-    private String clientId;
+  @JsonProperty("client_id")
+  private String clientId;
 
-    @JsonProperty("client_secret")
-    private String clientSecret;
+  @JsonProperty("client_secret")
+  private String clientSecret;
 
-    private String code;
+  private String code;
 }

@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ListBranchRequest {
-    private String repo;
+
+  private String repo;
 }

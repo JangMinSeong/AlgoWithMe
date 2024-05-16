@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class SearchStudyDto {
 
-    private Long id;
-    private String name;
-    private String imageUrl;
+  private Long id;
+  private String name;
+  private String imageUrl;
 }

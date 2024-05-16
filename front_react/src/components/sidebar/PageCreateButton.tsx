@@ -22,7 +22,7 @@ const PageCreateButton = (props: { groupId: number; pageId: number }) => {
           }}
         />
       </a>
-      <Tooltip anchorSelect="hover" place="right">
+      <Tooltip anchorSelect="#hover" place="bottom">
         하위 페이지 생성하기
       </Tooltip>
     </div>

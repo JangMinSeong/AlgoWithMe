@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface UserCustomRepository {
 
-    List<SolvedTagCountDto> getSolvedTagChart(Integer userId);
+  List<SolvedTagCountDto> getSolvedTagChart(Integer userId);
 
-    List<StudiedProblemDto> getStudiedProblem(Integer userId);
+  List<StudiedProblemDto> getStudiedProblem(Integer userId);
 
-    List<RecentTeamDto> getRecentTeam(Integer userId);
+  List<RecentTeamDto> getRecentTeam(Integer userId);
 
-    List<TeamListDto> getUserTeam(Integer userId);
+  List<TeamListDto> getUserTeam(Integer userId);
 
-    List<SearchStudyDto> searchStudyByWord(Integer userId, String word);
+  List<SearchStudyDto> searchStudyByWord(Integer userId, String word);
 
-    List<Page> searchPageByWord(Integer userId, String word);
+  List<Page> searchPageByWord(Integer userId, String word);
 }

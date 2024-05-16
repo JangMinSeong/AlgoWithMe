@@ -10,11 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 public class CandidateProblemRawDto {
 
-    private Long candidateId;
-    private Long problemId;
-    private String url;
-    private Provider provider;
-    private int number;
-    private String name;
-    private String level;
+  private Long candidateId;
+  private Long problemId;
+  private String url;
+  private Provider provider;
+  private int number;
+  private String name;
+  private String level;
 }

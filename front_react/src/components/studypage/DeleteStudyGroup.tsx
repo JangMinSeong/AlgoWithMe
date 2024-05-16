@@ -21,6 +21,7 @@ const DeleteStudyGroup = ({
         credentials: 'include',
       })
         .then(() => navigate('/main'))
+
         .catch(() =>
           toast.error('삭제에 실패했어요. 잠시후 다시 시도해주세요.'),
         )

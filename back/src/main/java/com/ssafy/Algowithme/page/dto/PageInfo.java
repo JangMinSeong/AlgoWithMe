@@ -13,29 +13,30 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PageInfo {
-    private Long pageId;
-    private String title;
-    private boolean isDocs;
-    private String provider;
-    private List<PageInfo> children;
 
-    public static PageInfo create(Page page) {
-        boolean isDocs = false;
-        if(page.getProblem() == null) {
-            isDocs = true;
-        }
+  private Long pageId;
+  private String title;
+  private boolean isDocs;
+  private String provider;
+  private List<PageInfo> children;
 
-        String provider = "";
-        if(isDocs == false) {
-            provider = page.getProblem().getProvider().getName();
-        }
-
-        return PageInfo.builder()
-                .pageId(page.getId())
-                .title(page.getTitle())
-                .isDocs(isDocs)
-                .provider(provider)
-                .children(new ArrayList<>())
-                .build();
+  public static PageInfo create(Page page) {
+    boolean isDocs = false;
+    if (page.getProblem() == null) {
+      isDocs = true;
     }
+
+    String provider = "";
+    if (isDocs == false) {
+      provider = page.getProblem().getProvider().getName();
+    }
+
+    return PageInfo.builder()
+        .pageId(page.getId())
+        .title(page.getTitle())
+        .isDocs(isDocs)
+        .provider(provider)
+        .children(new ArrayList<>())
+        .build();
+  }
 }

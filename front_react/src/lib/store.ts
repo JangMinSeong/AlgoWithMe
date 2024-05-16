@@ -6,13 +6,14 @@ import sidebarReducer from '@/features/sidebar/sidebarSlice'
 import timerReducer from '@/features/timer/timerSlice'
 import solvingReducer from '@/features/solving/solvingSlice'
 import websocketReducer from '@/features/socket/webSocketSlice.ts'
-import groupcallReducer from '@/features/groupcall/groupcallSlice'
+import callReducer from '@/features/groupcall/callSlice'
 import modalReducer from '@/features/modal/modalSlice'
 import levelReducer from '@/features/levels/levelSlice'
 import studyReducer from '@/features/study/studySlice'
 import userReducer from '@/features/user/userSlice'
 import searchReducer from '@/features/search/searchSlice'
 import codeReducer from '@/features/code/codeSlice'
+import memberReducer from '@/features/study/memberSlice'
 
 const authPersistConfig = {
   key: 'auth',
@@ -30,13 +31,14 @@ export const makeStore = () => {
       timer: timerReducer,
       solving: solvingReducer,
       socket: websocketReducer,
-      groupcall: groupcallReducer,
+      call: callReducer,
       modal: modalReducer,
       levels: levelReducer,
       study: studyReducer,
       userInfo: userReducer,
       search: searchReducer,
       code: codeReducer,
+      member: memberReducer,
     },
   })
 
