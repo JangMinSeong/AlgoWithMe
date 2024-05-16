@@ -15,6 +15,7 @@ import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import LoadingComp from '@/components/LoadingComp'
+import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -91,9 +92,9 @@ const StudyMainPage = () => {
   }
 
   const handleRightArrow = () => {
-    const newEndIdx = Math.max(endIdx + 3, currentStudyInfo.ranking.length)
+    const newEndIdx = Math.min(endIdx + 3, currentStudyInfo.ranking.length)
     setEndIdx(newEndIdx)
-    setStartIdx(newEndIdx - 3)
+    setStartIdx(Math.max(newEndIdx - 3, 0))
   }
 
   return (
@@ -213,15 +214,20 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex overflow-x-scroll no-scrollbar mx-2">
-              <div onClick={handleLeftArrow}>왼쪽</div>
+            <div className="flex overflow-x-scroll no-scrollbar mx-2 items-center justify-between">
+              <button onClick={handleLeftArrow}>
+                {' '}
+                <IoIosArrowDropleft className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
+              </button>
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
               {visibleRanking.map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}
-              <div onClick={handleRightArrow}>오른쪽</div>
+              <button onClick={handleRightArrow}>
+                <IoIosArrowDropright className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
+              </button>
             </div>
           </div>
         </div>
