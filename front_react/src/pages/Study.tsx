@@ -16,6 +16,7 @@ import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import LoadingComp from '@/components/LoadingComp'
 import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
+import InactiveProfileItem from '@/components/studypage/InactiveProfileItem'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -26,7 +27,7 @@ const StudyMainPage = () => {
   const location = useLocation()
   const { sendUpdateMessage } = useWebSocket()
   const client = useSelector((state: RootState) => state.socket.client)
-
+  const memberList = useSelector((state: RootState) => state.study.memberList)
   const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
@@ -80,21 +81,6 @@ const StudyMainPage = () => {
     const formData = new FormData()
     formData.append('file', file)
     handleEditImage(Number(groupId), formData)
-  }
-  const [startIdx, setStartIdx] = useState(0)
-  const [endIdx, setEndIdx] = useState(3)
-  const visibleRanking = currentStudyInfo.ranking.slice(startIdx, endIdx + 1)
-
-  const handleLeftArrow = () => {
-    const newStIdx = Math.max(0, startIdx - 3)
-    setStartIdx(newStIdx)
-    setEndIdx(Math.min(newStIdx + 3, currentStudyInfo.ranking.length))
-  }
-
-  const handleRightArrow = () => {
-    const newEndIdx = Math.min(endIdx + 3, currentStudyInfo.ranking.length)
-    setEndIdx(newEndIdx)
-    setStartIdx(Math.max(newEndIdx - 3, 0))
   }
 
   return (
@@ -210,30 +196,23 @@ const StudyMainPage = () => {
       {/* 위 */}
       <div className=" flex flex-wrap">
         {/* 왼쪽 위 */}
-        <div className=" w-[50%] mb-10 flex flex-col ">
+        <div className=" w-[60%] mb-10 flex flex-col ">
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
             <div className="flex mx-2 items-center justify-between">
-              <button onClick={handleLeftArrow}>
-                {' '}
-                <IoIosArrowDropleft className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
-              </button>
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
-              {visibleRanking.map((el, idx) => (
+              {currentStudyInfo.ranking.slice(0, 4).map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}
-              <button onClick={handleRightArrow}>
-                <IoIosArrowDropright className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
-              </button>
             </div>
           </div>
         </div>
 
         {/* 오른쪽 위 파이차트 */}
-        <div className="w-[50%] mb-10 flex flex-col mx-auto">
+        <div className="w-[40%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
           <div className="flex items-center justify-center h-72 ">
             <PieChart chartList={currentStudyInfo.chart} />
@@ -244,10 +223,19 @@ const StudyMainPage = () => {
       {/* 아래 */}
       <div className="flex flex-wrap">
         <div className="mb-10 flex grow">
-          <div className="w-[34%] grow mb-10 flex flex-col">
+          {/* <div className="w-[34%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">풀이시간 설정하기</div>
             <div className="flex justify-center">
               <SetTimer />
+            </div>
+          </div> */}
+
+          <div className="w-[33%] grow mb-10 flex flex-col">
+            <div className="font-bold mb-4 mt-4">스터디 그룹 멤버 목록</div>
+            <div className="pr-10">
+              {memberList.map((member) => (
+                <InactiveProfileItem memberInfo={member} key={member.id} />
+              ))}
             </div>
           </div>
 
