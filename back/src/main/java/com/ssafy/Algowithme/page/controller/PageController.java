@@ -78,8 +78,8 @@ public class PageController {
             @ApiResponse(responseCode = "400", description = "수정 실패"),
             @ApiResponse(responseCode = "1200", description = "개인메모가 존재하지 않습니다.", content = {@Content(schema = @Schema(implementation = ErrorResponse.class))}),
     })
-    public ResponseEntity<Void> updateMemo(@RequestBody UpdateMemoRequest request) {
-        pageService.updateMemo(request);
+    public ResponseEntity<Void> updateMemo(@RequestBody UpdateMemoRequest request, @AuthenticationPrincipal User user) {
+        pageService.updateMemo(request, user);
         return ResponseEntity.ok().build();
     }
 
