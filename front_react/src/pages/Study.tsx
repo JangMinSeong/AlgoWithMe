@@ -86,7 +86,7 @@ const StudyMainPage = () => {
   return (
     <div className="flex flex-col">
       {/* 스터디 소개 */}
-      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 pb-6 border-b-2 ">
+      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-2 ">
         <span
           className="relative"
           onMouseEnter={() => setIsShowingImgEditor(true)}
@@ -142,10 +142,10 @@ const StudyMainPage = () => {
                   type="text"
                   name="newName"
                   required
-                  maxLength={16}
+                  maxLength={10}
                   defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
                   placeholder="새로운 스터디 이름"
-                  className="text-3xl p-2 rounded-xl bg-transparent w-80"
+                  className="text-3xl p-2 rounded-xl bg-transparent w-60"
                 />
                 <div className="flex items-center">
                   <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
@@ -196,7 +196,7 @@ const StudyMainPage = () => {
       {/* 위 */}
       <div className=" flex flex-wrap">
         {/* 왼쪽 위 */}
-        <div className=" w-[60%] mb-10 flex flex-col ">
+        <div className=" w-[50%] mb-10 flex flex-col ">
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
@@ -204,7 +204,7 @@ const StudyMainPage = () => {
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
-              {currentStudyInfo.ranking.slice(0, 4).map((el, idx) => (
+              {currentStudyInfo.ranking.slice(0, 3).map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}
             </div>
@@ -212,7 +212,7 @@ const StudyMainPage = () => {
         </div>
 
         {/* 오른쪽 위 파이차트 */}
-        <div className="w-[40%] mb-10 flex flex-col mx-auto">
+        <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
           <div className="flex items-center justify-center h-72 ">
             <PieChart chartList={currentStudyInfo.chart} />
@@ -230,28 +230,34 @@ const StudyMainPage = () => {
             </div>
           </div> */}
 
-          <div className="w-[33%] grow mb-10 flex flex-col">
+          {/* <div className="w-[33%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">스터디 그룹 멤버 목록</div>
             <div className="pr-10">
               {memberList.map((member) => (
                 <InactiveProfileItem memberInfo={member} key={member.id} />
               ))}
             </div>
-          </div>
+          </div> */}
 
-          <div className="w-[33%] grow mb-10 flex flex-col">
+          <div className="w-[50%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
-            <div className="pr-10">
+            <div className="pr-20">
               <AddProblem groupId={groupId} />
+
               {currentStudyInfo.candidateProblems.map((el) => (
                 <NextProblem problemInfo={el} key={el.problemId} />
               ))}
             </div>
           </div>
 
-          <div className="w-[33%] grow mb-10 flex flex-col">
+          <div className="w-[50%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">지난 스터디 복습하기</div>
-            <div className="pr-10">
+            <div className="pr-20">
+              {currentStudyInfo.solvedProblems.length === 0 && (
+                <div className="flex items-center justify-center mt-6">
+                  스터디그룹에서 푼 문제가 없어요 💨
+                </div>
+              )}
               {currentStudyInfo.solvedProblems.map((el) => (
                 <PrevProblem key={el.pageId} problemPageInfo={el} />
               ))}
