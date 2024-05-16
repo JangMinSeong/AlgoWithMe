@@ -170,15 +170,15 @@ const InStudyPageItem = (props: {
           <img
             src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png"
             alt="File Folder"
-            width="25"
-            height="25"
+            width="15"
+            height="15"
           />
         ) : (
           <img
             src={`/${props.provider}.png`}
-            width={20}
-            height={20}
-            className="rounded-full mr-2"
+            width={15}
+            height={15}
+            className="rounded-full"
           />
         )}
         <div style={{ width: 182 - pl }} className="truncate pl-2">
