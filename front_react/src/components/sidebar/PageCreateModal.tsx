@@ -9,6 +9,7 @@ import { RootState } from '@/lib/store'
 import useSidebar from '@/hooks/useSidebar'
 import AddProblemModal from '../problems/AddProblemModal'
 import {useWebSocket} from "@/hooks/useWebSocket.ts";
+import toast,{Toaster} from 'react-hot-toast'
 
 interface Page {
   pageId: number
@@ -82,6 +83,7 @@ const PageCreateModal = () => {
     }
     handleCloseModal()
     sendUpdateMessage(`/app/study/${groupId}`, `create page ${responseData.pageId}`)
+    toast.success('폴더가 생성되었어요')
     navigate(`/${groupId}/docs/${responseData.pageId}`)
   }
 
@@ -123,6 +125,7 @@ const PageCreateModal = () => {
               />
             </div>
         )}
+        <Toaster position={"bottom-center"}/>
       </div>
   )
 }

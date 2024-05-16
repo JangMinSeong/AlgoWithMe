@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Button from '@/components/Button'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import ViewProblems from './ViewProblems'
 import LevelSelector from './LevelSelector'
 import ProblemSearch from './ProblemSearch'
@@ -93,6 +93,7 @@ const AddProblemModal = ({
       `/app/study/${groupId}`,
       `create page ${responseData.pageId}`,
     )
+    toast.success("문제가 생성되었어요")
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
 

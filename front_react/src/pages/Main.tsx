@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import useSidebar from '@/hooks/useSidebar'
+import toast,{Toast} from 'react-hot-toast'
 
 const MainPage: React.FC = () => {
   const navigate = useNavigate()
@@ -59,6 +60,7 @@ const MainPage: React.FC = () => {
 
       if (response.ok) {
         const data = await response.json()
+        toast.success("새로운 스터디가 생성 됐어요")
         navigate(`/${data.teamId}/study`)
       } else {
         console.error('스터디 생성 실패')

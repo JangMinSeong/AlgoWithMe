@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import fetch from '@/lib/fetch.ts'
+import toast,{Toaster} from 'react-hot-toast'
 
 interface Page {
   pageId: number
@@ -22,8 +23,7 @@ const NextProblem: React.FC = ({
   const { handleDeleteCandidateProblem } = useStudy()
   const navigate = useNavigate()
   const { groupId } = useParams()
-
-  const pPageId = useSelector((state: RootState) => state.sidebar.pageId)
+  
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
   const { setPages } = useSidebar()
@@ -31,7 +31,7 @@ const NextProblem: React.FC = ({
   const handleAddProblem = async () => {
     const dataToCreate = {
       teamId: groupId,
-      pageId: pPageId === 0 ? -1 : pPageId,
+      pageId: -1,
       problemId: problemInfo.problemId,
     }
     console.log(dataToCreate)
@@ -51,31 +51,10 @@ const NextProblem: React.FC = ({
       children: [],
     }
 
-    const addSubPage = (
-      pages: Page[],
-      parentPageId: number,
-      newPage: Page,
-    ): Page[] =>
-      pages.map((page) => {
-        if (page.pageId === parentPageId) {
-          return { ...page, children: [...page.children, newPage] }
-        }
-
-        return {
-          ...page,
-          children: addSubPage(page.children, parentPageId, newPage),
-        }
-      })
-
-    if (pPageId === -1) {
-      const updatedList = [...pageList, newPage]
-      setPages(updatedList)
-    } else {
-      const updatedList = addSubPage(pageList, pPageId, newPage)
-      setPages(updatedList)
-      console.log(updatedList)
-    }
+    const updatedList = [...pageList, newPage]
+    setPages(updatedList)
     handleDeleteCandidateProblem(problemInfo.candidateId)
+    toast.success('문제가 생성되었어요')
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
   return (
@@ -126,6 +105,7 @@ const NextProblem: React.FC = ({
         </div>
       </div>
       <Tooltip id="nextProb" place="bottom" />
+      <Toaster position={"bottom-center"}/>
     </div>
   )
 }
