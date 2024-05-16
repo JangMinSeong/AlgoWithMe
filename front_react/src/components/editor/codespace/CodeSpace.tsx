@@ -237,13 +237,32 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       saveCode,
     }))
 
-    const handleCodeChange = debounce((newCode: string) => {
+      const saveCache = async (code:string) => {
+          const dataToCache = {
+              codeId : activeTab,
+              language:language,
+              code : code
+          }
+          console.log(dataToCache.codeId)
+          await fetch(`/code/cache`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body : JSON.stringify(dataToCache)
+          })
+      }
+
+    const handleCodeChange =  debounce((newCode: string) => {
       console.log('Code changed:', newCode)
         const newMessage = {
           language:language,
             code:newCode
         }
-        if(!option) sendMessage(`/app/code/${activeTab}`, newMessage)
+        if(!option) {
+            sendMessage(`/app/code/${activeTab}`, newMessage)
+            saveCache(newCode)
+        }
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
