@@ -84,13 +84,13 @@ const Main = () => {
 
       setSubscriber(mySubscriber)
 
-      if (enterAlertArr.findIndex((nn) => nn === nickname) === -1) {
-        toast(`${nickname}님이 음성채팅에 입장했어요`, {
-          icon: '🙋‍♀️',
-        })
-        setEnterAlertArr((prev) => [...prev, nickname])
-        setLeaveAlertArr((prev) => prev.filter((nn) => nn !== nickname))
-      }
+      // if (enterAlertArr.findIndex((nn) => nn === nickname) === -1) {
+      //   toast(`${nickname}님이 음성채팅에 입장했어요`, {
+      //     icon: '🙋‍♀️',
+      //   })
+      //   setEnterAlertArr((prev) => [...prev, nickname])
+      //   setLeaveAlertArr((prev) => prev.filter((nn) => nn !== nickname))
+      // }
     })
 
     session.on('streamDestroyed', (event) => {
@@ -102,13 +102,13 @@ const Main = () => {
       const nickname = event.stream.connection.data
       handleUnsetOnline(nickname)
 
-      if (leaveAlertArr.findIndex((nn) => nn === nickname) === -1) {
-        toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
-          icon: '👋',
-        })
-        setLeaveAlertArr((prev) => [...prev, nickname])
-        setEnterAlertArr((prev) => prev.filter((nn) => nn !== nickname))
-      }
+      // if (leaveAlertArr.findIndex((nn) => nn === nickname) === -1) {
+      //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
+      //     icon: '👋',
+      //   })
+      //   setLeaveAlertArr((prev) => [...prev, nickname])
+      //   setEnterAlertArr((prev) => prev.filter((nn) => nn !== nickname))
+      // }
 
       // toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
       //   icon: '👋',
@@ -162,7 +162,7 @@ const Main = () => {
       session.connect(token, myNickname).then(() => {
         if (OV) {
           const publishers = OV.initPublisher('publisherDiv', {
-            audioSource: undefined,
+            audioSource: isHeadphoneOn,
             videoSource: false,
             publishAudio: isMicOn, // 여기 수정
             publishVideo: false, // 여기 수정
