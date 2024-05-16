@@ -86,7 +86,12 @@ public class CodeService {
         Page workspace = pageRepository.findById(pageId).orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
         User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ExceptionStatus.USER_NOT_FOUND));
         List<PersonalCode> codes = personalCodeRepository.findAllByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(workspace, user);
-        return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(), PersonalCodeResponse.fromEntity(codes.getFirst()));
+        if(codes.isEmpty()) throw new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND);
+        Long codeId = codes.getFirst().getId();
+        PersonalCodeResponse firstCode = codeCacheRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
+                .orElseGet(() -> personalCodeRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
+                        .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND)));
+        return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(), firstCode);
     }
 
     public Mono<ExecutionResponse> executeCode(ExecuteRequest request){
