@@ -31,7 +31,7 @@ const InStudyPageItem = (props: {
   const { setPId } = useSidebar()
 
   const menuItemWrapper =
-    'px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
+    'border px-2 h-10 hover:bg-navy hover:bg-opacity-30 transition-colors flex items-center text-sm'
 
   const pl = props.depth
 
@@ -150,7 +150,7 @@ const InStudyPageItem = (props: {
       style={{ paddingLeft: `${props.depth * (10 / props.depth)}px` }}
       className={`draggable-item ${
         isDragOver ? 'bg-blue-100 border-gray-300' : 'bg-white'
-      } border`}
+      }`}
     >
       <div
         onClick={handleMovePage}

@@ -36,7 +36,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   const studyUpdate = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
-  const {handleEditName, handleFetchStudyInfo} = useStudy()
+  const { handleEditName, handleFetchStudyInfo } = useStudy()
 
   const { setGId, setPages, setStudys } = useSidebar()
 
@@ -88,11 +88,10 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   }
 
   useEffect(() => {
-    if(studyUpdate.startsWith('"updateTitle')) {
+    if (studyUpdate.startsWith('"updateTitle')) {
       fetchStudyList()
       handleFetchStudyInfo(groupId)
-    }
-    else {
+    } else {
       fetchPageData()
     }
   }, [studyUpdate])
@@ -145,16 +144,15 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         null,
         0,
       )
-      const { page: targetPage, parent:targetParent, index: order } = findPage(
-        updatedPages,
-        targetPageId,
-        null,
-        0,
-      )
+      const {
+        page: targetPage,
+        parent: targetParent,
+        index: order,
+      } = findPage(updatedPages, targetPageId, null, 0)
 
       /// 폴더 내 순서 변경
-      if(targetPage.docs === false) {
-        console.log("폴더 내 순서 변경")
+      if (targetPage.docs === false) {
+        console.log('폴더 내 순서 변경')
         const dataToPut = {
           pageId: draggedPageId,
           parentPageId: targetParent ? targetParent.pageId : -1,
@@ -173,8 +171,8 @@ const SideBar = ({ groupId }: { groupId: number }) => {
             throw new Error('Failed to update the parent on the server.')
 
           sendUpdateMessage(
-              `/app/study/${groupId}`,
-              `update${draggedPageId} to ${targetPageId} order ${order}`,
+            `/app/study/${groupId}`,
+            `update${draggedPageId} to ${targetPageId} order ${order}`,
           )
 
           return updatedPages
@@ -186,7 +184,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
       //동일 폴더로 옮겼을 경우
       if (targetPage.children.some((child) => child.pageId === draggedPageId)) {
-        console.log("동일 폴더")
+        console.log('동일 폴더')
         return pages
       }
 
@@ -213,8 +211,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         )
       }
 
-
-      console.log("폴더 이동")
+      console.log('폴더 이동')
       const dataToPut = {
         pageId: draggedPageId,
         parentPageId: targetPageId,
@@ -265,7 +262,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         </div>
         <div>
           {pageList.map((el) => (
-            <div>
+            <div className="">
               <InStudyPageItem
                 groupId={groupId}
                 page={el}

@@ -103,7 +103,7 @@ const NextProblem: React.FC = ({
         </Tooltip>
         <div
           className="w-[56%]"
-          data-tooltip-id="titleTooltip"
+          data-tooltip-id="nextProb"
           data-tooltip-content={problemInfo.name}
         >
           {problemInfo.number}.{' '}
@@ -125,7 +125,7 @@ const NextProblem: React.FC = ({
           삭제
         </div>
       </div>
-      <Tooltip id="titleTooltip" place="bottom" />
+      <Tooltip id="nextProb" place="bottom" />
     </div>
   )
 }

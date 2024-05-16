@@ -40,7 +40,7 @@ const PrevProblem = ({
         </Tooltip>
         <div
           className="w-[70%]"
-          data-tooltip-id="titleTooltip"
+          data-tooltip-id="prevTitle"
           data-tooltip-content={problemPageInfo.name}
         >
           {problemPageInfo.number}.{' '}
@@ -52,7 +52,7 @@ const PrevProblem = ({
           {problemPageInfo.createdAt.slice(0, 10)}
         </div>
       </div>
-      <Tooltip id="titleTooltip" place="bottom" />
+      <Tooltip id="prevTitle" place="bottom" />
     </div>
   )
 }

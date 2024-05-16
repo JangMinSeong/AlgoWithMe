@@ -63,7 +63,7 @@ const DeleteButton = (props: { pageId: number }) => {
           onClick={handleDelete}
         />
       </a>
-      <Tooltip anchorSelect="hoverDelete" place="right">
+      <Tooltip anchorSelect="#hoverDelete" place="bottom">
         페이지 삭제하기
       </Tooltip>
     </div>
