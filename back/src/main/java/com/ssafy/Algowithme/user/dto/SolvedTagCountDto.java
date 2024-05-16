@@ -10,6 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 public class SolvedTagCountDto {
 
-    private Tag tag;
-    private Long count;
+  private Tag tag;
+  private Long count;
 }

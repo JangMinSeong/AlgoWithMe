@@ -15,9 +15,9 @@ import org.springframework.data.redis.core.index.Indexed;
 @RedisHash(value = "refresh", timeToLive = 1_296_000)
 public class RefreshToken {
 
-    @Id
-    private Integer id;
+  @Id
+  private Integer id;
 
-    @Indexed
-    private String refreshToken;
+  @Indexed
+  private String refreshToken;
 }

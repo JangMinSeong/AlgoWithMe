@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateProblemPageRequest {
-    private Long teamId;
-    private Long pageId;
-    private Long problemId;
+
+  private Long teamId;
+  private Long pageId;
+  private Long problemId;
 }

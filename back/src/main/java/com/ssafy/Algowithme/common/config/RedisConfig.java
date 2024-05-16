@@ -13,26 +13,26 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 @EnableRedisRepositories
 public class RedisConfig {
 
-    @Value("${spring.data.redis.host}")
-    private String host;
-    @Value("${spring.data.redis.port}")
-    private int port;
-    @Value("${spring.data.redis.password}")
-    private String password;
+  @Value("${spring.data.redis.host}")
+  private String host;
+  @Value("${spring.data.redis.port}")
+  private int port;
+  @Value("${spring.data.redis.password}")
+  private String password;
 
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration();
-        redisConfiguration.setHostName(host);
-        redisConfiguration.setPort(port);
-        redisConfiguration.setPassword(password);
-        return new LettuceConnectionFactory(redisConfiguration);
-    }
+  @Bean
+  public RedisConnectionFactory redisConnectionFactory() {
+    RedisStandaloneConfiguration redisConfiguration = new RedisStandaloneConfiguration();
+    redisConfiguration.setHostName(host);
+    redisConfiguration.setPort(port);
+    redisConfiguration.setPassword(password);
+    return new LettuceConnectionFactory(redisConfiguration);
+  }
 
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
-        template.setConnectionFactory(redisConnectionFactory());
-        return template;
-    }
+  @Bean
+  public RedisTemplate<?, ?> redisTemplate() {
+    RedisTemplate<String, String> template = new RedisTemplate<>();
+    template.setConnectionFactory(redisConnectionFactory());
+    return template;
+  }
 }

@@ -10,7 +10,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProgrammersResponse {
-    private int status;
-    private String error;
-    private List<ProgrammersDetail> results;
+
+  private int status;
+  private String error;
+  private List<ProgrammersDetail> results;
 }

@@ -9,11 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 public class CandidateProblemDto {
 
-    private Long candidateId;
-    private Long problemId;
-    private String url;
-    private String provider;
-    private int number;
-    private String name;
-    private String level;
+  private Long candidateId;
+  private Long problemId;
+  private String url;
+  private String provider;
+  private int number;
+  private String name;
+  private String level;
 }

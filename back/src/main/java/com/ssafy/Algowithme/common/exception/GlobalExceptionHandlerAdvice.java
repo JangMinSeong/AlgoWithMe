@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandlerAdvice {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(CustomException.class)
-    public ErrorResponse badRequestExceptionHandler(CustomException e) {
-        return new ErrorResponse(e.getExceptionStatus());
-    }
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  @ExceptionHandler(CustomException.class)
+  public ErrorResponse badRequestExceptionHandler(CustomException e) {
+    return new ErrorResponse(e.getExceptionStatus());
+  }
 
 }

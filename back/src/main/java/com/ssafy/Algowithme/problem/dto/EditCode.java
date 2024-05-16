@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EditCode {
-    private String language;
-    private String frameCode;
+
+  private String language;
+  private String frameCode;
 }

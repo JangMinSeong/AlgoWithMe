@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExecutionResponse {
-    private int status;
-    private String output;
-    private int execution_time;
+
+  private int status;
+  private String output;
+  private int execution_time;
 }

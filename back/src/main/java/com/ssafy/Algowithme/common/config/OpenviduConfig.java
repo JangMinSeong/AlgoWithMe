@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenviduConfig {
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
+  @Value("${OPENVIDU_URL}")
+  private String OPENVIDU_URL;
 
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
+  @Value("${OPENVIDU_SECRET}")
+  private String OPENVIDU_SECRET;
 
-    @Bean
-    public OpenVidu openVidu() {
-        return new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
-    }
+  @Bean
+  public OpenVidu openVidu() {
+    return new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET);
+  }
 }

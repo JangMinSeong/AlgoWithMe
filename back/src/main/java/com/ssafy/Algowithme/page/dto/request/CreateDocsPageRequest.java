@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateDocsPageRequest {
-    private Long teamId;
-    private Long pageId;
+
+  private Long teamId;
+  private Long pageId;
 }

@@ -18,26 +18,31 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GithubController {
 
-    private final GithubService githubService;
+  private final GithubService githubService;
 
-    @GetMapping("/repository")
-    public ResponseEntity<List<RepositoryResponse>> getRepositories(@AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(githubService.getRepositories(user));
-    }
+  @GetMapping("/repository")
+  public ResponseEntity<List<RepositoryResponse>> getRepositories(
+      @AuthenticationPrincipal User user) {
+    return ResponseEntity.ok(githubService.getRepositories(user));
+  }
 
-    @PostMapping("/branch")
-    public ResponseEntity<List<String>> getBranches(@RequestBody ListBranchRequest req, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(githubService.getBranches(req.getRepo(), user));
-    }
+  @PostMapping("/branch")
+  public ResponseEntity<List<String>> getBranches(@RequestBody ListBranchRequest req,
+                                                  @AuthenticationPrincipal User user) {
+    return ResponseEntity.ok(githubService.getBranches(req.getRepo(), user));
+  }
 
-    @PostMapping("/directory")
-    public ResponseEntity<List<String>> getDirectoryContent(@RequestBody ListDirectoryRequest req, @AuthenticationPrincipal User user) {
-        return ResponseEntity.ok(githubService.getDirectoryStructure(req.getRepo(), req.getBranch(), req.getPath(), user));
-    }
+  @PostMapping("/directory")
+  public ResponseEntity<List<String>> getDirectoryContent(@RequestBody ListDirectoryRequest req,
+                                                          @AuthenticationPrincipal User user) {
+    return ResponseEntity.ok(
+        githubService.getDirectoryStructure(req.getRepo(), req.getBranch(), req.getPath(), user));
+  }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadCode(@RequestBody CodeUploadRequest req, @AuthenticationPrincipal User user) {
-        githubService.uploadFile(req, user);
-        return ResponseEntity.ok("Success");
-    }
+  @PostMapping("/upload")
+  public ResponseEntity<String> uploadCode(@RequestBody CodeUploadRequest req,
+                                           @AuthenticationPrincipal User user) {
+    githubService.uploadFile(req, user);
+    return ResponseEntity.ok("Success");
+  }
 }

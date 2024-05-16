@@ -10,7 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangePositionRequest {
-    private Long pageId;
-    private Long parentPageId;
-    private int order;
+
+  private Long pageId;
+  private Long parentPageId;
+  private int order;
 }

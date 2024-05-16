@@ -9,11 +9,11 @@ import lombok.Setter;
 @Builder
 public class TeamInfoResponse {
 
-    private Long teamId;
+  private Long teamId;
 
-    public static TeamInfoResponse create(Long teamId) {
-        return TeamInfoResponse.builder()
-                .teamId(teamId)
-                .build();
-    }
+  public static TeamInfoResponse create(Long teamId) {
+    return TeamInfoResponse.builder()
+        .teamId(teamId)
+        .build();
+  }
 }

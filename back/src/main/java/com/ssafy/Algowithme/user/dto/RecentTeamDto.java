@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RecentTeamDto {
 
-    private Long id;
-    private String name;
-    private String imageUrl;
-    private LocalDateTime visitedAt;
+  private Long id;
+  private String name;
+  private String imageUrl;
+  private LocalDateTime visitedAt;
 }

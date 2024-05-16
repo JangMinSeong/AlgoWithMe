@@ -8,8 +8,8 @@ const SetTimer = () => {
   const [isActiveEditing, setIsActiveEditing] = useState(false)
 
   const isSolving = useSelector((state: RootState) => state.solving.isSolving)
-  const hour = useSelector((state: RootState) => state.timer.hour)
-  const min = useSelector((state: RootState) => state.timer.min)
+  const hour = useSelector((state: RootState) => state.timer.initialhour)
+  const min = useSelector((state: RootState) => state.timer.initialmin)
 
   const [timerHour, setTimerHour] = useState(hour)
   const [timerMin, setTimerMin] = useState(min)

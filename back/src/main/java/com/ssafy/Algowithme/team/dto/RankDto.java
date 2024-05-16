@@ -9,8 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 public class RankDto {
 
-    private Integer id;
-    private String nickname;
-    private String imageUrl;
-    private Long solvedCount;
+  private Integer id;
+  private String nickname;
+  private String imageUrl;
+  private Long solvedCount;
 }

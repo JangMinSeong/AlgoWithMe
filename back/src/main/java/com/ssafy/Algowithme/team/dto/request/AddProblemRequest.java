@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AddProblemRequest {
-    private Long teamId;
-    private Long problemId;
+
+  private Long teamId;
+  private Long problemId;
 }

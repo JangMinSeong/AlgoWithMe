@@ -20,47 +20,48 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final JwtUtil jwtUtil;
-    private final ObjectMapper objectMapper;
+  private final JwtUtil jwtUtil;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        String authorization = request.getHeader("Authorization");
+  @Override
+  public void handle(HttpServletRequest request, HttpServletResponse response,
+                     AccessDeniedException accessDeniedException) throws IOException, ServletException {
+    String authorization = request.getHeader("Authorization");
 
-        JwtCode jwtCode;
-        if(authorization == null || !authorization.startsWith("Bearer ")) {
-            jwtCode = JwtCode.DENIED;
-        } else {
-            jwtCode = jwtUtil.validateToken(authorization.split(" ")[1]);
-        }
-
-        response.setContentType("application/json");
-        response.setStatus(getStatusInfo(jwtCode));
-        response.getWriter().write(objectMapper.writeValueAsString(getErrorMessageMap(jwtCode)));
+    JwtCode jwtCode;
+    if (authorization == null || !authorization.startsWith("Bearer ")) {
+      jwtCode = JwtCode.DENIED;
+    } else {
+      jwtCode = jwtUtil.validateToken(authorization.split(" ")[1]);
     }
 
-    private int getStatusInfo(JwtCode jwtCode) {
-        if(jwtCode == JwtCode.ACCESS) {
-            return HttpStatus.FORBIDDEN.value();
-        }
-        return HttpStatus.UNAUTHORIZED.value();
+    response.setContentType("application/json");
+    response.setStatus(getStatusInfo(jwtCode));
+    response.getWriter().write(objectMapper.writeValueAsString(getErrorMessageMap(jwtCode)));
+  }
+
+  private int getStatusInfo(JwtCode jwtCode) {
+    if (jwtCode == JwtCode.ACCESS) {
+      return HttpStatus.FORBIDDEN.value();
+    }
+    return HttpStatus.UNAUTHORIZED.value();
+  }
+
+  private Map<String, String> getErrorMessageMap(JwtCode jwtCode) {
+    Map<String, String> errorMsg = new LinkedHashMap<>();
+
+    switch (jwtCode) {
+      case ACCESS:
+        errorMsg.put("message", "권한이 없습니다.");
+        errorMsg.put("errorType", "AccessDeniedException");
+      case EXPIRED:
+        errorMsg.put("message", "토큰이 만료되었습니다.");
+        errorMsg.put("errorType", "TokenExpiredException");
+      case DENIED:
+        errorMsg.put("message", "토큰이 유효하지 않습니다.");
+        errorMsg.put("errorType", "TokenInvalidException");
     }
 
-    private Map<String, String> getErrorMessageMap(JwtCode jwtCode) {
-        Map<String, String> errorMsg = new LinkedHashMap<>();
-
-        switch (jwtCode) {
-            case ACCESS :
-                errorMsg.put("message", "권한이 없습니다.");
-                errorMsg.put("errorType", "AccessDeniedException");
-            case EXPIRED :
-                errorMsg.put("message", "토큰이 만료되었습니다.");
-                errorMsg.put("errorType", "TokenExpiredException");
-            case DENIED :
-                errorMsg.put("message", "토큰이 유효하지 않습니다.");
-                errorMsg.put("errorType", "TokenInvalidException");
-        }
-
-        return errorMsg;
-    }
+    return errorMsg;
+  }
 }

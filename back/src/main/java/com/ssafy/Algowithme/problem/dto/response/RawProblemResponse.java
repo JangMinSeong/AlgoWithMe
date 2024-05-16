@@ -16,35 +16,36 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RawProblemResponse {
-    private String id;
-    private String site;
-    private String url;
-    private int number;
-    private String title;
-    private String content;
-    private String level;
-    private List<Integer> timeLimit;
-    private List<TestCase> exampleList;
-    private List<EditCode> editCodesList;
-    private List<String> tagList;
 
-    public static RawProblemResponse create(RawProblem rawProblem, List<WorkspaceTag> workspaceTags) {
-        List<String> tagList = new ArrayList<>();
-        for(WorkspaceTag workspaceTag : workspaceTags) {
-            tagList.add(workspaceTag.getTag().getName());
-        }
-        return RawProblemResponse.builder()
-                .id(rawProblem.getId())
-                .site(rawProblem.getSite())
-                .url(rawProblem.getUrl())
-                .number(rawProblem.getNumber())
-                .title(rawProblem.getTitle())
-                .content(rawProblem.getContent())
-                .level(rawProblem.getLevel())
-                .timeLimit(rawProblem.getTimeLimit())
-                .exampleList(rawProblem.getExampleList())
-                .editCodesList(rawProblem.getEditCodesList())
-                .tagList(tagList)
-                .build();
+  private String id;
+  private String site;
+  private String url;
+  private int number;
+  private String title;
+  private String content;
+  private String level;
+  private List<Integer> timeLimit;
+  private List<TestCase> exampleList;
+  private List<EditCode> editCodesList;
+  private List<String> tagList;
+
+  public static RawProblemResponse create(RawProblem rawProblem, List<WorkspaceTag> workspaceTags) {
+    List<String> tagList = new ArrayList<>();
+    for (WorkspaceTag workspaceTag : workspaceTags) {
+      tagList.add(workspaceTag.getTag().getName());
     }
+    return RawProblemResponse.builder()
+        .id(rawProblem.getId())
+        .site(rawProblem.getSite())
+        .url(rawProblem.getUrl())
+        .number(rawProblem.getNumber())
+        .title(rawProblem.getTitle())
+        .content(rawProblem.getContent())
+        .level(rawProblem.getLevel())
+        .timeLimit(rawProblem.getTimeLimit())
+        .exampleList(rawProblem.getExampleList())
+        .editCodesList(rawProblem.getEditCodesList())
+        .tagList(tagList)
+        .build();
+  }
 }

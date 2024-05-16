@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SWEADetail {
-    private String expected;
-    private String got;
-    private boolean match;
+
+  private String expected;
+  private String got;
+  private boolean match;
 }

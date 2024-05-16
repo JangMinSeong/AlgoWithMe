@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IMemberSlice {
   onlineMembers: Array<IMember>
-  offlineMembers: Array<IMember>
 }
 
 export interface IMember {
@@ -13,31 +12,27 @@ export interface IMember {
 
 const initialState: IMemberSlice = {
   onlineMembers: [],
-  offlineMembers: [],
 }
 
 const memberSlice = createSlice({
   name: 'member',
   initialState,
   reducers: {
-    fetchAllMembers: (
-      state: IMemberSlice,
-      action: PayloadAction<Array<IMember>>,
-    ) => {
-      state.offlineMembers = [...action.payload]
-    },
     setOnline: (state: IMemberSlice, action: PayloadAction<IMember>) => {
-      state.onlineMembers = [...state.onlineMembers, action.payload]
-      state.offlineMembers = state.offlineMembers.filter(
-        (item) => item.nickname !== action.payload.nickname,
+      const isDuplicate = state.onlineMembers.findIndex(
+        (item) => item.nickname === action.payload.nickname,
       )
+      if (isDuplicate === -1) {
+        state.onlineMembers = [...state.onlineMembers, action.payload]
+      }
     },
-    setOffline: (state: IMemberSlice, action: PayloadAction<IMember>) => {
-      state.offlineMembers = [...state.offlineMembers, action.payload]
+
+    unsetOnline: (state: IMemberSlice, action: PayloadAction<string>) => {
       state.onlineMembers = state.onlineMembers.filter(
-        (item) => item.nickname !== action.payload.nickname,
+        (item) => item.nickname !== action.payload,
       )
     },
+
     setSpeaker: (state: IMemberSlice, action: PayloadAction<string>) => {
       const target = state.onlineMembers.find(
         (p) => p.nickname === action.payload,
@@ -53,12 +48,7 @@ const memberSlice = createSlice({
   },
 })
 
-export const {
-  fetchAllMembers,
-  setOnline,
-  setOffline,
-  setSpeaker,
-  unsetSpeaker,
-} = memberSlice.actions
+export const { setOnline, unsetOnline, setSpeaker, unsetSpeaker } =
+  memberSlice.actions
 
 export default memberSlice.reducer

@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExecuteRequest {
-    private Language language;
-    private String code;
-    private String input;
+
+  private Language language;
+  private String code;
+  private String input;
 }

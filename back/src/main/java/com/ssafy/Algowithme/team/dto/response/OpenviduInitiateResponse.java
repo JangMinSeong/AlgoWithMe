@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpenviduInitiateResponse {
-    private String sessionId;
+
+  private String sessionId;
 }
