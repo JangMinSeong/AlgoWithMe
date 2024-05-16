@@ -25,5 +25,6 @@ public class UserWorkspace { // 개인 메모장
     @JoinColumn(name = "page_id")
     private Page workspace;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 }

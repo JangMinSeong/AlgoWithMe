@@ -33,6 +33,7 @@ public class PersonalCode{
     @Enumerated(EnumType.STRING)
     private Language language;
 
+    @Column(columnDefinition = "TEXT")
     private String code;
 
     private boolean deleted;
