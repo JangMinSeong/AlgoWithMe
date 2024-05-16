@@ -28,15 +28,11 @@ const router = createBrowserRouter([
           { path: 'study', element: <Study /> },
         ],
       },
-      // {
-      //   path: 'invitation/:groupId',
-      //   element: <Invitation />,
-      // },
+      {
+        path: 'invitation/:groupId',
+        element: <Invitation />,
+      },
     ],
-  },
-  {
-    path: 'invitation/:groupId',
-    element: <Invitation />,
   },
   {
     path: '/loading',

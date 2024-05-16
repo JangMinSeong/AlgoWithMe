@@ -35,15 +35,11 @@ const InvitationPage = () => {
   )
 
   useEffect(() => {
-    const currentUrl = window.location.href
-
     if (isLoggedIn) {
       connectToServer(Number(groupId))
       handleFetchStudyInfo(Number(groupId))
     } else {
-      localStorage.setItem('invite_url', currentUrl)
-      window.location.assign(`https://www.github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_GITHUB_ID}&scope=repo%20project`)
-      // navigate('/welcome')
+      navigate('/welcome')
     }
     return disconnectToServer
   }, [])
