@@ -11,17 +11,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProblemByTagsResponse {
-    private int resultCount;    // 조회 결과 수
-    private int page;           // 페이지 번호
-    private int totalPages;     // 전체 페이지 번호
-    private List<ProblemInfo> problemInfoList;  //문제 리스트
 
-    public static ProblemByTagsResponse create(int resultCount, int page, int totalPages, List<ProblemInfo> problemInfoList) {
-        return ProblemByTagsResponse.builder()
-                .resultCount(resultCount)
-                .page(page)
-                .totalPages(totalPages)
-                .problemInfoList(problemInfoList)
-                .build();
-    }
+  private int resultCount;    // 조회 결과 수
+  private int page;           // 페이지 번호
+  private int totalPages;     // 전체 페이지 번호
+  private List<ProblemInfo> problemInfoList;  //문제 리스트
+
+  public static ProblemByTagsResponse create(int resultCount, int page, int totalPages,
+                                             List<ProblemInfo> problemInfoList) {
+    return ProblemByTagsResponse.builder()
+        .resultCount(resultCount)
+        .page(page)
+        .totalPages(totalPages)
+        .problemInfoList(problemInfoList)
+        .build();
+  }
 }

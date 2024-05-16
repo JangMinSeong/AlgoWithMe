@@ -8,8 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostSWEARequest {
-    private String code;
-    private int limit_time;
-    private String input;
-    private String output;
+
+  private String code;
+  private int limit_time;
+  private String input;
+  private String output;
 }

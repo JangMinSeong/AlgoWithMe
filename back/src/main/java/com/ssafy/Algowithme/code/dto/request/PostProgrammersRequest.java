@@ -11,7 +11,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostProgrammersRequest {
-    private String main;
-    private String solution;
-    private List<TestCase> test_cases;
+
+  private String main;
+  private String solution;
+  private List<TestCase> test_cases;
 }

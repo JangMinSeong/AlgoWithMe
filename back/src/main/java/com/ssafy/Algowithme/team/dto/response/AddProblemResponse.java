@@ -11,25 +11,26 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddProblemResponse {
-    private Long candidateId;
-    private Long problemId;
-    private String url;
-    private String provider;
-    private int number;
-    private String name;
-    private String level;
 
-    public static AddProblemResponse create(CandidateProblem candidateProblem) {
-        Problem problem = candidateProblem.getProblem();
+  private Long candidateId;
+  private Long problemId;
+  private String url;
+  private String provider;
+  private int number;
+  private String name;
+  private String level;
 
-        return AddProblemResponse.builder()
-                .candidateId(candidateProblem.getId())
-                .problemId(problem.getId())
-                .url(problem.getUrl())
-                .provider(problem.getProvider().getName())
-                .number(problem.getNumber())
-                .name(problem.getName())
-                .level(problem.getLevel())
-                .build();
-    }
+  public static AddProblemResponse create(CandidateProblem candidateProblem) {
+    Problem problem = candidateProblem.getProblem();
+
+    return AddProblemResponse.builder()
+        .candidateId(candidateProblem.getId())
+        .problemId(problem.getId())
+        .url(problem.getUrl())
+        .provider(problem.getProvider().getName())
+        .number(problem.getNumber())
+        .name(problem.getName())
+        .level(problem.getLevel())
+        .build();
+  }
 }

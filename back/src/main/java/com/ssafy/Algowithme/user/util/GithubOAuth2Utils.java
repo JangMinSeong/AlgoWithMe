@@ -20,57 +20,57 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class GithubOAuth2Utils {
 
-    @Value("${github.client.id}")
-    private String clientId;
+  @Value("${github.client.id}")
+  private String clientId;
 
-    @Value("${github.client.secrets}")
-    private String clientSecret;
+  @Value("${github.client.secrets}")
+  private String clientSecret;
 
-    @Value("${github.info.url}")
-    private String githubInfoUrl;
+  @Value("${github.info.url}")
+  private String githubInfoUrl;
 
-    @Value("${github.token.url}")
-    private String githubTokenUrl;
+  @Value("${github.token.url}")
+  private String githubTokenUrl;
 
-    public GithubInfoResponse getGithubInfo(String token) {
-        HttpHeaders headers = new HttpHeaders();
+  public GithubInfoResponse getGithubInfo(String token) {
+    HttpHeaders headers = new HttpHeaders();
 
-        headers.setBearerAuth(token);
+    headers.setBearerAuth(token);
 
-        HttpEntity<Void> request = new HttpEntity<>(headers);
+    HttpEntity<Void> request = new HttpEntity<>(headers);
 
-        RestTemplate restTemplate = new RestTemplate();
+    RestTemplate restTemplate = new RestTemplate();
 
-        try {
-            return restTemplate.exchange(
-                    githubInfoUrl,
-                    HttpMethod.GET,
-                    request,
-                    GithubInfoResponse.class
-            ).getBody();
-        } catch (HttpClientErrorException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
-        }
+    try {
+      return restTemplate.exchange(
+          githubInfoUrl,
+          HttpMethod.GET,
+          request,
+          GithubInfoResponse.class
+      ).getBody();
+    } catch (HttpClientErrorException e) {
+      throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
+    }
+  }
+
+  public String getGithubToken(String code) {
+    RestTemplate restTemplate = new RestTemplate();
+
+    GithubTokenResponse githubTokenResponse = restTemplate.postForObject(
+        githubTokenUrl,
+        new GithubTokenRequest(clientId, clientSecret, code),
+        GithubTokenResponse.class
+    );
+
+    log.info("Github Code : " + code);
+    log.info("Github Secret : " + clientSecret);
+    log.info("Github Token Url : " + githubTokenUrl);
+    log.info("GithubTokenResponse : " + githubTokenResponse);
+
+    if (githubTokenResponse != null && githubTokenResponse.getAccessToken() != null) {
+      return githubTokenResponse.getAccessToken();
     }
 
-    public String getGithubToken(String code) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        GithubTokenResponse githubTokenResponse = restTemplate.postForObject(
-                githubTokenUrl,
-                new GithubTokenRequest(clientId, clientSecret, code),
-                GithubTokenResponse.class
-        );
-
-        log.info("Github Code : " + code);
-        log.info("Github Secret : " + clientSecret);
-        log.info("Github Token Url : " + githubTokenUrl);
-        log.info("GithubTokenResponse : " + githubTokenResponse);
-
-        if (githubTokenResponse != null && githubTokenResponse.getAccessToken() != null) {
-            return githubTokenResponse.getAccessToken();
-        }
-
-        throw new CustomException(ExceptionStatus.GITHUB_TOKEN_NOT_FOUND);
-    }
+    throw new CustomException(ExceptionStatus.GITHUB_TOKEN_NOT_FOUND);
+  }
 }

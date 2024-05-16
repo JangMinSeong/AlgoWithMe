@@ -10,9 +10,9 @@ import java.util.Optional;
 
 public interface UserTeamRepository extends JpaRepository<UserTeam, Long> {
 
-    Optional<UserTeam> findByUserAndTeam(User user, Team team);
+  Optional<UserTeam> findByUserAndTeam(User user, Team team);
 
-    Optional<UserTeam> findByUserIdAndTeamId(Integer userId, Long teamId);
+  Optional<UserTeam> findByUserIdAndTeamId(Integer userId, Long teamId);
 
-    List<UserTeam> findAllByTeamId(Long teamId);
+  List<UserTeam> findAllByTeamId(Long teamId);
 }

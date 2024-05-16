@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CodeByPageAndUserResponse {
-    private List<Long> codeIds;
-    private PersonalCodeResponse code;
+
+  private List<Long> codeIds;
+  private PersonalCodeResponse code;
 }

@@ -7,5 +7,6 @@ import java.util.Optional;
 
 
 public interface UserWorkspaceRepository extends JpaRepository<UserWorkspace, Long> {
-    Optional<UserWorkspace> findByWorkspaceIdAndUserId(Long pageId, Integer id);
+
+  Optional<UserWorkspace> findByWorkspaceIdAndUserId(Long pageId, Integer id);
 }

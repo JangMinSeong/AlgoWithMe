@@ -16,18 +16,21 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RepositoryResponse {
-    private String name;
-    private String fullname;
-    private String description;
-    private boolean isPrivate;
 
-    public static RepositoryResponse create (GHRepository repo) {
-        if(repo == null) throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
-        return new RepositoryResponse(
-                repo.getName(),
-                repo.getFullName(),
-                repo.getDescription(),
-                repo.isPrivate()
-        );
+  private String name;
+  private String fullname;
+  private String description;
+  private boolean isPrivate;
+
+  public static RepositoryResponse create(GHRepository repo) {
+    if (repo == null) {
+      throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
     }
+    return new RepositoryResponse(
+        repo.getName(),
+        repo.getFullName(),
+        repo.getDescription(),
+        repo.isPrivate()
+    );
+  }
 }

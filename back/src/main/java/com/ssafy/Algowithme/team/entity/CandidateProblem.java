@@ -11,16 +11,17 @@ import lombok.*;
 @Getter
 @Setter
 public class CandidateProblem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "candidate_id")
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "candidate_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_id")
-    private Problem problem;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "team_id")
+  private Team team;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "problem_id")
+  private Problem problem;
 }

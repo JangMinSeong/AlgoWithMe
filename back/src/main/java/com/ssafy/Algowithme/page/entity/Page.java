@@ -20,38 +20,38 @@ import java.util.List;
 @Builder
 public class Page extends BaseTime {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="page_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "page_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "team_id")
+  private Team team;
 
-    private String title;
+  private String title;
 
-    private Double orders;
+  private Double orders;
 
-    @ColumnDefault(value = "false")
-    private boolean deleted;
+  @ColumnDefault(value = "false")
+  private boolean deleted;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "parent_id")
-    private Page parent;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  @JoinColumn(name = "parent_id")
+  private Page parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<Page> child;
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+  private List<Page> child;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "problem_id")
-    private Problem problem;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "problem_id")
+  private Problem problem;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-    private List<WorkspaceTag> tags;
+  @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+  private List<WorkspaceTag> tags;
 
-    @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
-    private List<PersonalCode> personalCodes;
+  @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL)
+  private List<PersonalCode> personalCodes;
 
 }

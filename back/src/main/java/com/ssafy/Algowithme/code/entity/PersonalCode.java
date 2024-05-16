@@ -14,27 +14,27 @@ import java.util.List;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
-public class PersonalCode{
+public class PersonalCode {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "code_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "code_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "page_id")
-    private Page workspace;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "page_id")
+  private Page workspace;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Language language;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  private Language language;
 
-    @Column(columnDefinition = "TEXT")
-    private String code;
+  @Column(columnDefinition = "TEXT")
+  private String code;
 
-    private boolean deleted;
+  private boolean deleted;
 }

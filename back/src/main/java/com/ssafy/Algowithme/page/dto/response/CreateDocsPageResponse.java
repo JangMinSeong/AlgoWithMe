@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateDocsPageResponse {
-    private Long pageId;
+
+  private Long pageId;
 }

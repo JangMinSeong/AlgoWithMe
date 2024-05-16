@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SaveCodeRequest {
-    private Long codeId;
-    private Language language;
-    private String code;
+
+  private Long codeId;
+  private Language language;
+  private String code;
 }

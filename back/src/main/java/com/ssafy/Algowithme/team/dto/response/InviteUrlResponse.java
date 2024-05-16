@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InviteUrlResponse {
-    private String url;
+
+  private String url;
 }

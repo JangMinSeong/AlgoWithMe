@@ -11,21 +11,22 @@ import lombok.*;
 @Getter
 @Setter
 public class Problem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "problem_id")
-    private Long id;
 
-    private String uid;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "problem_id")
+  private Long id;
 
-    private String url;
+  private String uid;
 
-    @Enumerated(EnumType.STRING)
-    private Provider provider;
+  private String url;
 
-    private int number; // 문제 번호
+  @Enumerated(EnumType.STRING)
+  private Provider provider;
 
-    private String name; // 문제 이름
+  private int number; // 문제 번호
 
-    private String level;
+  private String name; // 문제 이름
+
+  private String level;
 }

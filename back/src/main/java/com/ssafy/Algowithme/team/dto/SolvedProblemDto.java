@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class SolvedProblemDto {
 
-    private long pageId;
-    private long problemId;
-    private String url;
-    private String provider;
-    private int number;
-    private String name;
-    private String level;
-    private LocalDateTime createdAt;
+  private long pageId;
+  private long problemId;
+  private String url;
+  private String provider;
+  private int number;
+  private String name;
+  private String level;
+  private LocalDateTime createdAt;
 }
