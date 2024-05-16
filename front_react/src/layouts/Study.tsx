@@ -15,8 +15,7 @@ export default function Layout() {
 
   return (
     <div className="flex flex-col h-dvh pt-16">
-      <div className="w-full h-px bg-gradient-to-r from-violet-500 to-fuchsia-500" />
-      <div className="h-full w-dvw flex transition-all duration-700">
+      <div className="h-full w-dvw flex transition-all duration-700 border-t-[1px] border-blueishPurple">
         <ScrollToTop />
         {isSidebarOpen && (
           <>
