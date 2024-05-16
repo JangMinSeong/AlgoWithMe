@@ -16,6 +16,7 @@ import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import LoadingComp from '@/components/LoadingComp'
 import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
+import InactiveProfileItem from '@/components/studypage/InactiveProfileItem'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -26,7 +27,7 @@ const StudyMainPage = () => {
   const location = useLocation()
   const { sendUpdateMessage } = useWebSocket()
   const client = useSelector((state: RootState) => state.socket.client)
-
+  const memberList = useSelector((state: RootState) => state.study.memberList)
   const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
@@ -81,26 +82,11 @@ const StudyMainPage = () => {
     formData.append('file', file)
     handleEditImage(Number(groupId), formData)
   }
-  const [startIdx, setStartIdx] = useState(0)
-  const [endIdx, setEndIdx] = useState(3)
-  const visibleRanking = currentStudyInfo.ranking.slice(startIdx, endIdx + 1)
-
-  const handleLeftArrow = () => {
-    const newStIdx = Math.max(0, startIdx - 3)
-    setStartIdx(newStIdx)
-    setEndIdx(Math.min(newStIdx + 3, currentStudyInfo.ranking.length))
-  }
-
-  const handleRightArrow = () => {
-    const newEndIdx = Math.min(endIdx + 3, currentStudyInfo.ranking.length)
-    setEndIdx(newEndIdx)
-    setStartIdx(Math.max(newEndIdx - 3, 0))
-  }
 
   return (
     <div className="flex flex-col">
       {/* 스터디 소개 */}
-      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 pb-6 border-b-2 ">
+      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-2 ">
         <span
           className="relative"
           onMouseEnter={() => setIsShowingImgEditor(true)}
@@ -156,10 +142,10 @@ const StudyMainPage = () => {
                   type="text"
                   name="newName"
                   required
-                  maxLength={16}
+                  maxLength={10}
                   defaultValue={currentStudyInfo.name.replace(/"/gi, '')}
                   placeholder="새로운 스터디 이름"
-                  className="text-3xl p-2 rounded-xl bg-transparent w-80"
+                  className="text-3xl p-2 rounded-xl bg-transparent w-60"
                 />
                 <div className="flex items-center">
                   <button className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors">
@@ -215,19 +201,12 @@ const StudyMainPage = () => {
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
             <div className="flex mx-2 items-center justify-between">
-              <button onClick={handleLeftArrow}>
-                {' '}
-                <IoIosArrowDropleft className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
-              </button>
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
-              {visibleRanking.map((el, idx) => (
+              {currentStudyInfo.ranking.slice(0, 3).map((el, idx) => (
                 <ActiveProfileItem key={el.id} person={el} rank={idx} />
               ))}
-              <button onClick={handleRightArrow}>
-                <IoIosArrowDropright className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
-              </button>
             </div>
           </div>
         </div>
@@ -244,26 +223,41 @@ const StudyMainPage = () => {
       {/* 아래 */}
       <div className="flex flex-wrap">
         <div className="mb-10 flex grow">
-          <div className="w-[34%] grow mb-10 flex flex-col">
+          {/* <div className="w-[34%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">풀이시간 설정하기</div>
             <div className="flex justify-center">
               <SetTimer />
             </div>
-          </div>
+          </div> */}
 
-          <div className="w-[33%] grow mb-10 flex flex-col">
-            <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
+          {/* <div className="w-[33%] grow mb-10 flex flex-col">
+            <div className="font-bold mb-4 mt-4">스터디 그룹 멤버 목록</div>
             <div className="pr-10">
+              {memberList.map((member) => (
+                <InactiveProfileItem memberInfo={member} key={member.id} />
+              ))}
+            </div>
+          </div> */}
+
+          <div className="w-[50%] grow mb-10 flex flex-col">
+            <div className="font-bold mb-4 mt-4">함께 풀어 볼 문제</div>
+            <div className="pr-20">
               <AddProblem groupId={groupId} />
+
               {currentStudyInfo.candidateProblems.map((el) => (
                 <NextProblem problemInfo={el} key={el.problemId} />
               ))}
             </div>
           </div>
 
-          <div className="w-[33%] grow mb-10 flex flex-col">
+          <div className="w-[50%] grow mb-10 flex flex-col">
             <div className="font-bold mb-4 mt-4">지난 스터디 복습하기</div>
-            <div className="pr-10">
+            <div className="pr-20">
+              {currentStudyInfo.solvedProblems.length === 0 && (
+                <div className="flex items-center justify-center mt-6">
+                  스터디그룹에서 푼 문제가 없어요 💨
+                </div>
+              )}
               {currentStudyInfo.solvedProblems.map((el) => (
                 <PrevProblem key={el.pageId} problemPageInfo={el} />
               ))}

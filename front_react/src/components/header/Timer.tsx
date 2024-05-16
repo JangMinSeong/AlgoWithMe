@@ -4,7 +4,8 @@ import toast, { Toaster } from 'react-hot-toast'
 import { FaRegPlayCircle, FaRegStopCircle } from 'react-icons/fa'
 import useSolving from '@/hooks/useSolving'
 import useTimer from '@/hooks/useTimer'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import SetTimer from '../studypage/SetTimer'
 
 const Timer = () => {
   const { handleChangeTimer } = useTimer()
@@ -81,8 +82,18 @@ const Timer = () => {
     }
   }
 
+  const [isSetTimerVisible, setIsSetTimerVisible] = useState(false)
+  const [isEditingTime, setIsEditingTime] = useState(false)
+
   return (
-    <div className="flex items-center">
+    <div className="flex items-center relative">
+      <div
+        onClick={() => setIsSetTimerVisible(!isSetTimerVisible)}
+        className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
+      >
+        {isSetTimerVisible ? '닫기' : '시간설정'}
+      </div>
+
       <div
         className={`bg-white bg-opacity-20 border border-accent border-opacity-50 flex p-2 w-fit rounded-3xl shadow-foggyPurple items-center mr-2`}
       >
@@ -110,8 +121,16 @@ const Timer = () => {
           )}
         </div>
       </div>
-
-      <Toaster position="bottom-center" reverseOrder={false} />
+      {isSetTimerVisible && (
+        <div className="absolute top-10 left-20">
+          {' '}
+          <SetTimer
+            isEditing={isEditingTime}
+            setParentIsEditing={setIsEditingTime}
+          />{' '}
+        </div>
+      )}
+      {/* <Toaster position="bottom-center" reverseOrder={false} /> */}
     </div>
   )
 }
