@@ -10,9 +10,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AllProblemResponse {
-    private List<Problem> problemList;
 
-    public static AllProblemResponse create(List<Problem> problemList) {
-        return AllProblemResponse.builder().problemList(problemList).build();
-    }
+  private List<Problem> problemList;
+
+  public static AllProblemResponse create(List<Problem> problemList) {
+    return AllProblemResponse.builder().problemList(problemList).build();
+  }
 }

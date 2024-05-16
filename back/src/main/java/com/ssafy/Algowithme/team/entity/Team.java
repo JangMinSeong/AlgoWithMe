@@ -14,18 +14,19 @@ import java.util.List;
 @Getter
 @Setter
 public class Team extends BaseTime {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
-    private Long id;
 
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "team_id")
+  private Long id;
 
-    private String imageUrl;
+  private String name;
 
-    private boolean deleted;
+  private String imageUrl;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private List<UserTeam> userTeamList;
+  private boolean deleted;
+
+  @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+  private List<UserTeam> userTeamList;
 
 }

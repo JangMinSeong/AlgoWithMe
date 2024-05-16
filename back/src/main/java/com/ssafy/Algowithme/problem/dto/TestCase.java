@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestCase {
-    private String problem;
-    private String answer;
+
+  private String problem;
+  private String answer;
 }

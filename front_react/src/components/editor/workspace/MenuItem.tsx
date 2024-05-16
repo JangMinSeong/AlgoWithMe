@@ -16,13 +16,13 @@ const MenuItem: React.FC<MenuItemProps> = ({
   action,
   isActive = () => false,
 }) => (
-  <Button
+  <button
     className={`menu-item${isActive() ? ' is-active' : ''}`}
     onClick={action}
     title={title}
   >
     <i className={`ri-${icon}`} />
-  </Button>
+  </button>
 )
 
 export default MenuItem

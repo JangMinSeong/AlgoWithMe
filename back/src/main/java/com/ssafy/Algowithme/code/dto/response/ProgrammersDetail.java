@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProgrammersDetail {
-    private int status;
-    private String input;
-    private String expected;
-    private String got;
-    private boolean passed;
-    private int execution_time;
+
+  private int status;
+  private String input;
+  private String expected;
+  private String got;
+  private boolean passed;
+  private int execution_time;
 }

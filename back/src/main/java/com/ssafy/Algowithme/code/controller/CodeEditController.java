@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CodeEditController {
 
-    @MessageMapping("/code/{codeId}")
-    @SendTo("/topic/{codeId}")
-    public SocketMessage sharingEditorCode(@DestinationVariable("codeId") int codeId, SocketMessage message) throws Exception {
-        System.out.println("codeId: " + codeId + ", code: " + message);
-        // redis 저장 로직 필요
-        return message;
-    }
+  @MessageMapping("/code/{codeId}")
+  @SendTo("/topic/{codeId}")
+  public SocketMessage sharingEditorCode(@DestinationVariable("codeId") int codeId,
+                                         SocketMessage message) throws Exception {
+    System.out.println("codeId: " + codeId + ", code: " + message);
+    return message;
+  }
 
-    @MessageMapping("/codeTab/{userId}")
-    @SendTo("/topic/codeTab/{userId}")
-    public String updateCodeTab(@DestinationVariable("userId") int userId, String message) throws Exception {
-        System.out.println("codeId: " + userId + ", code: " + message);
-        // redis 저장 로직 필요
-        return message;
-    }
+  @MessageMapping("/codeTab/{userId}")
+  @SendTo("/topic/codeTab/{userId}")
+  public String updateCodeTab(@DestinationVariable("userId") int userId,
+                              String message) throws Exception {
+    System.out.println("userId: " + userId + ", message: " + message);
+    return message;
+  }
 
-    @MessageMapping("/study/{groupId}")
-    @SendTo("/topic/study/{groupId}")
-    public String updateStudy(@DestinationVariable("groupId") int groupId, String message) throws Exception {
-        System.out.println("codeId: " + groupId + ", code: " + message);
-        // redis 저장 로직 필요
-        return message;
-    }
+  @MessageMapping("/study/{groupId}")
+  @SendTo("/topic/study/{groupId}")
+  public String updateStudy(@DestinationVariable("groupId") int groupId,
+                            String message) throws Exception {
+    System.out.println("groupId: " + groupId + ", message: " + message);
+    return message;
+  }
 }
 

@@ -9,13 +9,14 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MemoResponse {
-    private Long memoId;
-    private String memo;
 
-    public static MemoResponse create(UserWorkspace userWorkspace) {
-        return MemoResponse.builder()
-                .memoId(userWorkspace.getId())
-                .memo(userWorkspace.getContent())
-                .build();
-    }
+  private Long memoId;
+  private String memo;
+
+  public static MemoResponse create(UserWorkspace userWorkspace) {
+    return MemoResponse.builder()
+        .memoId(userWorkspace.getId())
+        .memo(userWorkspace.getContent())
+        .build();
+  }
 }

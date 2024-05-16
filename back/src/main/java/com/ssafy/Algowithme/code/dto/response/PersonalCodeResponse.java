@@ -13,26 +13,27 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class PersonalCodeResponse {
-    private Long id;
-    private Language language;
-    private String code;
+
+  private Long id;
+  private Language language;
+  private String code;
 //    private List<CodeCommentResponse> comments;
 
-    static public PersonalCodeResponse fromEntity(PersonalCode entity) {
-        return new PersonalCodeResponse(
-                entity.getId(),
-                entity.getLanguage(),
-                entity.getCode()
+  static public PersonalCodeResponse fromEntity(PersonalCode entity) {
+    return new PersonalCodeResponse(
+        entity.getId(),
+        entity.getLanguage(),
+        entity.getCode()
 //                entity.getCodeComments().stream().map(CodeCommentResponse::fromEntity).toList()
-        );
-    }
+    );
+  }
 
-    static public PersonalCodeResponse fromEntity(Code entity) {
-        return new PersonalCodeResponse(
-                entity.getId(),
-                entity.getLanguage(),
-                entity.getCode()
+  static public PersonalCodeResponse fromEntity(Code entity) {
+    return new PersonalCodeResponse(
+        entity.getId(),
+        entity.getLanguage(),
+        entity.getCode()
 //                entity.getCodeComments().stream().map(CodeCommentResponse::fromEntity).toList()
-        );
-    }
+    );
+  }
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateMemoRequest {
-    private Long userWorkspaceId;
-    private String content;
+
+  private Long userWorkspaceId;
+  private String content;
 }

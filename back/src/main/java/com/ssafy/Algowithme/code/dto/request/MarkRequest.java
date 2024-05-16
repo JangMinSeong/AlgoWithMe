@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MarkRequest {
-    private String uid; // 문제 mongoDB id
-    private Language language;
-    private String code;
+
+  private String uid; // 문제 mongoDB id
+  private Language language;
+  private String code;
 }

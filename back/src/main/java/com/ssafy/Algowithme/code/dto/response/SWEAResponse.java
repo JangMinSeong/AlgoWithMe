@@ -10,13 +10,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SWEAResponse {
-    private int status;
-    private String input;
-    private String expected;
-    private String got;
-    private boolean passed;
-    private int test_case;
-    private int matches;
-    private int execution_time;
-    private List<SWEADetail> details;
+
+  private int status;
+  private String input;
+  private String expected;
+  private String got;
+  private boolean passed;
+  private int test_case;
+  private int matches;
+  private int execution_time;
+  private List<SWEADetail> details;
 }

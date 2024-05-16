@@ -14,22 +14,23 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class UserTeam extends BaseTime {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_team_id")
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_team_id")
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name ="team_id")
-    private Team team;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
 
-    @Column(nullable = false)
-    private boolean manager;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "team_id")
+  private Team team;
 
-    @Column(nullable = false)
-    private LocalDateTime visitedAt;
+  @Column(nullable = false)
+  private boolean manager;
+
+  @Column(nullable = false)
+  private LocalDateTime visitedAt;
 }

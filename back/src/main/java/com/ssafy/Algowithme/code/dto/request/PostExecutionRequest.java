@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostExecutionRequest {
-    private String code;
-    private String input;
+
+  private String code;
+  private String input;
 }

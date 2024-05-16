@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface TeamCustomRepository {
 
-    List<SolvedTagCountDto> getSolvedTagChart(Long teamId);
+  List<SolvedTagCountDto> getSolvedTagChart(Long teamId);
 
-    List<SolvedProblemDto> getSolvedProblem(Long teamId);
+  List<SolvedProblemDto> getSolvedProblem(Long teamId);
 
-    List<CandidateProblemDto> getCandidateProblem(Long teamId);
+  List<CandidateProblemDto> getCandidateProblem(Long teamId);
 
-    List<RankDto> getRank(Long teamId);
+  List<RankDto> getRank(Long teamId);
 }

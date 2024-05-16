@@ -42,6 +42,7 @@ const Main = () => {
   const leaveSession = useCallback(() => {
     if (session) session.disconnect()
 
+    handleUnsetOnline(myNickname)
     setOV(null)
     setSession('')
     setSessionId('')

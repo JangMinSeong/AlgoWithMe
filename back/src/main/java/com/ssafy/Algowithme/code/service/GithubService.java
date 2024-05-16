@@ -24,69 +24,74 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GithubService {
 
-    public List<RepositoryResponse> getRepositories(User user) {
-        GitHub gitHub = getGitHub(user);
-        try {
-            Map<String, GHRepository> repositories = gitHub.getMyself().getRepositories();
-            return repositories.keySet().stream()
-                    .map(repositories::get)
-                    .map(RepositoryResponse::create)
-                    .toList();
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
-        }
+  public List<RepositoryResponse> getRepositories(User user) {
+    GitHub gitHub = getGitHub(user);
+    try {
+      Map<String, GHRepository> repositories = gitHub.getMyself().getRepositories();
+      return repositories.keySet().stream()
+          .map(repositories::get)
+          .map(RepositoryResponse::create)
+          .toList();
+    } catch (IOException e) {
+      throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
     }
+  }
 
-    public List<String> getBranches(String repo, User user) {
-        GitHub gitHub = getGitHub(user);
-        try {
-            GHRepository repository = gitHub.getMyself().getRepository(repo);
-            if(repository == null) throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
-            return repository.getBranches().values().stream().map(GHBranch::getName).toList();
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
-        }
+  public List<String> getBranches(String repo, User user) {
+    GitHub gitHub = getGitHub(user);
+    try {
+      GHRepository repository = gitHub.getMyself().getRepository(repo);
+      if (repository == null) {
+        throw new CustomException(ExceptionStatus.GITHUB_REPOSITORY_NOT_FOUND);
+      }
+      return repository.getBranches().values().stream().map(GHBranch::getName).toList();
+    } catch (IOException e) {
+      throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
     }
+  }
 
-    public List<String> getDirectoryStructure(String repo, String branch, String path, User user) {
-        GitHub gitHub = getGitHub(user);
-        try {
-            GHRepository repository = gitHub.getMyself().getRepository(repo);
-            List<GHContent> contents = repository.getDirectoryContent(path, branch);
-            return contents.stream().filter(GHContent::isDirectory).map(GHContent::getName).toList();
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
-        }
+  public List<String> getDirectoryStructure(String repo, String branch, String path, User user) {
+    GitHub gitHub = getGitHub(user);
+    try {
+      GHRepository repository = gitHub.getMyself().getRepository(repo);
+      List<GHContent> contents = repository.getDirectoryContent(path, branch);
+      return contents.stream().filter(GHContent::isDirectory).map(GHContent::getName).toList();
+    } catch (IOException e) {
+      throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
     }
+  }
 
-    public void uploadFile(CodeUploadRequest req, User user) {
-        GitHub gitHub = getGitHub(user);
-        try {
-            GHRepository repository = gitHub.getMyself().getRepository(req.getRepo());
-            String path = req.getPath() + req.getFileName() + req.getLanguage().getExtension();
-            try {
-                GHContent fileContent = repository.getFileContent(path, req.getBranch());
-                GHContentUpdateResponse response = fileContent.update(req.getContent(), req.getCommitMessage(), req.getBranch());
-            } catch (GHFileNotFoundException e) {
-                GHContentBuilder contentBuilder = repository.createContent();
-                contentBuilder.path(path).branch(req.getBranch()).content(req.getContent()).message(req.getCommitMessage()).commit();
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
-        }
+  public void uploadFile(CodeUploadRequest req, User user) {
+    GitHub gitHub = getGitHub(user);
+    try {
+      GHRepository repository = gitHub.getMyself().getRepository(req.getRepo());
+      String path = req.getPath() + req.getFileName() + req.getLanguage().getExtension();
+      try {
+        GHContent fileContent = repository.getFileContent(path, req.getBranch());
+        GHContentUpdateResponse response = fileContent.update(req.getContent(),
+            req.getCommitMessage(), req.getBranch());
+      } catch (GHFileNotFoundException e) {
+        GHContentBuilder contentBuilder = repository.createContent();
+        contentBuilder.path(path).branch(req.getBranch()).content(req.getContent())
+            .message(req.getCommitMessage()).commit();
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new CustomException(ExceptionStatus.GITHUB_ACCESS_DENIED);
     }
+  }
 
-    public GitHub getGitHub(User user) {
-        if(user == null) throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
-        try {
-            GitHub gitHub = new GitHubBuilder().withOAuthToken(user.getGitToken()).build();
-            gitHub.checkApiUrlValidity();
-            return gitHub;
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.GITHUB_TOKEN_BAD_CREDENTIALS);
-        }
+  public GitHub getGitHub(User user) {
+    if (user == null) {
+      throw new CustomException(ExceptionStatus.GITHUB_USER_NOT_FOUND);
     }
+    try {
+      GitHub gitHub = new GitHubBuilder().withOAuthToken(user.getGitToken()).build();
+      gitHub.checkApiUrlValidity();
+      return gitHub;
+    } catch (IOException e) {
+      throw new CustomException(ExceptionStatus.GITHUB_TOKEN_BAD_CREDENTIALS);
+    }
+  }
 
 }

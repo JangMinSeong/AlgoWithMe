@@ -9,6 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateTagsRequest {
-    private Long pageId;
-    private List<String> tagList;
+
+  private Long pageId;
+  private List<String> tagList;
 }

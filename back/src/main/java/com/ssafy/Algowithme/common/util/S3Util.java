@@ -15,23 +15,23 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class S3Util {
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+  @Value("${cloud.aws.s3.bucket}")
+  private String bucket;
 
-    private final AmazonS3 amazonS3;
+  private final AmazonS3 amazonS3;
 
-    public String uploadVideo(MultipartFile file, String directory, String name) {
-        try {
-            ObjectMetadata metadata= new ObjectMetadata();
-            metadata.setContentType(file.getContentType());
-            metadata.setContentLength(file.getSize());
+  public String uploadVideo(MultipartFile file, String directory, String name) {
+    try {
+      ObjectMetadata metadata = new ObjectMetadata();
+      metadata.setContentType(file.getContentType());
+      metadata.setContentLength(file.getSize());
 
-            amazonS3.putObject(bucket + directory, name, file.getInputStream(), metadata);
+      amazonS3.putObject(bucket + directory, name, file.getInputStream(), metadata);
 
-            return amazonS3.getUrl(bucket + directory, name).toString();
+      return amazonS3.getUrl(bucket + directory, name).toString();
 
-        } catch (IOException e) {
-            throw new CustomException(ExceptionStatus.S3_UPLOAD_FAILED);
-        }
+    } catch (IOException e) {
+      throw new CustomException(ExceptionStatus.S3_UPLOAD_FAILED);
     }
+  }
 }

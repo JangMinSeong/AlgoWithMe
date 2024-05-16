@@ -28,7 +28,7 @@ const Avatar = (props: { userInfo: UserInfo; isProfile: boolean }) => {
         width={30}
         height={0}
         className={`${
-          props.userInfo.isSpeaking && 'border-red-500 border-4'
+          props.userInfo.isSpeaking && 'border-red-500 border-2'
         } rounded-full`}
         onClick={handleClickEvent}
       />

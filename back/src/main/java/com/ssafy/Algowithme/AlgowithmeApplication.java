@@ -11,8 +11,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaAuditing
 public class AlgowithmeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AlgowithmeApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(AlgowithmeApplication.class, args);
+  }
 
 }
