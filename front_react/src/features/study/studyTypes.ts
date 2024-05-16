@@ -11,6 +11,7 @@ export interface IProblemPage {
   number: number
   name: string
   level: string
+  createdAt: string
 }
 
 export interface IProblemInfo {
