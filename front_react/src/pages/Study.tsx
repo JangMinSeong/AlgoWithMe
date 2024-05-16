@@ -200,7 +200,7 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex mx-2 items-center">
+            <div className="flex mx-2 items-center justify-between">
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
