@@ -4,7 +4,7 @@ import {
   Link,
   useParams,
   useSearchParams,
-  useNavigate,
+  useNavigate, redirect,
 } from 'react-router-dom'
 import fetch from '@/lib/fetch'
 import useStudy from '@/hooks/useStudy'
@@ -64,6 +64,7 @@ const InvitationPage = () => {
   }
 
   return (
+    isLoggedIn &&
     <div className="h-screen flex items-center justify-center ">
       <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg mx-auto w-[30%] ">
         <img
