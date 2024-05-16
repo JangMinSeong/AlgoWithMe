@@ -3,6 +3,7 @@ import fetch from '@/lib/fetch.ts'
 import BranchExplorer from "@/components/github/BranchExplorer.tsx";
 import DirectoryExplorer from '@/components/github/DirectoryExplorer.tsx'
 import GithubUpload from '@/components/github/GithubUpload.tsx'
+import './loader.css';
 
 interface Repository {
     name: string
@@ -85,7 +86,7 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
                   </div>
                   <div
                     className="border-2 border-gray-300 absolute top-20 overflow-y-auto max-h-64 w-11/12 h-full p-2 no-scrollbar rounded-xl">
-                      {isLoading ? (<div>로딩중</div>) : (
+                      {isLoading ? (<div className="flex items-center justify-center w-full h-full"><div className="loader" /></div>) : (
                         <>
                             {activeRepo === null && (
                               <ul className="space-y-2">
@@ -116,9 +117,9 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
                       )}</div>
                   <div className="absolute bottom-0 mb-1 right-7">
                       {activeBranch &&
-                        <button className="py-2 px-4 bg-fuchsia-300 text-white rounded hover:bg-navy mr-2"
+                        <button className="py-2 px-4 bg-fuchsia-300 text-white rounded hover:bg-fuchsia-400 mr-2"
                                 onClick={handleSaveBtn}>확인</button>}
-                      <button className="py-2 px-4 bg-fuchsia-300 text-white rounded hover:bg-navy"
+                      <button className="py-2 px-4 bg-navy text-white rounded hover:bg-gray-600"
                               onClick={() => isClose()}>닫기
                       </button>
                       {activeUpload &&
