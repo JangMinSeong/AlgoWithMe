@@ -73,7 +73,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({ activeTab, onSave, url,pageId ,
         {/*  <img src='/public/link.png' className='w-5 h-5'/>*/}
         {/*</button>*/}
         <span className="hover:bg-gray-400 w-7 h-7 flex items-center justify-center rounded-md mr-2">
-          <img src="/public/link.png" className="w-5 h-5" onClick={() => handleProblemLinkClick()} />
+          <img src="/link.png" className="w-5 h-5" onClick={() => handleProblemLinkClick()} />
         </span>
       </div>
     </div>

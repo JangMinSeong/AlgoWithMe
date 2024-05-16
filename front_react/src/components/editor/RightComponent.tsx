@@ -346,7 +346,7 @@ const RightComponent: React.FC<ProblemProp> = ({
             className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 flex items-center"
             onClick={handleGithub}
           >
-            <img src="/public/logo/github/github-mark-white.png" alt="icon" className="h-6 w-6 mr-2" />
+            <img src="/logo/github/github-mark-white.png" alt="icon" className="h-6 w-6 mr-2" />
             <span>Upload</span>
           </button>
           {isGitHubExplorerOpen && (
