@@ -44,8 +44,8 @@ const PrevProblem = ({
           data-tooltip-content={problemPageInfo.name}
         >
           {problemPageInfo.number}.{' '}
-          {problemPageInfo.name.length >= 11
-            ? `${problemPageInfo.name.slice(0, 11)} ...`
+          {problemPageInfo.name.length >= 16
+            ? `${problemPageInfo.name.slice(0, 16)} ...`
             : problemPageInfo.name}
         </div>
         <div className=" text-slate-500 text-xs">

@@ -5,18 +5,14 @@ import DeleteStudyGroup from '@/components/studypage/DeleteStudyGroup'
 import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
-import SetTimer from '@/components/studypage/SetTimer'
 import { useLocation, useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import LoadingComp from '@/components/LoadingComp'
-import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
-import InactiveProfileItem from '@/components/studypage/InactiveProfileItem'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -84,7 +80,7 @@ const StudyMainPage = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-40">
       {/* 스터디 소개 */}
       <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-2 ">
         <span
@@ -200,7 +196,7 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex mx-2 items-center justify-between">
+            <div className="flex mx-2 items-center justify-center">
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
