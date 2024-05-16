@@ -268,7 +268,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
   return (
     <div className="mt-0 m-3 flex flex-col">
       <div className="flex flex-row">
-        <Header activeTab={activeTab} onSave={handleSave} />
+        <Header activeTab={activeTab} onSave={handleSave} room={Number(room)}/>
       </div>
       <div className="w-full" style={{ height: '72vh' }}>
         {renderContent()}
