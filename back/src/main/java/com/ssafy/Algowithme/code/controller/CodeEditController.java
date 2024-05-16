@@ -16,7 +16,6 @@ public class CodeEditController {
   public SocketMessage sharingEditorCode(@DestinationVariable("codeId") int codeId,
                                          SocketMessage message) throws Exception {
     System.out.println("codeId: " + codeId + ", code: " + message);
-    // redis 저장 로직 필요
     return message;
   }
 
@@ -24,8 +23,7 @@ public class CodeEditController {
   @SendTo("/topic/codeTab/{userId}")
   public String updateCodeTab(@DestinationVariable("userId") int userId,
                               String message) throws Exception {
-    System.out.println("codeId: " + userId + ", code: " + message);
-    // redis 저장 로직 필요
+    System.out.println("userId: " + userId + ", message: " + message);
     return message;
   }
 
@@ -33,8 +31,7 @@ public class CodeEditController {
   @SendTo("/topic/study/{groupId}")
   public String updateStudy(@DestinationVariable("groupId") int groupId,
                             String message) throws Exception {
-    System.out.println("codeId: " + groupId + ", code: " + message);
-    // redis 저장 로직 필요
+    System.out.println("groupId: " + groupId + ", message: " + message);
     return message;
   }
 }

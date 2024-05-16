@@ -47,11 +47,10 @@ public class TeamService {
 
   @Transactional
   public TeamInfoResponse createTeam(User user) {
-    //팀 생성
     Team team = teamRepository.save(Team.builder()
         .name("이름 없는 스터디")
         .build());
-    //팀멤버 저장
+
     userTeamRepository.save(UserTeam.builder()
         .user(user)
         .team(team)
@@ -64,22 +63,18 @@ public class TeamService {
 
   @Transactional
   public AddProblemResponse addCandidateProblem(AddProblemRequest request, User user) {
-    //팀 멤버 확인
     UserTeam userTeam = userTeamRepository.findByUserIdAndTeamId(user.getId(), request.getTeamId())
         .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
-    //문제 중복 검사
     Optional<CandidateProblem> candidateProblemOptional = candidateProblemRepository.findByProblemId(
         request.getProblemId());
     if (candidateProblemOptional.isPresent()) {
       throw new CustomException(ExceptionStatus.CANDIDATE_PROBLEM_ALREADY_EXIST);
     }
 
-    //문제 조회
     Problem problem = problemRepository.findById(request.getProblemId())
         .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-    //문제 후보 추가
     CandidateProblem candidateProblem = candidateProblemRepository.save(CandidateProblem.builder()
         .team(userTeam.getTeam())
         .problem(problem)

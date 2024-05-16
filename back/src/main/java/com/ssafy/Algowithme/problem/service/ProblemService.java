@@ -46,43 +46,33 @@ public class ProblemService {
   }
 
   public RawProblemResponse getProblem(Long pageId) {
-    //페이지 조회
     Page page = pageRepository.findById(pageId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
 
-    //문제 페이지 확인
     if (page.getProblem() == null) {
       throw new CustomException(ExceptionStatus.NOT_PROBLEM_PAGE);
     }
 
-    //요약 정보 조회
     Problem problem = problemRepository.findById(page.getProblem().getId())
         .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
-
-    //세부 정보 조회
     RawProblem rawProblem = rawProblemRepository.findById(problem.getUid())
         .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-    //태그 조회
     List<WorkspaceTag> workspaceTags = workspaceTagRepository.findByWorkspaceId(pageId);
 
     return RawProblemResponse.create(rawProblem, workspaceTags);
   }
 
   public ProblemByTitleResponse getProblemByTitle(String title, int page) {
-    //문제 제목 조회
     List<Problem> problemList = problemRepository.findByNameContaining(title);
     if (problemList.size() == 0) {
       return ProblemByTitleResponse.create(0, 1, 1, new ArrayList<>());
     }
 
-    //조회 결과 수
     int resultCount = problemList.size();
 
-    //전체 페이지 번호
     int totalPages = resultCount / 10 + (resultCount % 10 == 0 ? 0 : 1);
 
-    //문제 리스트
     List<ProblemInfo> problemInfoList = new ArrayList<>();
     int startNum = 10 * (page - 1);
     for (int i = startNum; i < startNum + 10 && i < problemList.size(); i++) {
@@ -94,25 +84,20 @@ public class ProblemService {
   }
 
   public ProblemByTagsResponse getProblemByTag(String levels, int page) {
-    // 태그 리스트
     String[] levelList = levels.split(" ");
     if (levelList.length == 0) {
       return ProblemByTagsResponse.create(0, 1, 1, new ArrayList<>());
     }
 
-    // 태그 리스트로 문제 조회
     List<Problem> problemList = problemRepository.findByLevelInOrderByLevel(levelList);
     if (problemList.size() == 0) {
       return ProblemByTagsResponse.create(0, 1, 1, new ArrayList<>());
     }
 
-    //조회 결과 수
     int resultCount = problemList.size();
 
-    //전체 페이지 번호
     int totalPages = resultCount / 10 + (resultCount % 10 == 0 ? 0 : 1);
 
-    //문제 리스트
     List<ProblemInfo> problemInfoList = new ArrayList<>();
     int startNum = 10 * (page - 1);
     for (int i = startNum; i < startNum + 10 && i < problemList.size(); i++) {
@@ -125,21 +110,16 @@ public class ProblemService {
 
   @Transactional
   public void storeProblemSolvingHistory(User user, Long pageId) {
-    //페이지 조회
     Page page = pageRepository.findById(pageId)
         .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
 
-    //문제 조회
     Problem problem = problemRepository.findById(page.getProblem().getId())
         .orElseThrow(() -> new CustomException(ExceptionStatus.PROBLEM_NOT_FOUND));
 
-    //제출 이력 조회
     Optional<UserProblem> userProblem = userProblemRepository.findByUserIdAndProblemId(user.getId(),
         problem.getId());
 
-    //유저가 해당 문제에 대해 제출한 이력이 없는 경우
     if (userProblem.isEmpty()) {
-      //제출 이력 저장
       userProblemRepository.save(UserProblem.builder()
           .user(user)
           .problem(problem)
