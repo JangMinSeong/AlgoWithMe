@@ -4,7 +4,7 @@ import { RootState } from '@/lib/store'
 import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
 import { useScroll } from '@/hooks/useScroll.ts'
-import UserProfile from '@/components/mainpage/UserProfile.tsx'
+import UserProfile from '@/components/header/UserProfile.tsx'
 
 const MainHeader: React.FC = () => {
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)

@@ -140,7 +140,7 @@ export default function Layout() {
   return (
     <div>
       <ScrollToTop />
-      <main className="w-dvw h-full transition-all duration-700 overflow-hidden">
+      <main className="w-full h-full transition-all duration-700 overflow-hidden">
         {!isLoading ?
           <div className="h-full">
             <Outlet />

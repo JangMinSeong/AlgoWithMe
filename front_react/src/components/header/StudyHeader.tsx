@@ -4,13 +4,14 @@ import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
 // import GroupCall from '../groupcall/GroupCall'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import fetch from '@/lib/fetch.ts'
 import { RootState } from '@/lib/store.ts'
 import useCode from '@/hooks/useCode.ts'
 import Main from '../groupcall/main'
 import useStudy from '@/hooks/useStudy'
 import useAuth from '@/hooks/useAuth'
+import UserProfile from '@/components/header/UserProfile.tsx'
 
 interface UserInfo {
   id: number
@@ -21,6 +22,9 @@ interface UserInfo {
 const StudyHeader = (props: { groupId: number }) => {
   const [users, setUsers] = useState<UserInfo[]>([])
   const [curUser, setCurUser] = useState<UserInfo | null>(null)
+  const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
+  const [showProfile, setShowProfile] = React.useState<boolean>(false)
+  const avatarRef = useRef<HTMLImageElement>(null)
   // const nickname = useSelector((state: RootState) => state.auth.user.nickname) // 현재 사용자 닉네임 가져오기
   const { handleFetchStudyMembers } = useStudy()
 
@@ -85,7 +89,28 @@ const StudyHeader = (props: { groupId: number }) => {
 
       <div className="flex items-center">
         <Timer />
-        <Avatar userInfo={myInfo} isProfile={true} />
+        {avatarUrl ? (
+          <div className="relative flex-none">
+            <img
+              src={avatarUrl}
+              alt="Profile Image"
+              width={40}
+              height={40}
+              className="rounded-full shadow-md hover:cursor-pointer"
+              onClick={() => setShowProfile(!showProfile)}
+              ref={avatarRef}
+            />
+            {showProfile && (
+              <UserProfile
+                avatarUrl={avatarUrl}
+                onClose={() => setShowProfile(false)}
+                avatarRef={avatarRef}
+              />
+            )}
+          </div>
+        ) : (
+          <div>profile</div>
+        )}
       </div>
     </div>
   )
