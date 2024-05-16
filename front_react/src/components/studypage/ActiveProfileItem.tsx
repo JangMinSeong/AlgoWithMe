@@ -15,7 +15,7 @@ const ActiveProfileItem = ({
         {rank === 2 && '🥉 3등'}
       </div>
       <div className="from-primary/50 via-secondary/50 to-blueishPurple/50 p-[2px] bg-gradient-to-br w-fit rounded-2xl mr-2 shadow-foggyBlue">
-        <div className=" bg-white w-40 h-52 rounded-2xl flex flex-col items-center p-4">
+        <div className=" bg-white w-36 h-52 rounded-2xl flex flex-col items-center p-4">
           {/* gradient border */}
           <div className="h-[60%] flex items-center justify-center">
             <a
