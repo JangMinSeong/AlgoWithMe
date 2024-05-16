@@ -214,7 +214,7 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex overflow-x-scroll no-scrollbar mx-2 items-center justify-between">
+            <div className="flex mx-2 items-center justify-between">
               <button onClick={handleLeftArrow}>
                 {' '}
                 <IoIosArrowDropleft className="w-6 h-6 text-slate-500/50 hover:text-white/50 transition-colors" />
