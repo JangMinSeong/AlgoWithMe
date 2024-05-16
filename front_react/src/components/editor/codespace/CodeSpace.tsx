@@ -17,6 +17,7 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from "@/lib/fetch.ts";
 import {useSelector} from "react-redux";
 import {RootState} from "@/lib/store.ts";
+import 'ace-builds/src-noconflict/theme-tomorrow';
 
 interface CodeExample {
   mode: string
@@ -360,6 +361,8 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             name="UNIQUE_ID_OF_DIV"
             value={!option || socketMessage.code === '' ? code : socketMessage.code}
             readOnly={option}
+            theme="tomorrow"
+            lineHeight={17}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
             setOptions={{
