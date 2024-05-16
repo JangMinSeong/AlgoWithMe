@@ -17,6 +17,8 @@ import { useWebSocket } from '@/hooks/useWebSocket'
 import fetch from '@/lib/fetch.ts'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store.ts'
+import 'ace-builds/src-noconflict/theme-tomorrow'
+import { CiSettings } from 'react-icons/ci'
 
 interface CodeExample {
   mode: string
@@ -243,13 +245,32 @@ const CodeEditor: React.FC<{
       saveCode,
     }))
 
+    const saveCache = async (code: string) => {
+      const dataToCache = {
+        codeId: activeTab,
+        language: language,
+        code: code,
+      }
+      console.log(dataToCache.codeId)
+      await fetch(`/code/cache`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToCache),
+      })
+    }
+
     const handleCodeChange = debounce((newCode: string) => {
       console.log('Code changed:', newCode)
       const newMessage = {
         language: language,
         code: newCode,
       }
-      if (!option) sendMessage(`/app/code/${activeTab}`, newMessage)
+      if (!option) {
+        sendMessage(`/app/code/${activeTab}`, newMessage)
+        saveCache(newCode)
+      }
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
@@ -307,7 +328,7 @@ const CodeEditor: React.FC<{
               </button>
             )}
           </div>
-          <div>
+          <div className="flex flex-row items-center">
             {!option && (
               <>
                 <button
@@ -336,6 +357,12 @@ const CodeEditor: React.FC<{
                     </option>
                   ))}
                 </select>
+
+                <CiSettings
+                  className="hover:cursor-pointer"
+                  fontSize={30}
+                  onClick={() => {}}
+                />
               </>
             )}
           </div>
@@ -344,7 +371,16 @@ const CodeEditor: React.FC<{
         <style>
           {`
             #algo_editor .ace_gutter {
-              background-color: #00000010;
+              background: linear-gradient(0deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
+            }
+            #algo_editor .ace_active-line {
+              background: linear-gradient(270deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
+            }
+            #algo_editor .ace_gutter-active-line {
+              background: rgba(0,0,0,0.1);
+            }
+            #algo_editor #UNIQUE_ID_OF_DIV .ace_editor {
+              font-size: 21px;
             }
           `}
         </style>
@@ -358,6 +394,8 @@ const CodeEditor: React.FC<{
               !option || socketMessage.code === '' ? code : socketMessage.code
             }
             readOnly={option}
+            theme="tomorrow"
+            lineHeight={20}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
             setOptions={{
@@ -366,6 +404,8 @@ const CodeEditor: React.FC<{
               enableSnippets: true,
               showLineNumbers: true,
               showFoldWidgets: true,
+              showGutter: true,
+              fontSize: 18,
             }}
             width="100%"
             height="100%"
