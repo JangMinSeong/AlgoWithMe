@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 import ColorPickerItem from '@/components/editor/workspace/ColorPickerItem'
 import FontSizeControl from '@/components/editor/workspace/FontSizeControl'
 import MenuItem from './MenuItem'
-import {Editor} from "@tiptap/react";
+import { Editor } from '@tiptap/react'
 import fetch from '@/lib/fetch.ts'
 
 // MenuItemProps 인터페이스 정의
@@ -16,56 +16,55 @@ interface MenuItemProps {
 }
 
 interface MenuBarProp {
-  editor:Editor
-  pageId:string
+  editor: Editor
+  pageId: string
 }
 
 const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
-
   const insertImageFromUrl = (url) => {
-    editor.chain().focus().setImage({ src: url }).run();
-  };
+    editor.chain().focus().setImage({ src: url }).run()
+  }
 
   const uploadAndInsertImage = async (file) => {
-    const formData = new FormData();
-    formData.append('file', file);
+    const formData = new FormData()
+    formData.append('file', file)
 
     try {
       const response = await fetch(`/page/image/${pageId}`, {
         method: 'POST',
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error('Network response was not ok')
       }
-      const textResponse = await response.text();
+      const textResponse = await response.text()
       //const responseData = await response.json();  // JSON 형태로 응답 데이터 파싱
-      console.log('Image uploaded and response received:', textResponse);
+      console.log('Image uploaded and response received:', textResponse)
       insertImageFromUrl(textResponse)
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error uploading image:', error)
     }
-  };
+  }
 
   const handleImageUpload = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*';
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = 'image/*'
 
     input.onchange = (e) => {
-      const target = e.target as HTMLInputElement;
+      const target = e.target as HTMLInputElement
 
       if (target.files && target.files.length > 0) {
-        const file = target.files[0];
+        const file = target.files[0]
         uploadAndInsertImage(file)
       } else {
-        console.log("No file selected.");
+        console.log('No file selected.')
       }
-    };
+    }
 
-    input.click();
-  };
+    input.click()
+  }
 
   const items: MenuItemProps[] = [
     {
@@ -188,7 +187,7 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
       icon: 'file-image-line',
       title: 'Image',
       action: () => {
-          handleImageUpload();
+        handleImageUpload()
       },
     },
     {
@@ -236,15 +235,21 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
     },
   ]
   return (
-    <div className="editor__header">
+    <div className="editor__header border-b-[1px] border-blueishPurple">
       {items.map((item, index) => (
         <Fragment key={index}>
           {item.title === 'Color' ? (
-            <ColorPickerItem editor={editor} isActive={item.isActive} icon={''} title={''} action={function (): void {
-              throw new Error('Function not implemented.')
-            }} />
+            <ColorPickerItem
+              editor={editor}
+              isActive={item.isActive}
+              icon={''}
+              title={''}
+              action={function (): void {
+                throw new Error('Function not implemented.')
+              }}
+            />
           ) : item.title === 'Font Size' ? (
-            <FontSizeControl editor={editor}/>
+            <FontSizeControl editor={editor} />
           ) : (
             <MenuItem {...item} />
           )}
