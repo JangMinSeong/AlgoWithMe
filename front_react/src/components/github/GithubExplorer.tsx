@@ -70,9 +70,9 @@ const GitHubExplorer = ({isOpen, isClose, repositories, content, language}) => {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center p-4 z-50">
           <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full overflow-hidden h-96">
-              <div className="p-7 relative h-full w-full">
+              <div className="p-6 relative h-full w-full">
                   <h2 className="text-xl font-bold">{naviText}</h2>
-                  <div className="">
+                  <div className="ml-1">
                       {activeRepo && <span className={'text-sm'} onClick={() => {
                           setActiveRepo(null)
                           setActiveBranch(null)

@@ -88,9 +88,10 @@ public class CodeService {
       codes.add(personalCodeRepository.save(
           PersonalCode.builder().user(user).workspace(workspace).language(Language.C).deleted(false)
               .build()));
+      return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(),
+          PersonalCodeResponse.fromEntity(codes.getFirst()));
     }
-    return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(),
-        PersonalCodeResponse.fromEntity(codes.getFirst()));
+    return getFirstCodeAndIdsById(codes);
   }
 
 
@@ -104,14 +105,7 @@ public class CodeService {
     if (codes.isEmpty()) {
       throw new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND);
     }
-    Long codeId = codes.getFirst().getId();
-    PersonalCodeResponse firstCode = codeCacheRepository.findById(codeId)
-        .map(PersonalCodeResponse::fromEntity)
-        .orElseGet(
-            () -> personalCodeRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
-                .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND)));
-    return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(),
-        firstCode);
+    return getFirstCodeAndIdsById(codes);
   }
 
   public Mono<ExecutionResponse> executeCode(ExecuteRequest request) {
@@ -172,6 +166,17 @@ public class CodeService {
                 request.getCode(), problem.getExampleList()))
             .retrieve()
             .bodyToMono(ProgrammersResponse.class));
+  }
+
+  public CodeByPageAndUserResponse getFirstCodeAndIdsById(List<PersonalCode> codes) {
+    Long codeId = codes.getFirst().getId();
+    PersonalCodeResponse firstCode = codeCacheRepository.findById(codeId)
+        .map(PersonalCodeResponse::fromEntity)
+        .orElseGet(
+            () -> personalCodeRepository.findById(codeId).map(PersonalCodeResponse::fromEntity)
+                .orElseThrow(() -> new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND)));
+    return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(),
+        firstCode);
   }
 
   public String getProgrammersMain(Language language) {
