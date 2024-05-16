@@ -39,7 +39,7 @@ const InStudyPageItem = (props: {
 
   const [isModifierShowing, setIsModifierShowing] = useState(false)
   const [showEditModal, setShowEditModal] = useState(false)
-  const [pageTitle, setPageTitle] = useState(props.page.title)
+  const [curPageTitle, setCurPageTitle] = useState(props.page.title)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
   const curPageId = useSelector((state:RootState) => state.sidebar.pageId)
@@ -48,7 +48,7 @@ const InStudyPageItem = (props: {
   const { sendUpdateMessage } = useWebSocket()
 
   useEffect(() => {
-    setPageTitle(props.page.title)
+    setCurPageTitle(props.page.title)
   }, [props.page.title])
 
   const handleEdit = () => {
@@ -74,7 +74,7 @@ const InStudyPageItem = (props: {
       },
       body: newTitle,
     }).then(() => {
-      setPageTitle(newTitle)
+      setCurPageTitle(newTitle)
       setPages(updatePageTitle(pageList, props.page.pageId, newTitle))
       sendUpdateMessage(
         `/app/study/${props.groupId}`,
@@ -140,7 +140,9 @@ const InStudyPageItem = (props: {
 
   const handleMovePage = () => {
     setPId(props.page.pageId)
-    if (props.page.docs) navigate(`/${props.groupId}/docs/${props.page.pageId}`)
+    if (props.page.docs) {
+      navigate(`/${props.groupId}/docs/${props.page.pageId}`)
+    }
     else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
 
@@ -182,7 +184,7 @@ const InStudyPageItem = (props: {
           />
         )}
         <div style={{ width: 182 - pl }} className="truncate pl-2">
-          {pageTitle ? pageTitle : '빈 페이지'}
+          {curPageTitle ? curPageTitle : '빈 페이지'}
         </div>
         {isModifierShowing && (
           <div className="flex items-center">
