@@ -23,11 +23,11 @@ const ProblemList: React.FC<ProblemProp> = ({ problemList }) => {
 
     return (
         <div
-            style={containerStyle}
-            className="bg-lighterPurple w-full p-4 rounded-lg shadow-xl text-left"
+            // style={containerStyle}
+            className="border-[1px] border-navy w-[36vw] h-full p-4 rounded-lg text-left"
         >
             <div className="text-lg font-semibold mb-2">최근 학습한 목록</div>
-            <hr className="border-t border-gray-200 my-2" />
+            <hr className="border-t border-gray-400 my-2" />
             <ul className="list-none space-y-2">
                 {problemList.length > 0 ? (
                     problemList.map((problem, index) => (
@@ -40,7 +40,7 @@ const ProblemList: React.FC<ProblemProp> = ({ problemList }) => {
                         </li>
                     ))
                 ) : (
-                    <li className="text-center text-gray-500">No problems to display</li>
+                    <li className="text-center text-gray-500">스터디에 참여해 문제풀이를 시작하세요</li>
                 )}
             </ul>
         </div>

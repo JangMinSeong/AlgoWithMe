@@ -82,7 +82,7 @@ const StudyMainPage = () => {
   return (
     <div className="flex flex-col px-40">
       {/* 스터디 소개 */}
-      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-2 ">
+      <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-[1px] border-b-blueishPurple ">
         <span
           className="relative"
           onMouseEnter={() => setIsShowingImgEditor(true)}
