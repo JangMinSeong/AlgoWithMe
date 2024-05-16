@@ -1,5 +1,5 @@
 import * as React from 'react'
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import CodeEditor from '@/components/editor/codespace/CodeSpace'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useSelector } from 'react-redux'
@@ -9,9 +9,8 @@ import ErrorOutput from '@/components/editor/codespace/ErrorOutput'
 import ExecuteOutput from '@/components/editor/codespace/ExecuteOutput'
 import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
-import useCode from "@/hooks/useCode.ts";
-import GitHubExplorer from "@/components/github/GithubExplorer.tsx";
-import {setCurUserId} from "@/features/code/codeSlice.ts";
+import useCode from '@/hooks/useCode.ts'
+import GitHubExplorer from '@/components/github/GithubExplorer.tsx'
 
 interface BojAndPGDetail {
   status: number
@@ -31,21 +30,21 @@ interface ProblemProp {
   provider: string
   number: number
   editCodes: { language: string; frameCode: string }[]
-  pageId : number
-  uid:string
+  pageId: number
+  uid: string
 }
 
 interface PersonalCodeResponse {
-  id:number
-  language:string
-  code:string
+  id: number
+  language: string
+  code: string
 }
 
 interface Repository {
-  name:string
-  fullname:string
-  description:string
-  isPrivate:boolean
+  name: string
+  fullname: string
+  description: string
+  isPrivate: boolean
 }
 
 const RightComponent: React.FC<ProblemProp> = ({
@@ -53,7 +52,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   number,
   editCodes,
   pageId,
-    uid
+  uid,
 }) => {
   const [isGitHubExplorerOpen, setIsGitHubExplorerOpen] = React.useState(false)
   const [repositories, setRepositories] = React.useState<Repository[]>([])
@@ -64,7 +63,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const [resStatus, setResStatus] = React.useState(200)
   const [execTime, setExecTime] = React.useState(0)
 
-  const [codeIds , setCodeIds] = React.useState<number[]>([])
+  const [codeIds, setCodeIds] = React.useState<number[]>([])
   const [firstCode, setFirstCode] = React.useState<PersonalCodeResponse>()
 
   const [resultBojAndPGList, setResultBojAndPGList] = React.useState<
@@ -76,14 +75,16 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   const curUser = useSelector((state: RootState) => state.code.curUserId)
   const myId = useSelector((state: RootState) => state.code.myId)
-  const [option ,setOption] = useState(false)
+  const [option, setOption] = useState(false)
   const [isInit, setIsInit] = useState(false)
-  const {handleCurUserId} = useCode()
-  const updateMessage = useSelector((state: RootState) => state.socket.messageUserTabUpdate)
-  const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
-  const curTopic = useSelector((state:RootState) => state.socket.subscriptionUser)
-
-
+  const { handleCurUserId } = useCode()
+  const updateMessage = useSelector(
+    (state: RootState) => state.socket.messageUserTabUpdate,
+  )
+  const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket()
+  const curTopic = useSelector(
+    (state: RootState) => state.socket.subscriptionUser,
+  )
 
   const fetchMyData = async () => {
     try {
@@ -102,7 +103,6 @@ const RightComponent: React.FC<ProblemProp> = ({
       setIsInit(false)
       setCodeIds(responseData.codeIds)
       setFirstCode(responseData.code)
-
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
@@ -113,12 +113,15 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   const fetchUserData = async () => {
     try {
-      const response = await fetch(`/code/user?pageId=${pageId}&userId=${curUser}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/code/user?pageId=${pageId}&userId=${curUser}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
         },
-      })
+      )
 
       if (!response.ok) {
         throw new Error('Network response was not ok')
@@ -127,7 +130,6 @@ const RightComponent: React.FC<ProblemProp> = ({
       const responseData = await response.json()
       setCodeIds(responseData.codeIds)
       setFirstCode(responseData.code)
-
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
@@ -138,29 +140,29 @@ const RightComponent: React.FC<ProblemProp> = ({
   useEffect(() => {
     setOption(myId !== curUser)
 
-    if(curTopic !== '' || myId === curUser) {
-      console.log(curTopic + " unsubscribe")
-      unsubscribeFromTopic(curTopic,true)
+    if (curTopic !== '' || myId === curUser) {
+      console.log(curTopic + ' unsubscribe')
+      unsubscribeFromTopic(curTopic, true)
       fetchMyData()
     }
-    if(option || curUser !== myId) {
-      console.log(curTopic + "  subscribe")
-      subscribeToTopic(`/topic/codeTab/${curUser}`,true)
+    if (option || curUser !== myId) {
+      console.log(curTopic + '  subscribe')
+      subscribeToTopic(`/topic/codeTab/${curUser}`, true)
       fetchUserData()
     }
-  },[curUser])
+  }, [curUser])
 
   useEffect(() => {
-    if(option) {
+    if (option) {
       fetchUserData()
     }
-  },[updateMessage])
+  }, [updateMessage])
 
-  useEffect(()=> {
+  useEffect(() => {
     handleCurUserId(myId)
     setOption(false)
     fetchMyData()
-  },[pageId])
+  }, [pageId])
 
   const handleInputRun = async () => {
     setIsLoading(true)
@@ -246,7 +248,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   }
 
   const handleSaveAndRun = () => {
-    if(curUser === myId) {
+    if (curUser === myId) {
       codeEditorRef.current?.saveCode()
       codeSolve()
       setSaveInputText(inputText)
@@ -261,13 +263,13 @@ const RightComponent: React.FC<ProblemProp> = ({
       headers: {
         'Content-Type': 'application/json',
       },
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error('Network response was not ok')
     }
 
-    const responseData = await response.json();
+    const responseData = await response.json()
     setRepositories(responseData)
     console.log(responseData)
 
@@ -275,37 +277,40 @@ const RightComponent: React.FC<ProblemProp> = ({
   }
 
   const handleCloseGitHubExplorer = () => {
-    setIsGitHubExplorerOpen(false);
-  };
-
+    setIsGitHubExplorerOpen(false)
+  }
 
   return (
     <div className="flex flex-col w-full h-full">
-      <div style={{ flex: 1}} className={"h-full"}>
+      <div style={{ flex: 1 }} className={'h-full'}>
         <CodeEditor
-            ref={codeEditorRef}
+          ref={codeEditorRef}
           provider={provider}
           editCodes={editCodes}
           idList={codeIds}
           firstCode={firstCode}
           pageId={pageId}
           option={option}
-            isInit={isInit}
+          isInit={isInit}
         />
       </div>
+      <div className="h-px bg-blueishPurple" />
       <div className="flex flex-col flex-1">
         <div className="flex flex-row flex-1 border-gray-300 h-full">
           {provider !== 'programmers' ? (
-            <div className="flex-1 bg-white" >
-              <textarea
-                className="w-full resize-none p-2 h-full overflow-auto bg-white"
-                placeholder="Enter text here..."
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-              />
-            </div>
+            <>
+              <div className="flex-1">
+                <textarea
+                  className="w-full resize-none p-2 h-full overflow-auto bg-transparent"
+                  placeholder="Enter text here..."
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                />
+              </div>
+              <div className="w-px bg-blueishPurple" />
+            </>
           ) : null}
-          <div className="flex-1 p-1 bg-white w-32 h-full" style={{ overflow: 'auto' }}>
+          <div className="flex-1 h-full" style={{ overflow: 'auto' }}>
             {isLoading ? (
               <pre>실행 중...</pre>
             ) : resStatus !== 200 ? (
@@ -330,24 +335,27 @@ const RightComponent: React.FC<ProblemProp> = ({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-end bg-white">
+        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple">
           <button
             onClick={handleSaveAndRun}
             className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
           >
             실행하기
           </button>
-          <button className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2" onClick={handleGithub}>
+          <button
+            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            onClick={handleGithub}
+          >
             GIT 저장하기
           </button>
           {isGitHubExplorerOpen && (
-              <GitHubExplorer
-                  isOpen={isGitHubExplorerOpen}
-                  isClose={handleCloseGitHubExplorer}
-                  repositories={repositories}
-                  content={codeEditorRef.current?.getCurrentTabInfo().code}
-                  language={codeEditorRef.current?.getCurrentTabInfo().language}
-              />
+            <GitHubExplorer
+              isOpen={isGitHubExplorerOpen}
+              isClose={handleCloseGitHubExplorer}
+              repositories={repositories}
+              content={codeEditorRef.current?.getCurrentTabInfo().code}
+              language={codeEditorRef.current?.getCurrentTabInfo().language}
+            />
           )}
         </div>
       </div>

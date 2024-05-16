@@ -3,12 +3,13 @@ import Logo from '@/components/Logo'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
-import GroupCall from '../groupcall/GroupCall'
+// import GroupCall from '../groupcall/GroupCall'
 import { useEffect, useState } from 'react'
 import fetch from '@/lib/fetch.ts'
 import { RootState } from '@/lib/store.ts'
 import useCode from '@/hooks/useCode.ts'
 import Main from '../groupcall/main'
+import useMember from '@/hooks/useMember'
 
 interface UserInfo {
   id: number
@@ -21,8 +22,13 @@ const StudyHeader = (props: { groupId: number }) => {
   const [curUser, setCurUser] = useState<UserInfo | null>(null)
   const nickname = useSelector((state: RootState) => state.auth.user.nickname) // 현재 사용자 닉네임 가져오기
   const { handleUserList, handleMyId, handleCurUserId } = useCode()
+  const { handleFetchAllMembers } = useMember()
   const updateStudyMessage = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
+  )
+
+  const participants = useSelector(
+    (state: RootState) => state.call.participants,
   )
 
   const fetchUsers = async () => {
@@ -52,6 +58,7 @@ const StudyHeader = (props: { groupId: number }) => {
   }, [updateStudyMessage])
 
   useEffect(() => {
+    handleFetchAllMembers(props.groupId)
     fetchUsers()
   }, [props.groupId, nickname])
 
@@ -65,6 +72,10 @@ const StudyHeader = (props: { groupId: number }) => {
             <Avatar key={user.id} userInfo={user} isProfile={false} />
           ))}
           <Main />
+
+          {participants.map((p) => (
+            <div>참{p.nickname}</div>
+          ))}
         </div>
       </div>
 

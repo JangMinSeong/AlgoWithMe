@@ -1,10 +1,3 @@
-import { RootState } from '@/lib/store'
-import { useSelector } from 'react-redux'
-import useCode from '@/hooks/useCode.ts'
-import { useWebSocket } from '@/hooks/useWebSocket.ts'
-import { useState } from 'react'
-import useAuth from '@/hooks/useAuth'
-
 interface UserInfo {
   id: number
   nickname: string

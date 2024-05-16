@@ -31,9 +31,6 @@ public class Page extends BaseTime {
 
     private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String content;
-
     private Double orders;
 
     @ColumnDefault(value = "false")

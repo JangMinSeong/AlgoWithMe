@@ -15,20 +15,27 @@ import { RootState } from '@/lib/store'
 import { FiMic, FiMicOff } from 'react-icons/fi'
 import { Tooltip } from 'react-tooltip'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
+import useCall from '@/hooks/useCall'
 
 const Main = () => {
   const { groupId } = useParams()
   const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
+  const {
+    handleAddParticipant,
+    handleRemoveParticipant,
+    handleAddActiveSpeaker,
+    handleRemoveActiveSpeaker,
+  } = useCall()
 
   const [session, setSession] = useState<OVSession | ''>('')
   const [sessionId, setSessionId] = useState<string>('')
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [publisher, setPublisher] = useState<Publisher | null>(null)
   const [OV, setOV] = useState<OpenVidu | null>(null)
-  const [activeSpeaker, setActiveSpeaker] = useState<string>()
+  // const [activeSpeaker, setActiveSpeaker] = useState<string>()
   const [isMicOn, setIsMicOn] = useState(false)
   const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
-  const [participants, setParticipants] = useState([])
+  // const [participants, setParticipants] = useState([])
 
   const leaveSession = useCallback(() => {
     if (session) session.disconnect()
@@ -70,16 +77,11 @@ const Main = () => {
       console.log(connectionId)
 
       setSubscriber(mySubscriber)
-      setParticipants((prevParticipants) => [
-        ...prevParticipants,
-        { connectionId, nickname, mySubscriber },
-      ])
+      handleAddParticipant(nickname)
 
       toast(`${nickname}님이 음성채팅에 입장했어요`, {
         icon: '🙋‍♀️',
       })
-
-      console.log('참가자목록', participants)
     })
 
     session.on('streamDestroyed', (event) => {
@@ -88,11 +90,9 @@ const Main = () => {
         setSubscriber(null)
       }
       console.log('스트림파괴')
-      const connectionId = event.stream.connection.connectionId
-      setParticipants((prevParticipants) =>
-        prevParticipants.filter((item) => item.connectionId !== connectionId),
-      )
+      // const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
+      handleRemoveParticipant(nickname)
       toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
         icon: '👋',
       })
@@ -120,13 +120,13 @@ const Main = () => {
     // })
 
     session.on('publisherStartSpeaking', (event) => {
-      setActiveSpeaker(event.connection.connectionId)
-      console.log('User ' + event.connection.connectionId + '가 말하고 있어요')
+      handleAddActiveSpeaker(event.connection.data)
+      console.log('User ' + event.connection.data + '가 말하고 있어요')
     })
 
     session.on('publisherStopSpeaking', (event) => {
-      setActiveSpeaker(undefined)
-      console.log('User ' + event.connection.connectionId + '가 말을 멈췄어요')
+      handleRemoveActiveSpeaker(event.connection.data)
+      console.log('User ' + event.connection.data + '가 말을 멈췄어요')
     })
   }, [subscriber, session])
 
@@ -182,25 +182,24 @@ const Main = () => {
 
   const handleHeadphoneOff = () => {
     console.log(subscriber)
-    subscriber.subscribeToAudio(false)
     setIsHeadphoneOn(false)
+    subscriber.subscribeToAudio(false)
   }
   const handleHeadphoneOn = () => {
     console.log(subscriber)
-    subscriber.subscribeToAudio(true)
     setIsHeadphoneOn(true)
+    subscriber.subscribeToAudio(true)
   }
 
   const handleMicOff = () => {
+    setIsMicOn(false)
     publisher.publishAudio(false)
     console.log(publisher)
-    setIsMicOn(false)
   }
   const handleMicOn = () => {
-    publisher.publishAudio(true)
-    console.log(publisher)
-
     setIsMicOn(true)
+    console.log(publisher)
+    publisher.publishAudio(true)
   }
 
   const anchorTagCSS =
@@ -255,11 +254,11 @@ const Main = () => {
         </div>
       )}
 
-      <Session
+      {/* <Session
         publisher={publisher as Publisher}
         subscriber={subscriber as Subscriber}
         participants={participants}
-      />
+      /> */}
 
       <div style={{ display: 'none' }} id="subscriberDiv"></div>
       <div style={{ display: 'none' }} id="publisherDiv"></div>
