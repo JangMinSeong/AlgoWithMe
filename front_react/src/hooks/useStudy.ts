@@ -15,7 +15,7 @@ import {RootState} from "@/lib/store.ts";
 const useStudy = () => {
   const dispatch = useDispatch()
   const { handleMyId, handleCurUserId } = useCode()
-  const nickname = useSelector((state: RootState) => state.auth.user.nickname)
+  const nickname = useSelector((state: RootState) => state.auth.user?.nickname)
   const curUser = useSelector((state:RootState) => state.code.curUserId)
 
   const handleFetchStudyInfo = async (teamId: number) => {

@@ -44,6 +44,12 @@ export default function Layout() {
       hasOngoingRequest.current = true
 
       if (user === null) {
+        console.log(location.pathname)
+        if (location.pathname.includes('/invitation')) {
+          const currentUrl = window.location.href
+          localStorage.setItem('invite_url', currentUrl)
+          window.location.assign(`https://www.github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_GITHUB_ID}&scope=repo%20project`)
+        }
         await (async () => {
           const response = await fetch(`${baseUrl}/user/refresh`, {
             method: 'POST',

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   BrowserRouter as Router,
   Link,
@@ -18,6 +18,7 @@ const InvitationPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
   const code = searchParams.get('code')
+  const [dataLoaded, setDataLoaded] = useState(false)
   const { connectToServer, disconnectToServer } = useWebSocket()
   const { handleFetchStudyInfo } = useStudy()
 
@@ -37,7 +38,9 @@ const InvitationPage = () => {
   useEffect(() => {
     if (isLoggedIn) {
       connectToServer(Number(groupId))
-      handleFetchStudyInfo(Number(groupId))
+      handleFetchStudyInfo(Number(groupId)).then(() => {
+        setDataLoaded(true)
+      })
     } else {
       navigate('/welcome')
     }
@@ -64,6 +67,7 @@ const InvitationPage = () => {
   }
 
   return (
+    isLoggedIn && dataLoaded &&
     <div className="h-screen flex items-center justify-center ">
       <div className="flex flex-col items-center justify-center p-6 bg-white shadow-lg rounded-lg mx-auto w-[30%] ">
         <img
