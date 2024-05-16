@@ -306,7 +306,7 @@ const CodeEditor: React.FC<{
                                 ))}
                                 {showAvatar && (
                                     <div
-                                        className={"absolute flex flex-row top-12 left-2 bg-transparent shadow-lg z-30"}>
+                                        className={"absolute flex flex-col space-y-2 top-10 left-2 bg-transparent shadow-lg z-30 animate-slideDown"}>
                                         {userList.map((user) => (
                                             user.id !== curUser && (<Avatar key={user.id} userInfo={user} click={null}
                                                                             clickList={() => handleAvatarList(user.id)}/>)
@@ -338,7 +338,7 @@ const CodeEditor: React.FC<{
                             )}
                             {showMoreTabs && (
                                 <div
-                                    className="absolute top-10 left-28 bg-white shadow-lg"
+                                    className="absolute top-10 left-28 bg-transparent shadow-lg animate-slideDown"
                                     style={{position: 'absolute', top: '100%', zIndex: 1000}}
                                 >
                                     {tabs.slice(3).map((tab, index) => (
@@ -368,7 +368,7 @@ const CodeEditor: React.FC<{
                             )}
                         </div>
                     </div>
-                    <div className={"flex-1 items-end"}>
+                    <div className={"flex-1 flex justify-end items-end mr-3"}>
                         {!option && (
                             <>
                                 <button
@@ -404,10 +404,26 @@ const CodeEditor: React.FC<{
 
                 <style>
                     {`
-            #algo_editor .ace_gutter {
-              background-color: #00000010;
-            }
-          `}
+                        #algo_editor .ace_gutter {
+                          background-color: #00000010;
+                        }
+                    `}
+                    {`
+                        @keyframes slideDown {
+                            from {
+                                opacity: 0;
+                                transform: translateY(-20px);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: translateY(0);
+                            }
+                        }
+                    
+                        .animate-slideDown {
+                            animation: slideDown 0.3s ease-out;
+                        }
+                    `}
                 </style>
 
                 <div id="algo_editor" className="w-full h-full pb-12">
