@@ -26,7 +26,7 @@ export default function Layout() {
         <main className="h-full w-dvw max-w-dvw">
           <div className="h-full">
             <StudyHeader groupId={Number(groupId)} />
-            <main className="h-full overflow-y-scroll no-scrollbar px-40">
+            <main className="h-full overflow-y-scroll no-scrollbar">
               <Outlet />
             </main>
           </div>

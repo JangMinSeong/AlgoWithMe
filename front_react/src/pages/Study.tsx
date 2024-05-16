@@ -5,18 +5,14 @@ import DeleteStudyGroup from '@/components/studypage/DeleteStudyGroup'
 import AddProblem from '@/components/problems/AddProblem'
 import PrevProblem from '@/components/problems/PrevProblem'
 import ActiveProfileItem from '@/components/studypage/ActiveProfileItem'
-import SetTimer from '@/components/studypage/SetTimer'
 import { useLocation, useParams } from 'react-router-dom'
 import { GoPencil } from 'react-icons/go'
 import { Tooltip } from 'react-tooltip'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
 import useStudy from '@/hooks/useStudy'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import LoadingComp from '@/components/LoadingComp'
-import { IoIosArrowDropleft, IoIosArrowDropright } from 'react-icons/io'
-import InactiveProfileItem from '@/components/studypage/InactiveProfileItem'
 
 const StudyMainPage = () => {
   const { groupId } = useParams()
@@ -84,7 +80,7 @@ const StudyMainPage = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col px-40">
       {/* 스터디 소개 */}
       <div className="font-bold flex justify-between items-center h-[28%] mb-6 p-2 py-6 border-b-2 ">
         <span
