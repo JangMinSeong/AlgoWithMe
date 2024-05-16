@@ -1,8 +1,6 @@
 .menu-item {
   background-color: transparent;
   border: none;
-  border-radius: 0.4rem;
-  color: #fff;
   cursor: pointer;
   height: 1.75rem;
   margin-right: 0.25rem;
@@ -20,6 +18,6 @@
 
   &:hover,
   &.is-active {
-    background-color: #303030;
+    background-color: #ADB1F1;
   }
 }

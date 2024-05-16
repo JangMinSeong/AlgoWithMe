@@ -1,4 +1,3 @@
-
 import '@/components/editor/workspace/styles.scss'
 
 import React from 'react'
@@ -8,12 +7,12 @@ import MenuBar from '@/components/editor/workspace/MenuBar'
 
 interface WorkSpaceProps {
   editor: Editor
-    pageId: string
+  pageId: string
 }
 
-const WorkSpace: React.FC<WorkSpaceProps> = ({ editor,pageId }) => (
-  <div className="editor w-full">
-    {editor && <MenuBar editor={editor} pageId={pageId}/>}
+const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => (
+  <div className="editor w-full h-full">
+    {editor && <MenuBar editor={editor} pageId={pageId} />}
     <EditorContent className="editor__content" editor={editor} />
   </div>
 )
