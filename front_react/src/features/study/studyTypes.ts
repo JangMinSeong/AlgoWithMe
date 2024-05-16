@@ -31,6 +31,12 @@ export interface IRanking {
   solvedCount: number
 }
 
+export interface IMemberInfo {
+  id: number
+  nickname: string
+  imageUrl: string
+}
+
 export interface IStudyState {
   teamId: number
   name: string
@@ -41,4 +47,5 @@ export interface IStudyState {
   candidateProblems: Array<IProblemInfo> | []
   ranking: Array<IRanking> | []
   manager: boolean
+  memberList: Array<IMemberInfo>
 }

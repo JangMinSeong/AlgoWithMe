@@ -1,6 +1,7 @@
 import { useDispatch } from 'react-redux'
 import {
   viewStudyInfo,
+  viewStudyMembers,
   editImage,
   editName,
   addCandidateProblems,
@@ -26,6 +27,18 @@ const useStudy = () => {
       .catch((error) => {
         console.error(error)
       })
+  }
+
+  const handleFetchStudyMembers = async (groupId) => {
+    await fetch(`/study/${groupId}/members`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((json) => dispatch(viewStudyMembers(json)))
   }
 
   const handleAddCandidateProblems = async (
@@ -91,6 +104,7 @@ const useStudy = () => {
 
   return {
     handleFetchStudyInfo,
+    handleFetchStudyMembers,
     handleAddCandidateProblems,
     handleDeleteCandidateProblem,
     handleEditImage,

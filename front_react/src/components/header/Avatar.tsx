@@ -1,43 +1,35 @@
 import { RootState } from '@/lib/store'
 import { useSelector } from 'react-redux'
-import useCode from '@/hooks/useCode.ts'
 import { useWebSocket } from '@/hooks/useWebSocket.ts'
 import { useState } from 'react'
 import useAuth from '@/hooks/useAuth'
 
 interface UserInfo {
-  id: number
   nickname: string
   imageUrl: string
+  isSpeaking: boolean
 }
 
 const Avatar = (props: { userInfo: UserInfo; isProfile: boolean }) => {
   //const userImage = useSelector((state: RootState) => state.auth.user.imageUrl)
   const { handleLogout } = useAuth()
   const [showLogOutButton, setShowLogOutButton] = useState(false)
-  const { handleCurUserId } = useCode()
-  const curUser = useSelector((state: RootState) => state.code.curUserId)
   const handleClickEvent = () => {
-    handleCurUserId(props.userInfo.id)
     if (props.isProfile) {
       setShowLogOutButton(!showLogOutButton)
     }
   }
 
   return (
-    <div
-      className={`${
-        curUser === props.userInfo.id && !props.isProfile
-          ? 'border border-red-500 rounded-full'
-          : ''
-      } mr-2`}
-    >
+    <div className="mr-2">
       <img
         src={props.userInfo.imageUrl}
         alt="프로필"
         width={30}
         height={0}
-        className="rounded-full"
+        className={`${
+          props.userInfo.isSpeaking && 'border-red-500 border-4'
+        } rounded-full`}
         onClick={handleClickEvent}
       />
       {showLogOutButton && (

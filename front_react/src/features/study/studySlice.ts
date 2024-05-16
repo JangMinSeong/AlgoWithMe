@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IStudyState, IProblemInfo } from './studyTypes'
+import { IStudyState, IProblemInfo, IMemberInfo } from './studyTypes'
 
 const initialState: IStudyState = {
   teamId: 0,
@@ -11,6 +11,7 @@ const initialState: IStudyState = {
   candidateProblems: [],
   ranking: [],
   manager: false,
+  memberList: [],
 }
 
 const studyState = createSlice({
@@ -27,6 +28,12 @@ const studyState = createSlice({
       state.candidateProblems = [...action.payload.candidateProblems]
       state.ranking = [...action.payload.ranking]
       state.manager = action.payload.manager
+    },
+    viewStudyMembers: (
+      state: IStudyState,
+      action: PayloadAction<IMemberInfo[]>,
+    ) => {
+      state.memberList = [...action.payload]
     },
     editImage: (state: IStudyState, action: PayloadAction<string>) => {
       state.imageUrl = action.payload
@@ -53,6 +60,7 @@ const studyState = createSlice({
 
 export const {
   viewStudyInfo,
+  viewStudyMembers,
   editImage,
   editName,
   addCandidateProblems,
