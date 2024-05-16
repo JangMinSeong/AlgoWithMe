@@ -23,7 +23,6 @@ import com.ssafy.Algowithme.problem.type.Tag;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.team.TeamRepository;
 import com.ssafy.Algowithme.user.entity.User;
-import com.ssafy.Algowithme.user.entity.UserTeam;
 import com.ssafy.Algowithme.user.repository.UserTeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,7 +51,7 @@ public class PageService {
         userTeamRepository.findByUserIdAndTeamId(user.getId(), teamId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 
-        // 팀 내 페이지 조회
+        //팀 내 페이지 조회
         List<Page> pages = pageRepository.findByTeamIdAndDeletedOrderByParentIdAscOrdersAsc(teamId, false);
 
         HashMap<Long, PageInfo> pageInfoMap = new HashMap<>();
@@ -125,7 +124,6 @@ public class PageService {
         if(pageId == -1) {
             //순서 조회
             int order = pageRepository.countByTeamIdAndParentIsNull(team.getId());
-            System.out.println("-1인 경우: " + order);
 
             //페이지(워크 스페이스) 생성 및 저장
             page = pageRepository.save(Page.builder()
@@ -158,19 +156,19 @@ public class PageService {
 
     @Transactional
     public MemoResponse getMemo(Long pageId, User user) {
-        // page 조회
+        //page 조회
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
 
-        // team 조회
+        //team 조회
         Team team = teamRepository.findById(page.getTeam().getId())
                         .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
 
-        // 팀원 여부 확인
+        //팀원 여부 확인
         userTeamRepository.findByUserIdAndTeamId(user.getId(), team.getId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
         
-        // userId 와 pageId 로 조회
+        //userId 와 pageId 로 조회
         Optional<UserWorkspace> optionalUserWorkspace = userWorkspaceRepository.findByWorkspaceIdAndUserId(pageId, user.getId());
 
         UserWorkspace userWorkspace;
@@ -191,10 +189,15 @@ public class PageService {
     }
 
     @Transactional
-    public void updateMemo(UpdateMemoRequest request) {
+    public void updateMemo(UpdateMemoRequest request, User user) {
         //개인메모 조회
         UserWorkspace userWorkspace = userWorkspaceRepository.findById(request.getUserWorkspaceId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USERWORKSPACE_NOT_FOUND));
+
+        //유저 권한 체크
+        if(!userWorkspace.getUser().getId().equals(user.getId())) {
+            throw new CustomException(ExceptionStatus.USERWORKSPACE_USER_MISMATCH);
+        }
 
         //개인메모 내용 수정
         userWorkspace.setContent(request.getContent());
@@ -202,7 +205,6 @@ public class PageService {
 
     @Transactional
     public void changePageTitle(User user, Long pageId, String title) {
-        //Page
         Page page = getPage(pageId, user.getId());
 
         page.setTitle(title);
@@ -233,7 +235,7 @@ public class PageService {
     }
 
     public String uploadImage(User user, Long pageId, MultipartFile file) {
-        //페이지 확인
+        //페이지 조회
         Page page = getPage(pageId, user.getId());
 
         //S3 이미지 저장
@@ -372,7 +374,7 @@ public class PageService {
         Page page = pageRepository.findById(pageId)
                 .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
 
-        // user의 page에 대한 권한 확인
+        //user의 page에 대한 권한 확인
         userTeamRepository.findByUserIdAndTeamId(userId, page.getTeam().getId())
                 .orElseThrow(() -> new CustomException(ExceptionStatus.USER_TEAM_NOT_FOUND));
 

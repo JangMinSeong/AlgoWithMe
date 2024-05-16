@@ -31,6 +31,7 @@ public enum ExceptionStatus {
     USERWORKSPACE_NOT_FOUND(1201, "개인메모가 존재하지 않습니다."),
     PARENT_PAGE_CANNOT_BE_CHILD_PAGE(1202, "자신의 자식페이지를 부모페이지로 할 수 없습니다."),
     NOT_PROBLEM_PAGE(1203, "문제 페이지가 아닙니다."),
+    USERWORKSPACE_USER_MISMATCH(1204, "유저의 개인메모가 아닙니다."),
 
     // code(13),
     PERSONAL_CODE_NOT_FOUND(1300, "코드가 존재하지 않습니다."),
