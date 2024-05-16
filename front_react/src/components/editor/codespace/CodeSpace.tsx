@@ -134,7 +134,7 @@ const CodeEditor: React.FC<{
         )
         const myId = useSelector((state: RootState) => state.code.myId)
 
-        const userList = useSelector((state: RootState) => state.code.userList)
+        const userList = useSelector((state: RootState) => state.study.memberList)
         const curUser = useSelector((state: RootState) => state.code.curUserId)
         const [showAvatar, setShowAvatar] = useState(false)
         const {handleCurUserId} = useCode()

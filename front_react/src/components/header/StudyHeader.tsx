@@ -21,7 +21,7 @@ const StudyHeader = (props: { groupId: number }) => {
   const [users, setUsers] = useState<UserInfo[]>([])
   const [curUser, setCurUser] = useState<UserInfo | null>(null)
   // const nickname = useSelector((state: RootState) => state.auth.user.nickname) // 현재 사용자 닉네임 가져오기
-  const { handleUserList, handleMyId, handleCurUserId } = useCode()
+
   const { handleFetchStudyMembers } = useStudy()
 
   useEffect(() => {
@@ -35,9 +35,9 @@ const StudyHeader = (props: { groupId: number }) => {
   // 중복 제거
   // const removeDuplicateList = onlineMembers.filter
 
-  // const updateStudyMessage = useSelector(
-  //   (state: RootState) => state.socket.messageStudyUpdate,
-  // )
+  const updateStudyMessage = useSelector(
+    (state: RootState) => state.socket.messageStudyUpdate,
+  )
 
   // const fetchUsers = async () => {
   //   const response = await fetch(`/study/${props.groupId}/members`, {
@@ -61,9 +61,9 @@ const StudyHeader = (props: { groupId: number }) => {
   //   }
   // }
 
-  // useEffect(() => {
-  //   if (updateStudyMessage.startsWith(`"invite Member`)) fetchUsers()
-  // }, [updateStudyMessage])
+  useEffect(() => {
+    if (updateStudyMessage.startsWith(`"invite Member`)) handleFetchStudyMembers(props.groupId)
+  }, [updateStudyMessage])
 
   // useEffect(() => {
   //   fetchUsers()

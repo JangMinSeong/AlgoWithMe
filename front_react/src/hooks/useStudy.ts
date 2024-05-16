@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import {
   viewStudyInfo,
   viewStudyMembers,
@@ -9,9 +9,14 @@ import {
 } from '@/features/study/studySlice'
 import fetch from '@/lib/fetch'
 import toast from 'react-hot-toast'
+import useCode from "@/hooks/useCode.ts";
+import {RootState} from "@/lib/store.ts";
 
 const useStudy = () => {
   const dispatch = useDispatch()
+  const { handleMyId, handleCurUserId } = useCode()
+  const nickname = useSelector((state: RootState) => state.auth.user.nickname)
+  const curUser = useSelector((state:RootState) => state.code.curUserId)
 
   const handleFetchStudyInfo = async (teamId: number) => {
     await fetch(`/study/${teamId}`, {
@@ -41,6 +46,12 @@ const useStudy = () => {
       .then((json) => {
         console.log('멤버', json)
         dispatch(viewStudyMembers(json))
+        // 현재 사용자 닉네임과 일치하는 사용자 찾기
+        const foundUser = json.find(
+            (user) => user.nickname === nickname,
+        )
+        handleMyId(foundUser.id)
+        if (curUser === 0) handleCurUserId(foundUser.id)
       })
   }
 
