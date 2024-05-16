@@ -32,9 +32,6 @@ const StudyHeader = (props: { groupId: number }) => {
     (state: RootState) => state.member.onlineMembers,
   )
 
-  // 중복 제거
-  // const removeDuplicateList = onlineMembers.filter
-
   const updateStudyMessage = useSelector(
     (state: RootState) => state.socket.messageStudyUpdate,
   )
@@ -62,12 +59,9 @@ const StudyHeader = (props: { groupId: number }) => {
   // }
 
   useEffect(() => {
-    if (updateStudyMessage.startsWith(`"invite Member`)) handleFetchStudyMembers(props.groupId)
+    if (updateStudyMessage.startsWith(`"invite Member`))
+      handleFetchStudyMembers(props.groupId)
   }, [updateStudyMessage])
-
-  // useEffect(() => {
-  //   fetchUsers()
-  // }, [props.groupId, nickname])
 
   return (
     <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center px-5">
