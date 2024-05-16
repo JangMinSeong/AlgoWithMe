@@ -74,14 +74,15 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
     setCodeEditorVisible(!codeEditorVisible)
   }
 
-  const handleCenterDivider = () => {
+  const handleCenterDivider = (event) => {
     // Todo: 좌우로 이동할 수 있게 변경해야함
-    setCodeEditorVisible(!codeEditorVisible)
+    console.log(event)
+    // setCodeEditorVisible(!codeEditorVisible)
   }
 
   return (
     <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
-      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out w-10">
+      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
         <LeftComponent
           url={url}
           content={content}
@@ -92,8 +93,20 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         />
       </div>
       <div
-        className="flex border-x-[1px] border-blueishPurple h-full w-4 hover:bg-gray-500/10 hover:cursor-pointer items-center"
-        onClick={() => handleCenterDivider()}
+        className="flex border-x-[1px] border-blueishPurple h-full w-4 hover:bg-gray-500/10 items-center"
+        onDrag={() => handleCenterDivider()}
+        onMouseEnter={() => {
+          document.body.style.cursor = 'grab'
+        }}
+        onMouseLeave={() => {
+          document.body.style.cursor = 'default'
+        }}
+        onMouseDown={() => {
+          document.body.style.cursor = 'grabbing'
+        }}
+        onMouseUp={() => {
+          document.body.style.cursor = 'default'
+        }}
       >
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>

@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onSave }) => {
   }
 
   return (
-    <div className="bg-goldenPurple text-white flex justify-between items-center p-1 w-full">
+    <div className="text-white flex justify-between items-center p-1 w-full">
       <div className="p-1 h-8 border border-transparent opacity-0">
         {/* Invisible space */}
       </div>
