@@ -14,9 +14,9 @@ import 'ace-builds/src-noconflict/ext-language_tools'
 import 'ace-builds/src-noconflict/ext-code_lens'
 import debounce from 'lodash.debounce'
 import { useWebSocket } from '@/hooks/useWebSocket'
-import fetch from "@/lib/fetch.ts";
-import {useSelector} from "react-redux";
-import {RootState} from "@/lib/store.ts";
+import fetch from '@/lib/fetch.ts'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/lib/store.ts'
 
 interface CodeExample {
   mode: string
@@ -28,13 +28,21 @@ interface EditCode {
 }
 
 interface PersonalCodeResponse {
-    id:number
-    language:string
-    code:string
+  id: number
+  language: string
+  code: string
 }
 
-const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode:PersonalCodeResponse; idList:number[]; pageId:number; option:boolean ; isInit:boolean}> =
-  forwardRef(({ provider, editCodes,firstCode, idList, pageId,option, isInit }, ref) => {
+const CodeEditor: React.FC<{
+  provider: string
+  editCodes: EditCode[]
+  firstCode: PersonalCodeResponse
+  idList: number[]
+  pageId: number
+  option: boolean
+  isInit: boolean
+}> = forwardRef(
+  ({ provider, editCodes, firstCode, idList, pageId, option, isInit }, ref) => {
     const aceRef = useRef<any>(null)
     const [language, setLanguage] = useState<string>('C')
 
@@ -109,43 +117,40 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
     }
 
     const [code, setCode] = useState<string>(languageOptions.C.value)
-    const [tabs, setTabs] = useState<
-       number[]
-    >([])
+    const [tabs, setTabs] = useState<number[]>([])
     const [activeTab, setActiveTab] = useState<number>(1)
     const [showMoreTabs, setShowMoreTabs] = useState(false)
 
-    const curTopic = useSelector((state: RootState) => state.socket.subscription)
-    const {subscribeToTopic, unsubscribeFromTopic} = useWebSocket()
-    const socketMessage = useSelector((state: RootState) => state.socket.message)
-      const myId = useSelector((state:RootState) => state.code.myId)
+    const curTopic = useSelector(
+      (state: RootState) => state.socket.subscription,
+    )
+    const { subscribeToTopic, unsubscribeFromTopic } = useWebSocket()
+    const socketMessage = useSelector(
+      (state: RootState) => state.socket.message,
+    )
+    const myId = useSelector((state: RootState) => state.code.myId)
 
     useEffect(() => {
-        if(curTopic)
-            unsubscribeFromTopic(curTopic)
-        if(option)
-            subscribeToTopic(`/topic/${activeTab}`)
-    },[activeTab])
+      if (curTopic) unsubscribeFromTopic(curTopic)
+      if (option) subscribeToTopic(`/topic/${activeTab}`)
+    }, [activeTab])
 
     const { sendMessage, sendUpdateMessage } = useWebSocket()
 
     useEffect(() => {
       if (idList.length !== 0) {
-          console.log(idList)
+        console.log(idList)
         setTabs(idList)
         setActiveTab(firstCode.id)
         setLanguage(firstCode.language)
-          if(firstCode.code)
-              setCode(firstCode.code)
-          else
-              setCode(languageOptions[firstCode.language].value)
-      } else if(!option && isInit && tabs.length !== 0) {
-          addTab()
+        if (firstCode.code) setCode(firstCode.code)
+        else setCode(languageOptions[firstCode.language].value)
+      } else if (!option && isInit && tabs.length !== 0) {
+        addTab()
       } else {
-          setTabs([])
+        setTabs([])
       }
-    }, [pageId,idList])
-
+    }, [pageId, idList])
 
     const addTab = async () => {
       const response = await fetch(`/code/${pageId}`, {
@@ -156,79 +161,80 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
       })
       const responseData = await response.json()
       const newId = responseData
-        let newTabs = []
-        if(idList.length === 0)
-            newTabs = [newId]
-        else
-            newTabs = [...tabs, newId]
+      let newTabs = []
+      if (idList.length === 0) newTabs = [newId]
+      else newTabs = [...tabs, newId]
       setTabs(newTabs)
       setActiveTab(newId)
       setLanguage('C')
       setCode(languageOptions.C.value)
-        if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `add ${myId} ${activeTab}`)
+      if (!option)
+        sendUpdateMessage(`/app/codeTab/${myId}`, `add ${myId} ${activeTab}`)
     }
 
     const handleTabChange = async (tabId: number) => {
       setActiveTab(tabId)
-        const response = await fetch(`/code/${tabId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-        const responseData = await response.json()
-        setLanguage(responseData.language)
-        if(responseData.code)
-            setCode(responseData.code)
-        else
-            setCode(languageOptions[responseData.language].value)
+      const response = await fetch(`/code/${tabId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const responseData = await response.json()
+      setLanguage(responseData.language)
+      if (responseData.code) setCode(responseData.code)
+      else setCode(languageOptions[responseData.language].value)
 
-        setShowMoreTabs(false)
+      setShowMoreTabs(false)
     }
 
     const saveCode = async () => {
       const currentCode = aceRef.current?.editor.getValue()
       setCode(currentCode)
-        const dataToSave = {
-            codeId:activeTab,
-            code,
-            language,
-        }
-        const response = await fetch(`/code/save`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body : JSON.stringify(dataToSave)
-        })
+      const dataToSave = {
+        codeId: activeTab,
+        code,
+        language,
+      }
+      const response = await fetch(`/code/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSave),
+      })
     }
 
     const deleteCode = async () => {
       if (tabs.length <= 1) {
         return
       }
-        const response = await fetch(`/code/${activeTab}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+      const response = await fetch(`/code/${activeTab}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
 
       if (tabs.length > 0) {
-          const filteredTabs = tabs.filter((tab) => tab !== activeTab);
-          setTabs(filteredTabs);
-          handleTabChange(filteredTabs[0])
+        const filteredTabs = tabs.filter((tab) => tab !== activeTab)
+        setTabs(filteredTabs)
+        handleTabChange(filteredTabs[0])
       }
-        if(!option) sendUpdateMessage(`/app/codeTab/${myId}`, `delete  ${myId} ${activeTab}`)
+      if (!option)
+        sendUpdateMessage(
+          `/app/codeTab/${myId}`,
+          `delete  ${myId} ${activeTab}`,
+        )
     }
     useEffect(() => {
-        if(option) {
-            if(socketMessage.code !== '') {
-                setCode(socketMessage.code)
-                setLanguage(socketMessage.language)
-            }
+      if (option) {
+        if (socketMessage.code !== '') {
+          setCode(socketMessage.code)
+          setLanguage(socketMessage.language)
         }
-    },[socketMessage])
+      }
+    }, [socketMessage])
 
     useImperativeHandle(ref, () => ({
       getCurrentTabInfo() {
@@ -239,107 +245,118 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
 
     const handleCodeChange = debounce((newCode: string) => {
       console.log('Code changed:', newCode)
-        const newMessage = {
-          language:language,
-            code:newCode
-        }
-        if(!option) sendMessage(`/app/code/${activeTab}`, newMessage)
+      const newMessage = {
+        language: language,
+        code: newCode,
+      }
+      if (!option) sendMessage(`/app/code/${activeTab}`, newMessage)
       setCode(newCode)
       // client.publish({ destination: '/app/code', body: newCode }); // Send code to the server
     }, 500) // 500 ms debounce period
 
     return (
       <div className="w-full h-full">
-        <div className="bg-white flex items-center justify-between relative h-12">
-            <div>
-                {tabs.slice(0, 3).map((tab, index) => (
-                    <button
-                        key={tab}
-                        onClick={() => handleTabChange(tab)}
-                        className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+        <div className="border-b-[1px] border-blueishPurple flex items-center justify-between relative h-12">
+          <div>
+            {tabs.slice(0, 3).map((tab, index) => (
+              <button
+                key={tab}
+                onClick={() => handleTabChange(tab)}
+                className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
               ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-                    >
-                        {index + 1}
-                    </button>
+              >
+                {index + 1}
+              </button>
+            ))}
+            {tabs.length > 3 && (
+              <button
+                onClick={() => setShowMoreTabs(!showMoreTabs)}
+                className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+              >
+                ...
+              </button>
+            )}
+            {showMoreTabs && (
+              <div
+                className="absolute top-10 left-10 bg-white shadow-lg"
+                style={{ position: 'absolute', top: '100%', zIndex: 1000 }}
+              >
+                {tabs.slice(3).map((tab, index) => (
+                  <button
+                    key={tab}
+                    onClick={() => handleTabChange(tab)}
+                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
+              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
+                  >
+                    {index + 4}
+                  </button>
                 ))}
-                {tabs.length > 3 && (
-                    <button
-                        onClick={() => setShowMoreTabs(!showMoreTabs)}
-                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-                    >
-                        ...
-                    </button>
-                )}
-                {showMoreTabs && (
-                    <div
-                        className="absolute top-10 left-10 bg-white shadow-lg"
-                        style={{position: 'absolute', top: '100%', zIndex: 1000}}
-                    >
-                        {tabs.slice(3).map((tab, index) => (
-                            <button
-                                key={tab}
-                                onClick={() => handleTabChange(tab)}
-                                className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-              ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
-                            >
-                                {index + 4}
-                            </button>
-                        ))}
-                    </div>
-                )}
-                {tabs.length === 0 && (
-                    <div className="border border-transparent opacity-0">
-                        {/* Invisible space */}
-                    </div>
-                )}
-                {!option && (
-                    <button
-                        onClick={addTab}
-                        className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
-                    >
-                        +
-                    </button>
-                )}
-            </div>
-            <div>
-                {!option && (
-                    <>
-                        <button
-                            onClick={deleteCode}
-              className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            >
-              삭제
-            </button>
-            <button
-              onClick={saveCode}
-              className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
-            >
-              저장
-            </button>
-            <select
-              value={language}
-              onChange={(e) => {
-                setLanguage(e.target.value)
-                setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
-              }}
-              className="w-1/3"
-            >
-              {Object.keys(languageOptions).map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang}
-                </option>
-              ))}
-            </select>
-            </>
+              </div>
+            )}
+            {tabs.length === 0 && (
+              <div className="border border-transparent opacity-0">
+                {/* Invisible space */}
+              </div>
+            )}
+            {!option && (
+              <button
+                onClick={addTab}
+                className="bg-navy pt-1 h-8 text-white rounded-md p-2 hover:bg-secondary border border-gray-300"
+              >
+                +
+              </button>
+            )}
+          </div>
+          <div>
+            {!option && (
+              <>
+                <button
+                  onClick={deleteCode}
+                  className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+                >
+                  삭제
+                </button>
+                <button
+                  onClick={saveCode}
+                  className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+                >
+                  저장
+                </button>
+                <select
+                  value={language}
+                  onChange={(e) => {
+                    setLanguage(e.target.value)
+                    setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
+                  }}
+                  className="w-1/3"
+                >
+                  {Object.keys(languageOptions).map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
+              </>
             )}
           </div>
         </div>
-        <div className="w-full h-full pb-12">
+
+        <style>
+          {`
+            #algo_editor .ace_gutter {
+              background-color: #00000010;
+            }
+          `}
+        </style>
+
+        <div id="algo_editor" className="w-full h-full pb-12">
           <AceEditor
             ref={aceRef}
             mode={languageOptions[language].mode}
             name="UNIQUE_ID_OF_DIV"
-            value={!option || socketMessage.code === '' ? code : socketMessage.code}
+            value={
+              !option || socketMessage.code === '' ? code : socketMessage.code
+            }
             readOnly={option}
             onChange={handleCodeChange}
             editorProps={{ $blockScrolling: true }}
@@ -352,10 +369,12 @@ const CodeEditor: React.FC<{ provider: string; editCodes: EditCode[] ; firstCode
             }}
             width="100%"
             height="100%"
+            style={{ backgroundColor: '#ffffff00' }}
           />
         </div>
       </div>
     )
-  })
+  },
+)
 
 export default CodeEditor

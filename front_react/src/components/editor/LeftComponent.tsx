@@ -25,11 +25,7 @@ import CharacterCount from '@tiptap/extension-character-count'
 import Collaboration from '@tiptap/extension-collaboration'
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import Problem from '@/components/editor/Problem'
-import { RootState } from '@/lib/store'
-import useSolving from '@/hooks/useSolving'
-import { useSelector } from 'react-redux'
 import fetch from '@/lib/fetch'
-import useTimer from '@/hooks/useTimer'
 
 interface ProblemProp {
   url: string
@@ -301,7 +297,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
 
   return (
     <div className="flex flex-col h-full max-h-full">
-      <div className="flex flex-row h-12">
+      <div className="flex flex-row h-12 border-b-[1px] border-blueishPurple">
         <LeftHeader
           activeTab={activeTab}
           onSave={handleSave}
@@ -310,10 +306,8 @@ const LeftComponent: React.FC<ProblemProp> = ({
           tags={updatedTags}
         />
       </div>
-      <div className="grow overflow-auto">
-        {renderContent()}
-      </div>
-      <div className="flex flex-row justify-between">
+      <div className="grow overflow-auto">{renderContent()}</div>
+      <div className="flex flex-row justify-between border-t-[1px] border-blueishPurple">
         <div className="flex w-10">
           {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
             <button
