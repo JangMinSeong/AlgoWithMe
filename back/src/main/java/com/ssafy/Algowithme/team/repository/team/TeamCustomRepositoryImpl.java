@@ -50,20 +50,21 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
     public List<SolvedProblemDto> getSolvedProblem(Long teamId) {
         List<SolvedProblemRawDto> solvedProblemRawDtoList =
                 jpaQueryFactory.select(Projections.fields(SolvedProblemRawDto.class,
-                        page.id.as("pageId"),
-                        problem.id.as("problemId"),
-                        problem.url,
-                        problem.provider,
-                        problem.number,
-                        problem.name,
-                        problem.level))
-                .from(team)
-                .innerJoin(page).on(team.id.eq(page.team.id))
-                .innerJoin(problem).on(problem.id.eq(page.problem.id))
-                .where(team.id.eq(teamId), page.deleted.eq(false))
-                .orderBy(page.updatedAt.desc())
-                .limit(3)
-                .fetch();
+                                page.id.as("pageId"),
+                                problem.id.as("problemId"),
+                                problem.url,
+                                problem.provider,
+                                problem.number,
+                                problem.name,
+                                problem.level,
+                                page.createdAt))
+                        .from(team)
+                        .innerJoin(page).on(team.id.eq(page.team.id))
+                        .innerJoin(problem).on(problem.id.eq(page.problem.id))
+                        .where(team.id.eq(teamId), page.deleted.eq(false))
+                        .orderBy(page.updatedAt.desc())
+                        .limit(3)
+                        .fetch();
 
         List<SolvedProblemDto> result = new ArrayList<>();
 
@@ -76,6 +77,7 @@ public class TeamCustomRepositoryImpl implements TeamCustomRepository {
                                 .number(dto.getNumber())
                                 .name(dto.getName())
                                 .level(dto.getLevel())
+                                .createdAt(dto.getCreatedAt())
                                 .build()));
 
         return result;

@@ -2,6 +2,8 @@ package com.ssafy.Algowithme.team.dto;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 @Setter
@@ -16,4 +18,5 @@ public class SolvedProblemDto {
     private int number;
     private String name;
     private String level;
+    private LocalDateTime createdAt;
 }
