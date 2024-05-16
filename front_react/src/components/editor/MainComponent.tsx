@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import fetch from '@/lib/fetch'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
-import { useWebSocket } from '@/hooks/useWebSocket'
 import { RootState } from '@/lib/store.ts'
 import { useSelector } from 'react-redux'
 import { FaGripLinesVertical } from 'react-icons/fa'
@@ -82,7 +81,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
 
   return (
     <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
-      <div className="bg-white mt-0 flex-1 transition-all duration-500 ease-in-out w-10">
+      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out w-10">
         <LeftComponent
           url={url}
           content={content}
@@ -92,7 +91,10 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           tags={tags}
         />
       </div>
-      <div className="flex border-x-2 border-gray-300 h-full w-4 bg-white hover:bg-gray-100 hover:cursor-pointer items-center" onClick={() => handleCenterDivider()}>
+      <div
+        className="flex border-x-[1px] border-blueishPurple h-full w-4 hover:bg-gray-500/10 hover:cursor-pointer items-center"
+        onClick={() => handleCenterDivider()}
+      >
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
