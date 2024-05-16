@@ -35,7 +35,19 @@ public class ProblemController {
       @ApiResponse(responseCode = "500", description = "조회 실패")
   })
   public ResponseEntity<AllProblemResponse> getAllProblem() {
-    return problemService.getAll();
+
+    long beforeTime = System.currentTimeMillis(); // 코드 실행 전에 시간 받아오기
+
+    // 실행할 함수
+    System.out.print("problemService.getAll() :");
+    ResponseEntity<AllProblemResponse> all = problemService.getAll();
+    System.out.println();
+
+    long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+    long diffTimeSec = (afterTime - beforeTime); // 두 개의 실행 시간
+    System.out.println("실행 시간(sec): " + diffTimeSec); // 세컨드
+
+    return all;
   }
 
   @GetMapping("/{pageId}")
@@ -48,7 +60,8 @@ public class ProblemController {
       @ApiResponse(responseCode = "1400", description = "조회 실패")
   })
   public ResponseEntity<RawProblemResponse> getProblem(@PathVariable("pageId") Long pageId) {
-    return ResponseEntity.ok(problemService.getProblem(pageId));
+    RawProblemResponse problem = problemService.getProblem(pageId);
+    return ResponseEntity.ok(problem);
   }
 
   @GetMapping("/search")
@@ -86,6 +99,21 @@ public class ProblemController {
   public ResponseEntity<Void> storeProblemSolvingHistory(@AuthenticationPrincipal User user,
                                                          @PathVariable("pageId") Long pageId) {
     problemService.storeProblemSolvingHistory(user, pageId);
+    return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/test")
+  public ResponseEntity<?> test() {
+    long beforeTime = System.currentTimeMillis(); // 코드 실행 전에 시간 받아오기
+
+    // 실행할 함수
+    System.out.print("problemService.getAll() :");
+    problemService.getAll();
+    System.out.println();
+
+    long afterTime = System.currentTimeMillis(); // 코드 실행 후에 시간 받아오기
+    long diffTimeSec = (afterTime - beforeTime); // 두 개의 실행 시간
+    System.out.println("실행 시간(sec): " + diffTimeSec); // 세컨드
     return ResponseEntity.ok().build();
   }
 }

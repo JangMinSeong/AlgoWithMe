@@ -8,10 +8,7 @@ import com.ssafy.Algowithme.problem.entity.Problem;
 import com.ssafy.Algowithme.problem.repository.ProblemRepository;
 import com.ssafy.Algowithme.team.dto.ImageUrlDto;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
-import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
-import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
-import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
-import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
+import com.ssafy.Algowithme.team.dto.response.*;
 import com.ssafy.Algowithme.team.entity.CandidateProblem;
 import com.ssafy.Algowithme.team.entity.Team;
 import com.ssafy.Algowithme.team.repository.candidateProblem.CandidateProblemRepository;
@@ -221,5 +218,11 @@ public class TeamService {
         .map(UserTeam::getUser)
         .map(UserInfoResponse::fromEntity)
         .toList();
+  }
+
+  public TeamBriefResponse getTeamNameAndImage(Long teamId) {
+    Team team = teamRepository.findById(teamId)
+            .orElseThrow(() -> new CustomException(ExceptionStatus.TEAM_NOT_FOUND));
+    return new TeamBriefResponse(team.getName(), team.getImageUrl());
   }
 }
