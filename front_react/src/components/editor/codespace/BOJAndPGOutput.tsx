@@ -20,7 +20,7 @@ const BOJAndPGOutput: React.FC<OutputProps> = ({ status, error, results }) => {
   const [selectedCase, setSelectedCase] = React.useState<Detail | null>(null)
 
   return (
-    <div className="w-full h-full flex flex-col flex-grow border border-gray-300 rounded-md p-1 bg-white overflow-auto">
+    <div className="w-full h-full flex flex-col flex-grow overflow-auto">
       {status === 422 ? (
         <ErrorOutput status={status} output={error} />
       ) : (
@@ -31,7 +31,9 @@ const BOJAndPGOutput: React.FC<OutputProps> = ({ status, error, results }) => {
             let caseColor = 'text-black'
 
             if (result.status === 200) {
-              caseText = `${caseLabel} ${result.passed ? '통과' : '실패'} (${result.execution_time} ms)`
+              caseText = `${caseLabel} ${result.passed ? '통과' : '실패'} (${
+                result.execution_time
+              } ms)`
               caseColor = result.passed ? 'text-blue-500' : 'text-red-500'
             } else if (result.status === 400) {
               caseText = `${caseLabel} 런타임 에러`
@@ -61,7 +63,9 @@ const BOJAndPGOutput: React.FC<OutputProps> = ({ status, error, results }) => {
                       </div>
                     )}
                     <div
-                      className={`overflow-auto w-${selectedCase.status === 200 ? '1/2' : 'full'} p-2`}
+                      className={`overflow-auto w-${
+                        selectedCase.status === 200 ? '1/2' : 'full'
+                      } p-2`}
                     >
                       <strong>출력 결과:</strong> <br /> {selectedCase.got}
                     </div>

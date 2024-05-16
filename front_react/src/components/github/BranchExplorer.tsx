@@ -1,17 +1,16 @@
 // BranchExplorer.tsx
 import React, {useState} from 'react';
 import fetch from "@/lib/fetch.ts";
-import DirectoryExplorer from "@/components/github/DirectoryExplorer.tsx";
 
 interface BranchExplorerProps {
     branches: string[];
     repoName: string;
-    onDirectorySelect: (path: string) => void;
     onBranchSelect: (branchName: string) => void;
+    setDirectories: (selected:string[]) => void;
+    setIsLoading: (arg:boolean) => void;
 }
 
-const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName,onDirectorySelect , onBranchSelect}) => {
-    const [directories, setDirectories] = useState<string[]>([])
+const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName , onBranchSelect, setDirectories, setIsLoading}) => {
     const [activeBranch, setActiveBranch] = useState<string | null>(null);
 
     if (branches.length === 0) {
@@ -20,6 +19,7 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName,onDi
 
     const handleBranchClick = async (event,branchName) => {
         event.stopPropagation();
+        setIsLoading(true);
         onBranchSelect(branchName)
         setActiveBranch(activeBranch === branchName ? null : branchName);
         const dataToPost = {
@@ -40,23 +40,25 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({ branches, repoName,onDi
         }
 
         const responseData = await response.json();
-        setDirectories(responseData)
-        onDirectorySelect("")
+        setDirectories(responseData.map((dir: string) => `${dir}/`));
+        setIsLoading(false)
         console.log(responseData)
     }
 
     return (
-        <div className="flex flex-col space-y-1 w-full overflow-y-auto h-full">
-            {branches.map((branch, index) => (
-                <div key={index} className={`mr-4 px-2 bg-gray-200 rounded hover:bg-gray-300 cursor-pointer`} onClick={(e) => handleBranchClick(e,branch)}>
-                    {branch}
-                    {activeBranch === branch && (
-                        <DirectoryExplorer branch={branch} repoName={repoName} directories={directories} directoryName={""} depth={0} onDirectorySelect={onDirectorySelect}/>
-                    )}
-                </div>
-            ))}
-        </div>
-    );
+      <div className="flex flex-col space-y-1 w-full overflow-y-auto h-full">
+          {branches.map((branch, index) => (
+            <div key={index}
+                 className="flex items-center mr-4 px-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer"
+                 onClick={(e) => handleBranchClick(e, branch)}>
+      <span className="mr-2">
+        <img src="/branch.png" alt="branch" width={20} height={20} />
+      </span>
+                <span>{branch}</span>
+            </div>
+          ))}
+      </div>
+    )
 };
 
 export default BranchExplorer;

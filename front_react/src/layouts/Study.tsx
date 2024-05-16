@@ -18,7 +18,12 @@ export default function Layout() {
       <div className="w-full h-px bg-gradient-to-r from-violet-500 to-fuchsia-500" />
       <div className="h-full w-dvw flex transition-all duration-700">
         <ScrollToTop />
-        {isSidebarOpen && <SideBar groupId={Number(groupId)} />}
+        {isSidebarOpen && (
+          <>
+            <SideBar groupId={Number(groupId)} />
+            <div className="w-px h-full bg-blueishPurple" />
+          </>
+        )}
         <main className="h-full w-dvw max-w-dvw">
           <div className="h-full">
             <StudyHeader groupId={Number(groupId)} />
@@ -30,6 +35,5 @@ export default function Layout() {
         {isModalOpen && <PageCreateModal />}
       </div>
     </div>
-
   )
 }
