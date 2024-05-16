@@ -297,8 +297,8 @@ const CodeEditor: React.FC<{
         return (
             <div className="w-full h-full">
                 <div className="border-b-[1px] border-blueishPurple flex items-center justify-between h-12">
-                    <div className={"flex-1 relative"}>
-                        <div className={"flex flex-row"}>
+                    <div className="flex-1 relative">
+                        <div className="flex flex-row">
                             <div className="flex flex-row items-start ml-2">
                                 {userList.map((user) => (
                                     user.id === curUser && (
@@ -307,21 +307,21 @@ const CodeEditor: React.FC<{
                                 ))}
                                 {showAvatar && (
                                     <div
-                                        className={"absolute flex flex-col space-y-2 top-10 left-2 bg-transparent shadow-lg z-30 animate-slideDown"}>
+                                        className="absolute flex flex-col space-y-2 top-10 left-2 bg-transparent shadow-lg z-30 slideDown">
                                         {userList.map((user) => (
-                                            user.id !== curUser && (<Avatar key={user.id} userInfo={user} click={null}
-                                                                            clickList={() => handleAvatarList(user.id)}/>)
+                                            user.id !== curUser && (
+                                                <Avatar key={user.id} userInfo={user} click={null}
+                                                        clickList={() => handleAvatarList(user.id)}/>
+                                            )
                                         ))}
                                     </div>
                                 )}
                             </div>
-
                             {tabs.slice(0, 3).map((tab, index) => (
                                 <button
                                     key={tab}
                                     onClick={() => handleTabChange(tab)}
-                                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-                          ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
+                                    className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300 ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
                                 >
                                     {index + 1}
                                 </button>
@@ -338,16 +338,13 @@ const CodeEditor: React.FC<{
                                 </button>
                             )}
                             {showMoreTabs && (
-                                <div
-                                    className="absolute top-10 left-28 bg-transparent shadow-lg animate-slideDown"
-                                    style={{position: 'absolute', top: '100%', zIndex: 1000}}
-                                >
+                                <div className="absolute top-10 left-28 bg-transparent shadow-lg slideDown"
+                                     style={{zIndex: 1000}}>
                                     {tabs.slice(3).map((tab, index) => (
                                         <button
                                             key={tab}
                                             onClick={() => handleTabChange(tab)}
-                                            className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300
-                          ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
+                                            className={`hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 border border-gray-300 ${tab === activeTab ? 'bg-primary' : 'bg-navy'}`}
                                         >
                                             {index + 4}
                                         </button>
@@ -369,7 +366,7 @@ const CodeEditor: React.FC<{
                             )}
                         </div>
                     </div>
-                    <div className={"flex flex-row items-center"}>
+                    <div className="flex flex-row items-center">
                         {!option && (
                             <>
                                 <button
@@ -388,7 +385,7 @@ const CodeEditor: React.FC<{
                                     value={language}
                                     onChange={(e) => {
                                         setLanguage(e.target.value)
-                                        setCode(languageOptions[e.target.value].value) // 변경된 언어의 기본 코드로 업데이트
+                                        setCode(languageOptions[e.target.value].value)
                                     }}
                                     className="mr-0"
                                 >
@@ -398,79 +395,80 @@ const CodeEditor: React.FC<{
                                         </option>
                                     ))}
                                 </select>
-
-                              <CiSettings
-                                className="hover:cursor-pointer"
-                                fontSize={30}
-                                onClick={() => {}}
-                              />
+                                <CiSettings
+                                    className="hover:cursor-pointer"
+                                    fontSize={30}
+                                    onClick={() => {
+                                    }}
+                                />
                             </>
                         )}
                     </div>
                 </div>
 
-        <style>
-          {`
-            #algo_editor .ace_gutter {
-              background: linear-gradient(0deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
-            }
-            #algo_editor .ace_active-line {
-              background: linear-gradient(270deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
-            }
-            #algo_editor .ace_gutter-active-line {
-              background: rgba(0,0,0,0.1);
-            }
-            #algo_editor #UNIQUE_ID_OF_DIV .ace_editor {
-              font-size: 21px;
-          `}
-          {`
-                        @keyframes slideDown {
-                            from {
-                                opacity: 0;
-                                transform: translateY(-20px);
-                            }
-                            to {
-                                opacity: 1;
-                                transform: translateY(0);
-                            }
-                        }
-                    
-                        .animate-slideDown {
-                            animation: slideDown 0.3s ease-out;
-                        }
-                    `}
-        </style>
+                <style>
+                    {`
+      #algo_editor .ace_gutter {
+        background: linear-gradient(0deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
+      }
+      #algo_editor .ace_active-line {
+        background: linear-gradient(270deg, rgba(226,145,214,0.2) 0%, rgba(189,144,228,0.2) 52%, rgba(136,180,218,0.2) 100%);
+      }
+      #algo_editor .ace_gutter-active-line {
+        background: rgba(0,0,0,0.1);
+      }
+      #algo_editor #UNIQUE_ID_OF_DIV .ace_editor {
+        font-size: 21px;
+      }
+    `}
+                    {`
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-        <div id="algo_editor" className="w-full h-full pb-12">
-          <AceEditor
-            ref={aceRef}
-            mode={languageOptions[language].mode}
-            name="UNIQUE_ID_OF_DIV"
-            value={
-              !option || socketMessage.code === '' ? code : socketMessage.code
-            }
-            readOnly={option}
-            theme="tomorrow"
-            lineHeight={20}
-            onChange={handleCodeChange}
-            editorProps={{ $blockScrolling: true }}
-            setOptions={{
-              enableBasicAutocompletion: true,
-              enableLiveAutocompletion: true,
-              enableSnippets: true,
-              showLineNumbers: true,
-              showFoldWidgets: true,
-              showGutter: true,
-              fontSize: 18,
-            }}
-            width="100%"
-            height="100%"
-            style={{ backgroundColor: '#ffffff00' }}
-          />
-        </div>
-      </div>
-    )
-  },
+      .slideDown {
+        animation: slideDown 0.3s ease-out;
+      }
+    `}
+                </style>
+
+                <div id="algo_editor" className="w-full h-full pb-12">
+                    <AceEditor
+                        ref={aceRef}
+                        mode={languageOptions[language].mode}
+                        name="UNIQUE_ID_OF_DIV"
+                        value={
+                            !option || socketMessage.code === '' ? code : socketMessage.code
+                        }
+                        readOnly={option}
+                        theme="tomorrow"
+                        lineHeight={20}
+                        onChange={handleCodeChange}
+                        editorProps={{$blockScrolling: true}}
+                        setOptions={{
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true,
+                            enableSnippets: true,
+                            showLineNumbers: true,
+                            showFoldWidgets: true,
+                            showGutter: true,
+                            fontSize: 18,
+                        }}
+                        width="100%"
+                        height="100%"
+                        style={{backgroundColor: '#ffffff00'}}
+                    />
+                </div>
+            </div>
+        )
+    },
 )
 
 export default CodeEditor
