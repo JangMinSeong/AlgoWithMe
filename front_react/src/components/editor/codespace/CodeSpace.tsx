@@ -410,7 +410,7 @@ const CodeEditor: React.FC<{
                 </button>
                 <button
                   onClick={saveCode}
-                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-5 text-xs px-3 h-7 mr-1 transition-colors border-b-0"
+                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-5 text-xs px-3 h-7  transition-colors border-b-0 mr-1"
                 >
                   저장
                 </button>
