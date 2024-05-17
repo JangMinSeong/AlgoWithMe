@@ -157,11 +157,6 @@ const CodeEditor: React.FC<{
         setLanguage(firstCode.language)
         if (firstCode.code) setCode(firstCode.code)
         else setCode(languageOptions[firstCode.language].value)
-      } else if (!option && tabs.length !== 0) {
-        addTab()
-      } else if(firstCode ===null) {
-        setCode("\n\n      아직 코드가 없어요")
-        setTabs([])
       }
     }, [pageId, idList])
 
@@ -304,8 +299,8 @@ const CodeEditor: React.FC<{
       handleCurUserId(id)
     }
 
-    return (
-      <div className="w-full h-full">
+      return (
+          <div className="w-full h-full">
         <div className="border-b-[1px] border-blueishPurple flex items-center justify-between h-12">
           <div className="flex-1 relative">
             <div className="flex flex-row">
