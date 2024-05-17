@@ -139,7 +139,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
   useEffect(() => {
     setOption(myId !== curUser)
-    
+
     if (curTopic !== '' || myId === curUser) {
       console.log(curTopic + ' unsubscribe')
       unsubscribeFromTopic(curTopic, true)
@@ -302,7 +302,7 @@ const RightComponent: React.FC<ProblemProp> = ({
               <div className="flex-1">
                 <textarea
                   className="w-full resize-none p-2 h-full overflow-auto bg-transparent"
-                  placeholder="Enter text here..."
+                  placeholder="테스트 케이스를 입력하세요"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                 />
@@ -312,7 +312,9 @@ const RightComponent: React.FC<ProblemProp> = ({
           ) : null}
           <div className="flex-1 h-full" style={{ overflow: 'auto' }}>
             {isLoading ? (
-              <pre>실행 중...</pre>
+              <pre style={{ fontFamily: 'pretendard' }} className="ml-2 mt-2">
+                실행 중...
+              </pre>
             ) : resStatus !== 200 ? (
               <ErrorOutput status={resStatus} output={output} />
             ) : saveInputText !== '' ? (
@@ -338,15 +340,19 @@ const RightComponent: React.FC<ProblemProp> = ({
         <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple">
           <button
             onClick={handleSaveAndRun}
-            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2"
+            className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
           >
             실행하기
           </button>
           <button
-            className="mr-1 bg-primary hover:bg-secondary pt-1 h-8 text-white rounded-md p-2 flex items-center"
+            className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
             onClick={handleGithub}
           >
-            <img src="/logo/github/github-mark-white.png" alt="icon" className="h-6 w-6 mr-2" />
+            <img
+              src="/logo/github/github-mark-white.png"
+              alt="icon"
+              className="h-6 w-6 mr-2"
+            />
             <span>Upload</span>
           </button>
           {isGitHubExplorerOpen && (

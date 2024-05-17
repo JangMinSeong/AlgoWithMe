@@ -29,7 +29,7 @@ const SWEAOutput: React.FC<SWEAOutputProps> = ({
   }
 
   return (
-    <div className="w-full h-full relative flex flex-col flex-grow border border-gray-300 rounded-md p-1 bg-white">
+    <div className="w-full h-full relative flex flex-col flex-grow border border-gray-300 rounded-md p-1 ">
       <div className="text-base text-black pr-4 overflow-auto">
         {details.map((detail, index) => {
           const caseLabel = `케이스 ${index + 1}:`

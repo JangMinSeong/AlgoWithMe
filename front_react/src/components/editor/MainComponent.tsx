@@ -88,7 +88,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
 
   return (
     <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
-      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
+      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out w-[50%] text-wrap">
         <LeftComponent
           title={problemTitle}
           level={problemLevel}

@@ -287,7 +287,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
   }
 
   return (
-    <div className="flex flex-col h-full max-h-full ml-2">
+    <div className="flex flex-col h-full max-h-full ml-2 ">
       <div className="">
         <LeftHeader
           title={title}

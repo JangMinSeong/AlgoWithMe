@@ -88,8 +88,8 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
   }
 
   return (
-    <div className="flex justify-between items-center w-full ">
-      <div className="flex items-center ml-10 my-4">
+    <div className="flex justify-between items-center ml-8 flex-wrap">
+      <div className="flex items-center  my-4">
         <img
           src={`/${provider === 'boj' ? 'baekjoon' : provider}.png`}
           className="w-10 h-10 rounded-full mr-4"
@@ -97,7 +97,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
           data-tooltip-id="pLink"
           data-tooltip-content="원본 문제 보러가기"
         />
-        <div className="text-2xl font-bold mr-4">
+        <div className="text-2xl font-bold mr-4 text-wrap">
           {number}. {title}
         </div>
         <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6  hover:bg-primary/70 transition-colors text-white text-xs mt-1">
@@ -117,18 +117,18 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
       <div className="flex">
         {activeTab === '개인 메모장' && (
           <button
-            className="border border-primary  text-primary hover:bg-primary/70 hover:text-white rounded-xl text-xs px-3 h-7  mr-2 transition-colors"
+            className="border border-primary border-b-0  text-primary hover:bg-primary/70 hover:text-white rounded-t-xl text-xs px-3 h-7 mt-11 mr-2 transition-colors"
             onClick={() => handleSaveClick('저장')}
           >
-            저장하기
+            저장
           </button>
         )}
 
         <button
-          className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
+          className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7 mr-2 mt-11 border-b-0 rounded-t-xl transition-colors "
           onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)}
         >
-          문제 유형 선택하기
+          문제 유형 선택
         </button>
 
         {isTagSelectorOpen && (
