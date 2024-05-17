@@ -13,7 +13,6 @@ interface editorProp {
 }
 const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const user = useSelector((state: RootState) => state.auth.user)
-  const [codeEditorVisible, setCodeEditorVisible] = useState(true)
   const [number, setNumber] = useState(0)
   const [uid, setUid] = useState()
   const [provider, setProvider] = useState('')
@@ -82,10 +81,6 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
     fetchProblemData()
   }, [number, pageId])
 
-  const toggleCodeEditor = () => {
-    setCodeEditorVisible(!codeEditorVisible)
-  }
-
   const handleMouseDown = (e) => {
     e.preventDefault()
     document.addEventListener('mousemove', handleMouseMove)
@@ -115,7 +110,8 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   }
 
   return (
-    <div ref={containerRef} className="flex w-full h-full overflow-hidden pt-0">
+    // Note: 패딩 삽입 금지
+    <div ref={containerRef} className="flex w-full h-full overflow-hidden">
       <div style={{ width: leftWidth }} className={`mt-0 overflow-hidden`}>
         <LeftComponent
           title={problemTitle}
@@ -147,9 +143,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
-        className={`transition-width duration-500 ease-in-out pr-2 pb-2 overflow-hidden ${
-          codeEditorVisible ? 'flex-1' : 'w-0 hidden'
-        }`}
+        className={`transition-width duration-500 ease-in-out overflow-hidden w-auto`}
       >
         <RightComponent
           provider={provider}
@@ -159,12 +153,6 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
           uid={uid}
         />
       </div>
-      <button
-        className="bg-none hover:bg-navy absolute top-1/2 right-0 mr-5 z-10 rounded-full"
-        onClick={toggleCodeEditor}
-      >
-        {codeEditorVisible ? '>' : '<'}
-      </button>
     </div>
   )
 }
