@@ -104,24 +104,26 @@ const AddProblemModal = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-[60%] h-[88%] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg p-6 flex flex-col items-center "
+        className="w-[60%] h-[92%] fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 bg-background rounded-lg p-6 flex flex-col items-center "
       >
         {/* 위쪽 */}
         <h2 className="text-lg font-bold mb-4">문제 검색하기</h2>
 
         <div className="flex justify-around">
           {/* 왼쪽 */}
-          <div className="w-[46%] h-[90%] overflow-y-scroll">
+          <div className="w-[46%] h-[90%]">
             <div className="font-bold mb-2">제목으로 검색하기</div>
             <ProblemSearch />
             <div className="w-full">
               <div className="font-bold mb-2">난이도로 검색하기</div>
               <TempSelected />
+              <div className={"overflow-y-scroll no-scrollbar"}>
               <LevelSelector />
+              </div>
             </div>
           </div>
           {/* 오른쪽 */}
-          <div className="w-[46%]">
+          <div className="w-[46%] mt-10">
             <ViewProblems setParentChosenProblem={setChosenProblem} />
           </div>
         </div>

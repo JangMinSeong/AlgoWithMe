@@ -388,23 +388,23 @@ const RightComponent: React.FC<ProblemProp> = ({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-1">
+        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-2">
           <button
             onClick={handleSaveAndRun}
-            className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
+            className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors mr-1 "
           >
             실행하기
           </button>
           <button
-            className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
+            className="bg-black hover:bg-black/70 text-white  text-xs px-2 h-7 transition-colors flex items-center"
             onClick={handleGithub}
           >
             <img
               src="/logo/github/github-mark-white.png"
               alt="icon"
-              className="h-6 w-6 mr-2"
+              className="h-4 w-4 mr-2 text-white"
             />
-            <span>Upload</span>
+            GitHub에 저장
           </button>
           {isGitHubExplorerOpen && (
             <GitHubExplorer

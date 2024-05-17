@@ -157,9 +157,10 @@ const CodeEditor: React.FC<{
         setLanguage(firstCode.language)
         if (firstCode.code) setCode(firstCode.code)
         else setCode(languageOptions[firstCode.language].value)
-      } else if (!option && isInit && tabs.length !== 0) {
+      } else if (!option && tabs.length !== 0) {
         addTab()
       } else {
+          setCode("\n\n      아직 코드가 없어요")
         setTabs([])
       }
     }, [pageId, idList])
@@ -387,7 +388,7 @@ const CodeEditor: React.FC<{
                   {/* Invisible space */}
                 </div>
               )}
-              {!option && (
+              {!option && tabs.length < 8 && (
                 <button
                   onClick={addTab}
                   className="hover:bg-primary/70 hover:text-white border border-b-0 hover:border-0 border-blueishPurple text-blueishPurple  mt-5 text-xs px-4 h-7 transition-colors border-collapse"
@@ -404,13 +405,13 @@ const CodeEditor: React.FC<{
               <>
                 <button
                   onClick={deleteCode}
-                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 mt-5 h-7 mr-1  transition-colors border-b-0"
+                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 mt-2 h-7 mr-1  transition-colors "
                 >
                   현재 탭 삭제
                 </button>
                 <button
                   onClick={saveCode}
-                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-5 text-xs px-3 h-7 mr-1 transition-colors border-b-0"
+                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-2 text-xs px-3 h-7  transition-colors  mr-1"
                 >
                   저장
                 </button>
@@ -420,7 +421,7 @@ const CodeEditor: React.FC<{
                     setLanguage(e.target.value)
                     setCode(languageOptions[e.target.value].value)
                   }}
-                  className="mb-1 rounded-md"
+                  className="mb-0 mt-2 h-7 bg-transparent border border-blueishPurple"
                 >
                   {Object.keys(languageOptions).map((lang) => (
                     <option key={lang} value={lang}>

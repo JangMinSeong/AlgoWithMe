@@ -65,12 +65,14 @@ const TagSelector: React.FC<TagSelectorProps> = ({
       <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
         <div className="font-bold text-lg mb-2">현재 선택한 유형 </div>
 
-        <div className="flex flex-wrap pb-3 border-b-2 border-slate-300 mb-4">
+        <div className="flex flex-wrap pb-1 border-b-2 border-slate-300 mb-4">
           {selectedTags.length === 0 && (
             <div className="text-sm">아직 선택한 유형이 없어요</div>
           )}
           {selectedTags.map((item) => (
-            <div className="mr-1 text-sm">{item}, </div>
+            <div className="rounded-xl bg-blueishPurple/20 text-xs flex px-3 items-center justify-center h-6 mr-1 mb-1 ">
+              {item}
+            </div>
           ))}
         </div>
 
