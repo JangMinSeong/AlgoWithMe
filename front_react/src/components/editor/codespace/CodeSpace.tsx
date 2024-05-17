@@ -387,7 +387,7 @@ const CodeEditor: React.FC<{
                   {/* Invisible space */}
                 </div>
               )}
-              {!option && (
+              {!option && tabs.length < 8 && (
                 <button
                   onClick={addTab}
                   className="hover:bg-primary/70 hover:text-white border border-b-0 hover:border-0 border-blueishPurple text-blueishPurple  mt-5 text-xs px-4 h-7 transition-colors border-collapse"
