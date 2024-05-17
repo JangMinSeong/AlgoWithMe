@@ -117,8 +117,6 @@ public class CodeController {
           @Content(schema = @Schema(implementation = ErrorResponse.class))}),
       @ApiResponse(responseCode = "1200", description = "페이지가 존재하지 않습니다.", content = {
           @Content(schema = @Schema(implementation = ErrorResponse.class))}),
-      @ApiResponse(responseCode = "1300", description = "코드가 존재하지 않습니다.", content = {
-          @Content(schema = @Schema(implementation = ErrorResponse.class))}),
       @ApiResponse(responseCode = "500", description = "조회 실패")
   })
   public ResponseEntity<CodeByPageAndUserResponse> getPersonalCodeByPageAndUser(
