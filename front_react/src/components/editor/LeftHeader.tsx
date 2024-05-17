@@ -102,7 +102,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
         <div className="text-2xl font-bold mr-4  truncate">
           {number}. {title}
         </div>
-        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6 text-white text-xs">
+        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-7  text-white text-xs">
           {provider === 'boj' && level !== 'Unrated' && (
             <img
               src={`/level/${bojdata[level]}.svg`}
@@ -127,7 +127,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
         )}
 
         <button
-          className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
+          className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 min-w-32 h-7 mr-2 transition-colors "
           onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)}
         >
           문제 유형 설정
