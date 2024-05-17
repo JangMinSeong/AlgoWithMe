@@ -1,7 +1,7 @@
-import React, {useEffect, useRef, useState} from 'react'
-import fetch from "@/lib/fetch.ts";
-import {useNavigate} from "react-router-dom";
-import {useWebSocket} from "@/hooks/useWebSocket.ts";
+import React, { useEffect, useRef, useState } from 'react'
+import fetch from '@/lib/fetch.ts'
+import { useNavigate } from 'react-router-dom'
+import { useWebSocket } from '@/hooks/useWebSocket.ts'
 
 interface Study {
   id: number
@@ -24,9 +24,8 @@ const SearchDropdown: React.FC = () => {
   const [studyItems, setStudyItems] = useState<Study[]>([])
   const [pageItems, setPageItems] = useState<Page[]>([])
 
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const {connectToServer} =useWebSocket()
-
+  const wrapperRef = useRef<HTMLDivElement>(null)
+  const { connectToServer } = useWebSocket()
 
   useEffect(() => {
     const fetchSearchList = async () => {
@@ -55,10 +54,8 @@ const SearchDropdown: React.FC = () => {
   const handlePageItemClick = (id: number, studyId: number, isDoc: boolean) => {
     connectToServer(studyId)
     setDropdownVisible(false)
-    if(isDoc)
-      navigate(`/${studyId}/docs/${id}`)
-    else
-      navigate(`/${studyId}/editor/${id}`)
+    if (isDoc) navigate(`/${studyId}/docs/${id}`)
+    else navigate(`/${studyId}/editor/${id}`)
   }
 
   useEffect(() => {
@@ -76,30 +73,28 @@ const SearchDropdown: React.FC = () => {
 
   return (
     <div
-      className={`relative w-full rounded-2xl ${
-        dropdownVisible ? 'shadow-searchShadow' : ''
-      }`}
+      className={`relative w-full ${dropdownVisible ? '' : ''}`}
       ref={wrapperRef}
     >
       <input
-        className={`w-full p-2 text-base border border-navy hover:bg-dimmedPurple rounded-2xl ${
+        className={`w-full p-2 text-base border border-navy hover:bg-dimmedPurple  ${
           dropdownVisible
-            ? `rounded-b-none bg-dimmedPurple bg- border-b-0 ring-0 outline-none shadow-searchShadow`
+            ? `rounded-b-none bg-dimmedPurple border-b-0 ring-0 outline-none`
             : `bg-transparent`
-        } hover:shadow-searchShadow focus:outline-none `}
+        } hover:shadow-searchShadow focus:outline-none transition-colors `}
         type="text"
-        placeholder="스터디 검색"
+        placeholder="내 스터디그룹 또는 학습한 페이지를 검색해보세요"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}
         onClick={() => setDropdownVisible(!dropdownVisible)}
       />
       {dropdownVisible && (
-        <div className="absolute w-full rounded-b-2xl max-h-64 overflow-auto bg-dimmedPurple border border-navy border-t-0 shadow-[0_10px_10px_1px_rgba(0,0,0,0.1)]">
+        <div className=" absolute w-full max-h-64 overflow-auto bg-dimmedPurple border border-navy border-t-0 shadow-[0_10px_10px_1px_rgba(0,0,0,0.1)]">
           <div>
             {studyItems.map((item, index) => (
               <div
                 key={index}
-                className="p-2 hover:bg-lighterPurple"
+                className="p-2  hover:bg-lightPurple transition-colors truncate"
                 onClick={() => {
                   handleStudyItemClick(item.id)
                 }}
@@ -108,15 +103,15 @@ const SearchDropdown: React.FC = () => {
               </div>
             ))}
             {pageItems.map((item, index) => (
-                <div
-                    key={index}
-                    className="p-2 hover:bg-lighterPurple"
-                    onClick={() => {
-                      handlePageItemClick(item.id, item.studyId, item.isDoc)
-                    }}
-                >
-                  {item.name.replace(/"/g, '').replace(/null/g,'빈 페이지')}
-                </div>
+              <div
+                key={index}
+                className="p-2 hover:bg-lightPurple transition-colors truncate"
+                onClick={() => {
+                  handlePageItemClick(item.id, item.studyId, item.isDoc)
+                }}
+              >
+                {item.name.replace(/"/g, '').replace(/null/g, '빈 페이지')}
+              </div>
             ))}
           </div>
         </div>

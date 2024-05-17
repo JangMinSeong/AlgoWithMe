@@ -20,14 +20,25 @@ interface ProblemData {
 }
 
 const ChartProblem: React.FC<Props> = ({ chartList, problemList }) => (
-  <div className="flex-grow flex flex-row w-full justify-center items-center">
-    <div className="flex justify-center m-10 h-96" style={{ flexGrow: 1 }}>
+  <div className="flex-grow flex items-center w-full ">
+    {/* 왼쪽 */}
+    <div className="flex justify-center h-96  flex-col" style={{ flexGrow: 1 }}>
+      <div className="text-darkNavy text-lg  pl-5  text-left font-bold ">
+        나의 알고리즘 통계
+      </div>
+
       <PieChart chartList={chartList} />
     </div>
+
+    {/* 오른쪽 */}
     <div
-      className="flex justify-center m-10 h-96 pr-10"
+      className="flex justify-center m-10 h-96 pr-10  flex-col"
       style={{ flexGrow: 1 }}
     >
+      <div className="text-darkNavy text-lg  pl-5  text-left font-bold ">
+        최근 학습한 문제 목록
+      </div>
+
       <ProblemList problemList={problemList} />
     </div>
   </div>
