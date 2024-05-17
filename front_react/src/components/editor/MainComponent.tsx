@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import fetch from '@/lib/fetch'
 import LeftComponent from '@/components/editor/LeftComponent'
 import RightComponent from '@/components/editor/RightComponent'
@@ -25,6 +25,12 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
 
   const [problemTitle, setProblemTitle] = useState<string>()
   const [problemLevel, setProblemLevel] = useState<string>()
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [leftWidth, setLeftWidth] = useState('50%')
+  const [rightWidth, setRightWidth] = useState('50%')
+  const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const SIDEBAR_WIDTH = isSidebarOpen ? 201 : 7
 
   useEffect(() => {
     const fetchProblemData = async () => {
@@ -80,15 +86,37 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
     setCodeEditorVisible(!codeEditorVisible)
   }
 
-  const handleCenterDivider = (event) => {
-    // Todo: 좌우로 이동할 수 있게 변경해야함
-    console.log(event)
-    // setCodeEditorVisible(!codeEditorVisible)
+  const handleMouseDown = (e) => {
+    e.preventDefault()
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+    document.body.style.cursor = 'grabbing'
+  }
+
+  const handleMouseMove = (e) => {
+    e.preventDefault()
+    if (containerRef.current) {
+      console.log(containerRef.current.offsetWidth)
+      const containerWidth = containerRef.current.offsetWidth
+      const newLeftWidth = ((e.clientX - SIDEBAR_WIDTH) / containerWidth) * 100
+      const modifiedLeftWidth =
+        (newLeftWidth < 2 ? 0 : newLeftWidth) &&
+        (newLeftWidth > 97 ? 100 : newLeftWidth)
+      setLeftWidth(`${modifiedLeftWidth}%`)
+      setRightWidth(`${100 - modifiedLeftWidth}%`)
+    }
+  }
+
+  const handleMouseUp = (e) => {
+    e.preventDefault()
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+    document.body.style.cursor = 'default'
   }
 
   return (
-    <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
-      <div className="mt-0 flex-1 transition-all duration-500 ease-in-out w-[50%] text-wrap">
+    <div ref={containerRef} className="flex w-full h-full overflow-hidden pt-0">
+      <div style={{ width: leftWidth }} className={`mt-0 overflow-hidden`}>
         <LeftComponent
           title={problemTitle}
           level={problemLevel}
@@ -104,24 +132,22 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
       </div>
       <div
         className="flex border-x-[1px] border-blueishPurple h-full w-4 hover:bg-gray-500/10 items-center"
-        onDrag={() => handleCenterDivider()}
-        onMouseEnter={() => {
+        onMouseDown={(event) => {
+          handleMouseDown(event)
+        }}
+        onMouseEnter={(event) => {
+          event.preventDefault()
           document.body.style.cursor = 'grab'
         }}
-        onMouseLeave={() => {
-          document.body.style.cursor = 'default'
-        }}
-        onMouseDown={() => {
-          document.body.style.cursor = 'grabbing'
-        }}
-        onMouseUp={() => {
+        onMouseLeave={(event) => {
+          event.preventDefault()
           document.body.style.cursor = 'default'
         }}
       >
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
-        className={`transition-width duration-500 ease-in-out ${
+        className={`transition-width duration-500 ease-in-out pr-2 pb-2 overflow-hidden ${
           codeEditorVisible ? 'flex-1' : 'w-0 hidden'
         }`}
       >

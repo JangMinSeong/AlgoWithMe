@@ -337,7 +337,7 @@ const RightComponent: React.FC<ProblemProp> = ({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple">
+        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-1">
           <button
             onClick={handleSaveAndRun}
             className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors "

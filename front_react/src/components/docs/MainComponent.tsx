@@ -103,7 +103,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
 
   const editorUser = useEditor({
     extensions: [
-      StarterKit.configure({ history: false }),
+      StarterKit.configure({ history: true }),
       Highlight,
       TaskList,
       TaskItem,
@@ -280,7 +280,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
               key={tab}
               className={` h-8 flex-1 text-center whitespace-nowrap text-wrap hover:bg-primary/50 rounded-l-md text-white text-sm transition-colors ${
                 activeTab === tab ? 'bg-primary' : 'bg-navy'
-              } rounded-t-none`}
+              }`}
               onClick={() => setActiveTab(tab as any)}
               data-tooltip-id="tabName"
               data-tooltip-content={tab}
@@ -289,7 +289,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
             </button>
           ))}
         </div>
-        <div className="w-full" style={{ height: '72vh' }}>
+        <div className="w-full border-t-[1px] border-blueishPurple" style={{ height: '72vh' }}>
           {renderContent()}
         </div>
       </div>
