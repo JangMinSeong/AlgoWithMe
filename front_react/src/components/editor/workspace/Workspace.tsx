@@ -111,9 +111,9 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => {
                 classNames="fade"
                 unmountOnExit
             >
-                <div className="bg-white z-10" style={{
+                <div className="bg-white z-10 rounded-md" style={{
                     position: 'absolute',
-                    top: selectionRect ? `${selectionRect.top - 40}px` : curTop - 40,
+                    top: selectionRect ? `${selectionRect.top - 35}px` : curTop - 35,
                     left: selectionRect ? `${selectionRect.left}px` : curLeft
                 }}>
                     <DraggingMenuBar editor={curEditor!} pageId={pageId} isDragging={true}/>
