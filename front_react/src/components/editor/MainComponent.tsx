@@ -95,8 +95,8 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
       const containerWidth = containerRef.current.offsetWidth
       const newLeftWidth = ((e.clientX - SIDEBAR_WIDTH) / containerWidth) * 100
       const modifiedLeftWidth =
-        (newLeftWidth < 2 ? 0 : newLeftWidth) &&
-        (newLeftWidth > 97 ? 100 : newLeftWidth)
+        (newLeftWidth < 4 ? 0 : newLeftWidth) &&
+        (newLeftWidth > 96 ? 100 : newLeftWidth)
       setLeftWidth(`${modifiedLeftWidth}%`)
       setRightWidth(`${100 - modifiedLeftWidth}%`)
     }
@@ -112,7 +112,10 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   return (
     // Note: 패딩 삽입 금지
     <div ref={containerRef} className="flex w-full h-full overflow-hidden">
-      <div style={{ width: leftWidth }} className={`mt-0 overflow-hidden`}>
+      <div
+        style={{ width: leftWidth }}
+        className={`mt-0 overflow-hidden h-full`}
+      >
         <LeftComponent
           title={problemTitle}
           level={problemLevel}
