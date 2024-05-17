@@ -130,7 +130,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         />
       </div>
       <div
-        className="flex border-x-[1px] border-blueishPurple h-full w-4 hover:bg-gray-500/10 items-center"
+        className="flex border-x-[1px] border-blueishPurple h-full w-4 bg-gray-500/10 hover:bg-gray-500/20 items-center"
         onMouseDown={(event) => {
           handleMouseDown(event)
         }}
