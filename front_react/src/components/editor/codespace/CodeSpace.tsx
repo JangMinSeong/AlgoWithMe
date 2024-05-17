@@ -159,8 +159,8 @@ const CodeEditor: React.FC<{
         else setCode(languageOptions[firstCode.language].value)
       } else if (!option && tabs.length !== 0) {
         addTab()
-      } else {
-          setCode("\n\n      아직 코드가 없어요")
+      } else if(firstCode ===null) {
+        setCode("\n\n      아직 코드가 없어요")
         setTabs([])
       }
     }, [pageId, idList])
