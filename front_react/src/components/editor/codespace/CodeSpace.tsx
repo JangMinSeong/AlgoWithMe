@@ -420,7 +420,7 @@ const CodeEditor: React.FC<{
                     setLanguage(e.target.value)
                     setCode(languageOptions[e.target.value].value)
                   }}
-                  className="mb-1 rounded-md"
+                  className="mb-0 mt-5 h-7 bg-transparent border border-blueishPurple"
                 >
                   {Object.keys(languageOptions).map((lang) => (
                     <option key={lang} value={lang}>

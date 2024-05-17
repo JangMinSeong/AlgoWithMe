@@ -52,14 +52,18 @@ const LevelSelector = () => {
   ]
 
   const chipCss =
-    'bg-primary rounded-xl flex px-3 items-center justify-center h-6 mr-1 mb-1 hover:bg-primary/70 transition-colors'
+    'rounded-xl flex px-3 items-center justify-center h-6 mr-1 mb-1 transition-colors'
+
+  const selectedCss = 'bg-primary'
+  const unselectedCss = 'bg-primary/60 hover:bg-primary'
+
   return (
     <div className="rounded-xl bg-slate-200 px-3 py-2 my-1">
       <div className="font-bold text-sm mb-1">SWEA</div>
       <div className="flex mb-1">
         {sweadata.map((lv) => (
           <div
-            className={chipCss}
+            className={`${chipCss} ${selected.includes(lv) ? selectedCss : unselectedCss}`}
             key={lv}
             onClick={() => {
               handleToggleSelection(lv)
@@ -74,7 +78,7 @@ const LevelSelector = () => {
       <div className="flex  mb-1">
         {programmersdata.map((lv) => (
           <div
-            className={chipCss}
+            className={`${chipCss} ${selected.includes(lv) ? selectedCss : unselectedCss}`}
             key={lv}
             onClick={() => {
               handleToggleSelection(lv)
@@ -89,7 +93,7 @@ const LevelSelector = () => {
       <div className="flex flex-wrap">
         {bojdata.map((lv, idx) => (
           <div
-            className={chipCss}
+            className={`${chipCss} ${selected.includes(lv) ? selectedCss : unselectedCss}`}
             key={lv}
             onClick={() => {
               handleToggleSelection(lv)
