@@ -404,13 +404,13 @@ const CodeEditor: React.FC<{
               <>
                 <button
                   onClick={deleteCode}
-                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 mt-5 h-7 mr-1  transition-colors border-b-0"
+                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 mt-2 h-7 mr-1  transition-colors "
                 >
                   현재 탭 삭제
                 </button>
                 <button
                   onClick={saveCode}
-                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-5 text-xs px-3 h-7  transition-colors border-b-0 mr-1"
+                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-2 text-xs px-3 h-7  transition-colors  mr-1"
                 >
                   저장
                 </button>

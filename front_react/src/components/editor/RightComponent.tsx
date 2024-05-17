@@ -337,10 +337,10 @@ const RightComponent: React.FC<ProblemProp> = ({
             )}
           </div>
         </div>
-        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-1">
+        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-2">
           <button
             onClick={handleSaveAndRun}
-            className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors "
+            className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors mr-1 "
           >
             실행하기
           </button>
