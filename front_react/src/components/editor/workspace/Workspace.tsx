@@ -62,6 +62,7 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => {
     }, [curEditor])
 
     const handleEditorClick = (event: React.MouseEvent) => {
+        setShowTopMenuBar(false)
         if (workspaceRef.current && !workspaceRef.current.contains(event.target as Node)) {
             setSelectionRect(null)
             setShowMenuBar(false)
@@ -81,7 +82,8 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => {
         }
     }, [])
 
-    const toggleTopMenuBar = () => {
+    const toggleTopMenuBar = (e) => {
+        e.stopPropagation()
         setShowTopMenuBar(!showTopMenuBar)
     }
 
@@ -90,7 +92,7 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => {
             <div className="relative top-bar-container">
                 <MdMenu
                     className="w-7 h-7 absolute right-2 top-0 m-2 bg-transparent text-black hover:bg-navy p-1 rounded z-10"
-                    onClick={toggleTopMenuBar}
+                    onClick={(e)=>toggleTopMenuBar(e)}
                 >
                 </MdMenu>
                 <CSSTransition
