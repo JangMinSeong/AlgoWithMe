@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import CodeEditor from '@/components/editor/codespace/CodeSpace'
 import { useWebSocket } from '@/hooks/useWebSocket'
 import { useSelector } from 'react-redux'
@@ -11,6 +11,7 @@ import BOJAndPGOutput from '@/components/editor/codespace/BOJAndPGOutput'
 import SWEAOutput from '@/components/editor/codespace/SWEAOutput'
 import useCode from '@/hooks/useCode.ts'
 import GitHubExplorer from '@/components/github/GithubExplorer.tsx'
+import { FaGripLines } from 'react-icons/fa'
 
 interface BojAndPGDetail {
   status: number
@@ -85,6 +86,12 @@ const RightComponent: React.FC<ProblemProp> = ({
   const curTopic = useSelector(
     (state: RootState) => state.socket.subscriptionUser,
   )
+
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [topHeight, setTopHeight] = useState('50%')
+  const [bottomHeight, setBottomHeight] = useState('50%')
+  const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
+  const SIDEBAR_WIDTH = 71
 
   const fetchMyData = async () => {
     try {
@@ -280,11 +287,40 @@ const RightComponent: React.FC<ProblemProp> = ({
     setIsGitHubExplorerOpen(false)
   }
 
+  const handleMouseDown = (e) => {
+    e.preventDefault()
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
+    document.body.style.cursor = 'grabbing'
+  }
+
+  const handleMouseMove = (e) => {
+    e.preventDefault()
+    if (containerRef.current) {
+      console.log(containerRef.current.offsetHeight)
+      const containerHeight = containerRef.current.offsetHeight
+      const newLeftWidth = ((e.clientY - SIDEBAR_WIDTH) / containerHeight) * 100
+      const modifiedLeftWidth =
+        (newLeftWidth < 4 ? 0 : newLeftWidth) &&
+        (newLeftWidth > 96 ? 100 : newLeftWidth)
+      setTopHeight(`${modifiedLeftWidth}%`)
+      setBottomHeight(`${100 - modifiedLeftWidth}%`)
+    }
+  }
+
+  const handleMouseUp = (e) => {
+    e.preventDefault()
+    document.removeEventListener('mousemove', handleMouseMove)
+    document.removeEventListener('mouseup', handleMouseUp)
+    document.body.style.cursor = 'default'
+  }
+
   return (
-    <div className="flex flex-col w-full h-full">
-      <div style={{ flex: 1 }} className={'h-full'}>
+    <div ref={containerRef} className="flex flex-col w-full h-full">
+      <div style={{ height: topHeight }} className={'h-full overflow-hidden'}>
         <CodeEditor
           ref={codeEditorRef}
+          containerRef={containerRef}
           provider={provider}
           editCodes={editCodes}
           idList={codeIds}
@@ -294,14 +330,29 @@ const RightComponent: React.FC<ProblemProp> = ({
           isInit={isInit}
         />
       </div>
-      <div className="h-px bg-blueishPurple" />
+      <div
+        className="flex border-y-[1px] border-blueishPurple w-full bg-gray-500/10 hover:bg-gray-500/20 justify-center"
+        onMouseDown={(event) => {
+          handleMouseDown(event)
+        }}
+        onMouseEnter={(event) => {
+          event.preventDefault()
+          document.body.style.cursor = 'grab'
+        }}
+        onMouseLeave={(event) => {
+          event.preventDefault()
+          document.body.style.cursor = 'default'
+        }}
+      >
+        <FaGripLines className="text-sm text-gray-500" />
+      </div>
       <div className="flex flex-col flex-1">
         <div className="flex flex-row flex-1 border-gray-300 h-full">
           {provider !== 'programmers' ? (
             <>
               <div className="flex-1">
                 <textarea
-                  className="w-full resize-none p-2 h-full overflow-auto bg-transparent"
+                  className="w-full resize-none p-2 h-full overflow-auto bg-transparent outline-none"
                   placeholder="테스트 케이스를 입력하세요"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
