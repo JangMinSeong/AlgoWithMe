@@ -5,6 +5,7 @@ import Logo from '@/components/Logo'
 import SearchDropdown from '@/components/header/SearchDropdown.tsx'
 import { useScroll } from '@/hooks/useScroll.ts'
 import UserProfile from '@/components/header/UserProfile.tsx'
+import { PiMagnifyingGlass } from 'react-icons/pi'
 
 const MainHeader: React.FC = () => {
   const avatarUrl = useSelector((state: RootState) => state.auth.user?.imageUrl)
@@ -21,10 +22,10 @@ const MainHeader: React.FC = () => {
       <div className="flex-none">
         <Logo />
       </div>
-      <div className="shrink w-1/2">
+      <div className="shrink w-1/3 flex items-center">
+        <PiMagnifyingGlass className="mr-2 w-5 h-5" />
         <SearchDropdown />
       </div>
-
       {avatarUrl ? (
         <div className="relative flex-none">
           <img

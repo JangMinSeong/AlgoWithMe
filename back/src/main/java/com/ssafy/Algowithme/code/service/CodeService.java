@@ -103,7 +103,11 @@ public class CodeService {
     List<PersonalCode> codes = personalCodeRepository.findAllByWorkspaceAndUserAndDeletedFalseOrderByIdAsc(
         workspace, user);
     if (codes.isEmpty()) {
-      throw new CustomException(ExceptionStatus.PERSONAL_CODE_NOT_FOUND);
+      codes.add(personalCodeRepository.save(
+              PersonalCode.builder().user(user).workspace(workspace).language(Language.C).deleted(false)
+                      .build()));
+      return new CodeByPageAndUserResponse(codes.stream().map(PersonalCode::getId).toList(),
+              PersonalCodeResponse.fromEntity(codes.getFirst()));
     }
     return getFirstCodeAndIdsById(codes);
   }
