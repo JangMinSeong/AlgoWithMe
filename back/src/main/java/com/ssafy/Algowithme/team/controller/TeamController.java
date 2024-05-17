@@ -3,10 +3,7 @@ package com.ssafy.Algowithme.team.controller;
 import com.ssafy.Algowithme.common.exception.ErrorResponse;
 import com.ssafy.Algowithme.team.dto.ImageUrlDto;
 import com.ssafy.Algowithme.team.dto.request.AddProblemRequest;
-import com.ssafy.Algowithme.team.dto.response.AddProblemResponse;
-import com.ssafy.Algowithme.team.dto.response.InviteUrlResponse;
-import com.ssafy.Algowithme.team.dto.response.TeamInfoDetailResponse;
-import com.ssafy.Algowithme.team.dto.response.TeamInfoResponse;
+import com.ssafy.Algowithme.team.dto.response.*;
 import com.ssafy.Algowithme.team.service.TeamService;
 import com.ssafy.Algowithme.user.dto.response.UserInfoResponse;
 import com.ssafy.Algowithme.user.entity.User;
@@ -183,5 +180,17 @@ public class TeamController {
   public ResponseEntity<List<UserInfoResponse>> getTeamMembers(@PathVariable("teamId") Long teamId,
                                                                @AuthenticationPrincipal User user) {
     return ResponseEntity.ok(teamService.getTeamMembers(teamId, user));
+  }
+
+  @GetMapping("/invitation/{teamId}")
+  @Operation(summary = "팀 이름, 이미지 조회", description = "초대 코드로 보여질 스터디그룹의 이름과 이미지를 반환한다.")
+  @ApiResponses(value = {
+          @ApiResponse(responseCode = "200", description = "스터디그룹 정보 조회 성공",
+                  content = {@Content(schema = @Schema(implementation = TeamInfoDetailResponse.class))}),
+          @ApiResponse(responseCode = "1100", description = "팀이 존재하지 않습니다.",
+                  content = {@Content(schema = @Schema(implementation = ErrorResponse.class))})
+  })
+  public ResponseEntity<TeamBriefResponse> getTeamNameAndImage(@PathVariable("teamId") Long teamId) {
+    return ResponseEntity.ok(teamService.getTeamNameAndImage(teamId));
   }
 }

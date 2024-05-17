@@ -23,6 +23,9 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const [editCodes, setEditCodes] = useState([])
   const [tags, setTags] = useState([])
 
+  const [problemTitle, setProblemTitle] = useState<string>()
+  const [problemLevel, setProblemLevel] = useState<string>()
+
   useEffect(() => {
     const fetchProblemData = async () => {
       try {
@@ -63,6 +66,9 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         setNumber(responseData.number)
         setUid(responseData.id)
         setTags(responseData.tagList)
+
+        setProblemTitle(responseData.title)
+        setProblemLevel(responseData.level)
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }
@@ -84,6 +90,10 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
     <div className="flex items-stretch w-full h-full overflow-hidden pt-0">
       <div className="mt-0 flex-1 transition-all duration-500 ease-in-out">
         <LeftComponent
+          title={problemTitle}
+          level={problemLevel}
+          number={number}
+          provider={provider}
           url={url}
           content={content}
           room={`${pageId}`}

@@ -196,7 +196,7 @@ const StudyMainPage = () => {
           {/* 멤버랭킹 */}
           <div className="mr-4 flex flex-col h-[100%]">
             <div className="font-bold mb-4 ">멤버 랭킹</div>
-            <div className="flex mx-2 items-center">
+            <div className="flex items-center h-72">
               {currentStudyInfo.ranking.length === 0 && (
                 <div>랭킹이 없어요. 문제를 풀어보세요!</div>
               )}
@@ -210,7 +210,7 @@ const StudyMainPage = () => {
         {/* 오른쪽 위 파이차트 */}
         <div className="w-[50%] mb-10 flex flex-col mx-auto">
           <div className="font-bold mb-4">스터디에서 진행한 알고리즘 통계</div>
-          <div className="h-[72px]">
+          <div className="h-72 ">
             <PieChart chartList={currentStudyInfo.chart} />
           </div>
         </div>
