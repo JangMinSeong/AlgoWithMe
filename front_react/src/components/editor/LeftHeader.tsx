@@ -89,7 +89,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
 
   return (
     <div className="flex justify-between items-center w-full h-16 border-b-[1px] border-b-blueishPurple">
-      <div className="flex items-center ml-10 ">
+      <div className="flex items-center ml-10 w-[70%]">
         <img
           src={`/${provider === 'boj' ? 'baekjoon' : provider}.png`}
           width={30}
@@ -99,10 +99,10 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
           data-tooltip-id="pLink"
           data-tooltip-content="원본 문제 보러가기"
         />
-        <div className="text-2xl font-bold mr-4 text-wrap">
+        <div className="text-2xl font-bold mr-4  truncate">
           {number}. {title}
         </div>
-        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6  text-white text-xs">
+        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6 text-white text-xs">
           {provider === 'boj' && level !== 'Unrated' && (
             <img
               src={`/level/${bojdata[level]}.svg`}
@@ -116,10 +116,10 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex">
+      <div className="flex ">
         {activeTab === '개인 메모장' && (
           <button
-            className="border border-primary border-b-0  text-primary hover:bg-primary/70 hover:text-white rounded-t-xl text-xs px-3 h-7 mt-11 mr-2 transition-colors"
+            className="border border-primary  text-primary hover:bg-primary/70 hover:text-white rounded-xl text-xs px-3 h-7 mr-1 transition-colors"
             onClick={() => handleSaveClick('저장')}
           >
             저장
@@ -127,10 +127,10 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
         )}
 
         <button
-          className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7 mr-2 mt-11 border-b-0 rounded-t-xl transition-colors "
+          className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-7 mr-2 transition-colors "
           onClick={() => setIsTagSelectorOpen(!isTagSelectorOpen)}
         >
-          문제 유형 선택
+          문제 유형 설정
         </button>
 
         {isTagSelectorOpen && (
