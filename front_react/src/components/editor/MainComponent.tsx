@@ -143,7 +143,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
-        className={`transition-width duration-500 ease-in-out overflow-hidden w-auto`}
+        className={`transition-width duration-500 ease-in-out overflow-hidden w-auto flex-1`}
       >
         <RightComponent
           provider={provider}
