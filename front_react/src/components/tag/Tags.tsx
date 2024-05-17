@@ -1,5 +1,6 @@
 import * as React from 'react'
-import fetch from "@/lib/fetch.ts";
+import fetch from '@/lib/fetch.ts'
+import toast from 'react-hot-toast'
 
 // 태그 인터페이스
 interface Tag {
@@ -29,69 +30,82 @@ interface TagSelectorProps {
   selectedTags: string[]
   toggleTag: (key: string) => void
   onClose: () => void
-    pageId:number
+  pageId: number
 }
 
 const TagSelector: React.FC<TagSelectorProps> = ({
-                                                     selectedTags,
-                                                     toggleTag,
-                                                     onClose,
-                                                        pageId
-                                                 }) => {
-    const handleSave = async () => {
-        const dataToUpdate = {
-            pageId:pageId,
-            tagList:selectedTags
-        }
-
-        console.log(dataToUpdate)
-
-        await fetch(`/page/tag`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body:JSON.stringify(dataToUpdate)
-        }).then(()=> {
-            onClose()
-        })
+  selectedTags,
+  toggleTag,
+  onClose,
+  pageId,
+}) => {
+  const handleSave = async () => {
+    const dataToUpdate = {
+      pageId: pageId,
+      tagList: selectedTags,
     }
 
-    return(
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-            <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
-                <div className="flex flex-wrap justify-start gap-2">
-                    {tags.map((tag) => (
-                        <button
-                            key={tag.label}
-                            className={`px-4 py-1 text-sm text-center font-medium rounded-md shadow transition-colors duration-200 ${
-                                selectedTags.includes(tag.label) ? 'bg-primary text-white' : 'bg-navy hover:bg-secondary hover:text-white'
-                            }`}
-                            onClick={() => toggleTag(tag.label)}
-                            style={{minWidth: '5rem'}}
-                        >
-                            {tag.label}
-                        </button>
-                    ))}
-                </div>
-                <div className="flex flex-row justify-end text-right mt-4">
-                    <button
-                        className="py-1 px-4 mr-2 bg-primary text-white rounded hover:bg-secondary transition duration-200"
-                        onClick={handleSave}
-                    >
-                        저장
-                    </button>
-                    <button
-                        className="py-1 px-4 bg-navy text-white rounded hover:bg-secondary transition duration-200"
-                        onClick={onClose}
-                    >
-                        닫기
-                    </button>
-                </div>
-            </div>
+    console.log(dataToUpdate)
+
+    await fetch(`/page/tag`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToUpdate),
+    })
+      .then(() => {
+        toast.success('저장했어요')
+      })
+      .then(() => onClose())
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
+      <div className="modal-content bg-gray-200 p-5 rounded-lg shadow-lg max-w-lg w-full">
+        <div className="font-bold text-lg mb-2">현재 선택한 유형 </div>
+
+        <div className="flex flex-wrap pb-3 border-b-2 border-slate-300 mb-4">
+          {selectedTags.length === 0 && (
+            <div className="text-sm">아직 선택한 유형이 없어요</div>
+          )}
+          {selectedTags.map((item) => (
+            <div className="mr-1 text-sm">{item}, </div>
+          ))}
         </div>
 
-    );
+        <div className="flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <button
+              key={tag.label}
+              className={`px-4 py-1 text-sm font-semibold rounded-full transition-colors duration-200 ${
+                selectedTags.includes(tag.label)
+                  ? 'bg-primary text-white border-primary  border-4 hover:bg-primary/80 '
+                  : 'border-primary text-primary border-4 hover:bg-primary/80 hover:text-white'
+              }`}
+              onClick={() => toggleTag(tag.label)}
+            >
+              {tag.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex justify-end">
+          <button
+            className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 h-7 mr-2 mt-11 rounded-xl transition-colors "
+            onClick={onClose}
+          >
+            취소
+          </button>
+          <button
+            className="bg-primary hover:bg-primary/50 text-white text-xs px-3 h-7 mr-2 mt-11 border-b-0 rounded-xl transition-colors "
+            onClick={handleSave}
+          >
+            저장하기
+          </button>
+        </div>
+      </div>
+    </div>
+  )
 }
 
-export default TagSelector;
+export default TagSelector

@@ -9,13 +9,13 @@ const ActiveProfileItem = ({
   rank: number
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-[76%] ">
       <div className="font-bold text-lg mb-6 px-4 rounded-xl py-1 border-b">
         {rank === 0 && '🥇 1등'} {rank === 1 && '🥈 2등'}
         {rank === 2 && '🥉 3등'}
       </div>
-      <div className="from-primary/50 via-secondary/50 to-blueishPurple/50 p-[2px] bg-gradient-to-br w-fit rounded-2xl mr-2 shadow-foggyBlue">
-        <div className=" bg-white w-36 h-52 rounded-2xl flex flex-col items-center p-4">
+      <div className="from-primary/50 via-secondary/50 to-blueishPurple/50 p-[2px] bg-gradient-to-br w-fit rounded-2xl shadow-foggyBlue">
+        <div className=" bg-white w-40 h-52 rounded-2xl flex flex-col items-center p-4">
           {/* gradient border */}
           <div className="h-[60%] flex items-center justify-center">
             <a
