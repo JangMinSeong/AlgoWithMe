@@ -45,16 +45,16 @@ const Header: React.FC<HeaderProps> = ({ activeTab, onSave, room }) => {
       <img
         src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/File%20Folder.png"
         alt="File Folder"
-        width="66"
-        height="66"
-        className="ml-10 mt-10 mb-4"
+        width="56"
+        height="48"
+        className="ml-10 mt-3 mb-2"
       />
       <div className="flex justify-between  ml-10 ">
-        <div className=" text-4xl font-bold mb-8">{curTitle}</div>
+        <div className=" text-4xl font-bold mb-4">{curTitle}</div>
         <div className="flex">
           {activeTab === '개인 메모장' && (
             <button
-              className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-8 mt-8 mr-1 transition-colors"
+              className="bg-primary hover:bg-primary/70 text-white rounded-xl text-xs px-3 h-8 mt-5 mr-1 transition-colors"
               onClick={() => handleSaveClick('저장')}
             >
               저장하기

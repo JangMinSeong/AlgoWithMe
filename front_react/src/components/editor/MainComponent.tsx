@@ -121,7 +121,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         <FaGripLinesVertical className="text-sm text-gray-500" />
       </div>
       <div
-        className={`transition-width duration-500 ease-in-out ${
+        className={`transition-width duration-500 ease-in-out pr-2 pb-2 ${
           codeEditorVisible ? 'flex-1' : 'w-0 hidden'
         }`}
       >
