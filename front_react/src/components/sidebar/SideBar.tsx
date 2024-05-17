@@ -38,7 +38,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
   )
   const { handleEditName, handleFetchStudyInfo } = useStudy()
 
-  const { setGId, setPages, setStudys } = useSidebar()
+  const { setGId, setPages, setStudys, setPId } = useSidebar()
 
   const { connectToServer, sendUpdateMessage, subscribeStudy } = useWebSocket()
 
@@ -106,6 +106,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
   const handleGoStudyMain = () => {
     handleFetchStudyInfo(groupId)
+    setPId(0)
     navigate(`/${groupId}/study`)
   }
 

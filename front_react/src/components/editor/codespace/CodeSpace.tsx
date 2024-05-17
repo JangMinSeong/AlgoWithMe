@@ -157,9 +157,10 @@ const CodeEditor: React.FC<{
         setLanguage(firstCode.language)
         if (firstCode.code) setCode(firstCode.code)
         else setCode(languageOptions[firstCode.language].value)
-      } else if (!option && isInit && tabs.length !== 0) {
+      } else if (!option && tabs.length !== 0) {
         addTab()
       } else {
+          setCode("\n\n      아직 코드가 없어요")
         setTabs([])
       }
     }, [pageId, idList])
@@ -420,7 +421,7 @@ const CodeEditor: React.FC<{
                     setLanguage(e.target.value)
                     setCode(languageOptions[e.target.value].value)
                   }}
-                  className="mb-0 mt-5 h-7 bg-transparent border border-blueishPurple"
+                  className="mb-0 mt-2 h-7 bg-transparent border border-blueishPurple"
                 >
                   {Object.keys(languageOptions).map((lang) => (
                     <option key={lang} value={lang}>
