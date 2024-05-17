@@ -88,11 +88,13 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
   }
 
   return (
-    <div className="flex justify-between items-center ml-8 flex-wrap">
-      <div className="flex items-center  my-4">
+    <div className="flex justify-between items-center w-full h-16 border-b-[1px] border-b-blueishPurple">
+      <div className="flex items-center ml-10 ">
         <img
           src={`/${provider === 'boj' ? 'baekjoon' : provider}.png`}
-          className="w-10 h-10 rounded-full mr-4"
+          width={30}
+          height={30}
+          className="rounded-full mr-4 hover:cursor-pointer"
           onClick={() => handleProblemLinkClick()}
           data-tooltip-id="pLink"
           data-tooltip-content="원본 문제 보러가기"
@@ -100,7 +102,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
         <div className="text-2xl font-bold mr-4 text-wrap">
           {number}. {title}
         </div>
-        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6  hover:bg-primary/70 transition-colors text-white text-xs mt-1">
+        <div className="bg-primary rounded-xl flex px-3 items-center justify-center h-6  text-white text-xs">
           {provider === 'boj' && level !== 'Unrated' && (
             <img
               src={`/level/${bojdata[level]}.svg`}

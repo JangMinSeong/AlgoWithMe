@@ -301,13 +301,13 @@ const LeftComponent: React.FC<ProblemProp> = ({
           tags={updatedTags}
         />
       </div>
-      <div className="flex">
-        <div className="flex flex-col h-40">
+      <div className="flex h-full">
+        <div className="flex flex-col border-r-[1px] border-blueishPurple">
           {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
-              className={`w-8 flex-1 text-center text-wrap whitespace-nowrap  hover:bg-primary/50 rounded-l-md rounded-tl-md text-white text-sm transition-colors ${
-                activeTab === tab ? 'bg-primary' : 'bg-navy'
+              className={`z-20 w-8 max-h-16 flex-1 border-blueishPurple border-b-[1px] text-center text-wrap whitespace-nowrap  hover:bg-primary/50 text-white text-sm transition-colors ${
+                activeTab === tab ? 'bg-primary' : 'bg-none'
               } rounded-t-none`}
               onClick={() => setActiveTab(tab as any)}
               data-tooltip-id="codeTabName"
@@ -319,9 +319,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
             </button>
           ))}
         </div>
-        <div className="grow overflow-auto border-t-[1px] border-blueishPurple h-[80vh]">
-          {renderContent()}
-        </div>
+        <div className="grow overflow-auto h-full">{renderContent()}</div>
       </div>
       <Tooltip id="codeTabName" place="left" />
     </div>
