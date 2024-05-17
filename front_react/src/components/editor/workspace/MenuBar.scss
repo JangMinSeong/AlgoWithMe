@@ -1,7 +1,23 @@
-.divider {
-  background-color: rgba(#fff, 0.25);
-  height: 1.25rem;
-  margin-left: 0.5rem;
-  margin-right: 0.75rem;
-  width: 1px;
+.menu-item {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  height: 1.75rem;
+  margin-right: 0.25rem;
+  padding: 0.25rem;
+  width: auto; /* 너비를 자동으로 설정해 유동적으로 조정되도록 변경 */
+  display: flex; /* Flexbox 레이아웃 적용 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+
+  svg {
+    fill: currentColor;
+    height: 100%;
+    width: 100%;
+  }
+
+  &:hover,
+  &.is-active {
+    background-color: #ADB1F1;
+  }
 }
