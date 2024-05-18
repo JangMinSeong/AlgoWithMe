@@ -1,6 +1,5 @@
 import LandingHeader from '@/components/header/LandingHeader'
 import { useEffect, useRef, useState } from 'react'
-import { debounce } from 'lodash'
 
 function Landing() {
   const needProgramList = [
@@ -45,28 +44,33 @@ function Landing() {
     } else {
       textRefs.current.forEach((ref) => {
         if (ref) {
-          ref.style.opacity = '0'
-          ref.style.transform = 'translateY(10px)'
+          // ref.style.opacity = '0'
+          // ref.style.transform = 'translateY(10px)'
         }
       })
     }
   }, [textRefs])
 
   useEffect(() => {
-    const handleScroll = debounce(() => {
+    const handleScroll = () => {
       textRefs.current.forEach((ref) => {
         if (ref) {
           const top = ref.getBoundingClientRect().top
           if (top < window.innerHeight - 100) {
             ref.style.opacity = '1'
-            ref.style.transform = 'translateY(-10px)'
           } else {
             ref.style.opacity = '0'
-            ref.style.transform = 'translateY(10px)'
           }
+          // if (top < window.innerHeight) {
+          //   ref.style.opacity = '1'
+          //   ref.style.transform = 'translateY(-10px)'
+          // } else {
+          //   ref.style.opacity = '0'
+          //   ref.style.transform = 'translateY(10px)'
+          // }
         }
       })
-    }, 10)
+    }
 
     const handleBiggerScroll = () => {
       if (biggerRef.current) {
@@ -76,7 +80,7 @@ function Landing() {
           const distance = innerHeight * 2.5
           const normalizedDistance = (top - innerHeight) / distance
           const exponentialRate =
-            1 + 99 * Math.exp(-10 * (1 - normalizedDistance))
+            1 + 109 * Math.exp(-10 * (1 - normalizedDistance))
           if (top === 0) {
             setRate(1)
             return
@@ -84,7 +88,7 @@ function Landing() {
           setRate(exponentialRate)
         }
         if (top > innerHeight * 3.5) {
-          setRate(100)
+          setRate(110)
         }
         if (top < window.innerHeight) setRate(1)
       }
@@ -144,9 +148,9 @@ function Landing() {
         </section>
         <section className="h-[350vh] bg-indigo-950">
           <div className="sticky top-0 h-[100vh] overflow-hidden">
-            <div className="xl:container xl:mx-auto px-40 pt-40">
-              <div className="flex justify-center items-center">
-                <div className="grid grid-cols-4 grid-rows-2 gap-10 place-content-center w-fit">
+            <div className="h-[100vh] xl:container xl:mx-auto max-md:px-24 px-40 flex justify-center">
+              <div className="flex justify-center items-center w-full">
+                <div className="grid grid-cols-4 grid-rows-2 max-md:gap-5 gap-10 place-content-center w-fit">
                   {needProgramList.map((program, index) => (
                     <div
                       key={index}
@@ -168,7 +172,7 @@ function Landing() {
                 src="/logo_reverse.svg"
                 alt="logo_reverse"
                 style={{ transform: `matrix(${rate}, 0, 0, ${rate}, 0, 0)` }}
-                className="scale-[80]"
+                className="w-full"
               />
             </div>
           </div>
