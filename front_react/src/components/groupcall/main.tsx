@@ -146,12 +146,12 @@ const Main = () => {
 
     session.on('publisherStartSpeaking', (event) => {
       handleSetSpeaker(event.connection.data)
-      //     console.log('User ' + event.connection.data + '가 말하고 있어요')
+      console.log('User ' + event.connection.data + '가 말하고 있어요')
     })
 
     session.on('publisherStopSpeaking', (event) => {
       handleUnsetSpeaker(event.connection.data)
-      //    console.log('User ' + event.connection.data + '가 말을 멈췄어요')
+      console.log('User ' + event.connection.data + '가 말을 멈췄어요')
     })
   }, [subscriber, session])
 
