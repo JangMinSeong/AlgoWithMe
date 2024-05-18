@@ -1,6 +1,18 @@
 import LandingHeader from '@/components/header/LandingHeader'
+import { useEffect, useRef, useState } from 'react'
+import { debounce } from 'lodash'
 
 function Landing() {
+  const needProgramList = [
+    '/baekjoon.png',
+    '/programmers.svg',
+    '/swea.svg',
+    '/logo/github/github-mark-white.png',
+    '/notion.svg',
+    '/discord.svg',
+    '/vscode.svg',
+    '/IntelliJ.svg',
+  ]
   const handleGithubEmailSubmit = (e) => {
     e.preventDefault()
     alert('깃허브로 시작하기')
@@ -16,7 +28,73 @@ function Landing() {
       rgba(237, 214, 255, 1) 78%,\
       rgba(247, 224, 255, 0.9) 100%\
     )',
+    backgroundAttachment: 'fixed',
   }
+
+  const textRefs = useRef<HTMLDivElement[]>([])
+  const biggerRef = useRef<HTMLDivElement>(null)
+  const [rate, setRate] = useState(85)
+
+  useEffect(() => {
+    if (textRefs.current.length === 0) {
+      return
+    } else {
+      textRefs.current.forEach((ref) => {
+        if (ref) {
+          ref.style.opacity = '0'
+          ref.style.transform = 'translateY(10px)'
+        }
+      })
+    }
+  }, [textRefs])
+
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      textRefs.current.forEach((ref) => {
+        if (ref) {
+          const top = ref.getBoundingClientRect().top
+          if (top < window.innerHeight - 300) {
+            ref.style.opacity = '1'
+            ref.style.transform = 'translateY(0)'
+          } else {
+            ref.style.opacity = '0'
+            ref.style.transform = 'translateY(10px)'
+          }
+        }
+      })
+    }, 10)
+
+    const handleBiggerScroll = () => {
+      if (biggerRef.current) {
+        const top = biggerRef.current.getBoundingClientRect().top
+        const innerHeight = window.innerHeight
+        if (window.scrollY > innerHeight && top - innerHeight > 0) {
+          const distance = innerHeight * 2.5
+          const normalizedDistance = (top - innerHeight) / distance
+          const exponentialRate =
+            1 + 99 * Math.exp(-10 * (1 - normalizedDistance))
+          if (top === 0) {
+            setRate(1)
+            return
+          }
+          setRate(exponentialRate)
+        }
+        if (top > innerHeight * 3.5) {
+          setRate(100)
+        }
+        if (top < window.innerHeight) setRate(1)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    window.addEventListener('scroll', handleBiggerScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('scroll', handleBiggerScroll)
+    }
+  }, [])
+
   return (
     <>
       <LandingHeader />
@@ -60,11 +138,46 @@ function Landing() {
             </div>
           </div>
         </section>
-        <section className="bg-indigo-950">
+        <section className="h-[350vh] bg-indigo-950">
+          <div className="sticky top-0 h-[100vh] overflow-hidden">
+            <div className="xl:container xl:mx-auto px-40 pt-40">
+              <div className="flex justify-center items-center">
+                <div className="grid grid-cols-4 grid-rows-2 gap-10 place-content-center w-fit">
+                  {needProgramList.map((program, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-center"
+                    >
+                      <img
+                        src={program}
+                        width={256}
+                        alt="program"
+                        className="rounded-2xl"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="h-[100vh] w-full absolute top-0 overflow-hidden flex items-center justify-center">
+              <img
+                src="/logo_reverse.svg"
+                alt="logo_reverse"
+                style={{ transform: `matrix(${rate}, 0, 0, ${rate}, 0, 0)` }}
+                className="scale-[80]"
+              />
+            </div>
+          </div>
+        </section>
+        <section ref={biggerRef} className="bg-indigo-950">
           <div className="xl:container xl:mx-auto px-40">
             <div className="flex flex-col">
-              <div className="pt-32 font-bold text-5xl text-gray-400">
-                All-in-One
+              <div
+                // style={{ opacity: 0, transform: 'translateY(10px)' }}
+                ref={(ref) => textRefs.current.push(ref)}
+                className="pt-32 font-bold text-6xl text-gray-400 transition duration-500 ease-in-out"
+              >
+                ALL IN ONE
               </div>
             </div>
           </div>
