@@ -15,7 +15,11 @@ function Landing() {
   ]
   const handleGithubEmailSubmit = (e) => {
     e.preventDefault()
-    alert('깃허브로 시작하기')
+    window.location.assign(
+      `https://github.com/login/oauth/authorize?client_id=${
+        import.meta.env.VITE_GITHUB_ID
+      }&scope=repo%20project&login=${e.target[0].value}`,
+    )
   }
 
   const backgroundImage = {
