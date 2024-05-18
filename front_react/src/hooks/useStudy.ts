@@ -11,6 +11,7 @@ import fetch from '@/lib/fetch'
 import toast from 'react-hot-toast'
 import useCode from '@/hooks/useCode.ts'
 import { RootState } from '@/lib/store.ts'
+import { setOffline } from '@/features/study/memberSlice'
 
 const useStudy = () => {
   const dispatch = useDispatch()
@@ -26,11 +27,11 @@ const useStudy = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-      // console.log(json)
+        // console.log(json)
         dispatch(viewStudyInfo(json))
       })
       .catch((error) => {
-     //   console.error(error)
+        //   console.error(error)
       })
   }
 
@@ -44,8 +45,16 @@ const useStudy = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-    //    console.log('멤버', json)
+        // console.log('멤버', json)
         dispatch(viewStudyMembers(json))
+        json.map((item) => {
+          const data = {
+            nickname: item.nickname,
+            imageUrl: item.imageUrl,
+            isSpeaking: false,
+          }
+          dispatch(setOffline(data))
+        })
         // 현재 사용자 닉네임과 일치하는 사용자 찾기
         const foundUser = json.find((user) => user.nickname === nickname)
         handleMyId(foundUser.id)
@@ -66,12 +75,12 @@ const useStudy = () => {
       .then((res) => res.json())
       .then((json) => {
         toast.success('문제가 추가되었어요')
-   //     console.log(json)
+        //     console.log(json)
         dispatch(addCandidateProblems(json))
       })
       .catch((err) => {
         toast.error('이미 추가된 문제예요')
-    //    console.error(err)
+        //    console.error(err)
       })
   }
 
@@ -115,8 +124,8 @@ const useStudy = () => {
         dispatch(editName(name))
       })
       .catch((err) => {
-   //     console.log(teamId)
-    //    console.error(err)
+        //     console.log(teamId)
+        //    console.error(err)
       })
   }
 

@@ -3,7 +3,6 @@ import Logo from '@/components/Logo'
 import Avatar from './Avatar'
 import Timer from './Timer'
 import SideBarButton from '../sidebar/SideBarButton'
-// import GroupCall from '../groupcall/GroupCall'
 import React, { useEffect, useRef, useState } from 'react'
 // import fetch from '@/lib/fetch.ts'
 import { RootState } from '@/lib/store.ts'
@@ -34,6 +33,10 @@ const StudyHeader = (props: { groupId: number }) => {
 
   const onlineMembers = useSelector(
     (state: RootState) => state.member.onlineMembers,
+  )
+
+  const offlineMembers = useSelector(
+    (state: RootState) => state.member.offlineMembers,
   )
 
   const updateStudyMessage = useSelector(
@@ -77,12 +80,31 @@ const StudyHeader = (props: { groupId: number }) => {
   return (
     <div>
       <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center px-5">
-        <div className="flex items-center w-1/2">
+        <div className="flex items-center">
           <SideBarButton />
           <Logo />
         </div>
 
         <div className="flex items-center">
+          {/* 음성채팅 상단부 */}
+          <div className="ml-10 flex items-center mr-6">
+            {onlineMembers.map((person) => (
+              <Avatar
+                key={person.nickname}
+                userInfo={person}
+                isProfile={false}
+                isOnline={true}
+              />
+            ))}
+            {offlineMembers.map((person) => (
+              <Avatar
+                key={person.nickname}
+                userInfo={person}
+                isProfile={false}
+                isOnline={false}
+              />
+            ))}
+          </div>
           <Timer />
           {avatarUrl ? (
             <div className="relative flex-none">
@@ -108,21 +130,9 @@ const StudyHeader = (props: { groupId: number }) => {
           )}
         </div>
       </div>
-      {/* 음성채팅  */}
-      <div className="border fixed bottom-2 left-2">
-        <div className="mb-2">
-          {onlineMembers.map((person) => (
-            <Avatar
-              key={person.nickname}
-              userInfo={person}
-              isProfile={false}
-              data-tooltip-id="onlineMemberName"
-              data-tooltip-content={person.nickname}
-            />
-          ))}
-        </div>
-        <div className="border flex items-center">
-          <Avatar userInfo={myInfo} isProfile={true} />
+      {/* 음성채팅 하단부  */}
+      <div className=" fixed bottom-2 left-2">
+        <div className=" flex items-center">
           <Main />
         </div>
       </div>
