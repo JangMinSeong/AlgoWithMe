@@ -12,13 +12,6 @@ interface UserInfo {
 
 const Avatar = (props: { userInfo: UserInfo; isProfile: boolean }) => {
   //const userImage = useSelector((state: RootState) => state.auth.user.imageUrl)
-  const { handleLogout } = useAuth()
-  const [showLogOutButton, setShowLogOutButton] = useState(false)
-  const handleClickEvent = () => {
-    if (props.isProfile) {
-      setShowLogOutButton(!showLogOutButton)
-    }
-  }
 
   return (
     <div className="mr-2">
@@ -30,11 +23,7 @@ const Avatar = (props: { userInfo: UserInfo; isProfile: boolean }) => {
         className={`${
           props.userInfo.isSpeaking && 'border-red-500 border-2'
         } rounded-full`}
-        onClick={handleClickEvent}
       />
-      {showLogOutButton && (
-        <button onClick={() => handleLogout()}>로그아웃</button>
-      )}
     </div>
   )
 }

@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import SideBar from '@/components/sidebar/SideBar.tsx'
 import PageCreateModal from '@/components/sidebar/PageCreateModal.tsx'
 import ScrollToTop from '@/components/ScrollToTop'
+import { Tooltip } from 'react-tooltip'
 
 export default function Layout() {
   const { groupId } = useParams()

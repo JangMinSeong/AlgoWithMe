@@ -12,7 +12,7 @@ import Main from '../groupcall/main'
 import useStudy from '@/hooks/useStudy'
 import useAuth from '@/hooks/useAuth'
 import UserProfile from '@/components/header/UserProfile.tsx'
-
+import { Tooltip } from 'react-tooltip'
 interface UserInfo {
   id: number
   nickname: string
@@ -75,42 +75,56 @@ const StudyHeader = (props: { groupId: number }) => {
   }, [updateStudyMessage])
 
   return (
-    <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center px-5">
-      <div className="flex items-center w-1/2">
-        <SideBarButton />
-        <Logo />
-        <div className="flex items-center ml-10">
-          {onlineMembers.map((person) => (
-            <Avatar key={person.nickname} userInfo={person} isProfile={false} />
-          ))}
-          <Main />
+    <div>
+      <div className="fixed z-10 top-2 left-2 w-[98vw] h-12 flex justify-between items-center px-5">
+        <div className="flex items-center w-1/2">
+          <SideBarButton />
+          <Logo />
+        </div>
+
+        <div className="flex items-center">
+          <Timer />
+          {avatarUrl ? (
+            <div className="relative flex-none">
+              <img
+                src={avatarUrl}
+                alt="Profile Image"
+                width={40}
+                height={40}
+                className="rounded-full shadow-md hover:cursor-pointer"
+                onClick={() => setShowProfile(!showProfile)}
+                ref={avatarRef}
+              />
+              {showProfile && (
+                <UserProfile
+                  avatarUrl={avatarUrl}
+                  onClose={() => setShowProfile(false)}
+                  avatarRef={avatarRef}
+                />
+              )}
+            </div>
+          ) : (
+            <div>profile</div>
+          )}
         </div>
       </div>
-
-      <div className="flex items-center">
-        <Timer />
-        {avatarUrl ? (
-          <div className="relative flex-none">
-            <img
-              src={avatarUrl}
-              alt="Profile Image"
-              width={40}
-              height={40}
-              className="rounded-full shadow-md hover:cursor-pointer"
-              onClick={() => setShowProfile(!showProfile)}
-              ref={avatarRef}
+      {/* 음성채팅  */}
+      <div className="border fixed bottom-2 left-2">
+        <div className="mb-2">
+          {onlineMembers.map((person) => (
+            <Avatar
+              key={person.nickname}
+              userInfo={person}
+              isProfile={false}
+              data-tooltip-id="onlineMemberName"
+              data-tooltip-content={person.nickname}
             />
-            {showProfile && (
-              <UserProfile
-                avatarUrl={avatarUrl}
-                onClose={() => setShowProfile(false)}
-                avatarRef={avatarRef}
-              />
-            )}
-          </div>
-        ) : (
-          <div>profile</div>
-        )}
+          ))}
+        </div>
+        <div className="border flex items-center">
+          <Avatar userInfo={myInfo} isProfile={true} />
+          <Main />
+        </div>
       </div>
     </div>
   )
