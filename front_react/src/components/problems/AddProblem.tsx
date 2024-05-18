@@ -17,7 +17,7 @@ const AddProblem = ({ groupId }: { groupId: string }) => {
   }
 
   return (
-    <div onClick={handleModal} className="w-full ">
+    <div onClick={handleModal} className="w-full cursor-pointer">
       <div className="flex w-full justify-between bg-background grow h-[72px] items-center px-4 py-4 rounded-lg border border-blueishPurple border-opacity-30 shadow-foggyBlue mb-2 hover:bg-purple-200 hover:border-opacity-0 transition-colors">
         <MdAddCircleOutline className="min-w-6 min-h-6 mx-2" />
         <div className=" font-bold flex justify-center mr-2 w-36">

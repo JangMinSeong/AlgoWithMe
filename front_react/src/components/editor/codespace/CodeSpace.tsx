@@ -151,7 +151,7 @@ const CodeEditor: React.FC<{
 
     useEffect(() => {
       if (idList.length !== 0) {
-        console.log(idList)
+ //       console.log(idList)
         setTabs(idList)
         setActiveTab(firstCode.id)
         setLanguage(firstCode.language)
@@ -265,7 +265,7 @@ const CodeEditor: React.FC<{
         language: language,
         code: code,
       }
-      console.log(dataToCache.codeId)
+  //    console.log(dataToCache.codeId)
       await fetch(`/code/cache`, {
         method: 'POST',
         headers: {
@@ -276,7 +276,7 @@ const CodeEditor: React.FC<{
     }
 
     const handleCodeChange = debounce((newCode: string) => {
-      console.log('Code changed:', newCode)
+ //     console.log('Code changed:', newCode)
       const newMessage = {
         language: language,
         code: newCode,

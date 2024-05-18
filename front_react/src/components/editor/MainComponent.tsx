@@ -34,7 +34,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   useEffect(() => {
     const fetchProblemData = async () => {
       try {
-        //        console.log(pageId + ' ' + groupId)
+//        console.log(pageId + ' ' + groupId)
         const response = await fetch(`/problem/${pageId}`, {
           method: 'GET',
           headers: {
@@ -75,7 +75,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
         setProblemTitle(responseData.title)
         setProblemLevel(responseData.level)
       } catch (error) {
-        //       console.error('Failed to fetch data:', error)
+ //       console.error('Failed to fetch data:', error)
       }
     }
     fetchProblemData()
@@ -91,6 +91,7 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
   const handleMouseMove = (e) => {
     e.preventDefault()
     if (containerRef.current) {
+ //     console.log(containerRef.current.offsetWidth)
       const containerWidth = containerRef.current.offsetWidth
       const newLeftWidth = ((e.clientX - SIDEBAR_WIDTH) / containerWidth) * 100
       const modifiedLeftWidth =

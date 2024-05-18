@@ -22,7 +22,7 @@ const MainPage: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user)
+  //    console.log(user)
 
       const fetchData = async () => {
         try {
@@ -43,7 +43,7 @@ const MainPage: React.FC = () => {
             throw new Error('Network response was not ok.')
           }
         } catch (error) {
-          console.error('Error fetching data: ', error)
+   //       console.error('Error fetching data: ', error)
         }
       }
       fetchData()
@@ -64,10 +64,10 @@ const MainPage: React.FC = () => {
         toast.success('새로운 스터디가 생성 됐어요')
         navigate(`/${data.teamId}/study`)
       } else {
-        console.error('스터디 생성 실패')
+   //     console.error('스터디 생성 실패')
       }
     } catch (error) {
-      console.error('네트워크 오류:', error)
+   //   console.error('네트워크 오류:', error)
     }
   }
 

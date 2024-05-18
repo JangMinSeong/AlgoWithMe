@@ -6,6 +6,7 @@ import useSolving from '@/hooks/useSolving'
 import useTimer from '@/hooks/useTimer'
 import { useRef, useState } from 'react'
 import SetTimer from '../studypage/SetTimer'
+import { HiDotsVertical } from 'react-icons/hi'
 
 const Timer = () => {
   const { handleChangeTimer } = useTimer()
@@ -88,13 +89,6 @@ const Timer = () => {
   return (
     <div className="flex items-center relative">
       <div
-        onClick={() => setIsSetTimerVisible(!isSetTimerVisible)}
-        className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
-      >
-        {isSetTimerVisible ? '닫기' : '시간설정'}
-      </div>
-
-      <div
         className={`bg-white bg-opacity-20 border border-accent border-opacity-50 flex p-2 w-fit rounded-3xl shadow-foggyPurple items-center mr-2`}
       >
         <span className="text-xs text-navy mr-2 ">남은 시간</span>
@@ -113,21 +107,23 @@ const Timer = () => {
         </span>
         <span className="text-xs text-navy ml-1 mr-2">초</span>
 
-        <div className="flex">
+        <div className="mr-1 cursor-pointer">
           {isSolving ? (
             <FaRegStopCircle onClick={handleEnd} />
           ) : (
             <FaRegPlayCircle onClick={handleStart} />
           )}
         </div>
+        <div
+          onClick={() => setIsSetTimerVisible(!isSetTimerVisible)}
+          // className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
+        >
+          <HiDotsVertical className="w-4 h-4 cursor-pointer" />
+        </div>
       </div>
       {isSetTimerVisible && (
         <div className="absolute top-10 left-20">
-          {' '}
-          <SetTimer
-            isEditing={isEditingTime}
-            setParentIsEditing={setIsEditingTime}
-          />{' '}
+          <SetTimer />
         </div>
       )}
       {/* <Toaster position="bottom-center" reverseOrder={false} /> */}

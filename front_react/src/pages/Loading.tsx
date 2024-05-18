@@ -47,7 +47,7 @@ function Login() {
                         const user = { nickname, imageUrl, accessToken }
                         await handleLogin(user)
                         const inviteUrl = localStorage.getItem('invite_url')
-                        console.log(inviteUrl)
+      //                  console.log(inviteUrl)
                         if (inviteUrl) {
                             localStorage.removeItem('invite_url')
                             window.location.assign(inviteUrl)

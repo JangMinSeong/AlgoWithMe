@@ -54,7 +54,7 @@ const GitHubExplorer = ({
     const responseData = await response.json()
     setBranches(responseData)
     setIsLoading(false)
-    console.log(responseData)
+  //  console.log(responseData)
   }
 
   if (!isOpen) return null

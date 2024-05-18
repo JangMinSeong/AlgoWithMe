@@ -48,7 +48,7 @@ const AddProblemModal = ({
       pageId: pPageId,
       problemId: chosenProblem.problemId,
     }
-    console.log(dataToCreate)
+  //  console.log(dataToCreate)
     const response = await fetch('/page/problem', {
       method: 'POST',
       headers: {
@@ -86,7 +86,7 @@ const AddProblemModal = ({
     } else {
       const updatedList = addSubPage(pageList, pPageId, newPage)
       setPages(updatedList)
-      console.log(updatedList)
+  //    console.log(updatedList)
     }
     handleCloseModal()
     sendUpdateMessage(

@@ -16,25 +16,30 @@ import { FiMic, FiMicOff } from 'react-icons/fi'
 import { Tooltip } from 'react-tooltip'
 import { TbHeadphones, TbHeadphonesOff } from 'react-icons/tb'
 import useMember from '@/hooks/useMember'
+import { PiDotsThreeBold } from 'react-icons/pi'
 
 const Main = () => {
   const { groupId } = useParams()
   const myNickname = useSelector((state: RootState) => state.auth.user.nickname)
+  const myUrl = useSelector((state: RootState) => state.auth.user.imageUrl)
   const {
     handleSetOnline,
     handleUnsetOnline,
+    handleSetOffline,
+    handleUnsetOffline,
     handleSetSpeaker,
     handleUnsetSpeaker,
   } = useMember()
 
   const [session, setSession] = useState<OVSession | ''>('')
+  const [isInSession, setIsInsession] = useState(false)
   const [sessionId, setSessionId] = useState<string>('')
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [publisher, setPublisher] = useState<Publisher | null>(null)
   const [OV, setOV] = useState<OpenVidu | null>(null)
   // const [activeSpeaker, setActiveSpeaker] = useState<string>()
-  const [isMicOn, setIsMicOn] = useState(false)
-  const [isHeadphoneOn, setIsHeadphoneOn] = useState(false)
+  const [isMicOn, setIsMicOn] = useState(true)
+  const [isHeadphoneOn, setIsHeadphoneOn] = useState(true)
   // const [participants, setParticipants] = useState([])
 
   const [enterAlertArr, setEnterAlertArr] = useState([])
@@ -45,7 +50,15 @@ const Main = () => {
   const leaveSession = useCallback(() => {
     if (session) session.disconnect()
 
+    const myData = {
+      nickname: myNickname,
+      imageUrl: myUrl,
+      isSpeaking: false,
+    }
+
     handleUnsetOnline(myNickname)
+    handleSetOffline(myData)
+    setIsInsession(false)
     setOV(null)
     setSession('')
     setSessionId('')
@@ -58,6 +71,7 @@ const Main = () => {
     newOV.enableProdMode()
     setOV(newOV)
     setSession(newOV.initSession())
+    setIsInsession(true)
   }
 
   useEffect(() => {
@@ -76,11 +90,11 @@ const Main = () => {
     if (session === '') return
 
     session.on('streamCreated', (event) => {
-      console.log('스트림생성')
+      //   console.log('스트림생성')
       const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
-      console.log(connectionId)
+      //    console.log(connectionId)
 
       setSubscriber(mySubscriber)
 
@@ -98,9 +112,19 @@ const Main = () => {
       if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
         setSubscriber(null)
       }
-      console.log('스트림파괴')
+      //     console.log('스트림파괴')
       const nickname = event.stream.connection.data
+
+      const memberData = memberList.find((item) => item.nickname === nickname)
+      const member = {
+        nickname: nickname,
+        imageUrl: memberData.imageUrl,
+        isSpeaking: false,
+      }
+
+      if (nickname === myNickname) setIsInsession(false)
       handleUnsetOnline(nickname)
+      handleSetOffline(member)
 
       // if (leaveAlertArr.findIndex((nn) => nn === nickname) === -1) {
       //   toast(`${nickname}님이 음성채팅에서 퇴장했어요`, {
@@ -133,7 +157,9 @@ const Main = () => {
         isSpeaking: false,
       }
 
+      if (nickname === myNickname) setIsInsession(true)
       handleSetOnline(member)
+      handleUnsetOffline(nickname)
     })
 
     session.on('connectionDestroyed', (event) => {
@@ -198,7 +224,7 @@ const Main = () => {
             connectToSession(json.token)
           })
       } catch (error) {
-        console.error(error)
+        //      console.error(error)
       }
     }
 
@@ -206,12 +232,12 @@ const Main = () => {
   }, [session, OV, sessionId])
 
   const handleHeadphoneOff = () => {
-    console.log(subscriber)
+    //   console.log(subscriber)
     setIsHeadphoneOn(false)
     subscriber.subscribeToAudio(false)
   }
   const handleHeadphoneOn = () => {
-    console.log(subscriber)
+    //   console.log(subscriber)
     setIsHeadphoneOn(true)
     subscriber.subscribeToAudio(true)
   }
@@ -219,27 +245,47 @@ const Main = () => {
   const handleMicOff = () => {
     setIsMicOn(false)
     publisher.publishAudio(false)
-    console.log(publisher)
+    //   console.log(publisher)
   }
   const handleMicOn = () => {
     setIsMicOn(true)
-    console.log(publisher)
+    //  console.log(publisher)
     publisher.publishAudio(true)
   }
 
-  const anchorTagCSS =
-    'w-6 h-6 mr-2 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
+  const [AudioControllerVisible, setAudioControllerVisible] = useState(false)
 
   return (
     <div className="flex">
-      <JoinButton joinSession={joinSession} outSession={leaveSession} />
+      <JoinButton
+        joinSession={joinSession}
+        outSession={leaveSession}
+        isInSession={isInSession}
+        setParentIsInSession={setIsInsession}
+      />
+
+      {session && (
+        <div
+          onClick={() => setAudioControllerVisible(!AudioControllerVisible)}
+          className="cursor-pointer rounded-full w-10 h-10 border border-primary text-primary text-xs flex px-2 items-center justify-center  mr-1  hover:bg-primary hover:text-white transition-colors"
+        >
+          <PiDotsThreeBold className="w-5 h-5" />
+        </div>
+      )}
 
       {/* 오디오컨트롤 */}
-      {session && (
-        <div className="mr-2 bg-white bg-opacity-20 border border-accent border-opacity-50 flex pl-2  w-fit rounded-3xl ">
+      <div
+        className={`cursor-pointer mr-2 flex ${
+          AudioControllerVisible && session ? 'visible' : 'invisible'
+        }`}
+      >
+        <div>
           {isHeadphoneOn ? (
             <div onClick={handleHeadphoneOff}>
-              <a id="willOffHeadphone" className={anchorTagCSS}>
+              <a
+                id="willOffHeadphone"
+                className="rounded-full w-10 h-10 border border-primary text-primary text-xs flex px-2 items-center justify-center  mr-1  hover:bg-primary hover:text-white transition-colors"
+              >
                 <TbHeadphones className="w-5 h-5" />
               </a>
               <Tooltip anchorSelect="#willOffHeadphone" place="bottom">
@@ -248,18 +294,25 @@ const Main = () => {
             </div>
           ) : (
             <div onClick={handleHeadphoneOn}>
-              <a id="willOnHeadphone" className={anchorTagCSS}>
-                <TbHeadphonesOff className="w-5 h-5 text-red-400" />
+              <a
+                id="willOnHeadphone"
+                className="rounded-full w-10 h-10 border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center mr-1 hover:bg-red-500 hover:text-white transition-colors"
+              >
+                <TbHeadphonesOff className="w-5 h-5 " />
               </a>
               <Tooltip anchorSelect="#willOnHeadphone" place="bottom">
                 헤드셋 소리 켜기
               </Tooltip>
             </div>
           )}
-
+        </div>
+        <div>
           {isMicOn ? (
             <div onClick={handleMicOff}>
-              <a id="willOffMic" className={anchorTagCSS}>
+              <a
+                id="willOffMic"
+                className="rounded-full w-10 h-10 border border-primary text-primary text-xs flex px-2 items-center justify-center  mr-1  hover:bg-primary hover:text-white transition-colors"
+              >
                 <FiMic className="w-4 h-4" />
               </a>
               <Tooltip anchorSelect="#willOffMic" place="bottom">
@@ -268,8 +321,11 @@ const Main = () => {
             </div>
           ) : (
             <div onClick={handleMicOn}>
-              <a id="willOnMic" className={anchorTagCSS}>
-                <FiMicOff className="w-4 h-4 text-red-400" />
+              <a
+                id="willOnMic"
+                className="rounded-full w-10 h-10 border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center mr-1 hover:bg-red-500 hover:text-white transition-colors"
+              >
+                <FiMicOff className="w-4 h-4" />
               </a>
               <Tooltip anchorSelect="#willOnMic" place="bottom">
                 마이크 켜기
@@ -277,7 +333,7 @@ const Main = () => {
             </div>
           )}
         </div>
-      )}
+      </div>
 
       {/* <Session
         publisher={publisher as Publisher}

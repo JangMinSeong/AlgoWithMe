@@ -62,7 +62,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
       setStudyList(responseData)
       setStudys(responseData)
 
-      console.log(responseData)
+      //    console.log(responseData)
     }
   }
 
@@ -78,12 +78,12 @@ const SideBar = ({ groupId }: { groupId: number }) => {
       if (response.ok) {
         const data = await response.json()
         setPages(data.pageInfoList)
-        console.log(data.pageInfoList)
+        //     console.log(data.pageInfoList)
       } else {
         throw new Error('Network response was not ok.')
       }
     } catch (error) {
-      console.error('Error fetching data: ', error)
+      //     console.error('Error fetching data: ', error)
     }
   }
 
@@ -153,7 +153,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
       /// 폴더 내 순서 변경
       if (targetPage.docs === false) {
-        console.log('폴더 내 순서 변경')
+        //    console.log('폴더 내 순서 변경')
         const dataToPut = {
           pageId: draggedPageId,
           parentPageId: targetParent ? targetParent.pageId : -1,
@@ -178,14 +178,14 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
           return updatedPages
         } catch (error) {
-          console.error('Error updating page parent:', error)
+          //      console.error('Error updating page parent:', error)
           return pages // 에러가 발생하면 원본 페이지 반환
         }
       }
 
       //동일 폴더로 옮겼을 경우
       if (targetPage.children.some((child) => child.pageId === draggedPageId)) {
-        console.log('동일 폴더')
+        //      console.log('동일 폴더')
         return pages
       }
 
@@ -196,7 +196,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         !targetPage.docs ||
         isDescendant(draggedPage, targetPage.pageId)
       ) {
-        console.error('파일이동 안됨')
+        //       console.error('파일이동 안됨')
         return pages
       }
 
@@ -212,7 +212,7 @@ const SideBar = ({ groupId }: { groupId: number }) => {
         )
       }
 
-      console.log('폴더 이동')
+      //   console.log('폴더 이동')
       const dataToPut = {
         pageId: draggedPageId,
         parentPageId: targetPageId,
@@ -237,14 +237,14 @@ const SideBar = ({ groupId }: { groupId: number }) => {
 
         return updatedPages
       } catch (error) {
-        console.error('Error updating page parent:', error)
+        //     console.error('Error updating page parent:', error)
         return pages // 에러가 발생하면 원본 페이지 반환
       }
     }
 
     // 업데이트된 페이지 리스트로 상태 업데이트
     const updatedPageList = await updatePageList(pageList, draggedId, targetId)
-    console.log(updatedPageList)
+    //  console.log(updatedPageList)
     setPages(updatedPageList)
   }
 

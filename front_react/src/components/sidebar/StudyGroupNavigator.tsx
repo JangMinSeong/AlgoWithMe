@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import StudyGroupDropdown from './StudyGroupDropdown'
 import PageCreateButton from './PageCreateButton'
+import { Tooltip } from 'react-tooltip'
 
 interface Study {
   id: number
@@ -63,11 +64,24 @@ const StudyGroupNavigator = (props: {
         </span>
         <div className="flex items-center mr-2 ">
           <PageCreateButton groupId={props.groupId} pageId={-1} />
-          {isNavigatorOpen ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+          {isNavigatorOpen ? (
+            <MdKeyboardArrowUp
+              className="cursor-pointer"
+              data-tooltip-id="StudyNav"
+              data-tooltip-content="스터디그룹 목록 닫기"
+            />
+          ) : (
+            <MdKeyboardArrowDown
+              className="cursor-pointer"
+              data-tooltip-id="StudyNav"
+              data-tooltip-content="스터디그룹 목록 열기"
+            />
+          )}
         </div>
       </div>
       {/* 이걸 누르면 아래의 드랍다운이 펼쳐진다 */}
       {isNavigatorOpen ? <StudyGroupDropdown studyList={curStudyList} /> : null}
+      <Tooltip id="StudyNav" place="bottom" />
     </div>
   )
 }

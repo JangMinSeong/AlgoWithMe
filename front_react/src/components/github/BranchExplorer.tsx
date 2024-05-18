@@ -62,7 +62,7 @@ const BranchExplorer: React.FC<BranchExplorerProps> = ({
     const responseData = await response.json()
     setDirectories(responseData.map((dir: string) => `${dir}/`))
     setIsLoading(false)
-    console.log(responseData)
+ //   console.log(responseData)
   }
 
   return (

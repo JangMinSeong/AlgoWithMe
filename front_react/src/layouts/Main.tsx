@@ -29,7 +29,7 @@ export default function Layout() {
     { x: 400, y: 60 },
   ]
   const svgOutput = generateSVGPath(points)
-  console.log(svgOutput)
+  // console.log(svgOutput)
 
   const baseUrl =
     import.meta.env.MODE === 'development'
@@ -44,11 +44,15 @@ export default function Layout() {
       hasOngoingRequest.current = true
 
       if (user === null) {
-        console.log(location.pathname)
+        //      console.log(location.pathname)
         if (location.pathname.includes('/invitation')) {
           const currentUrl = window.location.href
           localStorage.setItem('invite_url', currentUrl)
-          window.location.assign(`https://www.github.com/login/oauth/authorize?client_id=${import.meta.env.VITE_GITHUB_ID}&scope=repo%20project`)
+          window.location.assign(
+            `https://www.github.com/login/oauth/authorize?client_id=${
+              import.meta.env.VITE_GITHUB_ID
+            }&scope=repo%20project`,
+          )
         }
         await (async () => {
           const response = await fetch(`${baseUrl}/user/refresh`, {
@@ -73,7 +77,7 @@ export default function Layout() {
             navigate('/welcome')
           }
           setIsLoading(false)
-          console.log(isLoading)
+          //      console.log(isLoading)
         })()
       } else {
         if (location.pathname === '/') {
@@ -132,7 +136,7 @@ export default function Layout() {
             navigate('/welcome')
           }
         } catch (error) {
-          console.error('Error refreshing token:', error)
+          //       console.error('Error refreshing token:', error)
           handleLogout()
           navigate('/welcome')
         } finally {
@@ -147,11 +151,13 @@ export default function Layout() {
     <div>
       <ScrollToTop />
       <main className="w-full h-full transition-all duration-700 overflow-hidden">
-        {!isLoading ?
+        {!isLoading ? (
           <div className="h-full">
             <Outlet />
           </div>
-          : <div className="fixed h-dvh w-dvw" />}
+        ) : (
+          <div className="fixed h-dvh w-dvw" />
+        )}
       </main>
     </div>
   )

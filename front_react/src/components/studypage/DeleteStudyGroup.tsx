@@ -45,7 +45,7 @@ const DeleteStudyGroup = ({
   }
 
   return (
-    <div className=" flex min-w-32 pr-2 py-2 rounded-xl border text-sm text-red-500 shadow-foggyBlue border-opacity-30 mb-2 items-center hover:bg-red-500/60 hover:text-white transition-colors">
+    <div className="cursor-pointer flex min-w-32 pr-2 py-2 rounded-xl border text-sm text-red-500 shadow-foggyBlue border-opacity-30 mb-2 items-center hover:bg-red-500/60 hover:text-white transition-colors">
       <MdDeleteForever className="w-6 h-6 mx-2" />
       {isManager ? (
         <div

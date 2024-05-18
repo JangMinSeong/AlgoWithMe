@@ -10,6 +10,7 @@ import fetch from '@/lib/fetch.ts'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store.ts'
 import { useWebSocket } from '@/hooks/useWebSocket.ts'
+import { Tooltip } from 'react-tooltip'
 
 interface IPage {
   pageId: number
@@ -42,7 +43,7 @@ const InStudyPageItem = (props: {
   const [curPageTitle, setCurPageTitle] = useState(props.page.title)
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
-  const curPageId = useSelector((state:RootState) => state.sidebar.pageId)
+  const curPageId = useSelector((state: RootState) => state.sidebar.pageId)
 
   const { setPages } = useSidebar()
   const { sendUpdateMessage } = useWebSocket()
@@ -64,7 +65,7 @@ const InStudyPageItem = (props: {
 
   const handleSave = async (newTitle) => {
     // 여기에서 페이지 제목을 업데이트하는 로직을 구현하세요.
-    console.log(`New title: ${newTitle}`)
+ //   console.log(`New title: ${newTitle}`)
     setShowEditModal(false)
     // API 호출 등을 통해 서버에 저장
     await fetch(`/page/${props.page.pageId}`, {
@@ -142,8 +143,7 @@ const InStudyPageItem = (props: {
     setPId(props.page.pageId)
     if (props.page.docs) {
       navigate(`/${props.groupId}/docs/${props.page.pageId}`)
-    }
-    else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
+    } else navigate(`/${props.groupId}/editor/${props.page.pageId}`)
   }
 
   return (
@@ -160,7 +160,9 @@ const InStudyPageItem = (props: {
     >
       <div
         onClick={handleMovePage}
-        className={`${menuItemWrapper} ${curPageId === props.page.pageId && "bg-gray-300" } ${
+        className={`${menuItemWrapper} ${
+          curPageId === props.page.pageId && 'bg-gray-300'
+        } ${
           isDragOver
             ? 'bg-blue-100 border-blue-500'
             : 'hover:bg-navy hover:bg-opacity-30'
@@ -191,8 +193,10 @@ const InStudyPageItem = (props: {
             {props.page.docs && (
               <>
                 <GoPencil
-                  className="w-4 mr-1 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors opacity-40"
+                  className="cursor-pointer w-4 mr-1 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors opacity-40"
                   onClick={handleEdit}
+                  data-tooltip-id="editPgName"
+                  data-tooltip-content="이름 수정하기"
                 />
 
                 <PageCreateButton
@@ -206,12 +210,12 @@ const InStudyPageItem = (props: {
               <>
                 {isSubPagesOpen ? (
                   <MdKeyboardArrowUp
-                    className="w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
+                    className="cursor-pointer  w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
                     onClick={handleSubPageOpen}
                   />
                 ) : (
                   <MdKeyboardArrowDown
-                    className="w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
+                    className="cursor-pointer w-5 h-5 rounded-md justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors"
                     onClick={handleSubPageOpen}
                   />
                 )}
@@ -239,6 +243,7 @@ const InStudyPageItem = (props: {
             />
           </div>
         ))}
+      <Tooltip id="editPgName" place="bottom" />
     </div>
   )
 }
