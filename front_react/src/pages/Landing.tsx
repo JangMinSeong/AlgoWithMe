@@ -53,9 +53,9 @@ function Landing() {
       textRefs.current.forEach((ref) => {
         if (ref) {
           const top = ref.getBoundingClientRect().top
-          if (top < window.innerHeight - 300) {
+          if (top < window.innerHeight - 100) {
             ref.style.opacity = '1'
-            ref.style.transform = 'translateY(0)'
+            ref.style.transform = 'translateY(-10px)'
           } else {
             ref.style.opacity = '0'
             ref.style.transform = 'translateY(10px)'
@@ -169,16 +169,17 @@ function Landing() {
             </div>
           </div>
         </section>
-        <section ref={biggerRef} className="bg-indigo-950">
-          <div className="xl:container xl:mx-auto px-40">
+        <section ref={biggerRef} className="bg-[#f2ddec]">
+          <div className="xl:container xl:mx-auto px-80">
             <div className="flex flex-col">
               <div
                 // style={{ opacity: 0, transform: 'translateY(10px)' }}
                 ref={(ref) => textRefs.current.push(ref)}
-                className="pt-32 font-bold text-6xl text-gray-400 transition duration-500 ease-in-out"
+                className="mt-[calc(-50vh+185px)] font-bold text-6xl text-gray-600 transition duration-500 ease-in-out"
               >
                 ALL IN ONE
               </div>
+              <div className="flex-row"></div>
             </div>
           </div>
         </section>
