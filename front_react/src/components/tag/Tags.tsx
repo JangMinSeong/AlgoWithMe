@@ -45,7 +45,7 @@ const TagSelector: React.FC<TagSelectorProps> = ({
       tagList: selectedTags,
     }
 
-    console.log(dataToUpdate)
+  //  console.log(dataToUpdate)
 
     await fetch(`/page/tag`, {
       method: 'PUT',

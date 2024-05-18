@@ -47,10 +47,10 @@ const StudyGroupDropdown = (props: { studyList: Study[] }) => {
         navigate(`/${data.teamId}/study`)
         toast.success('이름 없는 스터디 그룹 생성 성공!')
       } else {
-        console.error('스터디 생성 실패')
+  //      console.error('스터디 생성 실패')
       }
     } catch (error) {
-      console.error('네트워크 오류:', error)
+ //     console.error('네트워크 오류:', error)
     }
   }
 

@@ -23,7 +23,9 @@ const InviteMember = ({ groupId }: { groupId: string }) => {
         )
         toast.success('초대 링크가 클립보드에 복사되었어요.')
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        //console.error(err)
+      })
   }
 
   return (

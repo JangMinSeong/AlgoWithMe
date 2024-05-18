@@ -239,7 +239,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
           editorUser.commands.setContent('', false)
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error)
+  //      console.error('Failed to fetch data:', error)
       }
     }
 

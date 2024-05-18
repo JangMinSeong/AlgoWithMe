@@ -40,7 +40,7 @@ export function useWebSocket() {
 
   const connectToServer = async (groupId: number) => {
     if (client !== null) {
-      console.log('Already connected')
+  //    console.log('Already connected')
       // if (studySubscripton) {
       //
       //   studySubscripton.unsubscribe()
@@ -61,28 +61,28 @@ export function useWebSocket() {
     const newClient = new Client({
       webSocketFactory: () => new SockJS(`${baseUrl}/algowithme-websocket`),
       onConnect: () => {
-        console.log('Connection successful')
+   //     console.log('Connection successful')
         dispatch(setConnected(true))
 
         const subscription = newClient.subscribe(
           `/topic/study/${groupId}`,
           (message) => {
-            console.log('Message received:', message.body)
+   //         console.log('Message received:', message.body)
             dispatch(setMessageUpdateStudy(message.body))
             // 메시지 처리 로직 혹은 저장 로직 추가
           },
         )
-        console.log(subscription)
+   //     console.log(subscription)
         setStudySubscription(subscription)
       },
       onStompError: (frame) => {
-        console.error(
-          `Broker reported error: ${frame.headers.message}`,
-          frame.body,
-        )
+   //     console.error(
+   //       `Broker reported error: ${frame.headers.message}`,
+   //       frame.body,
+  //      )
       },
       debug: (str) => {
-        console.log(`Debug: ${str}`)
+   //     console.log(`Debug: ${str}`)
       },
       reconnectDelay: 5000,
     })
@@ -96,7 +96,7 @@ export function useWebSocket() {
       if(topic === studyTopic) return
       if(studySubscripton) {studySubscripton.unsubscribe()}
       const subscription = client.subscribe(topic, (message) => {
-        console.log('Message received:', message.body)
+    //    console.log('Message received:', message.body)
         dispatch(setMessageUpdateStudy(message.body))
         // 메시지 처리 로직 혹은 저장 로직 추가
       })
@@ -120,7 +120,7 @@ export function useWebSocket() {
         } else {
           dispatch(addMessage(parsedMessage))
         }
-        console.log('Message received: ' + message.body)
+  //      console.log('Message received: ' + message.body)
       })
       if (isUserSubscription)
         setUserSubscriptions((subs) => ({ ...subs, [topic]: subscription }))
@@ -129,19 +129,19 @@ export function useWebSocket() {
         ? dispatch(subscribeUser(topic))
         : dispatch(subscribe(topic))
     } else {
-      console.error(
-        'Attempted to subscribe while STOMP client is disconnected.',
-      )
+   //   console.error(
+  //      'Attempted to subscribe while STOMP client is disconnected.',
+  //    )
     }
   }
 
   const unsubscribeFromTopic = (topic: string, isUserSubscription = false) => {
     const subsType = isUserSubscription ? userSubscriptions : subscriptions
     const subscription = subsType[topic]
-    console.log(subsType)
+ //   console.log(subsType)
     if (subscription) {
       subscription.unsubscribe()
-      console.log(`Unsubscribed from ${topic}`)
+ //     console.log(`Unsubscribed from ${topic}`)
       const updateFunc = isUserSubscription
         ? setUserSubscriptions
         : setSubscriptions

@@ -34,7 +34,7 @@ const NextProblem: React.FC = ({
       pageId: -1,
       problemId: problemInfo.problemId,
     }
-    console.log(dataToCreate)
+ //   console.log(dataToCreate)
     const response = await fetch('/page/problem', {
       method: 'POST',
       headers: {

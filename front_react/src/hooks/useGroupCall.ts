@@ -56,16 +56,16 @@ const useGroupCall = () => {
     // 현재 발화자
     mySession.on('publisherStartSpeaking', (event) => {
       setActiveSpeaker(event.connection.connectionId)
-      console.log('User ' + event.connection.connectionId + ' start speaking')
+     // console.log('User ' + event.connection.connectionId + ' start speaking')
     })
 
     mySession.on('publisherStopSpeaking', (event) => {
       setActiveSpeaker(undefined)
-      console.log('User ' + event.connection.connectionId + ' stop speaking')
+    //  console.log('User ' + event.connection.connectionId + ' stop speaking')
     })
 
     mySession.on('exception', (exception) => {
-      console.warn(exception)
+ //     console.warn(exception)
     })
 
     // 이부분 html 요소 할당해야하는지 확인 필요

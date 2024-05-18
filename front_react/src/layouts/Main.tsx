@@ -29,7 +29,7 @@ export default function Layout() {
     { x: 400, y: 60 },
   ]
   const svgOutput = generateSVGPath(points)
-  console.log(svgOutput)
+ // console.log(svgOutput)
 
   const baseUrl =
     import.meta.env.MODE === 'development'
@@ -44,7 +44,7 @@ export default function Layout() {
       hasOngoingRequest.current = true
 
       if (user === null) {
-        console.log(location.pathname)
+  //      console.log(location.pathname)
         if (location.pathname.includes('/invitation')) {
           const currentUrl = window.location.href
           localStorage.setItem('invite_url', currentUrl)
@@ -73,7 +73,7 @@ export default function Layout() {
             navigate('/welcome')
           }
           setIsLoading(false)
-          console.log(isLoading)
+    //      console.log(isLoading)
         })()
       } else {
         if (location.pathname === '/') {
@@ -132,7 +132,7 @@ export default function Layout() {
             navigate('/welcome')
           }
         } catch (error) {
-          console.error('Error refreshing token:', error)
+   //       console.error('Error refreshing token:', error)
           handleLogout()
           navigate('/welcome')
         } finally {

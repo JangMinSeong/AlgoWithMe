@@ -61,7 +61,7 @@ const InvitationPage = () => {
       })
       .catch((err) => {
         toast.error('유효하지 않은 초대코드예요.')
-        console.error(err)
+  //      console.error(err)
       })
   }
 

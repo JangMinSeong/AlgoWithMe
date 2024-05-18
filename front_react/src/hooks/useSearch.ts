@@ -21,7 +21,9 @@ const useSearch = () => {
         dispatch(setIsLevel(false))
         dispatch(setSearchTitle(title))
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        //console.error(err)
+      })
   }
 
   //   const handleFetchNextPageResultByName = (prop) => {
@@ -38,7 +40,9 @@ const useSearch = () => {
         dispatch(setInitialPageSearchResult(json))
         dispatch(setIsLevel(true))
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        //console.error(err)
+      })
   }
 
   //   const handleFetchNextPageResultByLevel = (prop) => {

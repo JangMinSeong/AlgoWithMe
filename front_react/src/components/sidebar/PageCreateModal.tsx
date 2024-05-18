@@ -41,7 +41,7 @@ const PageCreateModal = () => {
       teamId: groupId,
       pageId: pPageId,
     }
-    console.log(dataToCreate)
+  //  console.log(dataToCreate)
     const response = await fetch('/page/docs', {
       method: 'POST',
       headers: {
@@ -79,7 +79,7 @@ const PageCreateModal = () => {
     } else {
       const updatedList = addSubPage(pageList, pPageId, newPage)
       setPages(updatedList)
-      console.log(updatedList)
+ //     console.log(updatedList)
     }
     handleCloseModal()
     sendUpdateMessage(

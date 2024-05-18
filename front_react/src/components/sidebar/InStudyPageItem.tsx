@@ -65,7 +65,7 @@ const InStudyPageItem = (props: {
 
   const handleSave = async (newTitle) => {
     // 여기에서 페이지 제목을 업데이트하는 로직을 구현하세요.
-    console.log(`New title: ${newTitle}`)
+ //   console.log(`New title: ${newTitle}`)
     setShowEditModal(false)
     // API 호출 등을 통해 서버에 저장
     await fetch(`/page/${props.page.pageId}`, {

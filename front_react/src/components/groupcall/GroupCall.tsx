@@ -41,14 +41,14 @@ const GroupCall = () => {
       const mySubscriber = mySession.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
-      console.log(connectionId)
+  //    console.log(connectionId)
 
       setParticipants((prevParticipants) => [
         ...prevParticipants,
         { connectionId, nickname, mySubscriber },
       ])
 
-      console.log('참가자목록', participants)
+ //     console.log('참가자목록', participants)
     })
 
     mySession.on('streamDestroyed', (event) => {
@@ -66,10 +66,10 @@ const GroupCall = () => {
     mySession
       .connect(token, myNickname)
       .then(() => {
-        console.log('커넥트요청보냄')
+ //       console.log('커넥트요청보냄')
       })
       .catch((err) => {
-        console.error(err)
+ //       console.error(err)
         toast.error('연결에 실패했어요. 잠시후 다시 시도해주세요.')
       })
 
@@ -99,16 +99,16 @@ const GroupCall = () => {
 
     mySession.on('publisherStartSpeaking', (event) => {
       setActiveSpeaker(event.connection.connectionId)
-      console.log('User ' + event.connection.connectionId + ' start speaking')
+//      console.log('User ' + event.connection.connectionId + ' start speaking')
     })
 
     mySession.on('publisherStopSpeaking', (event) => {
       setActiveSpeaker(undefined)
-      console.log('User ' + event.connection.connectionId + ' stop speaking')
+//      console.log('User ' + event.connection.connectionId + ' stop speaking')
     })
 
     mySession.on('exception', (exception) => {
-      console.warn(exception)
+  //    console.warn(exception)
     })
   }
 
@@ -124,12 +124,12 @@ const GroupCall = () => {
   // }
   const handleMicOff = () => {
     publisher.publishAudio(false)
-    console.log(publisher)
+ //   console.log(publisher)
     setIsMicOn(false)
   }
   const handleMicOn = () => {
     publisher.publishAudio(true)
-    console.log(publisher)
+ //   console.log(publisher)
 
     setIsMicOn(true)
   }
