@@ -3,7 +3,7 @@ import Logo from '@/components/Logo.tsx'
 
 export default function LandingHeader() {
   return (
-    <nav className="relative items-center">
+    <nav className="absolute w-full items-center">
       <div className="flex h-16 items-center justify-center">
         <Logo width={100} />
       </div>

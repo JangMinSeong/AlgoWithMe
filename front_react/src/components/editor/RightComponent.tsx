@@ -90,8 +90,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const containerRef = useRef<HTMLDivElement>(null)
   const [topHeight, setTopHeight] = useState('50%')
   const [bottomHeight, setBottomHeight] = useState('50%')
-  const isSidebarOpen = useSelector((state: RootState) => state.sidebar.isOpen)
-  const SIDEBAR_WIDTH = 71
+  const HEADER_HEIGHT = 71
 
   const fetchMyData = async () => {
     try {
@@ -299,10 +298,15 @@ const RightComponent: React.FC<ProblemProp> = ({
     if (containerRef.current) {
   //    console.log(containerRef.current.offsetHeight)
       const containerHeight = containerRef.current.offsetHeight
-      const newLeftWidth = ((e.clientY - SIDEBAR_WIDTH) / containerHeight) * 100
+      const newTopHeight = ((e.clientY - HEADER_HEIGHT) / containerHeight) * 100
       const modifiedLeftWidth =
-        (newLeftWidth < 4 ? 0 : newLeftWidth) &&
-        (newLeftWidth > 96 ? 100 : newLeftWidth)
+        newTopHeight < 4
+          ? 0
+          : newTopHeight > 96
+          ? 100
+          : newTopHeight > 49 && newTopHeight < 51
+          ? 50
+          : newTopHeight
       setTopHeight(`${modifiedLeftWidth}%`)
       setBottomHeight(`${100 - modifiedLeftWidth}%`)
     }

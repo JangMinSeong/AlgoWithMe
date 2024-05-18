@@ -95,8 +95,15 @@ const MainComponent: React.FC<editorProp> = ({ groupId, pageId }) => {
       const containerWidth = containerRef.current.offsetWidth
       const newLeftWidth = ((e.clientX - SIDEBAR_WIDTH) / containerWidth) * 100
       const modifiedLeftWidth =
-        (newLeftWidth < 4 ? 0 : newLeftWidth) &&
-        (newLeftWidth > 96 ? 100 : newLeftWidth)
+        newLeftWidth < 4
+          ? 0
+          : newLeftWidth > 96
+          ? 100
+          : newLeftWidth > 49 && newLeftWidth < 51
+          ? 50
+          : newLeftWidth
+
+      console.log(modifiedLeftWidth)
       setLeftWidth(`${modifiedLeftWidth}%`)
       setRightWidth(`${100 - modifiedLeftWidth}%`)
     }
