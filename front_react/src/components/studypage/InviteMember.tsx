@@ -3,7 +3,10 @@ import toast, { Toaster } from 'react-hot-toast'
 import fetch from '@/lib/fetch'
 
 const InviteMember = ({ groupId }: { groupId: string }) => {
-  const BASE_URL = import.meta.env.MODE === 'development' ? "https://localhost:3001" : "https://k10d205.p.ssafy.io"
+  const BASE_URL =
+    import.meta.env.MODE === 'development'
+      ? 'https://localhost:3001'
+      : 'https://k10d205.p.ssafy.io'
 
   const handleGetInviLink = async () => {
     await fetch(`/study/invite/${groupId}`, {
@@ -26,7 +29,7 @@ const InviteMember = ({ groupId }: { groupId: string }) => {
   return (
     <div
       onClick={handleGetInviLink}
-      className=" flex min-w-32 pr-2 py-2 mr-4 rounded-xl border text-sm shadow-foggyBlue border-opacity-30 mb-2 items-center hover:bg-primary/80 hover:text-white hover:border-opacity-0 transition-colors"
+      className="cursor-pointer flex min-w-32 pr-2 py-2 mr-4 rounded-xl border text-sm shadow-foggyBlue border-opacity-30 mb-2 items-center hover:bg-primary/80 hover:text-white hover:border-opacity-0 transition-colors"
     >
       <BsPersonPlusFill className="w-6 h-6 mx-2" />
       <div className="w-full flex justify-center">멤버 초대하기</div>

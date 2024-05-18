@@ -93,13 +93,13 @@ const NextProblem: React.FC = ({
 
         <div
           onClick={handleAddProblem}
-          className="rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
+          className="cursor-pointer rounded-xl border border-primary text-primary text-xs flex px-2 items-center justify-center h-6 mr-1  hover:bg-primary hover:text-white transition-colors"
         >
           문제풀기
         </div>
         <div
           onClick={() => handleDeleteCandidateProblem(problemInfo.candidateId)}
-          className="rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
+          className="cursor-pointer rounded-xl border border-red-500 text-red-500 text-xs flex px-2 items-center justify-center h-6 mr-1 hover:bg-red-500 hover:text-white transition-colors"
         >
           삭제
         </div>

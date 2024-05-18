@@ -56,7 +56,7 @@ const DeleteButton = (props: { pageId: number }) => {
     'w-6 h-6 mr-1 rounded-md flex justify-center items-center hover:bg-darkNavy hover:bg-opacity-20 transition-colors'
 
   return (
-    <div>
+    <div className="cursor-pointer">
       <a id="hoverDelete" className={anchorTagCSS}>
         <RiDeleteBin6Line
           className=" w-4 rounded-sm relative text-red-500"

@@ -23,7 +23,6 @@ const StudyMainPage = () => {
   const location = useLocation()
   const { sendUpdateMessage } = useWebSocket()
   const client = useSelector((state: RootState) => state.socket.client)
-  const memberList = useSelector((state: RootState) => state.study.memberList)
   const { handleEditName, handleEditImage, handleFetchStudyInfo } = useStudy()
 
   const currentStudyInfo = useSelector((state: RootState) => state.study)
@@ -113,7 +112,7 @@ const StudyMainPage = () => {
           >
             {isShowingImgEditor && (
               <label htmlFor="imageInput">
-                <GoPencil className="w-4 opacity-20" />
+                <GoPencil className="w-4 opacity-20 cursor-pointer" />
               </label>
             )}
             <input
@@ -166,7 +165,7 @@ const StudyMainPage = () => {
               {currentStudyInfo.manager && (
                 <a id="editName" className={anchorTagCSS}>
                   <GoPencil
-                    className="w-4 opacity-20"
+                    className="w-4 opacity-20 cursor-pointer"
                     onClick={() => setIsEditingName(true)}
                   />
                 </a>
@@ -181,7 +180,7 @@ const StudyMainPage = () => {
           </div>
           <div>일째</div>
         </div>
-        <div className="flex">
+        <div className="flex ">
           <InviteMember groupId={groupId} />
           <DeleteStudyGroup
             groupId={groupId}

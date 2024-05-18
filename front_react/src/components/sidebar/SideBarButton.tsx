@@ -10,7 +10,7 @@ const SideBarButton = () => {
   const isOpen = useSelector((state: RootState) => state.sidebar.isOpen)
 
   return (
-    <div>
+    <div className="cursor-pointer">
       {isOpen ? (
         <div className="h-8 flex items-center hover:bg-navy rounded-lg hover:bg-opacity-30">
           <a

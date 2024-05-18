@@ -3,6 +3,7 @@ import useTimer from '@/hooks/useTimer'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import toast, { Toaster } from 'react-hot-toast'
+import { TfiClose } from 'react-icons/tfi'
 
 const SetTimer = () => {
   const [isActiveEditing, setIsActiveEditing] = useState(true)
