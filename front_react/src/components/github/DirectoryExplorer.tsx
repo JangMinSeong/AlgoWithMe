@@ -47,9 +47,9 @@ const DirectoryExplorer: React.FC<DirectoryProps> = ({
 
       const responseData = await response.json()
       setDirectories(responseData.map((dir: string) => `${dir}/`))
-      console.log(responseData)
+  //    console.log(responseData)
     } catch (error) {
-      console.error('Failed to fetch branches:', error)
+  //    console.error('Failed to fetch branches:', error)
     } finally {
       setIsLoading(false)
       // onDirectorySelect(fullPath)

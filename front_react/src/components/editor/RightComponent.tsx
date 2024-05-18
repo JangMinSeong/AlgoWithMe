@@ -114,7 +114,7 @@ const RightComponent: React.FC<ProblemProp> = ({
       setCodeIds([])
       setFirstCode(null)
       setIsInit(true)
-      console.error('Failed to fetch data:', error)
+  //    console.error('Failed to fetch data:', error)
     }
   }
 
@@ -140,7 +140,7 @@ const RightComponent: React.FC<ProblemProp> = ({
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
-      console.error('Failed to fetch data:', error)
+  //    console.error('Failed to fetch data:', error)
     }
   }
 
@@ -148,12 +148,12 @@ const RightComponent: React.FC<ProblemProp> = ({
     setOption(myId !== curUser)
 
     if (curTopic !== '' || myId === curUser) {
-      console.log(curTopic + ' unsubscribe')
+ //     console.log(curTopic + ' unsubscribe')
       unsubscribeFromTopic(curTopic, true)
       fetchMyData()
     }
     if (option || curUser !== myId) {
-      console.log(curTopic + '  subscribe')
+ //     console.log(curTopic + '  subscribe')
       subscribeToTopic(`/topic/codeTab/${curUser}`, true)
       fetchUserData()
     }
@@ -278,7 +278,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
     const responseData = await response.json()
     setRepositories(responseData)
-    console.log(responseData)
+ //   console.log(responseData)
 
     setIsGitHubExplorerOpen(true)
   }
@@ -297,7 +297,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const handleMouseMove = (e) => {
     e.preventDefault()
     if (containerRef.current) {
-      console.log(containerRef.current.offsetHeight)
+  //    console.log(containerRef.current.offsetHeight)
       const containerHeight = containerRef.current.offsetHeight
       const newLeftWidth = ((e.clientY - SIDEBAR_WIDTH) / containerHeight) * 100
       const modifiedLeftWidth =

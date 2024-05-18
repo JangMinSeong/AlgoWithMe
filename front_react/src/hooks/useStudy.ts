@@ -26,11 +26,11 @@ const useStudy = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log(json)
+      // console.log(json)
         dispatch(viewStudyInfo(json))
       })
       .catch((error) => {
-        console.error(error)
+     //   console.error(error)
       })
   }
 
@@ -44,7 +44,7 @@ const useStudy = () => {
     })
       .then((res) => res.json())
       .then((json) => {
-        console.log('멤버', json)
+    //    console.log('멤버', json)
         dispatch(viewStudyMembers(json))
         // 현재 사용자 닉네임과 일치하는 사용자 찾기
         const foundUser = json.find((user) => user.nickname === nickname)
@@ -66,12 +66,12 @@ const useStudy = () => {
       .then((res) => res.json())
       .then((json) => {
         toast.success('문제가 추가되었어요')
-        console.log(json)
+   //     console.log(json)
         dispatch(addCandidateProblems(json))
       })
       .catch((err) => {
         toast.error('이미 추가된 문제예요')
-        console.error(err)
+    //    console.error(err)
       })
   }
 
@@ -82,9 +82,13 @@ const useStudy = () => {
       body: JSON.stringify(candidateId),
       credentials: 'include',
     })
-      .then((res) => console.log(res))
+      .then((res) => {
+        //console.log(res)
+      })
       .then(() => dispatch(deleteCandidateProblem(candidateId)))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        //console.error(err)
+      })
   }
 
   const handleEditImage = async (teamId: number, formData) => {
@@ -95,7 +99,9 @@ const useStudy = () => {
     })
       .then((res) => res.text())
       .then((text) => dispatch(editImage(text)))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        //console.error(err)
+      })
   }
 
   const handleEditName = async (teamId: number, name: string) => {
@@ -109,8 +115,8 @@ const useStudy = () => {
         dispatch(editName(name))
       })
       .catch((err) => {
-        console.log(teamId)
-        console.error(err)
+   //     console.log(teamId)
+    //    console.error(err)
       })
   }
 

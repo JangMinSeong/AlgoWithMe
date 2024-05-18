@@ -187,7 +187,7 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
       const textResponse = await response.text()
       insertImageFromUrl(textResponse)
     } catch (error) {
-      console.error('Error uploading image:', error)
+  //    console.error('Error uploading image:', error)
     }
   }
 

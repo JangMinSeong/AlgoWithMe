@@ -76,11 +76,11 @@ const Main = () => {
     if (session === '') return
 
     session.on('streamCreated', (event) => {
-      console.log('스트림생성')
+   //   console.log('스트림생성')
       const mySubscriber = session.subscribe(event.stream, 'subscriberDiv')
       const connectionId = event.stream.connection.connectionId
       const nickname = event.stream.connection.data
-      console.log(connectionId)
+  //    console.log(connectionId)
 
       setSubscriber(mySubscriber)
 
@@ -98,7 +98,7 @@ const Main = () => {
       if (subscriber && event.stream.streamId === subscriber.stream.streamId) {
         setSubscriber(null)
       }
-      console.log('스트림파괴')
+ //     console.log('스트림파괴')
       const nickname = event.stream.connection.data
       handleUnsetOnline(nickname)
 
@@ -146,12 +146,12 @@ const Main = () => {
 
     session.on('publisherStartSpeaking', (event) => {
       handleSetSpeaker(event.connection.data)
-      console.log('User ' + event.connection.data + '가 말하고 있어요')
+ //     console.log('User ' + event.connection.data + '가 말하고 있어요')
     })
 
     session.on('publisherStopSpeaking', (event) => {
       handleUnsetSpeaker(event.connection.data)
-      console.log('User ' + event.connection.data + '가 말을 멈췄어요')
+  //    console.log('User ' + event.connection.data + '가 말을 멈췄어요')
     })
   }, [subscriber, session])
 
@@ -198,7 +198,7 @@ const Main = () => {
             connectToSession(json.token)
           })
       } catch (error) {
-        console.error(error)
+  //      console.error(error)
       }
     }
 
@@ -206,12 +206,12 @@ const Main = () => {
   }, [session, OV, sessionId])
 
   const handleHeadphoneOff = () => {
-    console.log(subscriber)
+ //   console.log(subscriber)
     setIsHeadphoneOn(false)
     subscriber.subscribeToAudio(false)
   }
   const handleHeadphoneOn = () => {
-    console.log(subscriber)
+ //   console.log(subscriber)
     setIsHeadphoneOn(true)
     subscriber.subscribeToAudio(true)
   }
@@ -219,11 +219,11 @@ const Main = () => {
   const handleMicOff = () => {
     setIsMicOn(false)
     publisher.publishAudio(false)
-    console.log(publisher)
+ //   console.log(publisher)
   }
   const handleMicOn = () => {
     setIsMicOn(true)
-    console.log(publisher)
+  //  console.log(publisher)
     publisher.publishAudio(true)
   }
 

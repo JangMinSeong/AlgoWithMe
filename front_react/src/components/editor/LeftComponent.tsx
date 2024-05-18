@@ -258,7 +258,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
           editorUser.commands.setContent('', false)
         }
       } catch (error) {
-        console.error('Failed to fetch data:', error)
+ //       console.error('Failed to fetch data:', error)
       }
     }
 
