@@ -38,7 +38,7 @@ const UserProfile = ({ avatarUrl, onClose, avatarRef }) => {
   return (
     <div
       ref={profileRef}
-      className="absolute gap-5 bg-dimmedPurple py-6 w-80 mt-4 right-0 flex flex-col items-center rounded-2xl"
+      className="absolute gap-5 bg-dimmedPurple py-6 w-80 mt-4 right-0 flex flex-col items-center rounded-2xl shadow-lg"
     >
       <img
         src={avatarUrl}

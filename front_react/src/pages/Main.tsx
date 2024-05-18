@@ -80,8 +80,13 @@ const MainPage: React.FC = () => {
             환영합니다! {user.nickname} 님
           </h1>
 
-          <main className="flex w-full h-auto flex-col items-center justify-center text-center mt-0.5 pb-10">
-            <ChartProblem chartList={chartData} problemList={problemData} />
+          <main className="flex h-auto flex-col items-center justify-center text-center mt-2 pb-10">
+            {/* 위부분 */}
+            <div className="flex flex-col">
+              <ChartProblem chartList={chartData} problemList={problemData} />
+            </div>
+
+            {/* 아래부분 */}
             <div className="w-full text-darkNavy text-lg text-left pl-5 sticky top-0 font-bold mb-4">
               최근 진행한 스터디 목록
             </div>
