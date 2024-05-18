@@ -6,22 +6,24 @@ import { Tooltip } from 'react-tooltip'
 interface IJoinButtonProps {
   joinSession: () => void
   outSession: () => void
+  isInSession
+  setParentIsInSession
 }
 
 const JoinButton = (props: IJoinButtonProps) => {
-  const [isInSession, setIsInsession] = useState(false)
+  // const [isInSession, setIsInsession] = useState(false)
   const handleJoin = () => {
     props.joinSession()
-    setIsInsession(true)
+    props.setParentIsInSession(true)
   }
 
   const handleQuit = () => {
     props.outSession()
-    setIsInsession(false)
+    props.setParentIsInSession(false)
   }
   return (
     <div>
-      {isInSession ? (
+      {props.isInSession ? (
         <div>
           <a
             id="quitCall"

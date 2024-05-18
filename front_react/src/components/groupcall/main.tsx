@@ -32,6 +32,7 @@ const Main = () => {
   } = useMember()
 
   const [session, setSession] = useState<OVSession | ''>('')
+  const [isInSession, setIsInsession] = useState(false)
   const [sessionId, setSessionId] = useState<string>('')
   const [subscriber, setSubscriber] = useState<Subscriber | null>(null)
   const [publisher, setPublisher] = useState<Publisher | null>(null)
@@ -57,6 +58,7 @@ const Main = () => {
 
     handleUnsetOnline(myNickname)
     handleSetOffline(myData)
+    setIsInsession(false)
     setOV(null)
     setSession('')
     setSessionId('')
@@ -69,6 +71,7 @@ const Main = () => {
     newOV.enableProdMode()
     setOV(newOV)
     setSession(newOV.initSession())
+    setIsInsession(true)
   }
 
   useEffect(() => {
@@ -119,6 +122,7 @@ const Main = () => {
         isSpeaking: false,
       }
 
+      if (nickname === myNickname) setIsInsession(false)
       handleUnsetOnline(nickname)
       handleSetOffline(member)
 
@@ -153,6 +157,7 @@ const Main = () => {
         isSpeaking: false,
       }
 
+      if (nickname === myNickname) setIsInsession(true)
       handleSetOnline(member)
       handleUnsetOffline(nickname)
     })
@@ -252,7 +257,12 @@ const Main = () => {
 
   return (
     <div className="flex">
-      <JoinButton joinSession={joinSession} outSession={leaveSession} />
+      <JoinButton
+        joinSession={joinSession}
+        outSession={leaveSession}
+        isInSession={isInSession}
+        setParentIsInSession={setIsInsession}
+      />
 
       {session && (
         <div
@@ -266,7 +276,7 @@ const Main = () => {
       {/* 오디오컨트롤 */}
       <div
         className={`cursor-pointer mr-2 flex ${
-          AudioControllerVisible ? 'visible' : 'invisible'
+          AudioControllerVisible && session ? 'visible' : 'invisible'
         }`}
       >
         <div>
