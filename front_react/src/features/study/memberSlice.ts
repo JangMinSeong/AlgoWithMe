@@ -35,6 +35,14 @@ const memberSlice = createSlice({
       )
     },
 
+    emptyOnline: (state: IMemberSlice) => {
+      state.onlineMembers = []
+    },
+
+    emptyOffline: (state: IMemberSlice) => {
+      state.offlineMembers = []
+    },
+
     setOffline: (state: IMemberSlice, action: PayloadAction<IMember>) => {
       const isDuplicate = state.offlineMembers.findIndex(
         (item) => item.nickname === action.payload.nickname,
@@ -68,6 +76,8 @@ const memberSlice = createSlice({
 export const {
   setOnline,
   unsetOnline,
+  emptyOnline,
+  emptyOffline,
   setOffline,
   unsetOffline,
   setSpeaker,

@@ -11,7 +11,11 @@ import fetch from '@/lib/fetch'
 import toast from 'react-hot-toast'
 import useCode from '@/hooks/useCode.ts'
 import { RootState } from '@/lib/store.ts'
-import { setOffline } from '@/features/study/memberSlice'
+import {
+  emptyOnline,
+  emptyOffline,
+  setOffline,
+} from '@/features/study/memberSlice'
 
 const useStudy = () => {
   const dispatch = useDispatch()
@@ -47,6 +51,11 @@ const useStudy = () => {
       .then((json) => {
         // console.log('멤버', json)
         dispatch(viewStudyMembers(json))
+        dispatch(emptyOffline())
+        dispatch(emptyOnline())
+        return json
+      })
+      .then((json) => {
         json.map((item) => {
           const data = {
             nickname: item.nickname,
