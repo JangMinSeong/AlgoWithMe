@@ -45,6 +45,10 @@ const WorkSpace: React.FC<WorkSpaceProps> = ({ editor, pageId }) => {
                     setSelectionRect({ top: rect.top + window.scrollY, left: rect.left + window.scrollX })
                     setIsDragging(true)
                     setShowMenuBar(true)
+                } else if(!range.collapsed && !workspaceRef.current?.contains(selection.anchorNode)){
+                    setSelectionRect(null)
+                    setShowMenuBar(false)
+                    curEditor.commands.focus("end")
                 } else {
                     setSelectionRect(null)
                     setShowMenuBar(false)
