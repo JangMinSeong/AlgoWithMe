@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom'
 const DocsPage: React.FC = () => {
   const { groupId, pageId } = useParams()
   return (
-    <div className="px-40">
+    <div>
       <MainComponent groupId={Number(groupId)} room={pageId} />
     </div>
   )

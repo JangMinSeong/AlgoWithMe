@@ -5,7 +5,7 @@ import FontSizeControl from '@/components/editor/workspace/FontSizeControl'
 import MenuItem from './MenuItem'
 import { Editor } from '@tiptap/react'
 import fetch from '@/lib/fetch.ts'
-import VerticalMenuItem from "@/components/editor/workspace/VerticalMenuItem.tsx";
+import VerticalMenuItem from '@/components/editor/workspace/VerticalMenuItem.tsx'
 
 interface MenuItemProps {
   icon: string
@@ -107,7 +107,11 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
           const rows = parseInt(prompt('Enter number of rows') || '0', 10)
           const cols = parseInt(prompt('Enter number of columns') || '0', 10)
           if (rows > 0 && cols > 0) {
-            curEditor.chain().focus().insertTable({ rows, cols, withHeaderRow: true }).run()
+            curEditor
+              .chain()
+              .focus()
+              .insertTable({ rows, cols, withHeaderRow: true })
+              .run()
           }
         },
       },
@@ -187,7 +191,7 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
       const textResponse = await response.text()
       insertImageFromUrl(textResponse)
     } catch (error) {
-  //    console.error('Error uploading image:', error)
+      //    console.error('Error uploading image:', error)
     }
   }
 
@@ -196,13 +200,13 @@ const MenuBar: React.FC<MenuBarProp> = ({ editor, pageId }) => {
   }
 
   return (
-      <div className="editor__header w-full bg-white border-b-[1px] border-blueishPurple z-10 flex flex-col p-2 rounded-md">
-        {menuItems.map((item, index) => (
-            <div className = "w-full flex flex-row">
-              <VerticalMenuItem {...item} />
-            </div>
-        ))}
-      </div>
+    <div className="editor__header w-full bg-white border-b-[1px] border-blueishPurple z-10 flex flex-col p-2 rounded-md">
+      {menuItems.map((item, index) => (
+        <div className="w-full flex flex-row">
+          <VerticalMenuItem {...item} />
+        </div>
+      ))}
+    </div>
   )
 }
 export default MenuBar
