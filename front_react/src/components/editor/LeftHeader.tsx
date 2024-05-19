@@ -88,7 +88,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
   }
 
   return (
-    <div className="flex justify-between items-center w-full h-16 border-b-[1px] border-b-blueishPurple">
+    <div className="flex justify-between items-center w-full h-12 border-b-[1px] border-b-blueishPurple">
       <div className="flex items-center ml-10 w-[70%]">
         <img
           src={`/${provider === 'boj' ? 'baekjoon' : provider}.png`}
