@@ -113,7 +113,7 @@ const RightComponent: React.FC<ProblemProp> = ({
       setCodeIds([])
       setFirstCode(null)
       setIsInit(true)
-  //    console.error('Failed to fetch data:', error)
+      //    console.error('Failed to fetch data:', error)
     }
   }
 
@@ -139,7 +139,7 @@ const RightComponent: React.FC<ProblemProp> = ({
     } catch (error) {
       setCodeIds([])
       setFirstCode(null)
-  //    console.error('Failed to fetch data:', error)
+      //    console.error('Failed to fetch data:', error)
     }
   }
 
@@ -147,12 +147,12 @@ const RightComponent: React.FC<ProblemProp> = ({
     setOption(myId !== curUser)
 
     if (curTopic !== '' || myId === curUser) {
- //     console.log(curTopic + ' unsubscribe')
+      //     console.log(curTopic + ' unsubscribe')
       unsubscribeFromTopic(curTopic, true)
       fetchMyData()
     }
     if (option || curUser !== myId) {
- //     console.log(curTopic + '  subscribe')
+      //     console.log(curTopic + '  subscribe')
       subscribeToTopic(`/topic/codeTab/${curUser}`, true)
       fetchUserData()
     }
@@ -277,7 +277,7 @@ const RightComponent: React.FC<ProblemProp> = ({
 
     const responseData = await response.json()
     setRepositories(responseData)
- //   console.log(responseData)
+    //   console.log(responseData)
 
     setIsGitHubExplorerOpen(true)
   }
@@ -296,7 +296,7 @@ const RightComponent: React.FC<ProblemProp> = ({
   const handleMouseMove = (e) => {
     e.preventDefault()
     if (containerRef.current) {
-  //    console.log(containerRef.current.offsetHeight)
+      //    console.log(containerRef.current.offsetHeight)
       const containerHeight = containerRef.current.offsetHeight
       const newTopHeight = ((e.clientY - HEADER_HEIGHT) / containerHeight) * 100
       const modifiedLeftWidth =
@@ -350,75 +350,77 @@ const RightComponent: React.FC<ProblemProp> = ({
       >
         <FaGripLines className="text-sm text-gray-500" />
       </div>
-      <div className="flex flex-col flex-1">
-        <div className="flex flex-row flex-1 border-gray-300 h-full">
-          {provider !== 'programmers' ? (
-            <>
-              <div className="flex-1">
-                <textarea
-                  className="w-full resize-none p-2 h-full overflow-auto bg-transparent outline-none"
-                  placeholder="테스트 케이스를 입력하세요"
-                  value={inputText}
-                  onChange={(e) => setInputText(e.target.value)}
+      <div className="h-auto overflow-hidden flex-1">
+        <div className="flex flex-col grow overflow-hidden h-full">
+          <div className="flex flex-row flex-1 border-gray-300 h-full overflow-hidden">
+            {provider !== 'programmers' ? (
+              <>
+                <div className="flex-1">
+                  <textarea
+                    className="w-full resize-none p-2 h-full overflow-auto bg-transparent outline-none"
+                    placeholder="테스트 케이스를 입력하세요"
+                    value={inputText}
+                    onChange={(e) => setInputText(e.target.value)}
+                  />
+                </div>
+                <div className="w-px bg-blueishPurple" />
+              </>
+            ) : null}
+            <div className="flex-1 h-full" style={{ overflow: 'auto' }}>
+              {isLoading ? (
+                <pre style={{ fontFamily: 'pretendard' }} className="ml-2 mt-2">
+                  실행 중...
+                </pre>
+              ) : resStatus !== 200 ? (
+                <ErrorOutput status={resStatus} output={output} />
+              ) : saveInputText !== '' ? (
+                <ExecuteOutput time={execTime} output={output} />
+              ) : provider === 'boj' || provider === 'programmers' ? (
+                <BOJAndPGOutput
+                  status={resStatus}
+                  error={output}
+                  results={resultBojAndPGList}
                 />
-              </div>
-              <div className="w-px bg-blueishPurple" />
-            </>
-          ) : null}
-          <div className="flex-1 h-full" style={{ overflow: 'auto' }}>
-            {isLoading ? (
-              <pre style={{ fontFamily: 'pretendard' }} className="ml-2 mt-2">
-                실행 중...
-              </pre>
-            ) : resStatus !== 200 ? (
-              <ErrorOutput status={resStatus} output={output} />
-            ) : saveInputText !== '' ? (
-              <ExecuteOutput time={execTime} output={output} />
-            ) : provider === 'boj' || provider === 'programmers' ? (
-              <BOJAndPGOutput
-                status={resStatus}
-                error={output}
-                results={resultBojAndPGList}
+              ) : provider === 'swea' ? (
+                <SWEAOutput
+                  status={resStatus}
+                  got={output}
+                  execution_time={execTime}
+                  details={resultSweaList}
+                />
+              ) : (
+                <div>출력 창</div>
+              )}
+            </div>
+          </div>
+          <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-2">
+            <button
+              onClick={handleSaveAndRun}
+              className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors mr-1 "
+            >
+              실행하기
+            </button>
+            <button
+              className="bg-black hover:bg-black/70 text-white  text-xs px-2 h-7 transition-colors flex items-center"
+              onClick={handleGithub}
+            >
+              <img
+                src="/logo/github/github-mark-white.png"
+                alt="icon"
+                className="h-4 w-4 mr-2 text-white"
               />
-            ) : provider === 'swea' ? (
-              <SWEAOutput
-                status={resStatus}
-                got={output}
-                execution_time={execTime}
-                details={resultSweaList}
+              GitHub에 저장
+            </button>
+            {isGitHubExplorerOpen && (
+              <GitHubExplorer
+                isOpen={isGitHubExplorerOpen}
+                isClose={handleCloseGitHubExplorer}
+                repositories={repositories}
+                content={codeEditorRef.current?.getCurrentTabInfo().code}
+                language={codeEditorRef.current?.getCurrentTabInfo().language}
               />
-            ) : (
-              <div>출력 창</div>
             )}
           </div>
-        </div>
-        <div className="flex flex-row justify-end border-t-[1px] border-blueishPurple pt-2">
-          <button
-            onClick={handleSaveAndRun}
-            className="bg-primary hover:bg-primary/70 text-white text-xs px-3 h-7  transition-colors mr-1 "
-          >
-            실행하기
-          </button>
-          <button
-            className="bg-black hover:bg-black/70 text-white  text-xs px-2 h-7 transition-colors flex items-center"
-            onClick={handleGithub}
-          >
-            <img
-              src="/logo/github/github-mark-white.png"
-              alt="icon"
-              className="h-4 w-4 mr-2 text-white"
-            />
-            GitHub에 저장
-          </button>
-          {isGitHubExplorerOpen && (
-            <GitHubExplorer
-              isOpen={isGitHubExplorerOpen}
-              isClose={handleCloseGitHubExplorer}
-              repositories={repositories}
-              content={codeEditorRef.current?.getCurrentTabInfo().code}
-              language={codeEditorRef.current?.getCurrentTabInfo().language}
-            />
-          )}
         </div>
       </div>
     </div>

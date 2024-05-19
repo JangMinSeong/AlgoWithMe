@@ -36,6 +36,7 @@ function Landing() {
 
   const textRefs = useRef<HTMLDivElement[]>([])
   const biggerRef = useRef<HTMLDivElement>(null)
+  const allInOneRef = useRef<HTMLDivElement>(null)
   const [rate, setRate] = useState(85)
 
   useEffect(() => {
@@ -76,6 +77,19 @@ function Landing() {
       if (biggerRef.current) {
         const top = biggerRef.current.getBoundingClientRect().top
         const innerHeight = window.innerHeight
+        if (top - innerHeight < 200) {
+          const distance = top - innerHeight
+          const normalizedDistance = 1 - distance / 200
+          allInOneRef.current.style.transform = `matrix(1, 0, 0, 1, 0, ${
+            normalizedDistance * 50 > 50 ? 50 : normalizedDistance * 50
+          })`
+          allInOneRef.current.style.opacity = `${
+            normalizedDistance > 1 ? 1 : normalizedDistance
+          }`
+        } else {
+          allInOneRef.current.style.transform = 'matrix(1, 0, 0, 1, 0, 0)'
+          allInOneRef.current.style.opacity = '0'
+        }
         if (window.scrollY > innerHeight && top - innerHeight > 0) {
           const distance = innerHeight * 2.5
           const normalizedDistance = (top - innerHeight) / distance
@@ -177,15 +191,45 @@ function Landing() {
             </div>
           </div>
         </section>
-        <section ref={biggerRef} className="bg-[#f2ddec]">
+        <section ref={biggerRef} className="bg-[#F2DDEC] pb-[200px] ">
           <div className="xl:container xl:mx-auto px-80">
             <div className="flex flex-col">
               <div
                 // style={{ opacity: 0, transform: 'translateY(10px)' }}
-                ref={(ref) => textRefs.current.push(ref)}
-                className="mt-[calc(-50vh+185px)] font-bold text-6xl text-gray-600 transition duration-500 ease-in-out"
+                ref={allInOneRef}
+                className="z-20 mt-[calc(-50vh+185px)] flex flex-col"
               >
-                ALL IN ONE
+                <div className="text-8xl font-bold text-gray-600 pb-10">
+                  ALL IN ONE
+                </div>
+                <div className="flex flex-row">
+                  <div className="leading-normal break-keep text-2xl font-bold text-gray-400 w-1/2 pr-20">
+                    새롭게 선보이는{' '}
+                    <div className="break-keep inline text-gray-600">
+                      차세대 온라인 스터디 통합 플랫폼,
+                    </div>{' '}
+                    이거 켜고, 저거 켜고, 복잡한 스터디 준비 과정은 이제 그만,{' '}
+                    <div className="break-keep inline-block text-gray-600">
+                      Algowithme
+                    </div>
+                    에서 코드 작성, 코드 공유, 공유 문서 작성, 음성 채팅 까지
+                    제공하니까
+                  </div>
+                  <div className="flex flex-col w-1/2 gap-3">
+                    <div className="text-gray-400 text-2xl font-bold">
+                      다양한 문제 제공
+                    </div>
+                    <div className="text-gray-600 text-4xl font-bold">
+                      백준, 프로그래머스, SWEA
+                    </div>
+                    <div className="text-gray-400 text-2xl font-bold pt-4">
+                      네 가지 언어 지원
+                    </div>
+                    <div className="text-gray-600 text-4xl font-bold">
+                      C, C++, JAVA, Python
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="flex-row"></div>
             </div>
