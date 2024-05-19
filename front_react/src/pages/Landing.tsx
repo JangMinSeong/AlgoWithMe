@@ -1,5 +1,6 @@
 import LandingHeader from '@/components/header/LandingHeader'
 import { useEffect, useRef, useState } from 'react'
+import debounce from 'lodash.debounce'
 
 function Landing() {
   const needProgramList = [
@@ -35,43 +36,53 @@ function Landing() {
   }
 
   const textRefs = useRef<HTMLDivElement[]>([])
+  const replacementRefs = useRef<HTMLDivElement[]>([])
   const biggerRef = useRef<HTMLDivElement>(null)
   const allInOneRef = useRef<HTMLDivElement>(null)
+  const liveRef = useRef<HTMLDivElement>(null)
+  const liveBottomRef = useRef<HTMLDivElement>(null)
+  const grassRefs = useRef<HTMLDivElement[]>([])
   const [rate, setRate] = useState(85)
 
   useEffect(() => {
-    if (textRefs.current.length === 0) {
+    if (replacementRefs.current.length === 0) {
       return
     } else {
-      textRefs.current.forEach((ref) => {
+      console.log(replacementRefs.current)
+      replacementRefs.current.forEach((ref) => {
         if (ref) {
-          // ref.style.opacity = '0'
-          // ref.style.transform = 'translateY(10px)'
+          ref.style.display = 'none'
         }
       })
     }
-  }, [textRefs])
+  }, [replacementRefs])
 
   useEffect(() => {
-    const handleScroll = () => {
-      textRefs.current.forEach((ref) => {
-        if (ref) {
-          const top = ref.getBoundingClientRect().top
-          if (top < window.innerHeight - 100) {
-            ref.style.opacity = '1'
-          } else {
-            ref.style.opacity = '0'
-          }
-          // if (top < window.innerHeight) {
-          //   ref.style.opacity = '1'
-          //   ref.style.transform = 'translateY(-10px)'
-          // } else {
-          //   ref.style.opacity = '0'
-          //   ref.style.transform = 'translateY(10px)'
-          // }
+    const initScroll = debounce(() => {
+      const top = liveRef.current.getBoundingClientRect().top
+      if (top > window.innerHeight) {
+        console.log('init')
+        textRefs.current.forEach((ref) => {
+          ref.style.display = 'block'
+        })
+        replacementRefs.current.forEach((ref) => {
+          ref.style.display = 'none'
+          ref.style.opacity = '0'
+        })
+      }
+
+      grassRefs.current.forEach((ref) => {
+        const top = ref.getBoundingClientRect().top
+        const innerHeight = window.innerHeight
+        if (top < (innerHeight / 4) * 3) {
+          ref.style.opacity = '1'
+          ref.style.transform = 'translate(0, -20px)'
+        } else {
+          ref.style.opacity = '0'
+          ref.style.transform = 'translate(0, 0)'
         }
       })
-    }
+    }, 10)
 
     const handleBiggerScroll = () => {
       if (biggerRef.current) {
@@ -108,14 +119,54 @@ function Landing() {
       }
     }
 
-    window.addEventListener('scroll', handleScroll)
+    const handleLiveScroll = () => {
+      if (liveBottomRef.current) {
+        const top = liveBottomRef.current.getBoundingClientRect().top
+        const innerHeight = window.innerHeight
+        const distance = innerHeight * 3.5 - top
+        if (distance > 0 && distance < innerHeight * 2.5) {
+          const viewIndex = Math.floor(
+            (distance / (innerHeight * 2.5)) * (textRefs.current.length + 1),
+          )
+          console.log(viewIndex)
+          textRefs.current.forEach((ref, index) => {
+            if (ref) {
+              if (index < viewIndex) {
+                ref.style.display = 'none'
+                replacementRefs.current[index].style.display = 'block'
+                setTimeout(() => {
+                  replacementRefs.current[index].style.opacity = '1'
+                }, 100)
+              }
+            }
+          })
+          replacementRefs.current.forEach((ref, index) => {
+            if (ref) {
+              if (index >= viewIndex) {
+                setTimeout(() => {
+                  replacementRefs.current[index].style.opacity = '0'
+                }, 100)
+                ref.style.display = 'none'
+                textRefs.current[index].style.display = 'block'
+              }
+            }
+          })
+        }
+      }
+    }
+
     window.addEventListener('scroll', handleBiggerScroll)
+    window.addEventListener('scroll', initScroll)
+    window.addEventListener('scroll', handleLiveScroll)
 
     return () => {
-      window.removeEventListener('scroll', handleScroll)
       window.removeEventListener('scroll', handleBiggerScroll)
+      window.removeEventListener('scroll', initScroll)
+      window.removeEventListener('scroll', handleLiveScroll)
     }
   }, [])
+
+  const items = Array.from({ length: 84 }, (_, index) => index + 1)
 
   return (
     <>
@@ -192,7 +243,7 @@ function Landing() {
           </div>
         </section>
         <section ref={biggerRef} className="bg-[#F2DDEC] pb-[200px] ">
-          <div className="xl:container xl:mx-auto px-80">
+          <div className="xl:container xl:mx-auto max-xl:px-40 px-80">
             <div className="flex flex-col">
               <div
                 // style={{ opacity: 0, transform: 'translateY(10px)' }}
@@ -235,9 +286,303 @@ function Landing() {
             </div>
           </div>
         </section>
-        <footer className="bg-darkNavy pb-2">
-          <div className="xl:container xl:mx-auto px-40 h-[1000px]">
-            <div className="pt-32 font-bold text-5xl text-white">Footer</div>
+        <section ref={liveRef} className="bg-indigo-950 h-[350vh]">
+          <div className="sticky top-0 h-[100vh] overflow-hidden">
+            <div className="xl:container xl:mx-auto max-xl:px-40 px-80 h-full">
+              <div className="flex flex-col gap-5 h-full justify-center">
+                {/* Algowithme */}
+                <div
+                  ref={(ref) => {
+                    textRefs.current[0] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  # Algowithme
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[0] = ref
+                  }}
+                  className="text-6xl text-gray-300 font-bold transition-all duration-1000 ease-in-out pb-4"
+                >
+                  Algowithme
+                </div>
+                {/* 구분선 */}
+                <div
+                  ref={(ref) => {
+                    textRefs.current[1] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  ---
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[1] = ref
+                  }}
+                  className="w-full h-1 bg-gray-300 transition-all duration-1000 ease-in-out"
+                ></div>
+                {/* 마크다운 언어 지원 */}
+                <div
+                  ref={(ref) => {
+                    textRefs.current[2] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  ## 마크다운 언어 지원
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[2] = ref
+                  }}
+                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                >
+                  마크다운 언어 지원
+                </div>
+
+                {/* 문서 작성은 마크 다운 형식으로 간편하게 */}
+                <div className="text-2xl text-gray-300 flex flex-row gap-2">
+                  문서 작성은
+                  <div
+                    ref={(ref) => {
+                      textRefs.current[3] = ref
+                    }}
+                    className="inline text-2xl text-gray-300"
+                  >
+                    **마크 다운**
+                  </div>
+                  <div
+                    ref={(ref) => {
+                      replacementRefs.current[3] = ref
+                    }}
+                    className="inline text-2xl font-bold text-gray-300 transition-all duration-1000 ease-in-out"
+                  >
+                    마크 다운
+                  </div>{' '}
+                  형식으로 빠르고 간편하게
+                </div>
+                <div
+                  ref={(ref) => {
+                    textRefs.current[4] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  ## 실시간 문서 공유
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[4] = ref
+                  }}
+                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                >
+                  실시간 문서 공유
+                </div>
+                {/* prettier-ignore */}
+                <div
+                  ref={(ref) => {
+                    textRefs.current[5] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  ```<br />
+                  #include &lt;stdio.h&gt;
+                  <br />
+                  <br />
+                  int main()
+                  <br />
+                  &#123;
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;Hello, world!&quot;);
+                  <br />
+                  <br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;return 0;
+                  <br />
+                  &#125;
+                  <br />
+                  ```
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[5] = ref
+                  }}
+                  className="text-xl text-gray-300 transition-all duration-1000 ease-in-out"
+                >
+                  <div className="shadow-[0_0_34px_-9px_rgba(0,0,0,1)] rounded-md p-7 pr-20 bg-gray-800/80 w-fit">
+                    <code>
+                      <div className="inline text-orange-300">#include</div>{' '}
+                      <div className="inline text-orange-700">
+                        &lt;stdio.h&gt;
+                      </div>
+                      <br />
+                      <br />
+                      <div className="inline text-amber-200">int&nbsp;</div>
+                      main()
+                      <br />
+                      &#123;
+                      <br />
+                      &nbsp;&nbsp;&nbsp;&nbsp;
+                      <div className="inline text-amber-200">printf</div>(
+                      <div className="inline text-lime-700">
+                        &quot;Hello, world!&quot;
+                      </div>
+                      );
+                      <div
+                        ref={(ref) => {
+                          textRefs.current[6] = ref
+                        }}
+                      />
+                      <div
+                        ref={(ref) => {
+                          replacementRefs.current[6] = ref
+                        }}
+                      >
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div className="inline text-amber-200">printf</div>(
+                        <div className="inline text-lime-700">
+                          &quot;Hello, ssafy!&quot;
+                        </div>
+                        <div className="inline relative">
+                          );
+                          <div className="absolute pb-4 inline-block h-7 w-[2px] bg-accent" />
+                          <div className="absolute right-[-56px] top-[-5px] h-3 w-14 bg-accent " />
+                          <div className="absolute right-[-54px] top-[-14px] text-black font-mono text-[12px] font-bold">
+                            hyaanu
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        ref={(ref) => {
+                          textRefs.current[7] = ref
+                        }}
+                      />
+                      <div
+                        ref={(ref) => {
+                          replacementRefs.current[7] = ref
+                        }}
+                      >
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <div className="inline text-amber-200">printf</div>(
+                        <div className="inline text-lime-700">&quot;Hello,</div>
+                        <div className="inline relative">
+                          <div className="absolute pb-4 inline-block h-7 w-[2px] bg-blue-200" />
+                          <div className="absolute right-[-56px] top-[-5px] h-3 w-14 bg-blue-200 " />
+                          <div className="absolute right-[-54px] top-[-14px] text-black font-mono text-[12px] font-bold">
+                            sarang
+                          </div>
+                        </div>
+                      </div>
+                      <br />
+                      &nbsp;&nbsp;&nbsp;&nbsp;return 0;
+                      <br />
+                      &#125;
+                      <br />
+                    </code>
+                  </div>
+                </div>
+                <div
+                  ref={(ref) => {
+                    textRefs.current[8] = ref
+                  }}
+                  className="text-2xl text-gray-300"
+                >
+                  ## 음성 채팅 기능 제공
+                </div>
+                <div
+                  ref={(ref) => {
+                    replacementRefs.current[8] = ref
+                  }}
+                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                >
+                  음성 채팅 기능 제공
+                </div>
+                <div className="text-2xl text-gray-300">
+                  소통까지 가능한 완벽한 실시간 온라인 스터디 통합 플랫폼
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div ref={liveBottomRef} />
+        <section className="h-[120vh] bg-black">
+          <div className="xl:container xl:mx-auto max-xl:px-40 px-80 flex flex-col justify-center items-center pt-48">
+            <div
+              ref={(ref) => {
+                grassRefs.current.push(ref)
+              }}
+              className="transition duration-300 break-keep text-8xl font-bold text-white pb-20 text-center"
+            >
+              스터디의 마무리는 잔디로
+            </div>
+            <div
+              ref={(ref) => {
+                grassRefs.current.push(ref)
+              }}
+              className="w-fit h-fit transition duration-300"
+            >
+              <div className="grid grid-cols-12 gap-3">
+                {items.map((item) => {
+                  const rand = Math.floor(Math.random() * 5)
+                  let colorFactor
+                  switch (rand) {
+                    case 0:
+                      colorFactor = 'bg-[#161B22]'
+                      break
+                    case 1:
+                      colorFactor = 'bg-[#0E4429]'
+                      break
+                    case 2:
+                      colorFactor = 'bg-[#006D32]'
+                      break
+                    case 3:
+                      colorFactor = 'bg-[#26A641]'
+                      break
+                    case 4:
+                      colorFactor = 'bg-[#39D353]'
+                      break
+                    default:
+                      colorFactor = 'bg-[#161B22]'
+                      break
+                  }
+                  return (
+                    <div
+                      key={item}
+                      className={`${colorFactor} h-6 w-6 rounded-md`}
+                    ></div>
+                  )
+                })}
+              </div>
+            </div>
+
+            <div
+              ref={(ref) => {
+                grassRefs.current.push(ref)
+              }}
+              className="break-keep text-3xl text-gray-400 pt-20 text-center transition duration-300"
+            >
+              <div className="inline break-keep text-3xl font-bold text-white pt-20 text-center">
+                깃허브 연동
+              </div>
+              으로 클릭 몇 번이면 업로드 완료
+            </div>
+            <div
+              ref={(ref) => {
+                grassRefs.current.push(ref)
+              }}
+              className="break-keep text-3xl text-gray-400 pb-20 text-center transition duration-300"
+            >
+              마지막까지 편리한
+              <p className="inline-block font-bold bg-gradient-to-r from-indigo-700 to-darkPurple text-transparent bg-clip-text">
+                &nbsp;Algowithme
+              </p>
+            </div>
+          </div>
+        </section>
+        <footer className="pb-2 h-[10vh] bg-black">
+          <div className="xl:container xl:mx-auto px-40 flex flex-col items-center">
+            <img src={'/logo.svg'} alt="logo" className="h-4" />
+            <div className="text-md text-gray-700">
+              Copyright &copy;Algowithme 2024, Algowithme. All Right Reserved.
+            </div>
           </div>
         </footer>
       </div>
