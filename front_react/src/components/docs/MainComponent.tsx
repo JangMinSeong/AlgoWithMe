@@ -95,7 +95,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
   const [memoId, setMemoId] = useState<string | undefined>(undefined)
   const [currentUser, setCurrentUser] = useState(getInitialUser(null))
   const [activeTab, setActiveTab] = useState<'개인 메모장' | '워크스페이스'>(
-    '개인 메모장',
+    '워크스페이스',
   )
   const [editorGroup, setEditorGroup] = useState<any>(null)
 
