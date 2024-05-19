@@ -20,7 +20,6 @@ import { RootState } from '@/lib/store.ts'
 import Avatar from '@/components/editor/codespace/Avatar.tsx'
 import useCode from '@/hooks/useCode.ts'
 import 'ace-builds/src-noconflict/theme-tomorrow'
-import { CiSettings } from 'react-icons/ci'
 import toast from 'react-hot-toast'
 import { Tooltip } from 'react-tooltip'
 
@@ -394,18 +393,18 @@ const CodeEditor: React.FC<{
               )}
             </div>
           </div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-center">
             {!option && (
               <>
                 <button
                   onClick={deleteCode}
-                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 mt-2 h-7 mr-1  transition-colors "
+                  className="border border-red-500 hover:bg-red-500/70 hover:text-white text-red-500 text-xs px-3 h-7 mr-1  transition-colors text-nowrap"
                 >
                   현재 탭 삭제
                 </button>
                 <button
                   onClick={saveCode}
-                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white mt-2 text-xs px-3 h-7  transition-colors  mr-1"
+                  className="border border-primary  text-primary hover:bg-primary/70 hover:text-white text-xs px-3 h-7  transition-colors  mr-1 text-nowrap"
                 >
                   저장
                 </button>
@@ -415,7 +414,7 @@ const CodeEditor: React.FC<{
                     setLanguage(e.target.value)
                     setCode(languageOptions[e.target.value].value)
                   }}
-                  className="mb-0 mt-2 h-7 bg-transparent border border-blueishPurple"
+                  className="mb-0 h-7 bg-transparent border border-blueishPurple mr-7"
                 >
                   {Object.keys(languageOptions).map((lang) => (
                     <option key={lang} value={lang}>
@@ -423,11 +422,11 @@ const CodeEditor: React.FC<{
                     </option>
                   ))}
                 </select>
-                <CiSettings
-                  className="hover:cursor-pointer"
-                  fontSize={30}
-                  onClick={() => {}}
-                />
+                {/*<CiSettings*/}
+                {/*  className="hover:cursor-pointer"*/}
+                {/*  fontSize={30}*/}
+                {/*  onClick={() => {}}*/}
+                {/*/>*/}
               </>
             )}
           </div>
@@ -486,7 +485,7 @@ const CodeEditor: React.FC<{
               showLineNumbers: true,
               showFoldWidgets: true,
               showGutter: true,
-              fontSize: 18,
+              fontSize: 16,
             }}
             width="100%"
             height="100%"
