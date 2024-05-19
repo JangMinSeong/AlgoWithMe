@@ -22,8 +22,11 @@ interface ProblemData {
 const ChartProblem: React.FC<Props> = ({ chartList, problemList }) => (
   <div className="flex-grow flex items-center w-full ">
     {/* 왼쪽 */}
-    <div className="flex justify-center h-96  flex-col" style={{ flexGrow: 1 }}>
-      <div className="text-darkNavy text-lg  pl-5  text-left font-bold ">
+    <div
+      className="flex h-96 w-1/2 flex-col justify-start items-start"
+      style={{ flexGrow: 1 }}
+    >
+      <div className="text-darkNavy text-lg  pl-5 text-left font-bold ">
         나의 알고리즘 통계
       </div>
 
@@ -32,7 +35,7 @@ const ChartProblem: React.FC<Props> = ({ chartList, problemList }) => (
 
     {/* 오른쪽 */}
     <div
-      className="flex justify-center m-10 h-96 pr-10  flex-col"
+      className="flex justify-start m-10 h-96 pr-10 w-1/2 flex-col"
       style={{ flexGrow: 1 }}
     >
       <div className="text-darkNavy text-lg  pl-5  text-left font-bold ">
