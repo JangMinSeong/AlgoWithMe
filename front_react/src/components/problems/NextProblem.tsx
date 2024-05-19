@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/lib/store'
 import fetch from '@/lib/fetch.ts'
 import toast, { Toaster } from 'react-hot-toast'
+import { useWebSocket } from '@/hooks/useWebSocket'
 
 interface Page {
   pageId: number
@@ -23,6 +24,7 @@ const NextProblem: React.FC = ({
   const { handleDeleteCandidateProblem } = useStudy()
   const navigate = useNavigate()
   const { groupId } = useParams()
+  const { sendUpdateMessage } = useWebSocket()
 
   const pageList = useSelector((state: RootState) => state.sidebar.pageList)
 
@@ -34,7 +36,7 @@ const NextProblem: React.FC = ({
       pageId: -1,
       problemId: problemInfo.problemId,
     }
- //   console.log(dataToCreate)
+    //   console.log(dataToCreate)
     const response = await fetch('/page/problem', {
       method: 'POST',
       headers: {
@@ -54,6 +56,10 @@ const NextProblem: React.FC = ({
     const updatedList = [...pageList, newPage]
     setPages(updatedList)
     handleDeleteCandidateProblem(problemInfo.candidateId)
+    sendUpdateMessage(
+      `/app/study/${groupId}`,
+      `create page ${responseData.pageId}`,
+    )
     toast.success('문제가 생성되었어요')
     navigate(`/${groupId}/editor/${responseData.pageId}`)
   }
