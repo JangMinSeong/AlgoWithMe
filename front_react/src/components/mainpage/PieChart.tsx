@@ -2,7 +2,7 @@ import { Pie } from 'react-chartjs-2'
 import 'chart.js/auto'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import React from 'react'
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
+import { ArcElement, Chart as ChartJS, Legend, Tooltip } from 'chart.js'
 import './PieChart.css' // CSS 파일을 import
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels)
@@ -123,7 +123,7 @@ const PieChart: React.FC<ChartProp> = ({ chartList }) => {
   }
 
   return (
-    <div className="chart-container">
+    <div className="chart-container w-[90%] pt-4">
       <div className="chart">
         <Pie data={data} options={options} plugins={[ChartDataLabels]} />
       </div>
