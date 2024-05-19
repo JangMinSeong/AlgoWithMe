@@ -38,7 +38,6 @@ public class PageController {
     return ResponseEntity.ok(pageService.getPageList(teamId, user));
   }
 
-
   @PostMapping("/docs")
   @Operation(summary = "문서 페이지 생성", description = "팀 아이디와 상위 페이지 아이디를 입력하여, 페이지를 생성한다.")
   @ApiResponses(value = {

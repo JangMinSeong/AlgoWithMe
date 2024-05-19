@@ -7,9 +7,12 @@ import java.util.List;
 
 public interface PageRepository extends JpaRepository<Page, Long> {
 
-  int countByTeamIdAndParentId(Long teamId, Long parentId);
+  List<Page> findByParentIsNullAndDeletedFalse();
+  List<Page> findByParentIdAndDeletedFalse(Long pageId);
 
-  int countByTeamIdAndParentIsNull(Long teamId);
+  int countByTeamIdAndParentIdAndDeletedFalse(Long teamId, Long parentId);
+
+  int countByTeamIdAndParentIsNullAndDeletedFalse(Long teamId);
 
   List<Page> findByTeamIdAndDeletedOrderByParentIdAscOrdersAsc(Long teamId, boolean deleted);
 

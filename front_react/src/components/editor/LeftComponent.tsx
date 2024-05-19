@@ -27,6 +27,9 @@ import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
 import Problem from '@/components/editor/Problem'
 import fetch from '@/lib/fetch'
 import { Tooltip } from 'react-tooltip'
+import { IoDocumentTextOutline } from 'react-icons/io5'
+import { MdPeopleOutline } from 'react-icons/md'
+import { SlCalculator } from 'react-icons/sl'
 
 interface ProblemProp {
   title: string
@@ -120,7 +123,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
   const [updatedTags, setUpdatedTags] = useState<string[]>([])
   const editorUser = useEditor({
     extensions: [
-      StarterKit.configure({ history: false }),
+      StarterKit.configure({ history: true }),
       Highlight,
       TaskList,
       TaskItem,
@@ -258,7 +261,7 @@ const LeftComponent: React.FC<ProblemProp> = ({
           editorUser.commands.setContent('', false)
         }
       } catch (error) {
- //       console.error('Failed to fetch data:', error)
+        //       console.error('Failed to fetch data:', error)
       }
     }
 
@@ -306,16 +309,22 @@ const LeftComponent: React.FC<ProblemProp> = ({
           {['문제보기', '개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
-              className={`z-20 w-8 max-h-16 flex-1 border-blueishPurple border-b-[1px] text-center text-wrap whitespace-nowrap  hover:bg-primary/50 text-white text-sm transition-colors ${
-                activeTab === tab ? 'bg-primary' : 'bg-none'
+              className={`z-20 w-8 max-h-16 flex-1 flex items-center justify-center border-blueishPurple border-b-[1px] whitespace-nowrap  hover:bg-primary/50 hover:text-white transition-colors ${
+                activeTab === tab
+                  ? 'bg-primary text-white'
+                  : 'bg-none text-primary'
               } rounded-t-none`}
               onClick={() => setActiveTab(tab as any)}
               data-tooltip-id="codeTabName"
               data-tooltip-content={tab}
             >
-              {tab === '문제보기' && '📚'}
-              {tab === '개인 메모장' && '✍'}
-              {tab === '워크스페이스' && '👩🏻‍🤝‍🧑🏻'}
+              {tab === '문제보기' && <SlCalculator className=" w-5 h-5" />}
+              {tab === '개인 메모장' && (
+                <IoDocumentTextOutline className=" w-5 h-5" />
+              )}
+              {tab === '워크스페이스' && (
+                <MdPeopleOutline className=" w-5 h-5" />
+              )}
             </button>
           ))}
         </div>

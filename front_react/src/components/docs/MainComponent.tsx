@@ -28,6 +28,8 @@ import { useSelector } from 'react-redux'
 import Header from '@/components/docs/Header'
 import fetch from '@/lib/fetch'
 import { Tooltip } from 'react-tooltip'
+import { IoDocumentTextOutline } from 'react-icons/io5'
+import { MdPeopleOutline } from 'react-icons/md'
 
 interface DocProp {
   room: string
@@ -239,7 +241,7 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
           editorUser.commands.setContent('', false)
         }
       } catch (error) {
-  //      console.error('Failed to fetch data:', error)
+        //      console.error('Failed to fetch data:', error)
       }
     }
 
@@ -269,31 +271,35 @@ const MainComponent: React.FC<DocProp> = ({ room, groupId }) => {
   }
 
   return (
-    <div className="mt-0 m-3 flex flex-col">
+    <div className="mt-0  flex flex-col">
       <div className="flex flex-row">
         <Header activeTab={activeTab} onSave={handleSave} room={Number(room)} />
       </div>
-      <div className="flex">
-        <div className="flex flex-col w-8 h-40">
+      <div className="flex ">
+        <div className="w-[70%] ml-60" style={{ height: '72vh' }}>
+          {renderContent()}
+        </div>
+        <div className="flex flex-col w-8 h-40  border-primary border-y-[1px] ">
           {['개인 메모장', '워크스페이스'].map((tab) => (
             <button
               key={tab}
-              className={` h-8 flex-1 text-center whitespace-nowrap text-wrap hover:bg-primary/50 rounded-l-md text-white text-sm transition-colors ${
-                activeTab === tab ? 'bg-primary' : 'bg-navy'
+              className={` h-7 flex flex-1 border-r-[1px] border-primary items-center justify-center whitespace-nowrap text-wrap hover:bg-primary/50 hover:text-white  text-primary text-sm transition-colors ${
+                activeTab === tab ? 'bg-primary text-white' : ''
               }`}
               onClick={() => setActiveTab(tab as any)}
               data-tooltip-id="tabName"
               data-tooltip-content={tab}
             >
-              {tab === '개인 메모장' ? '✍' : '👩🏻‍🤝‍🧑🏻'}
+              {tab === '개인 메모장' ? (
+                <IoDocumentTextOutline className=" w-5 h-5" />
+              ) : (
+                <MdPeopleOutline className="w-5 h-5" />
+              )}
             </button>
           ))}
         </div>
-        <div className="w-full border-t-[1px] border-blueishPurple" style={{ height: '72vh' }}>
-          {renderContent()}
-        </div>
       </div>
-      <Tooltip id="tabName" place="left" />
+      <Tooltip id="tabName" place="right" />
     </div>
   )
 }

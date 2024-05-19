@@ -161,12 +161,30 @@
   h4,
   h5,
   h6 {
-    line-height: 1.1;
+    line-height: 1.2;
+  }
+
+  h1 {
+    font-size: 40px;
+    font-weight: 800;
+  }
+
+  h2 {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  h3 {
+    font-size: 26px;
+    font-weight: 600;
   }
 
   code {
-    background-color: rgba(#616161, 0.1);
-    color: #8d91b9;
+    background-color: rgba(#adb5bd, 0.1);
+    color: #d63a1e;
+    border-radius: 30%;
+    font-family: pretendard;
+    padding: 2px;
   }
 
   pre {
@@ -179,7 +197,7 @@
     code {
       background: none;
       color: inherit;
-      font-size: 0.8rem;
+      font-size: 1rem;
       padding: 0;
     }
   }
@@ -190,7 +208,7 @@
 
   img {
     height: auto;
-    max-width: 100%;
+    max-width: 80%;
   }
 
   hr {
@@ -198,7 +216,8 @@
   }
 
   blockquote {
-    border-left: 2px solid rgba(#0d0d0d, 0.1);
+    border-left: 4px solid rgba(#0d0d0d, 0.1);
+    font-size: large;
     padding-left: 1rem;
   }
 
@@ -232,11 +251,16 @@
 .editor {
   width: 100%;
   max-width: 100%;
-  border: 1px solid #ced4da;
-  color: #616161;
+  // border: 1px solid #ced4da;
+  color: #222222;
   display: flex;
   flex-direction: column;
   overflow: visible;
+  // 이부분 건드림
+  margin-left: auto;
+  margin-right: auto;
+  cursor: text;
+  //
 
   &__header {
     position: sticky;
@@ -256,6 +280,9 @@
     overflow-y: scroll;
     padding: 1.25rem 1rem;
     -webkit-overflow-scrolling: touch;
+    font-size: large;
+    // 이부분 건드림
+    padding-top: 40px;
   }
 
   &__footer {

@@ -32,7 +32,7 @@ const LeftHeader: React.FC<LeftHeaderProps> = ({
 
   useEffect(() => {
     setSelectedTags(tags)
-  //  console.log(tags)
+    //  console.log(tags)
   }, [tags])
 
   const toggleTag = (key: string) => {

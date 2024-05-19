@@ -113,7 +113,7 @@ public class PageService {
   private Page createPage(Team team, Long pageId) {
     Page page;
     if (pageId == -1) {
-      int order = pageRepository.countByTeamIdAndParentIsNull(team.getId());
+      int order = pageRepository.countByTeamIdAndParentIsNullAndDeletedFalse(team.getId());
 
       page = pageRepository.save(Page.builder()
           .team(team)
@@ -125,7 +125,7 @@ public class PageService {
       Page parentPage = pageRepository.findById(pageId)
           .orElseThrow(() -> new CustomException(ExceptionStatus.PAGE_NOT_FOUND));
 
-      int order = pageRepository.countByTeamIdAndParentId(team.getId(), parentPage.getId());
+      int order = pageRepository.countByTeamIdAndParentIdAndDeletedFalse(team.getId(), parentPage.getId());
 
       page = pageRepository.save(Page.builder()
           .team(team)
@@ -208,6 +208,14 @@ public class PageService {
     }
 
     pageRepository.saveAll(deletedPage);
+
+    List<Page> childList = null;
+    childList = page.getParent() == null ? pageRepository.findByParentIsNullAndDeletedFalse() : pageRepository.findByParentIdAndDeletedFalse(page.getParent().getId());
+    for(int i=0; i<childList.size(); i++) {
+      childList.get(i).setOrders((double) i);
+    }
+
+    pageRepository.saveAll(childList);
   }
 
   public String uploadImage(User user, Long pageId, MultipartFile file) {

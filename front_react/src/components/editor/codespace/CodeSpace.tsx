@@ -151,7 +151,7 @@ const CodeEditor: React.FC<{
 
     useEffect(() => {
       if (idList.length !== 0) {
- //       console.log(idList)
+        //       console.log(idList)
         setTabs(idList)
         setActiveTab(firstCode.id)
         setLanguage(firstCode.language)
@@ -265,7 +265,7 @@ const CodeEditor: React.FC<{
         language: language,
         code: code,
       }
-  //    console.log(dataToCache.codeId)
+      //    console.log(dataToCache.codeId)
       await fetch(`/code/cache`, {
         method: 'POST',
         headers: {
@@ -276,7 +276,7 @@ const CodeEditor: React.FC<{
     }
 
     const handleCodeChange = debounce((newCode: string) => {
- //     console.log('Code changed:', newCode)
+      //     console.log('Code changed:', newCode)
       const newMessage = {
         language: language,
         code: newCode,
@@ -299,15 +299,14 @@ const CodeEditor: React.FC<{
       handleCurUserId(id)
     }
 
-      return (
-          <div className="w-full h-full">
+    return (
+      <div className="w-full h-full">
         <div className="border-b-[1px] border-blueishPurple flex items-center justify-between h-12">
           <div className="flex-1 relative">
             <div className="flex flex-row">
-              <div
+              <a
                 className="flex flex-row items-start ml-2 mt-2"
-                data-tooltip-id="seeOthersCode"
-                data-tooltip-content="다른 사람 코드보기"
+                id="seeOthersCode"
               >
                 {userList.map(
                   (user) =>
@@ -334,7 +333,7 @@ const CodeEditor: React.FC<{
                     )}
                   </div>
                 )}
-              </div>
+              </a>
 
               {tabs.map((tab, index) => (
                 <button
@@ -495,7 +494,9 @@ const CodeEditor: React.FC<{
           />
         </div>
         <Tooltip id="createNewCodeTab" place="top" />
-        <Tooltip id="seeOthersCode" place="top" />
+        <Tooltip anchorSelect="#seeOthersCode" place="top">
+          다른 사람 코드보기
+        </Tooltip>
       </div>
     )
   },
