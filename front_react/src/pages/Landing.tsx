@@ -286,16 +286,16 @@ function Landing() {
             </div>
           </div>
         </section>
-        <section ref={liveRef} className="bg-indigo-950 h-[350vh]">
-          <div className="sticky top-0 h-[100vh] overflow-hidden">
-            <div className="xl:container xl:mx-auto max-xl:px-40 px-80 h-full">
-              <div className="flex flex-col gap-5 h-full justify-center">
+        <section ref={liveRef} className="bg-indigo-950 h-[350vh] pb-40">
+          <div className="sticky top-0 h-lvh overflow-hidden">
+            <div className="xl:container xl:mx-auto max-xl:px-40 px-80 h-full flex">
+              <div className="flex flex-col gap-2 max-h-full justify-center">
                 {/* Algowithme */}
                 <div
                   ref={(ref) => {
                     textRefs.current[0] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   # Algowithme
                 </div>
@@ -303,7 +303,7 @@ function Landing() {
                   ref={(ref) => {
                     replacementRefs.current[0] = ref
                   }}
-                  className="text-6xl text-gray-300 font-bold transition-all duration-1000 ease-in-out pb-4"
+                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
                 >
                   Algowithme
                 </div>
@@ -312,7 +312,7 @@ function Landing() {
                   ref={(ref) => {
                     textRefs.current[1] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   ---
                 </div>
@@ -327,7 +327,7 @@ function Landing() {
                   ref={(ref) => {
                     textRefs.current[2] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   ## 마크다운 언어 지원
                 </div>
@@ -335,19 +335,19 @@ function Landing() {
                   ref={(ref) => {
                     replacementRefs.current[2] = ref
                   }}
-                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                  className="text-2xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
                 >
                   마크다운 언어 지원
                 </div>
 
                 {/* 문서 작성은 마크 다운 형식으로 간편하게 */}
-                <div className="text-2xl text-gray-300 flex flex-row gap-2">
+                <div className="text-xl text-gray-300 flex flex-row gap-2">
                   문서 작성은
                   <div
                     ref={(ref) => {
                       textRefs.current[3] = ref
                     }}
-                    className="inline text-2xl text-gray-300"
+                    className="inline text-xl text-gray-300"
                   >
                     **마크 다운**
                   </div>
@@ -355,7 +355,7 @@ function Landing() {
                     ref={(ref) => {
                       replacementRefs.current[3] = ref
                     }}
-                    className="inline text-2xl font-bold text-gray-300 transition-all duration-1000 ease-in-out"
+                    className="inline text-xl font-bold text-gray-300 transition-all duration-1000 ease-in-out"
                   >
                     마크 다운
                   </div>{' '}
@@ -365,7 +365,7 @@ function Landing() {
                   ref={(ref) => {
                     textRefs.current[4] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   ## 실시간 문서 공유
                 </div>
@@ -373,7 +373,7 @@ function Landing() {
                   ref={(ref) => {
                     replacementRefs.current[4] = ref
                   }}
-                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                  className="text-2xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
                 >
                   실시간 문서 공유
                 </div>
@@ -382,7 +382,7 @@ function Landing() {
                   ref={(ref) => {
                     textRefs.current[5] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   ```<br />
                   #include &lt;stdio.h&gt;
@@ -483,7 +483,7 @@ function Landing() {
                   ref={(ref) => {
                     textRefs.current[8] = ref
                   }}
-                  className="text-2xl text-gray-300"
+                  className="text-xl text-gray-300"
                 >
                   ## 음성 채팅 기능 제공
                 </div>
@@ -491,11 +491,11 @@ function Landing() {
                   ref={(ref) => {
                     replacementRefs.current[8] = ref
                   }}
-                  className="text-4xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
+                  className="text-2xl text-gray-300 font-bold transition-all duration-1000 ease-in-out"
                 >
                   음성 채팅 기능 제공
                 </div>
-                <div className="text-2xl text-gray-300">
+                <div className="text-xl text-gray-300">
                   소통까지 가능한 완벽한 실시간 온라인 스터디 통합 플랫폼
                 </div>
               </div>
@@ -503,7 +503,7 @@ function Landing() {
           </div>
         </section>
         <div ref={liveBottomRef} />
-        <section className="h-[120vh] bg-black">
+        <section className="h-[180vh] bg-black">
           <div className="xl:container xl:mx-auto max-xl:px-40 px-80 flex flex-col justify-center items-center pt-48">
             <div
               ref={(ref) => {
