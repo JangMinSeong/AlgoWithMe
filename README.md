@@ -1,7 +1,12 @@
+# AlgoWithMe
+AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 이곳에서 사용자들은 음성통화, 코드공유, 워크스페이스 등 통합된 기능을 한번에 사용할 수 있습니다.
 
-# 자율 D205 프로젝트
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed quam eget odio interdum fermentum. Duis dapibus molestie ante consectetur congue. Cras eget sollicitudin ex, posuere euismod augue. Integer lacinia, neque egestas rutrum varius, neque elit laoreet magna, vel hendrerit libero arcu sed metus. Nunc non auctor sem, at pharetra nunc. Donec mollis arcu eget augue gravida gravida. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Integer porta molestie nunc ac semper. Fusce iaculis dapibus lorem. In pulvinar orci faucibus, porta purus in, blandit massa.
+# 목차
+1. 배경
+2. 주요 기능
+3. 사용 기술
+4. ERD
+5. 아키텍쳐
 
 ## 팀원
 |팀장|팀원(백)|팀원(백)|팀원(백)|팀원(프론트)|팀원(프론트)|
