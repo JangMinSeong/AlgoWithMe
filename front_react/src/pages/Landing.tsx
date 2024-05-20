@@ -288,7 +288,7 @@ function Landing() {
         </section>
         <section ref={liveRef} className="bg-indigo-950 h-[350vh] pb-40">
           <div className="sticky top-0 h-lvh overflow-hidden">
-            <div className="xl:container xl:mx-auto max-xl:px-40 px-80 h-full flex">
+            <div className="xl:container xl:mx-auto max-xl:px-40 px-80 h-full flex justify-center">
               <div className="flex flex-col gap-2 max-h-full justify-center">
                 {/* Algowithme */}
                 <div
