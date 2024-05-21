@@ -2,7 +2,7 @@
 
 <div align="center">
     <br />
-        <img src="image/logo.png" width="70%"/>
+        <img src="images/logo.png" width="70%"/>
     <br />
 </div>
 
