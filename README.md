@@ -2,7 +2,7 @@
 
 <div align="center">
     <br />
-        <img src="image/IBalance_logo.png" width="70%"/>
+        <img src="image/logo.png" width="70%"/>
     <br />
 </div>
 
@@ -28,17 +28,17 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 <table>
     <tr>
         <td height="140px" align="center"> <a href="https://github.com/JangMinSeong">
-            <img src="https://avatars.githubusercontent.com/u/26338183" width="140px" /> <br><br> ✨ 장민성 <br>(Front-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/26338183" width="120px" /> <br><br> ✨ 장민성 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/Hyaanu">
-            <img src="https://avatars.githubusercontent.com/u/125225751" width="110px" /> <br><br> 🌻 조현우 <br>(Front-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/125225751" width="120px" /> <br><br> 🌻 조현우 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/jiyeon2536">
             <img src="https://avatars.githubusercontent.com/u/125720796" width="120px" /> <br><br> 🤿 김지연 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/choe-jaeseong">
-            <img src="https://avatars.githubusercontent.com/u/96658361" width="140px" /> <br><br> 🐈‍ 최재성 <br>(Back-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/96658361" width="120px" /> <br><br> 🐈‍ 최재성 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/soungjin">
             <img src="https://avatars.githubusercontent.com/u/96867509" width="120px" /> <br><br> 🎮 박성진 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/sarang682">
-            <img src="https://avatars.githubusercontent.com/u/78913658" width="110px" /> <br><br> 🛌 박사랑 <br>(Back-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/78913658" width="120px" /> <br><br> 🛌 박사랑 <br>(Back-End) </a> <br></td>
     </tr>
 </table>
 </div>
@@ -60,20 +60,16 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 <img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
 <img src="https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white">
 <img src="https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white">
-<img src="https://img.shields.io/badge/PWA-5A0FC8?style=for-the-badge&logo=PWA">
 <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=Prettier&logoColor=white">
-<img src="https://img.shields.io/badge/lottie-04d1c1?style=for-the-badge">
-<img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
-<img src="https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase">
 
 
 <br>
 
-**Language |** HTML5, CSS3, JavaScript, node.js(v20.10.0)
+**Language |** HTML5, CSS3, JavaScript, node.js(v20.12.10)
 
-**Framework |** React.js(v18.2.0), Redux(v9.1.0), Vite(v5.1.4), 
+**Framework |** React.js(v18.2.0), Redux Toolkit(v2.2.3), Vite(v5.2.0), 
 
-**Library |** eslint(v8.56.0), vite PWA plugin(v9.19.7), prettier(v3.2.5), Lottie(v1.2.4), Axios(v1.6.7),Firebase(v10.10.0)
+**Library |** ESLINT(v8.57.0), VITE(v5.2.0), PRETTIER, TAILWIND(v3.4.3), TYPESCRIPT(v5.2.2), YSJ(13.6.14), OPENVIDU(2.29.1), TIPTAP(2.3.0), ACEEDITOR(11.0.1), STOMP(2.3.3), WEBSOCKET(8.17.0)
 
 
 </div>
