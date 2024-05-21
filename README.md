@@ -192,18 +192,28 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>스크롤 위치에 따라 화면을 렌더링합니다.</li>
 </ul>
 <img src="images/Animation.gif"></p>
+  <br />
+  <br />
+
  2. 로그인
 <p align="center">
 <ul>
     <li>GitHub 소셜 로그인이 가능합니다.</li>
 </ul>
 <img src="images/LOGIN.gif"></p>
+  <br />
+  <br />
+
+
  3. 페이지 검색
 <p align="center">
 <ul>
     <li>유저가 속한 스터디 그룹 및 그룹내 하위페이지를 모두 조회할 수 있습니다.</li>
 </ul>
 <img src="images/PAGESEARCH.gif"></p>
+  <br />
+  <br />
+
 4. 사용자 초대
 <p align="center">
 <ul>
@@ -211,6 +221,9 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>암호화된 코드를 전송합니다.</li>
 </ul>
 <img src="images/invite.gif"></p>
+  <br />
+  <br />
+
 5. 새로운 문제 추가
 <p align="center">
 <ul>
@@ -218,6 +231,9 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>페이지네이션으로 쉽게 탐색 가능합니다.</li>
 </ul>
 <img src="images/search.gif"></p>
+  <br />
+  <br />
+
 6. 화면 크기 조정
 <p align="center">
 <ul>
@@ -225,9 +241,15 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 
 </ul>
 <img src="images/DIVIDER.gif"></p>
+  <br />
+  <br />
+
 7. 문제 풀이 타이머 설정
 <p align="center">
 <img src="images/TIMER.gif"></p>
+  <br />
+  <br />
+
 8. 음성 채팅
 <p align="center">
 <ul>
@@ -235,12 +257,18 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>현재 발화자가 구분됩니다.</li>
 </ul>
 <img src="images/openvidu.gif"></p>
+  <br />
+  <br />
+
 9. 공용 메모 공간
 <p align="center">
 <ul>
     <li>다른 사용자 커서 위치가 표시됩니다.</li>
 </ul>
 <img src="images/workspace.gif"></p>
+  <br />
+  <br />
+
 10. 마크다운
 <p align="center">
 <ul>
@@ -248,26 +276,41 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>오른쪽 상단의 툴박스를 통해 더 많은 기능을 제공합니다.</li>
 </ul>
 <img src="images/MARKDOWN.gif"></p>
+  <br />
+  <br />
+
 11. 코드 자동 완성
 <p align="center"><img src="images/auto.gif"></p>
+  <br />
+  <br />
+
 12. 그룹원 코드 보기
 <p align="center">
 <ul>
     <li>socket을 통한 실시간 코드 공유로, 스터디 시 별도의 화면 공유가 필요 없습니다.</li>
 </ul>
 <img src="images/codespace.gif"></p>
+  <br />
+  <br />
+
 13. 코드 실행하기
 <p align="center">
 <ul>
     <li>내장되어 있는 테스트 케이스를 실행합니다.</li>
     <li>직접 테스트 케이스를 추가할 수 있습니다.</li>
 </ul><img src="images/EXECURW.gif"></p>
+  <br />
+  <br />
+
 14. 깃 저장하기
 <p align="center">
 <ul>
     <li>원하는 디렉토리 내에 커밋이 가능합니다.</li>
 </ul>
 <img src="images/GITH.gif"></p>
+  <br />
+  <br />
+
 15. 폴더 구조 변경
 <p align="center">
 <ul>
@@ -275,6 +318,9 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
     <li>모든 그룹원에게 실시간 적용됩니다.</li>
 </ul>
 <img src="images/DND.gif"></p>
+  <br />
+  <br />
+
 
 
 ## 프로젝트 산출물
