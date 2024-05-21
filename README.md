@@ -187,17 +187,30 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 
 # 기능소개
  1. 메인화면
-<p align="center"><img src="images/Animation.gif"></p>
+<p align="center">
+<ul>
+    <li>스크롤 위치에 따라 화면을 렌더링합니다.</li>
+</ul>
+<img src="images/Animation.gif"></p>
  2. 로그인
 <p align="center">
 <ul>
-    <li>GitHub 소셜 로그인</li>
+    <li>GitHub 소셜 로그인이 가능합니다.</li>
 </ul>
 <img src="images/LOGIN.gif"></p>
  3. 페이지 검색
-<p align="center"><img src="images/PAGESEARCH.gif"></p>
+<p align="center">
+<ul>
+    <li>유저가 속한 스터디 그룹 및 그룹내 하위페이지를 모두 조회할 수 있습니다.</li>
+</ul>
+<img src="images/PAGESEARCH.gif"></p>
 4. 사용자 초대
-<p align="center"><img src="images/invite.gif"></p>
+<p align="center">
+<ul>
+    <li>스터디그룹원을 추가할 수 있습니다.</li>
+    <li>암호화된 코드를 전송합니다.</li>
+</ul>
+<img src="images/invite.gif"></p>
 5. 새로운 문제 추가
 <p align="center">
 <ul>
@@ -206,7 +219,12 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 </ul>
 <img src="images/search.gif"></p>
 6. 화면 크기 조정
-<p align="center"><img src="images/DIVIDER.gif"></p>
+<p align="center">
+<ul>
+    <li>문제와 워크스페이스 / 코드 스페이스의 크기를 원하는대로 조절할 수 있습니다.</li>
+
+</ul>
+<img src="images/DIVIDER.gif"></p>
 7. 문제 풀이 타이머 설정
 <p align="center">
 <img src="images/TIMER.gif"></p>
@@ -239,9 +257,16 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 </ul>
 <img src="images/codespace.gif"></p>
 13. 코드 실행하기
-<p align="center"><img src="images/EXECURW.gif"></p>
+<p align="center">
+<ul>
+    <li>내장되어 있는 테스트 케이스를 실행합니다.</li>
+    <li>직접 테스트 케이스를 추가할 수 있습니다.</li>
+</ul><img src="images/EXECURW.gif"></p>
 14. 깃 저장하기
 <p align="center">
+<ul>
+    <li>원하는 디렉토리 내에 커밋이 가능합니다.</li>
+</ul>
 <img src="images/GITH.gif"></p>
 15. 폴더 구조 변경
 <p align="center">
