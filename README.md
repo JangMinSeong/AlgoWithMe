@@ -180,7 +180,7 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 
 <div align="middle">
   <br />
-  <img src="image/architecture.png" width="100%"/>
+  <img src="images/architecture.png" width="100%"/>
   <br />
 </div>
 
