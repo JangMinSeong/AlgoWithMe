@@ -177,33 +177,37 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 </div>
 
 
-## 기능소개
-
-### 2. 자녀정보 초기 생성
-
-<table>
-    <tr>
-        <td>생성 & 이름</td>
-        <td>생년월일</td>
-        <td>성별</td>
-    </tr>
-    <tr>
-        <td><img src="image/2.create_name.gif"></td>
-        <td><img src="image/2.create_birthdate.gif"></td>
-        <td><img src="image/2.create_gender.gif"></td>
-    </tr>
-    <tr>
-        <td>키</td>
-        <td>몸무게</td>
-        <td>알러지정보</td>
-    </tr>
-    <tr>
-        <td><img src="image/2.create_height.gif"></td>
-        <td><img src="image/2.create_weight.gif"></td>
-        <td><img src="image/2.create_allergy.gif"></td>
-    </tr>
-</table>
-<br>
+# 기능 소개
+1. 메인화면
+<p align="center"><img src="images/Animation.gif"></p>
+2. 로그인
+<p align="center"><img src="images/LOGIN.gif"></p>
+3. 페이지 검색
+<p align="center"><img src="images/PAGESEARCH.gif"></p>
+4. 사용자 초대
+<p align="center"><img src="images/invite.gif"></p>
+5. 새로운 문제 추가
+<p align="center"><img src="images/search.gif"></p>
+6. 화면 크기 조정
+<p align="center"><img src="images/DIVIDER.gif"></p>
+7. 문제 풀이 타이머 설정
+<p align="center"><img src="images/TIMER.gif"></p>
+8. 음성 채팅
+<p align="center"><img src="images/openvidu.gif"></p>
+9. 공용 메모 공간
+<p align="center"><img src="images/workspace.gif"></p>
+10. 마크다운
+<p align="center"><img src="images/MARKDOWN.gif"></p>
+11. 코드 자동 완성
+<p align="center"><img src="images/auto.gif"></p>
+12. 그룹원 코드 보기
+<p align="center"><img src="images/codespace.gif"></p>
+13. 코드 실행하기
+<p align="center"><img src="images/EXECURW.gif"></p>
+14. 깃 저장하기
+<p align="center"><img src="images/GITH.gif"></p>
+15. 폴더 구조 변경
+<p align="center"><img src="images/DND.gif"></p>
 
 
 ## 프로젝트 산출물
