@@ -55,21 +55,29 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 <img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white">
 <img src="https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white">
 <img src="https://img.shields.io/badge/JavaScript-FFE249?style=for-the-badge&logo=javascript&logoColor=white">
+<img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
 <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white">
 <img src="https://img.shields.io/badge/vite-646CFF?style=for-the-badge&logo=vite&logoColor=white">
-<img src="https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white">
 <img src="https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white">
 <img src="https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white">
 <img src="https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=Prettier&logoColor=white">
+<img src="https://img.shields.io/badge/tailwindcss-0F172A?&style=for-the-badge&logo=tailwindcss&logoColor=white">
+<img src="https://img.shields.io/badge/typescript-%231572B6?&style=for-the-badge&logo=typescript&logoColor=white">
+<img src="https://img.shields.io/badge/yjs-%23FF9900?&style=for-the-badge&logo=yjs&logoColor=white">
+<img src="https://img.shields.io/badge/openvidu-ffcd00?&style=for-the-badge&logo=openvidu&logoColor=white">
+<img src="https://img.shields.io/badge/tiptap-%23121011?&style=for-the-badge&logo=tiptap&logoColor=white">
+<img src="https://img.shields.io/badge/aceeditor-%231572B6?&style=for-the-badge&logo=aceeditor&logoColor=white">
+<img src="https://img.shields.io/badge/stomp-%2320232a?&style=for-the-badge&logo=stomp&logoColor=white">
+<img src="https://img.shields.io/badge/websocket-%23ED8B00?&style=for-the-badge&logo=websocket&logoColor=white">
 
 
 <br>
 
 **Language |** HTML5, CSS3, JavaScript, node.js(v20.12.10)
 
-**Framework |** React.js(v18.2.0), Redux Toolkit(v2.2.3), Vite(v5.2.0), 
+**Framework |** React.js(v18.2.0), Redux Toolkit(v2.2.3), Vite(v5.2.0)
 
-**Library |** ESLINT(v8.57.0), VITE(v5.2.0), PRETTIER, TAILWIND(v3.4.3), TYPESCRIPT(v5.2.2), YSJ(13.6.14), OPENVIDU(2.29.1), TIPTAP(2.3.0), ACEEDITOR(11.0.1), STOMP(2.3.3), WEBSOCKET(8.17.0)
+**Library |** ESLINT(v8.57.0), PRETTIER, TAILWIND(v3.4.3), TYPESCRIPT(v5.2.2), YSJ(13.6.14), OPENVIDU(2.29.1), TIPTAP(2.3.0), ACEEDITOR(11.0.1), STOMP(2.3.3), WEBSOCKET(8.17.0)
 
 
 </div>
