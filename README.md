@@ -32,7 +32,7 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
         <td height="140px" align="center"> <a href="https://github.com/Hyaanu">
             <img src="https://avatars.githubusercontent.com/u/125225751" width="120px" /> <br><br> 🌻 조현우 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/jiyeon2536">
-            <img src="https://avatars.githubusercontent.com/u/125720796" width="120px" /> <br><br> 🤿 김지연 <br>(Front-End) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/125720796" width="120px" /> <br><br> 🕊 김지연 <br>(Front-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/choe-jaeseong">
             <img src="https://avatars.githubusercontent.com/u/96658361" width="120px" /> <br><br> 🐈‍ 최재성 <br>(Back-End) </a> <br></td>
         <td height="140px" align="center"> <a href="https://github.com/soungjin">
@@ -186,36 +186,70 @@ AlgoWithMe는 온라인 알고리즘 스터디 플랫폼입니다. 사용자는 
 
 
 # 기능소개
-1. 메인화면
+ 1. 메인화면
 <p align="center"><img src="images/Animation.gif"></p>
-2. 로그인
-<p align="center"><img src="images/LOGIN.gif"></p>
-3. 페이지 검색
+ 2. 로그인
+<p align="center">
+<ul>
+    <li>GitHub 소셜 로그인</li>
+</ul>
+<img src="images/LOGIN.gif"></p>
+ 3. 페이지 검색
 <p align="center"><img src="images/PAGESEARCH.gif"></p>
 4. 사용자 초대
 <p align="center"><img src="images/invite.gif"></p>
 5. 새로운 문제 추가
-<p align="center"><img src="images/search.gif"></p>
+<p align="center">
+<ul>
+    <li>제목 또는 난이도로 검색이 가능합니다.</li>
+    <li>페이지네이션으로 쉽게 탐색 가능합니다.</li>
+</ul>
+<img src="images/search.gif"></p>
 6. 화면 크기 조정
 <p align="center"><img src="images/DIVIDER.gif"></p>
 7. 문제 풀이 타이머 설정
-<p align="center"><img src="images/TIMER.gif"></p>
+<p align="center">
+<img src="images/TIMER.gif"></p>
 8. 음성 채팅
-<p align="center"><img src="images/openvidu.gif"></p>
+<p align="center">
+<ul>
+    <li>접속자, 비접속자가 구분됩니다.</li>
+    <li>현재 발화자가 구분됩니다.</li>
+</ul>
+<img src="images/openvidu.gif"></p>
 9. 공용 메모 공간
-<p align="center"><img src="images/workspace.gif"></p>
+<p align="center">
+<ul>
+    <li>다른 사용자 커서 위치가 표시됩니다.</li>
+</ul>
+<img src="images/workspace.gif"></p>
 10. 마크다운
-<p align="center"><img src="images/MARKDOWN.gif"></p>
+<p align="center">
+<ul>
+    <li>마크다운 문법을 사용하여 문서를 작성합니다.</li>
+    <li>오른쪽 상단의 툴박스를 통해 더 많은 기능을 제공합니다.</li>
+</ul>
+<img src="images/MARKDOWN.gif"></p>
 11. 코드 자동 완성
 <p align="center"><img src="images/auto.gif"></p>
 12. 그룹원 코드 보기
-<p align="center"><img src="images/codespace.gif"></p>
+<p align="center">
+<ul>
+    <li>socket을 통한 실시간 코드 공유로, 스터디 시 별도의 화면 공유가 필요 없습니다.</li>
+</ul>
+<img src="images/codespace.gif"></p>
 13. 코드 실행하기
 <p align="center"><img src="images/EXECURW.gif"></p>
 14. 깃 저장하기
-<p align="center"><img src="images/GITH.gif"></p>
+<p align="center">
+<img src="images/GITH.gif"></p>
 15. 폴더 구조 변경
-<p align="center"><img src="images/DND.gif"></p>
+<p align="center">
+<ul>
+    <li>하위, 상위 및 같은 계층 내 이동이 가능합니다.</li>
+    <li>모든 그룹원에게 실시간 적용됩니다.</li>
+</ul>
+<img src="images/DND.gif"></p>
 
 
 ## 프로젝트 산출물
